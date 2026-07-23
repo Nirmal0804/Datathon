@@ -121,19 +121,86 @@ def get_station_window_weight(district, month):
     else:
         return 3.0 if district in ["Mysuru", "Chamarajanagar", "Bidar", "Bagalkote"] else 1.0
 
+# Short-Term Temporal Burst Windows (3-10 days, 2.0x-3.5x crime spikes)
+# All districts verified against stations reference dataset.
+BURST_WINDOWS = [
+    {
+        "name": "Bengaluru Cyber Crime Burst",
+        "district": "Bengaluru Urban",
+        "start": datetime(2025, 1, 15), "end": datetime(2025, 1, 22),
+        "multiplier": 3.0,
+        "primary_crimes": ["Cyber Crime", "Fraud"]
+    },
+    {
+        "name": "Belagavi Border Dispute Spike",
+        "district": "Belagavi",
+        "start": datetime(2025, 4, 10), "end": datetime(2025, 4, 18),
+        "multiplier": 3.2,
+        "primary_crimes": ["Assault"]
+    },
+    {
+        "name": "Ballari Narcotics Trafficking Spike",
+        "district": "Ballari",
+        "start": datetime(2025, 7, 5), "end": datetime(2025, 7, 12),
+        "multiplier": 2.8,
+        "primary_crimes": ["NDPS"]
+    },
+    {
+        "name": "Chamarajanagar Festival Theft Burst",
+        "district": "Chamarajanagar",
+        "start": datetime(2025, 10, 12), "end": datetime(2025, 10, 20),
+        "multiplier": 3.5,
+        "primary_crimes": ["Theft", "Robbery"]
+    },
+    {
+        "name": "Bidar Financial Scam Spike",
+        "district": "Bidar",
+        "start": datetime(2025, 11, 18), "end": datetime(2025, 11, 25),
+        "multiplier": 2.7,
+        "primary_crimes": ["Fraud", "Cyber Crime"]
+    },
+    {
+        "name": "Bengaluru Rural Dacoity Spike",
+        "district": "Bengaluru Rural",
+        "start": datetime(2025, 8, 20), "end": datetime(2025, 8, 27),
+        "multiplier": 2.5,
+        "primary_crimes": ["Dacoity", "Robbery"]
+    },
+    {
+        "name": "Chikkaballapura Vehicle Theft Burst",
+        "district": "Chikkaballapura",
+        "start": datetime(2025, 5, 8), "end": datetime(2025, 5, 15),
+        "multiplier": 2.2,
+        "primary_crimes": ["Vehicle Theft", "Theft"]
+    }
+]
+
+def get_active_burst(incident_dt, district):
+    for bw in BURST_WINDOWS:
+        if bw["district"] == district and bw["start"] <= incident_dt <= bw["end"]:
+            return bw
+    return None
+
 def generate_random_timestamp():
-    months = list(MONTH_WEIGHTS.keys())
-    probs = np.array(list(MONTH_WEIGHTS.values()))
-    probs = probs / probs.sum()
-    chosen_month = np.random.choice(months, p=probs)
+    # 15% chance of generating a timestamp inside a short-term temporal burst window
+    if random.random() < 0.15:
+        bw = random.choice(BURST_WINDOWS)
+        delta_days = (bw["end"] - bw["start"]).days
+        chosen_day_offset = random.randint(0, max(0, delta_days))
+        hour = random.randint(0, 23)
+        minute = random.randint(0, 59)
+        incident_dt = bw["start"] + timedelta(days=chosen_day_offset, hours=hour, minutes=minute)
+    else:
+        months = list(MONTH_WEIGHTS.keys())
+        probs = np.array(list(MONTH_WEIGHTS.values()))
+        probs = probs / probs.sum()
+        chosen_month = np.random.choice(months, p=probs)
 
-    max_days = 28 if chosen_month == 2 else (30 if chosen_month in [4, 6, 9, 11] else 31)
-    chosen_day = random.randint(1, max_days)
-
-    hour = random.randint(0, 23)
-    minute = random.randint(0, 59)
-
-    incident_dt = datetime(2025, chosen_month, chosen_day, hour, minute)
+        max_days = 28 if chosen_month == 2 else (30 if chosen_month in [4, 6, 9, 11] else 31)
+        chosen_day = random.randint(1, max_days)
+        hour = random.randint(0, 23)
+        minute = random.randint(0, 59)
+        incident_dt = datetime(2025, chosen_month, chosen_day, hour, minute)
 
     # FIR filing delay: 0 to 5 days
     delay_days = random.choices([0, 1, 2, 3, 4, 5], weights=[0.5, 0.25, 0.12, 0.08, 0.03, 0.02])[0]
@@ -155,7 +222,7 @@ def generate_firs():
     male_ids = people_df[people_df["Gender"] == "Male"]["Person_ID"].tolist()
     female_ids = people_df[people_df["Gender"] == "Female"]["Person_ID"].tolist()
 
-    # Pre-generate chronologically sorted incident timestamps following smooth seasonal curve
+    # Pre-generate chronologically sorted incident timestamps following smooth seasonal curve & burst windows
     timestamps = []
     for _ in range(TOTAL_FIRS):
         inc_dt, fir_dt = generate_random_timestamp()
@@ -219,8 +286,15 @@ def generate_firs():
         incident_dt, fir_dt = timestamps[i - 1]
         month = incident_dt.month
 
-        # Dynamic Hotspot Station Selection based on active time window
-        stn_weights = [get_station_window_weight(row["District"], month) for _, row in stations_df.iterrows()]
+        # Dynamic Hotspot & Temporal Burst Station Selection
+        stn_weights = []
+        for _, row in stations_df.iterrows():
+            w = get_station_window_weight(row["District"], month)
+            active_burst = get_active_burst(incident_dt, row["District"])
+            if active_burst:
+                w *= active_burst["multiplier"]
+            stn_weights.append(w)
+
         stn_probs = np.array(stn_weights, dtype=float) / sum(stn_weights)
         station_row = stations_df.iloc[np.random.choice(len(stations_df), p=stn_probs)]
 
@@ -229,13 +303,18 @@ def generate_firs():
         station_lat = station_row["Latitude"]
         station_lon = station_row["Longitude"]
 
-        # Combine base district crime weights with seasonal and evolutionary modifiers
+        # Combine base district crime weights with seasonal, evolutionary, and burst multipliers
         base_crime_weights = get_district_crime_weights(district)
+        active_burst = get_active_burst(incident_dt, district)
+
         combined_weights = []
         for idx, c in enumerate(CRIME_TYPES):
             base_w = base_crime_weights[idx]
             seasonal_mod = get_seasonal_crime_modifier(month, c)
-            combined_weights.append(base_w * seasonal_mod)
+            w = base_w * seasonal_mod
+            if active_burst and c in active_burst["primary_crimes"]:
+                w *= active_burst["multiplier"]
+            combined_weights.append(w)
 
         # Weekend assault boost (Sat, Sun)
         if incident_dt.weekday() in [5, 6]:

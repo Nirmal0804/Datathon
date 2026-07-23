@@ -7,8 +7,8 @@
 [PASS] STATIONS Primary Key (Station_ID) Unique: 250 records
 [PASS] PEOPLE Primary Key (Person_ID) Unique: 10000 records
 [PASS] FIRS Primary Key (FIR_ID) Unique: 5000 records
-[PASS] ARRESTS Primary Key (Arrest_ID) Unique: 2582 records
-[PASS] CHARGESHEETS Primary Key (ChargeSheet_ID) Unique: 2600 records
+[PASS] ARRESTS Primary Key (Arrest_ID) Unique: 2540 records
+[PASS] CHARGESHEETS Primary Key (ChargeSheet_ID) Unique: 2469 records
 
 --- Foreign Key Integrity Checks ---
 [PASS] stations -> districts (District_ID) FK valid
@@ -32,17 +32,17 @@ Total Districts       : 31
 Total Police Stations : 250
 Total Citizens        : 10000
 Total FIR Records     : 5000
-Total Arrest Records  : 2582
-Total Chargesheets    : 2600
+Total Arrest Records  : 2540
+Total Chargesheets    : 2469
 
 Recidivism Ratio Check:
-  Total Unique Accused   : 4552
-  1 FIR (Single Offense) : 4099 (90.05%)
-  2-4 FIRs (Repeat)      : 407 (8.94%)
-  5-10 FIRs (Chronic)    : 46 (1.01%)
+  Total Unique Accused   : 4517
+  1 FIR (Single Offense) : 4069 (90.08%)
+  2-4 FIRs (Repeat)      : 404 (8.94%)
+  5-10 FIRs (Chronic)    : 44 (0.97%)
 
 Operational Case Outcomes:
-  Arrest Rate            : 51.64%
-  Chargesheet Rate       : 52.0%
+  Arrest Rate            : 50.8%
+  Chargesheet Rate       : 49.38%
 ================================================================================
 [SUCCESS] ALL VALIDATION CHECKS PASSED PERFECTLY!
