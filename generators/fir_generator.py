@@ -73,32 +73,73 @@ def get_district_crime_weights(district_name):
     total = sum(weights.values())
     return [weights[c] / total for c in CRIME_TYPES]
 
-# Monthly crime seasonality weights (Peak in festival months Oct-Nov, May)
+# Monthly crime seasonality weights (Smooth seasonal curve: Winter, Summer, Monsoon, Festival peak Oct-Nov, Year-end Dec)
 MONTH_WEIGHTS = {
-    1: 0.7, 2: 0.75, 3: 0.85, 4: 0.95, 5: 1.2,
-    6: 0.9, 7: 0.85, 8: 0.90, 9: 1.0, 10: 1.35, 11: 1.45, 12: 1.1
+    1: 0.70, 2: 0.75, 3: 0.85, 4: 0.95, 5: 1.15,
+    6: 0.80, 7: 0.75, 8: 0.85, 9: 0.95, 10: 1.35, 11: 1.45, 12: 1.15
 }
 
+# 1. Seasonal & Evolutionary Crime Modifiers (Weather, Multi-Year Progression)
+def get_seasonal_crime_modifier(month, crime_type):
+    mult = 1.0
+    # Multi-year / progression evolution (Cyber/Fraud +15%, Traditional Robbery/Dacoity -10%)
+    time_factor = (month - 1) / 12.0
+    if crime_type in ["Cyber Crime", "Fraud"]:
+        mult *= (1.0 + 0.15 * time_factor)
+    elif crime_type in ["Robbery", "Dacoity"]:
+        mult *= (1.0 - 0.10 * time_factor)
+
+    # Weather & Seasonal Modifiers
+    if month in [1, 2]:  # Winter: Increase in theft & burglary
+        if crime_type in ["Theft", "Burglary"]:
+            mult *= 1.25
+    elif month in [3, 4, 5]:  # Summer: Outdoor conflict & vehicle theft spike
+        if crime_type in ["Vehicle Theft", "Assault"]:
+            mult *= 1.45
+    elif month in [6, 7, 8, 9]:  # Monsoon: Dip in outdoor crime, boost in cyber/fraud
+        if crime_type in ["Assault", "Robbery", "Theft"]:
+            mult *= 0.70
+        elif crime_type in ["Cyber Crime", "Fraud"]:
+            mult *= 1.20
+    elif month in [10, 11]:  # Festival: Peak theft, fraud, cyber fraud
+        if crime_type in ["Theft", "Fraud", "Cyber Crime"]:
+            mult *= 1.70
+        elif crime_type == "Vehicle Theft":
+            mult *= 1.35
+    elif month == 12:  # Year End: Spike in assault & vehicle incidents
+        if crime_type in ["Assault", "Vehicle Theft"]:
+            mult *= 1.40
+
+    return mult
+
+# 2. Dynamic Moving Hotspot Windows (Jan-Apr: CBD, May-Aug: Highway/Border, Sep-Dec: Mysuru/Festival Hubs)
+def get_station_window_weight(district, month):
+    if month in [1, 2, 3, 4]:
+        return 3.0 if district in ["Bengaluru Urban", "Bengaluru Rural"] else 1.0
+    elif month in [5, 6, 7, 8]:
+        return 3.0 if district in ["Belagavi", "Ballari", "Dakshina Kannada", "Kalaburagi"] else 1.0
+    else:
+        return 3.0 if district in ["Mysuru", "Chamarajanagar", "Bidar", "Bagalkote"] else 1.0
+
 def generate_random_timestamp():
-    start_date = datetime(2025, 1, 1)
     months = list(MONTH_WEIGHTS.keys())
     probs = np.array(list(MONTH_WEIGHTS.values()))
     probs = probs / probs.sum()
     chosen_month = np.random.choice(months, p=probs)
-    
+
     max_days = 28 if chosen_month == 2 else (30 if chosen_month in [4, 6, 9, 11] else 31)
     chosen_day = random.randint(1, max_days)
-    
+
     hour = random.randint(0, 23)
     minute = random.randint(0, 59)
-    
+
     incident_dt = datetime(2025, chosen_month, chosen_day, hour, minute)
-    
+
     # FIR filing delay: 0 to 5 days
     delay_days = random.choices([0, 1, 2, 3, 4, 5], weights=[0.5, 0.25, 0.12, 0.08, 0.03, 0.02])[0]
     delay_hours = random.randint(1, 12)
     fir_dt = incident_dt + timedelta(days=delay_days, hours=delay_hours)
-    
+
     return incident_dt, fir_dt
 
 def generate_firs():
@@ -113,6 +154,13 @@ def generate_firs():
 
     male_ids = people_df[people_df["Gender"] == "Male"]["Person_ID"].tolist()
     female_ids = people_df[people_df["Gender"] == "Female"]["Person_ID"].tolist()
+
+    # Pre-generate chronologically sorted incident timestamps following smooth seasonal curve
+    timestamps = []
+    for _ in range(TOTAL_FIRS):
+        inc_dt, fir_dt = generate_random_timestamp()
+        timestamps.append((inc_dt, fir_dt))
+    timestamps.sort(key=lambda x: x[0])
 
     # Pre-determine multi-accused slots per FIR (7% multi-accused chance)
     fir_slot_counts = [2 if random.random() < 0.07 else 1 for _ in range(TOTAL_FIRS)]
@@ -168,25 +216,43 @@ def generate_firs():
         fir_id = f"FIR2025{i:05d}"
         fir_number = f"FIR/{i:04d}/2025"
 
-        station_row = stations_df.sample(1).iloc[0]
+        incident_dt, fir_dt = timestamps[i - 1]
+        month = incident_dt.month
+
+        # Dynamic Hotspot Station Selection based on active time window
+        stn_weights = [get_station_window_weight(row["District"], month) for _, row in stations_df.iterrows()]
+        stn_probs = np.array(stn_weights, dtype=float) / sum(stn_weights)
+        station_row = stations_df.iloc[np.random.choice(len(stations_df), p=stn_probs)]
+
         station_id = station_row["Station_ID"]
         district = station_row["District"]
         station_lat = station_row["Latitude"]
         station_lon = station_row["Longitude"]
 
-        incident_dt, fir_dt = generate_random_timestamp()
-
-        # Crime type selection based on district profile
-        crime_probs = get_district_crime_weights(district)
+        # Combine base district crime weights with seasonal and evolutionary modifiers
+        base_crime_weights = get_district_crime_weights(district)
+        combined_weights = []
+        for idx, c in enumerate(CRIME_TYPES):
+            base_w = base_crime_weights[idx]
+            seasonal_mod = get_seasonal_crime_modifier(month, c)
+            combined_weights.append(base_w * seasonal_mod)
 
         # Weekend assault boost (Sat, Sun)
         if incident_dt.weekday() in [5, 6]:
-            c_type = random.choices(CRIME_TYPES, weights=[p * 1.8 if c == "Assault" else p for c, p in zip(CRIME_TYPES, crime_probs)])[0]
-        else:
-            c_type = random.choices(CRIME_TYPES, weights=crime_probs)[0]
+            combined_weights = [w * 1.8 if c == "Assault" else w for w, c in zip(combined_weights, CRIME_TYPES)]
 
+        comb_probs = np.array(combined_weights, dtype=float) / sum(combined_weights)
+        c_type = np.random.choice(CRIME_TYPES, p=comb_probs)
+
+        # Subhead selection & Causal Cascade logic (e.g. Festival crowd -> Pickpocketing -> Financial Fraud/Identity Theft)
         catalog_entry = CRIME_CATALOG[c_type]
-        crime_subhead = random.choice(catalog_entry["subheads"])
+        if month in [10, 11] and c_type == "Theft":
+            crime_subhead = random.choices(catalog_entry["subheads"], weights=[0.2, 0.4, 0.4])[0]  # Elevated Snatching & Pocket Pick
+        elif month in [10, 11] and c_type in ["Cyber Crime", "Fraud"]:
+            crime_subhead = random.choices(catalog_entry["subheads"], weights=[0.5, 0.3, 0.2])[0]  # Elevated Financial Fraud
+        else:
+            crime_subhead = random.choice(catalog_entry["subheads"])
+
         bns_sections = ", ".join(catalog_entry["sections"])
 
         # Localized spatial coordinates near police station (~2 km radius)
