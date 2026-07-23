@@ -1,0 +1,251 @@
+Station_ID,Station_Name,District_ID,District,Zone,Station_Type,Latitude,Longitude,Personnel_Strength,Patrol_Vehicles,Contact_Number,Email
+PS0001,Bagalkote East Town Police Station,1,Bagalkote,East,Town Police Station,16.184765,75.575664,130,8,809897858,ps1@ksp.gov.in
+PS0002,Bagalkote North Rural Police Station,1,Bagalkote,North,Rural Police Station,16.111362,75.503891,127,12,805017343,ps2@ksp.gov.in
+PS0003,Bagalkote North Traffic Police Station,1,Bagalkote,North,Traffic Police Station,16.332904,75.87488,56,18,802161193,ps3@ksp.gov.in
+PS0004,Bagalkote Central Traffic Police Station,1,Bagalkote,Central,Traffic Police Station,16.033057,75.686213,175,8,805446912,ps4@ksp.gov.in
+PS0005,Bagalkote Central Rural Police Station,1,Bagalkote,Central,Rural Police Station,16.150955,75.580819,173,25,804374754,ps5@ksp.gov.in
+PS0006,Bagalkote East Cyber Crime Police Station,1,Bagalkote,East,Cyber Crime Police Station,16.37976,75.756051,147,19,808574680,ps6@ksp.gov.in
+PS0007,Bagalkote North Traffic Police Station,1,Bagalkote,North,Traffic Police Station,16.071579,75.631334,176,10,804694634,ps7@ksp.gov.in
+PS0008,Bagalkote North Police Station,1,Bagalkote,North,Police Station,16.264836,75.51965,52,4,806543670,ps8@ksp.gov.in
+PS0009,Bagalkote North Rural Police Station,1,Bagalkote,North,Rural Police Station,16.076902,75.763691,89,20,803219824,ps9@ksp.gov.in
+PS0010,Bagalkote Central Rural Police Station,1,Bagalkote,Central,Rural Police Station,16.170768,75.809948,139,9,802582524,ps10@ksp.gov.in
+PS0011,Bagalkote North Town Police Station,1,Bagalkote,North,Town Police Station,16.15412,75.665531,154,4,802651177,ps11@ksp.gov.in
+PS0012,Bagalkote North Cyber Crime Police Station,1,Bagalkote,North,Cyber Crime Police Station,16.272985,75.816337,62,10,804214348,ps12@ksp.gov.in
+PS0013,Bagalkote South Rural Police Station,1,Bagalkote,South,Rural Police Station,16.161145,75.664853,106,17,805191056,ps13@ksp.gov.in
+PS0014,Bagalkote North Cyber Crime Police Station,1,Bagalkote,North,Cyber Crime Police Station,16.304909,75.838487,60,4,801247595,ps14@ksp.gov.in
+PS0015,Bagalkote North Traffic Police Station,1,Bagalkote,North,Traffic Police Station,16.048224,75.690356,89,15,801983738,ps15@ksp.gov.in
+PS0016,Bagalkote South Cyber Crime Police Station,1,Bagalkote,South,Cyber Crime Police Station,15.982562,75.652269,151,12,808096887,ps16@ksp.gov.in
+PS0017,Bagalkote Central Town Police Station,1,Bagalkote,Central,Town Police Station,16.269063,75.558019,110,9,801981186,ps17@ksp.gov.in
+PS0018,Bagalkote Central Town Police Station,1,Bagalkote,Central,Town Police Station,16.198578,75.79529,49,4,808999183,ps18@ksp.gov.in
+PS0019,Bagalkote Central Rural Police Station,1,Bagalkote,Central,Rural Police Station,16.044673,75.880412,55,8,802149597,ps19@ksp.gov.in
+PS0020,Bagalkote Central Police Station,1,Bagalkote,Central,Police Station,16.251785,75.590182,65,21,805130808,ps20@ksp.gov.in
+PS0021,Bagalkote Central Rural Police Station,1,Bagalkote,Central,Rural Police Station,15.997597,75.528893,179,19,806307805,ps21@ksp.gov.in
+PS0022,Bagalkote East Traffic Police Station,1,Bagalkote,East,Traffic Police Station,16.24959,75.621774,102,15,803195773,ps22@ksp.gov.in
+PS0023,Bagalkote East Cyber Crime Police Station,1,Bagalkote,East,Cyber Crime Police Station,16.108171,75.796846,53,3,808688755,ps23@ksp.gov.in
+PS0024,Bagalkote Central Rural Police Station,1,Bagalkote,Central,Rural Police Station,16.380139,75.525404,89,19,805449324,ps24@ksp.gov.in
+PS0025,Bagalkote South Women Police Station,1,Bagalkote,South,Women Police Station,16.334046,75.847808,129,12,803646552,ps25@ksp.gov.in
+PS0026,Ballari West Rural Police Station,2,Ballari,West,Rural Police Station,15.220816,76.966071,170,3,806022741,ps26@ksp.gov.in
+PS0027,Ballari North Traffic Police Station,2,Ballari,North,Traffic Police Station,15.045186,77.077285,176,7,805569244,ps27@ksp.gov.in
+PS0028,Ballari East Rural Police Station,2,Ballari,East,Rural Police Station,15.023652,76.858552,102,19,809196204,ps28@ksp.gov.in
+PS0029,Ballari East Police Station,2,Ballari,East,Police Station,14.976319,76.89083,105,4,801059486,ps29@ksp.gov.in
+PS0030,Ballari East Traffic Police Station,2,Ballari,East,Traffic Police Station,15.194245,76.826182,148,20,808175395,ps30@ksp.gov.in
+PS0031,Ballari Central Police Station,2,Ballari,Central,Police Station,14.98415,77.09942,73,20,801604451,ps31@ksp.gov.in
+PS0032,Ballari East Rural Police Station,2,Ballari,East,Rural Police Station,15.16041,76.893315,45,12,807117837,ps32@ksp.gov.in
+PS0033,Ballari North Women Police Station,2,Ballari,North,Women Police Station,15.023431,76.821212,61,14,807817881,ps33@ksp.gov.in
+PS0034,Ballari Central Town Police Station,2,Ballari,Central,Town Police Station,15.001221,77.093352,76,8,807917152,ps34@ksp.gov.in
+PS0035,Ballari North Traffic Police Station,2,Ballari,North,Traffic Police Station,15.234026,76.854274,140,24,805163555,ps35@ksp.gov.in
+PS0036,Ballari East Traffic Police Station,2,Ballari,East,Traffic Police Station,15.25435,76.764638,44,18,804731818,ps36@ksp.gov.in
+PS0037,Ballari South Cyber Crime Police Station,2,Ballari,South,Cyber Crime Police Station,15.079263,77.049615,93,10,801397023,ps37@ksp.gov.in
+PS0038,Ballari South Cyber Crime Police Station,2,Ballari,South,Cyber Crime Police Station,15.070705,77.067141,106,14,809546409,ps38@ksp.gov.in
+PS0039,Ballari West Town Police Station,2,Ballari,West,Town Police Station,15.33186,76.935886,42,6,805382463,ps39@ksp.gov.in
+PS0040,Ballari South Rural Police Station,2,Ballari,South,Rural Police Station,15.324414,76.827587,62,22,808290770,ps40@ksp.gov.in
+PS0041,Ballari East Town Police Station,2,Ballari,East,Town Police Station,15.253971,76.895958,165,6,807462506,ps41@ksp.gov.in
+PS0042,Ballari Central Traffic Police Station,2,Ballari,Central,Traffic Police Station,15.041289,77.004914,35,19,804305700,ps42@ksp.gov.in
+PS0043,Ballari East Cyber Crime Police Station,2,Ballari,East,Cyber Crime Police Station,14.96739,76.987095,119,22,806266630,ps43@ksp.gov.in
+PS0044,Ballari North Town Police Station,2,Ballari,North,Town Police Station,15.299419,76.924249,139,13,807751158,ps44@ksp.gov.in
+PS0045,Ballari East Rural Police Station,2,Ballari,East,Rural Police Station,14.990315,76.889579,132,24,803919694,ps45@ksp.gov.in
+PS0046,Belagavi Central Rural Police Station,3,Belagavi,Central,Rural Police Station,15.77008,74.516875,35,12,805813613,ps46@ksp.gov.in
+PS0047,Belagavi South Cyber Crime Police Station,3,Belagavi,South,Cyber Crime Police Station,15.964004,74.540365,117,17,808411939,ps47@ksp.gov.in
+PS0048,Belagavi West Town Police Station,3,Belagavi,West,Town Police Station,15.735181,74.486974,78,24,802422633,ps48@ksp.gov.in
+PS0049,Belagavi East Rural Police Station,3,Belagavi,East,Rural Police Station,15.915242,74.545404,58,10,806207974,ps49@ksp.gov.in
+PS0050,Belagavi South Traffic Police Station,3,Belagavi,South,Traffic Police Station,15.708642,74.316185,156,22,802221854,ps50@ksp.gov.in
+PS0051,Belagavi West Cyber Crime Police Station,3,Belagavi,West,Cyber Crime Police Station,16.004155,74.527968,133,18,807705062,ps51@ksp.gov.in
+PS0052,Belagavi South Traffic Police Station,3,Belagavi,South,Traffic Police Station,15.912123,74.299918,62,16,804671545,ps52@ksp.gov.in
+PS0053,Belagavi South Town Police Station,3,Belagavi,South,Town Police Station,15.856883,74.317787,98,6,808658158,ps53@ksp.gov.in
+PS0054,Belagavi South Cyber Crime Police Station,3,Belagavi,South,Cyber Crime Police Station,15.916731,74.692857,116,17,809468772,ps54@ksp.gov.in
+PS0055,Belagavi West Rural Police Station,3,Belagavi,West,Rural Police Station,15.828065,74.361363,156,17,805348512,ps55@ksp.gov.in
+PS0056,Belagavi South Town Police Station,3,Belagavi,South,Town Police Station,15.760625,74.60877,159,23,805013879,ps56@ksp.gov.in
+PS0057,Belagavi East Cyber Crime Police Station,3,Belagavi,East,Cyber Crime Police Station,15.680693,74.411991,104,13,806363836,ps57@ksp.gov.in
+PS0058,Belagavi Central Police Station,3,Belagavi,Central,Police Station,15.70505,74.390205,74,25,804589533,ps58@ksp.gov.in
+PS0059,Belagavi North Cyber Crime Police Station,3,Belagavi,North,Cyber Crime Police Station,15.81274,74.514744,141,4,804470105,ps59@ksp.gov.in
+PS0060,Belagavi West Cyber Crime Police Station,3,Belagavi,West,Cyber Crime Police Station,16.011635,74.531332,40,21,807381734,ps60@ksp.gov.in
+PS0061,Belagavi West Police Station,3,Belagavi,West,Police Station,16.026797,74.417145,134,16,804700025,ps61@ksp.gov.in
+PS0062,Belagavi West Traffic Police Station,3,Belagavi,West,Traffic Police Station,15.758874,74.491957,134,13,807783308,ps62@ksp.gov.in
+PS0063,Belagavi South Cyber Crime Police Station,3,Belagavi,South,Cyber Crime Police Station,16.017517,74.689989,171,3,807610562,ps63@ksp.gov.in
+PS0064,Belagavi Central Rural Police Station,3,Belagavi,Central,Rural Police Station,15.9149,74.331279,144,7,808746014,ps64@ksp.gov.in
+PS0065,Belagavi South Police Station,3,Belagavi,South,Police Station,15.753763,74.428641,151,13,806662319,ps65@ksp.gov.in
+PS0066,Belagavi West Women Police Station,3,Belagavi,West,Women Police Station,15.950504,74.63047,99,5,808890439,ps66@ksp.gov.in
+PS0067,Belagavi North Town Police Station,3,Belagavi,North,Town Police Station,15.865468,74.697663,124,10,802151225,ps67@ksp.gov.in
+PS0068,Belagavi North Police Station,3,Belagavi,North,Police Station,16.029545,74.377444,40,22,803556551,ps68@ksp.gov.in
+PS0069,Belagavi South Traffic Police Station,3,Belagavi,South,Traffic Police Station,15.839124,74.343456,90,17,805299055,ps69@ksp.gov.in
+PS0070,Bengaluru Rural East Traffic Police Station,4,Bengaluru Rural,East,Traffic Police Station,13.268057,77.760494,64,8,806218367,ps70@ksp.gov.in
+PS0071,Bengaluru Rural North Rural Police Station,4,Bengaluru Rural,North,Rural Police Station,13.035971,77.499783,131,15,804327421,ps71@ksp.gov.in
+PS0072,Bengaluru Rural North Rural Police Station,4,Bengaluru Rural,North,Rural Police Station,13.301946,77.625897,61,25,806059717,ps72@ksp.gov.in
+PS0073,Bengaluru Rural Central Police Station,4,Bengaluru Rural,Central,Police Station,13.344191,77.601373,45,14,809937982,ps73@ksp.gov.in
+PS0074,Bengaluru Rural West Town Police Station,4,Bengaluru Rural,West,Town Police Station,13.173928,77.577384,122,3,808047416,ps74@ksp.gov.in
+PS0075,Bengaluru Rural West Police Station,4,Bengaluru Rural,West,Police Station,13.199109,77.519875,152,25,803566765,ps75@ksp.gov.in
+PS0076,Bengaluru Rural West Traffic Police Station,4,Bengaluru Rural,West,Traffic Police Station,13.319218,77.761189,104,22,809111742,ps76@ksp.gov.in
+PS0077,Bengaluru Rural West Cyber Crime Police Station,4,Bengaluru Rural,West,Cyber Crime Police Station,13.355994,77.61199,117,10,802453962,ps77@ksp.gov.in
+PS0078,Bengaluru Rural East Cyber Crime Police Station,4,Bengaluru Rural,East,Cyber Crime Police Station,13.123245,77.560883,132,13,801481506,ps78@ksp.gov.in
+PS0079,Bengaluru Rural West Women Police Station,4,Bengaluru Rural,West,Women Police Station,13.098436,77.459848,101,13,805691890,ps79@ksp.gov.in
+PS0080,Bengaluru Rural Central Town Police Station,4,Bengaluru Rural,Central,Town Police Station,13.377743,77.597316,167,9,802436347,ps80@ksp.gov.in
+PS0081,Bengaluru Rural South Town Police Station,4,Bengaluru Rural,South,Town Police Station,13.188271,77.59707,96,25,808987516,ps81@ksp.gov.in
+PS0082,Bengaluru Rural West Cyber Crime Police Station,4,Bengaluru Rural,West,Cyber Crime Police Station,13.342873,77.412221,91,15,805081983,ps82@ksp.gov.in
+PS0083,Bengaluru Rural East Town Police Station,4,Bengaluru Rural,East,Town Police Station,13.258322,77.564304,170,14,808138769,ps83@ksp.gov.in
+PS0084,Bengaluru Rural Central Women Police Station,4,Bengaluru Rural,Central,Women Police Station,13.166424,77.556498,113,11,804867786,ps84@ksp.gov.in
+PS0085,Bengaluru Rural North Town Police Station,4,Bengaluru Rural,North,Town Police Station,13.102734,77.422822,172,25,804106298,ps85@ksp.gov.in
+PS0086,Bengaluru Rural South Traffic Police Station,4,Bengaluru Rural,South,Traffic Police Station,13.321142,77.4856,169,22,805747930,ps86@ksp.gov.in
+PS0087,Bengaluru Rural North Traffic Police Station,4,Bengaluru Rural,North,Traffic Police Station,13.144199,77.519352,112,3,809961299,ps87@ksp.gov.in
+PS0088,Bengaluru Rural South Women Police Station,4,Bengaluru Rural,South,Women Police Station,13.043906,77.39681,109,25,803118618,ps88@ksp.gov.in
+PS0089,Bengaluru Rural West Police Station,4,Bengaluru Rural,West,Police Station,13.374788,77.604626,155,18,808389840,ps89@ksp.gov.in
+PS0090,Bengaluru Rural East Traffic Police Station,4,Bengaluru Rural,East,Traffic Police Station,13.411899,77.475991,157,6,802096280,ps90@ksp.gov.in
+PS0091,Bengaluru Rural West Cyber Crime Police Station,4,Bengaluru Rural,West,Cyber Crime Police Station,13.055333,77.626778,48,7,803503120,ps91@ksp.gov.in
+PS0092,Bengaluru Rural Central Women Police Station,4,Bengaluru Rural,Central,Women Police Station,13.059772,77.474276,177,16,804786401,ps92@ksp.gov.in
+PS0093,Bengaluru Rural Central Cyber Crime Police Station,4,Bengaluru Rural,Central,Cyber Crime Police Station,13.205906,77.552088,144,12,802010496,ps93@ksp.gov.in
+PS0094,Bengaluru Rural Central Town Police Station,4,Bengaluru Rural,Central,Town Police Station,13.065393,77.680095,89,11,802362099,ps94@ksp.gov.in
+PS0095,Bengaluru Rural South Traffic Police Station,4,Bengaluru Rural,South,Traffic Police Station,13.095225,77.405026,35,16,808558197,ps95@ksp.gov.in
+PS0096,Bengaluru Rural Central Cyber Crime Police Station,4,Bengaluru Rural,Central,Cyber Crime Police Station,13.142204,77.46759,107,25,808617381,ps96@ksp.gov.in
+PS0097,Bengaluru Rural North Town Police Station,4,Bengaluru Rural,North,Town Police Station,13.11907,77.480822,85,16,802925626,ps97@ksp.gov.in
+PS0098,Bengaluru Rural Central Traffic Police Station,4,Bengaluru Rural,Central,Traffic Police Station,13.284754,77.738365,71,5,802000560,ps98@ksp.gov.in
+PS0099,Bengaluru Rural South Women Police Station,4,Bengaluru Rural,South,Women Police Station,13.263718,77.704696,108,17,803086308,ps99@ksp.gov.in
+PS0100,Bengaluru Rural West Town Police Station,4,Bengaluru Rural,West,Town Police Station,13.147336,77.536003,104,19,809284509,ps100@ksp.gov.in
+PS0101,Bengaluru Rural West Police Station,4,Bengaluru Rural,West,Police Station,13.264915,77.730769,117,22,805200476,ps101@ksp.gov.in
+PS0102,Bengaluru Rural North Police Station,4,Bengaluru Rural,North,Police Station,13.11727,77.644719,40,24,805521644,ps102@ksp.gov.in
+PS0103,Bengaluru Rural Central Police Station,4,Bengaluru Rural,Central,Police Station,13.330944,77.445076,167,23,808419378,ps103@ksp.gov.in
+PS0104,Bengaluru Rural East Traffic Police Station,4,Bengaluru Rural,East,Traffic Police Station,13.424478,77.549354,160,5,808885465,ps104@ksp.gov.in
+PS0105,Bengaluru Rural East Cyber Crime Police Station,4,Bengaluru Rural,East,Cyber Crime Police Station,13.159023,77.643053,76,13,807906258,ps105@ksp.gov.in
+PS0106,Bengaluru Rural West Women Police Station,4,Bengaluru Rural,West,Women Police Station,13.290733,77.535181,175,4,808630712,ps106@ksp.gov.in
+PS0107,Bengaluru Rural North Women Police Station,4,Bengaluru Rural,North,Women Police Station,13.12666,77.421369,138,19,801019311,ps107@ksp.gov.in
+PS0108,Bengaluru Rural Central Cyber Crime Police Station,4,Bengaluru Rural,Central,Cyber Crime Police Station,13.190999,77.450033,127,22,809363326,ps108@ksp.gov.in
+PS0109,Bengaluru Rural West Police Station,4,Bengaluru Rural,West,Police Station,13.107123,77.594688,108,17,809132114,ps109@ksp.gov.in
+PS0110,Bengaluru Urban North Police Station,5,Bengaluru Urban,North,Police Station,13.160859,77.638149,96,25,803657144,ps110@ksp.gov.in
+PS0111,Bengaluru Urban East Rural Police Station,5,Bengaluru Urban,East,Rural Police Station,12.77707,77.557796,92,6,808741810,ps111@ksp.gov.in
+PS0112,Bengaluru Urban North Town Police Station,5,Bengaluru Urban,North,Town Police Station,13.104457,77.59395,109,19,805587308,ps112@ksp.gov.in
+PS0113,Bengaluru Urban West Cyber Crime Police Station,5,Bengaluru Urban,West,Cyber Crime Police Station,13.163698,77.492092,176,7,807435505,ps113@ksp.gov.in
+PS0114,Bengaluru Urban South Rural Police Station,5,Bengaluru Urban,South,Rural Police Station,12.974896,77.746331,52,11,807961578,ps114@ksp.gov.in
+PS0115,Bengaluru Urban East Rural Police Station,5,Bengaluru Urban,East,Rural Police Station,12.878469,77.395626,111,21,809214801,ps115@ksp.gov.in
+PS0116,Bengaluru Urban South Cyber Crime Police Station,5,Bengaluru Urban,South,Cyber Crime Police Station,12.987032,77.53265,176,20,807328534,ps116@ksp.gov.in
+PS0117,Bengaluru Urban West Women Police Station,5,Bengaluru Urban,West,Women Police Station,13.119441,77.78691,96,21,807425184,ps117@ksp.gov.in
+PS0118,Bengaluru Urban South Cyber Crime Police Station,5,Bengaluru Urban,South,Cyber Crime Police Station,12.789059,77.692482,132,15,803551903,ps118@ksp.gov.in
+PS0119,Bengaluru Urban West Police Station,5,Bengaluru Urban,West,Police Station,12.822099,77.780741,119,6,808387112,ps119@ksp.gov.in
+PS0120,Bengaluru Urban North Rural Police Station,5,Bengaluru Urban,North,Rural Police Station,13.135777,77.400739,71,16,803589751,ps120@ksp.gov.in
+PS0121,Bengaluru Urban North Cyber Crime Police Station,5,Bengaluru Urban,North,Cyber Crime Police Station,13.08421,77.500609,136,23,802347467,ps121@ksp.gov.in
+PS0122,Bengaluru Urban East Town Police Station,5,Bengaluru Urban,East,Town Police Station,13.115337,77.546604,116,23,809186400,ps122@ksp.gov.in
+PS0123,Bengaluru Urban Central Police Station,5,Bengaluru Urban,Central,Police Station,13.018584,77.488508,108,10,802516313,ps123@ksp.gov.in
+PS0124,Bengaluru Urban West Police Station,5,Bengaluru Urban,West,Police Station,13.075748,77.676156,60,17,803791137,ps124@ksp.gov.in
+PS0125,Bengaluru Urban East Police Station,5,Bengaluru Urban,East,Police Station,12.789996,77.713057,110,14,807288789,ps125@ksp.gov.in
+PS0126,Bengaluru Urban West Traffic Police Station,5,Bengaluru Urban,West,Traffic Police Station,12.869279,77.559421,81,8,803937176,ps126@ksp.gov.in
+PS0127,Bengaluru Urban North Rural Police Station,5,Bengaluru Urban,North,Rural Police Station,13.119936,77.642484,96,18,803401116,ps127@ksp.gov.in
+PS0128,Bengaluru Urban South Cyber Crime Police Station,5,Bengaluru Urban,South,Cyber Crime Police Station,13.026762,77.578428,37,17,805825658,ps128@ksp.gov.in
+PS0129,Bengaluru Urban Central Traffic Police Station,5,Bengaluru Urban,Central,Traffic Police Station,12.801145,77.772694,111,23,808118722,ps129@ksp.gov.in
+PS0130,Bengaluru Urban East Cyber Crime Police Station,5,Bengaluru Urban,East,Cyber Crime Police Station,13.109722,77.474287,133,18,802789344,ps130@ksp.gov.in
+PS0131,Bengaluru Urban South Cyber Crime Police Station,5,Bengaluru Urban,South,Cyber Crime Police Station,13.000369,77.624525,110,3,807640518,ps131@ksp.gov.in
+PS0132,Bengaluru Urban East Police Station,5,Bengaluru Urban,East,Police Station,12.997972,77.66892,47,22,809333700,ps132@ksp.gov.in
+PS0133,Bengaluru Urban East Traffic Police Station,5,Bengaluru Urban,East,Traffic Police Station,13.014426,77.535528,83,22,805204819,ps133@ksp.gov.in
+PS0134,Bengaluru Urban South Town Police Station,5,Bengaluru Urban,South,Town Police Station,12.810466,77.645583,45,12,808395785,ps134@ksp.gov.in
+PS0135,Bengaluru Urban North Rural Police Station,5,Bengaluru Urban,North,Rural Police Station,12.917544,77.447165,110,13,807970985,ps135@ksp.gov.in
+PS0136,Bengaluru Urban South Traffic Police Station,5,Bengaluru Urban,South,Traffic Police Station,12.824464,77.610363,128,19,809418719,ps136@ksp.gov.in
+PS0137,Bengaluru Urban East Traffic Police Station,5,Bengaluru Urban,East,Traffic Police Station,12.874388,77.724476,158,12,806682698,ps137@ksp.gov.in
+PS0138,Bengaluru Urban North Cyber Crime Police Station,5,Bengaluru Urban,North,Cyber Crime Police Station,13.156757,77.450903,92,24,807667458,ps138@ksp.gov.in
+PS0139,Bengaluru Urban Central Women Police Station,5,Bengaluru Urban,Central,Women Police Station,12.807721,77.55243,102,20,803073474,ps139@ksp.gov.in
+PS0140,Bengaluru Urban West Women Police Station,5,Bengaluru Urban,West,Women Police Station,13.040731,77.663536,132,23,807232293,ps140@ksp.gov.in
+PS0141,Bengaluru Urban North Town Police Station,5,Bengaluru Urban,North,Town Police Station,12.865129,77.40461,178,13,804713925,ps141@ksp.gov.in
+PS0142,Bengaluru Urban North Town Police Station,5,Bengaluru Urban,North,Town Police Station,13.101142,77.758355,112,23,807850067,ps142@ksp.gov.in
+PS0143,Bengaluru Urban North Traffic Police Station,5,Bengaluru Urban,North,Traffic Police Station,12.789739,77.409485,161,6,802630611,ps143@ksp.gov.in
+PS0144,Bengaluru Urban South Rural Police Station,5,Bengaluru Urban,South,Rural Police Station,12.825866,77.576058,173,16,803592464,ps144@ksp.gov.in
+PS0145,Bengaluru Urban West Town Police Station,5,Bengaluru Urban,West,Town Police Station,12.811209,77.590339,139,11,801548888,ps145@ksp.gov.in
+PS0146,Bengaluru Urban East Traffic Police Station,5,Bengaluru Urban,East,Traffic Police Station,12.948953,77.774822,127,6,807162857,ps146@ksp.gov.in
+PS0147,Bengaluru Urban Central Town Police Station,5,Bengaluru Urban,Central,Town Police Station,12.91507,77.553856,83,6,808628891,ps147@ksp.gov.in
+PS0148,Bengaluru Urban North Town Police Station,5,Bengaluru Urban,North,Town Police Station,12.856442,77.650397,40,4,806595355,ps148@ksp.gov.in
+PS0149,Bengaluru Urban South Traffic Police Station,5,Bengaluru Urban,South,Traffic Police Station,13.086391,77.476682,176,9,804623062,ps149@ksp.gov.in
+PS0150,Bengaluru Urban South Women Police Station,5,Bengaluru Urban,South,Women Police Station,13.081347,77.710058,35,11,803427461,ps150@ksp.gov.in
+PS0151,Bengaluru Urban South Rural Police Station,5,Bengaluru Urban,South,Rural Police Station,12.871862,77.464399,41,7,801249314,ps151@ksp.gov.in
+PS0152,Bengaluru Urban East Traffic Police Station,5,Bengaluru Urban,East,Traffic Police Station,13.007141,77.400912,102,4,803126655,ps152@ksp.gov.in
+PS0153,Bidar West Rural Police Station,6,Bidar,West,Rural Police Station,17.75586,77.345323,149,14,809610704,ps153@ksp.gov.in
+PS0154,Bidar Central Police Station,6,Bidar,Central,Police Station,17.891202,77.40852,46,24,809748499,ps154@ksp.gov.in
+PS0155,Bidar East Cyber Crime Police Station,6,Bidar,East,Cyber Crime Police Station,17.967736,77.33236,157,15,808151684,ps155@ksp.gov.in
+PS0156,Bidar North Cyber Crime Police Station,6,Bidar,North,Cyber Crime Police Station,17.995361,77.497325,55,13,803488628,ps156@ksp.gov.in
+PS0157,Bidar North Traffic Police Station,6,Bidar,North,Traffic Police Station,17.820406,77.573131,175,25,806455706,ps157@ksp.gov.in
+PS0158,Bidar West Rural Police Station,6,Bidar,West,Rural Police Station,17.922623,77.501386,145,6,802919549,ps158@ksp.gov.in
+PS0159,Bidar Central Town Police Station,6,Bidar,Central,Town Police Station,18.056597,77.491928,93,16,806686328,ps159@ksp.gov.in
+PS0160,Bidar West Cyber Crime Police Station,6,Bidar,West,Cyber Crime Police Station,17.876796,77.357934,144,13,805276341,ps160@ksp.gov.in
+PS0161,Bidar East Traffic Police Station,6,Bidar,East,Traffic Police Station,17.985128,77.509607,58,5,802564141,ps161@ksp.gov.in
+PS0162,Bidar West Police Station,6,Bidar,West,Police Station,18.008236,77.468959,68,20,802006313,ps162@ksp.gov.in
+PS0163,Bidar Central Rural Police Station,6,Bidar,Central,Rural Police Station,17.935073,77.587905,140,14,808095702,ps163@ksp.gov.in
+PS0164,Bidar North Women Police Station,6,Bidar,North,Women Police Station,17.950564,77.460558,164,9,803595941,ps164@ksp.gov.in
+PS0165,Bidar West Traffic Police Station,6,Bidar,West,Traffic Police Station,18.04931,77.459946,177,14,802927455,ps165@ksp.gov.in
+PS0166,Bidar East Rural Police Station,6,Bidar,East,Rural Police Station,17.800864,77.491545,178,22,801440466,ps166@ksp.gov.in
+PS0167,Bidar Central Town Police Station,6,Bidar,Central,Town Police Station,18.042184,77.426879,81,11,806183902,ps167@ksp.gov.in
+PS0168,Bidar East Women Police Station,6,Bidar,East,Women Police Station,17.712842,77.667845,179,24,807724045,ps168@ksp.gov.in
+PS0169,Bidar North Traffic Police Station,6,Bidar,North,Traffic Police Station,18.006788,77.708624,58,19,804609330,ps169@ksp.gov.in
+PS0170,Bidar West Cyber Crime Police Station,6,Bidar,West,Cyber Crime Police Station,17.891858,77.382864,114,13,802425342,ps170@ksp.gov.in
+PS0171,Bidar North Traffic Police Station,6,Bidar,North,Traffic Police Station,17.773364,77.567035,55,11,808434202,ps171@ksp.gov.in
+PS0172,Bidar West Cyber Crime Police Station,6,Bidar,West,Cyber Crime Police Station,17.95323,77.485573,90,19,802909540,ps172@ksp.gov.in
+PS0173,Bidar East Cyber Crime Police Station,6,Bidar,East,Cyber Crime Police Station,17.754756,77.591187,159,19,806174418,ps173@ksp.gov.in
+PS0174,Bidar North Traffic Police Station,6,Bidar,North,Traffic Police Station,17.868505,77.55963,36,9,806056977,ps174@ksp.gov.in
+PS0175,Bidar South Traffic Police Station,6,Bidar,South,Traffic Police Station,18.016064,77.435679,65,3,809344741,ps175@ksp.gov.in
+PS0176,Bidar West Traffic Police Station,6,Bidar,West,Traffic Police Station,17.762074,77.532933,93,19,806941939,ps176@ksp.gov.in
+PS0177,Bidar North Cyber Crime Police Station,6,Bidar,North,Cyber Crime Police Station,18.055106,77.336821,39,17,802306317,ps177@ksp.gov.in
+PS0178,Bidar East Rural Police Station,6,Bidar,East,Rural Police Station,17.882114,77.481669,141,12,802932288,ps178@ksp.gov.in
+PS0179,Bidar West Police Station,6,Bidar,West,Police Station,18.09688,77.388649,152,25,807070880,ps179@ksp.gov.in
+PS0180,Bidar North Cyber Crime Police Station,6,Bidar,North,Cyber Crime Police Station,18.048194,77.417227,137,19,802319479,ps180@ksp.gov.in
+PS0181,Bidar West Women Police Station,6,Bidar,West,Women Police Station,18.008722,77.408529,78,5,809564488,ps181@ksp.gov.in
+PS0182,Bidar North Rural Police Station,6,Bidar,North,Rural Police Station,17.914381,77.682269,124,14,803477824,ps182@ksp.gov.in
+PS0183,Bidar South Police Station,6,Bidar,South,Police Station,17.768978,77.398809,74,23,802264218,ps183@ksp.gov.in
+PS0184,Bidar South Town Police Station,6,Bidar,South,Town Police Station,17.908047,77.621678,149,24,806422534,ps184@ksp.gov.in
+PS0185,Bidar East Traffic Police Station,6,Bidar,East,Traffic Police Station,17.886305,77.507468,112,11,801942411,ps185@ksp.gov.in
+PS0186,Bidar East Rural Police Station,6,Bidar,East,Rural Police Station,17.740076,77.504597,44,4,807186390,ps186@ksp.gov.in
+PS0187,Bidar East Police Station,6,Bidar,East,Police Station,17.968267,77.710847,58,22,809507186,ps187@ksp.gov.in
+PS0188,Bidar West Cyber Crime Police Station,6,Bidar,West,Cyber Crime Police Station,17.942532,77.701593,45,17,804158134,ps188@ksp.gov.in
+PS0189,Bidar East Rural Police Station,6,Bidar,East,Rural Police Station,17.900652,77.380244,50,17,802736473,ps189@ksp.gov.in
+PS0190,Bidar East Town Police Station,6,Bidar,East,Town Police Station,17.744132,77.578351,45,10,808344365,ps190@ksp.gov.in
+PS0191,Bidar West Rural Police Station,6,Bidar,West,Rural Police Station,17.919499,77.383398,130,12,807499771,ps191@ksp.gov.in
+PS0192,Bidar West Women Police Station,6,Bidar,West,Women Police Station,17.981959,77.340846,120,5,806531293,ps192@ksp.gov.in
+PS0193,Chamarajanagar North Rural Police Station,7,Chamarajanagar,North,Rural Police Station,11.997452,76.857359,73,13,802367376,ps193@ksp.gov.in
+PS0194,Chamarajanagar Central Town Police Station,7,Chamarajanagar,Central,Town Police Station,11.782671,76.883628,135,7,802421349,ps194@ksp.gov.in
+PS0195,Chamarajanagar East Rural Police Station,7,Chamarajanagar,East,Rural Police Station,11.876772,77.060365,67,24,809831414,ps195@ksp.gov.in
+PS0196,Chamarajanagar North Town Police Station,7,Chamarajanagar,North,Town Police Station,11.994282,76.947095,39,14,806181912,ps196@ksp.gov.in
+PS0197,Chamarajanagar South Traffic Police Station,7,Chamarajanagar,South,Traffic Police Station,11.862793,77.050162,84,10,803307963,ps197@ksp.gov.in
+PS0198,Chamarajanagar South Police Station,7,Chamarajanagar,South,Police Station,11.844417,77.058948,164,20,809833734,ps198@ksp.gov.in
+PS0199,Chamarajanagar North Town Police Station,7,Chamarajanagar,North,Town Police Station,11.860806,77.050223,68,22,807320310,ps199@ksp.gov.in
+PS0200,Chamarajanagar South Traffic Police Station,7,Chamarajanagar,South,Traffic Police Station,11.798438,77.020838,77,17,801733037,ps200@ksp.gov.in
+PS0201,Chamarajanagar West Women Police Station,7,Chamarajanagar,West,Women Police Station,11.996645,76.838712,148,22,805780297,ps201@ksp.gov.in
+PS0202,Chamarajanagar West Traffic Police Station,7,Chamarajanagar,West,Traffic Police Station,11.939704,76.867487,155,9,807171347,ps202@ksp.gov.in
+PS0203,Chamarajanagar Central Cyber Crime Police Station,7,Chamarajanagar,Central,Cyber Crime Police Station,11.910772,76.856409,132,19,809849306,ps203@ksp.gov.in
+PS0204,Chamarajanagar West Traffic Police Station,7,Chamarajanagar,West,Traffic Police Station,12.052856,77.064204,70,11,801875431,ps204@ksp.gov.in
+PS0205,Chamarajanagar West Women Police Station,7,Chamarajanagar,West,Women Police Station,11.947916,76.784736,167,6,805782563,ps205@ksp.gov.in
+PS0206,Chamarajanagar North Traffic Police Station,7,Chamarajanagar,North,Traffic Police Station,11.835217,77.105822,72,16,802538698,ps206@ksp.gov.in
+PS0207,Chamarajanagar South Cyber Crime Police Station,7,Chamarajanagar,South,Cyber Crime Police Station,12.079952,77.115889,141,4,807651393,ps207@ksp.gov.in
+PS0208,Chamarajanagar Central Women Police Station,7,Chamarajanagar,Central,Women Police Station,11.820411,77.14151,130,10,801472908,ps208@ksp.gov.in
+PS0209,Chamarajanagar East Police Station,7,Chamarajanagar,East,Police Station,12.061771,77.003684,72,7,801642620,ps209@ksp.gov.in
+PS0210,Chamarajanagar East Cyber Crime Police Station,7,Chamarajanagar,East,Cyber Crime Police Station,12.004529,76.799217,155,17,801088100,ps210@ksp.gov.in
+PS0211,Chamarajanagar North Police Station,7,Chamarajanagar,North,Police Station,11.82847,77.077685,175,22,809854536,ps211@ksp.gov.in
+PS0212,Chamarajanagar West Police Station,7,Chamarajanagar,West,Police Station,12.036569,76.838756,66,4,805000351,ps212@ksp.gov.in
+PS0213,Chamarajanagar West Town Police Station,7,Chamarajanagar,West,Town Police Station,12.04366,76.926545,63,18,809993490,ps213@ksp.gov.in
+PS0214,Chamarajanagar North Town Police Station,7,Chamarajanagar,North,Town Police Station,11.93225,76.840475,71,12,808201433,ps214@ksp.gov.in
+PS0215,Chamarajanagar North Rural Police Station,7,Chamarajanagar,North,Rural Police Station,11.867226,76.971965,82,24,802436363,ps215@ksp.gov.in
+PS0216,Chamarajanagar Central Women Police Station,7,Chamarajanagar,Central,Women Police Station,11.753172,76.954124,164,19,801341153,ps216@ksp.gov.in
+PS0217,Chamarajanagar West Cyber Crime Police Station,7,Chamarajanagar,West,Cyber Crime Police Station,11.743514,76.898453,130,11,801272499,ps217@ksp.gov.in
+PS0218,Chamarajanagar East Police Station,7,Chamarajanagar,East,Police Station,11.864021,77.036876,61,21,806578736,ps218@ksp.gov.in
+PS0219,Chamarajanagar South Police Station,7,Chamarajanagar,South,Police Station,11.86702,76.879119,79,24,808795078,ps219@ksp.gov.in
+PS0220,Chamarajanagar West Town Police Station,7,Chamarajanagar,West,Town Police Station,11.799011,76.797641,152,4,805923149,ps220@ksp.gov.in
+PS0221,Chamarajanagar South Police Station,7,Chamarajanagar,South,Police Station,12.042544,77.098016,115,12,809646701,ps221@ksp.gov.in
+PS0222,Chamarajanagar West Rural Police Station,7,Chamarajanagar,West,Rural Police Station,11.91546,76.758348,83,12,806989032,ps222@ksp.gov.in
+PS0223,Chamarajanagar North Town Police Station,7,Chamarajanagar,North,Town Police Station,11.85887,76.79349,129,16,807711251,ps223@ksp.gov.in
+PS0224,Chamarajanagar West Cyber Crime Police Station,7,Chamarajanagar,West,Cyber Crime Police Station,11.861715,76.818427,162,14,809712003,ps224@ksp.gov.in
+PS0225,Chamarajanagar East Police Station,7,Chamarajanagar,East,Police Station,12.016933,76.775271,81,20,805928582,ps225@ksp.gov.in
+PS0226,Chamarajanagar East Police Station,7,Chamarajanagar,East,Police Station,11.758128,77.008068,113,17,808149041,ps226@ksp.gov.in
+PS0227,Chamarajanagar South Town Police Station,7,Chamarajanagar,South,Town Police Station,11.903663,76.922552,125,22,808297090,ps227@ksp.gov.in
+PS0228,Chamarajanagar East Town Police Station,7,Chamarajanagar,East,Town Police Station,12.118111,77.122862,54,24,807815076,ps228@ksp.gov.in
+PS0229,Chamarajanagar East Rural Police Station,7,Chamarajanagar,East,Rural Police Station,12.046538,77.015464,42,7,808351320,ps229@ksp.gov.in
+PS0230,Chamarajanagar North Traffic Police Station,7,Chamarajanagar,North,Traffic Police Station,11.752993,77.055106,128,14,807423230,ps230@ksp.gov.in
+PS0231,Chamarajanagar Central Police Station,7,Chamarajanagar,Central,Police Station,11.968138,77.015325,129,14,808448065,ps231@ksp.gov.in
+PS0232,Chamarajanagar North Rural Police Station,7,Chamarajanagar,North,Rural Police Station,11.781178,76.89048,115,23,805675638,ps232@ksp.gov.in
+PS0233,Chamarajanagar South Police Station,7,Chamarajanagar,South,Police Station,11.736465,76.818119,167,15,802975701,ps233@ksp.gov.in
+PS0234,Chamarajanagar East Women Police Station,7,Chamarajanagar,East,Women Police Station,12.007715,76.829528,108,25,809240971,ps234@ksp.gov.in
+PS0235,Chikkaballapura South Police Station,8,Chikkaballapura,South,Police Station,13.289791,77.557521,79,25,808467726,ps235@ksp.gov.in
+PS0236,Chikkaballapura North Town Police Station,8,Chikkaballapura,North,Town Police Station,13.622524,77.92253,123,25,802089496,ps236@ksp.gov.in
+PS0237,Chikkaballapura Central Rural Police Station,8,Chikkaballapura,Central,Rural Police Station,13.351645,77.647883,75,25,803920762,ps237@ksp.gov.in
+PS0238,Chikkaballapura East Rural Police Station,8,Chikkaballapura,East,Rural Police Station,13.325197,77.921953,70,10,809288312,ps238@ksp.gov.in
+PS0239,Chikkaballapura North Women Police Station,8,Chikkaballapura,North,Women Police Station,13.457109,77.675464,176,7,802446455,ps239@ksp.gov.in
+PS0240,Chikkaballapura North Women Police Station,8,Chikkaballapura,North,Women Police Station,13.394764,77.814673,157,19,807891998,ps240@ksp.gov.in
+PS0241,Chikkaballapura West Rural Police Station,8,Chikkaballapura,West,Rural Police Station,13.265,77.916852,53,17,808815384,ps241@ksp.gov.in
+PS0242,Chikkaballapura Central Women Police Station,8,Chikkaballapura,Central,Women Police Station,13.286834,77.859521,176,23,804052834,ps242@ksp.gov.in
+PS0243,Chikkaballapura South Cyber Crime Police Station,8,Chikkaballapura,South,Cyber Crime Police Station,13.436646,77.875185,66,19,803567173,ps243@ksp.gov.in
+PS0244,Chikkaballapura East Traffic Police Station,8,Chikkaballapura,East,Traffic Police Station,13.300287,77.901795,92,14,809705660,ps244@ksp.gov.in
+PS0245,Chikkaballapura East Police Station,8,Chikkaballapura,East,Police Station,13.335742,77.781923,176,11,803100009,ps245@ksp.gov.in
+PS0246,Chikkaballapura East Rural Police Station,8,Chikkaballapura,East,Rural Police Station,13.448891,77.728929,78,21,803586950,ps246@ksp.gov.in
+PS0247,Chikkaballapura South Town Police Station,8,Chikkaballapura,South,Town Police Station,13.485292,77.8887,121,21,801691125,ps247@ksp.gov.in
+PS0248,Chikkaballapura North Police Station,8,Chikkaballapura,North,Police Station,13.253685,77.784481,102,23,804536777,ps248@ksp.gov.in
+PS0249,Chikkaballapura Central Cyber Crime Police Station,8,Chikkaballapura,Central,Cyber Crime Police Station,13.482743,77.540014,174,12,806068298,ps249@ksp.gov.in
+PS0250,Chikkaballapura West Traffic Police Station,8,Chikkaballapura,West,Traffic Police Station,13.557375,77.801896,111,17,802224284,ps250@ksp.gov.in
