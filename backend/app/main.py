@@ -29,6 +29,7 @@ from app.core.exceptions import (
     ResourceNotFoundError,
 )
 from app.api.dashboard import router as dashboard_router
+from app.api.districts import router as districts_router
 from app.api.field_map import router as field_map_router
 from app.api.intelligence_map import router as intelligence_map_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
@@ -131,5 +132,6 @@ async def health():
 # ---------------------------------------------------------------------------
 
 app.include_router(dashboard_router, prefix=settings.API_PREFIX)
+app.include_router(districts_router, prefix=settings.API_PREFIX)
 app.include_router(field_map_router, prefix=settings.API_PREFIX)
 app.include_router(intelligence_map_router, prefix=settings.API_PREFIX)
