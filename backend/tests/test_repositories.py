@@ -193,6 +193,15 @@ class TestCSVFIRRepository:
     def test_get_by_id_missing(self, fir_repo: CSVFIRRepository) -> None:
         assert fir_repo.get_by_id("FIR999999999") is None
 
+    def test_get_by_number(self, fir_repo: CSVFIRRepository) -> None:
+        f = fir_repo.list_all()[0]
+        result = fir_repo.get_by_number(f.fir_number)
+        assert result is not None
+        assert result.fir_number == f.fir_number
+
+    def test_get_by_number_missing(self, fir_repo: CSVFIRRepository) -> None:
+        assert fir_repo.get_by_number("NONEXISTENT/0000/0000") is None
+
     def test_accused_ids_are_tuples(self, fir_repo: CSVFIRRepository) -> None:
         for f in fir_repo.list_all():
             assert isinstance(f.accused_ids, tuple)

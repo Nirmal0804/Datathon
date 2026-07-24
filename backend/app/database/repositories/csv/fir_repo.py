@@ -14,6 +14,7 @@ class CSVFIRRepository:
     def __init__(self, rows: list[dict[str, str]]) -> None:
         self._rows = rows
         self._by_id: dict[str, FIRRecord] = {}
+        self._by_number: dict[str, FIRRecord] = {}
         self._by_station: dict[str, list[FIRRecord]] = {}
         self._by_district: dict[str, list[FIRRecord]] = {}
         self._by_status: dict[str, list[FIRRecord]] = {}
@@ -23,6 +24,7 @@ class CSVFIRRepository:
         for row in self._rows:
             record = self._row_to_record(row)
             self._by_id[record.fir_id] = record
+            self._by_number[record.fir_number] = record
             self._by_station.setdefault(record.station_id, []).append(record)
             self._by_district.setdefault(record.district, []).append(record)
             self._by_status.setdefault(record.status, []).append(record)
@@ -55,6 +57,9 @@ class CSVFIRRepository:
 
     def get_by_id(self, fir_id: str) -> Optional[FIRRecord]:
         return self._by_id.get(fir_id)
+
+    def get_by_number(self, fir_number: str) -> Optional[FIRRecord]:
+        return self._by_number.get(fir_number)
 
     def list_by_station(self, station_id: str) -> List[FIRRecord]:
         return list(self._by_station.get(station_id, []))
