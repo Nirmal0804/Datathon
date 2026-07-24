@@ -213,7 +213,7 @@ individual accused persons.
 **Candidate PKs:** `Arrest_ID`.
 **Recommended PK:** `Arrest_ID`.
 
-**Cardinality:** Exactly 1 arrest per FIR (min=1, max=1, avg=1.0).
+**Cardinality:** Each FIR has at most 1 arrest record (1:0..1).
 2,540 arrests reference 2,540 of the 5,000 FIRs (50.8%).
 
 **FK integrity:**
@@ -249,8 +249,8 @@ individual accused persons.
 **Candidate PKs:** `ChargeSheet_ID`, `FIR_ID` (both unique).
 **Recommended PK:** `ChargeSheet_ID`. `FIR_ID` is a candidate unique key (1:1).
 
-**Cardinality:** Exactly 1 chargesheet per FIR (min=1, max=1, avg=1.0).
-All 2,469 chargesheeted FIRs have exactly one chargesheet.
+**Cardinality:** Each FIR has at most 1 chargesheet (1:0..1).
+2,469 chargesheets reference 2,469 of the 5,000 FIRs (49.4%). All 2,469 chargesheeted FIRs have exactly one chargesheet.
 
 **FK integrity:**
 - `FIR_ID` → `firs.FIR_ID`: 0 orphans.
@@ -306,10 +306,10 @@ stations (1) ───────< (N) firs
               (people)    (people)  (people)
                     │
                     │
-firs (1) ─────────< (N) arrests (1:1 per FIR)
+firs (1) ─────────< (0..1) arrests (at most 1 per FIR)
                     │
                     │
-firs (1) ─────────< (1) chargesheets (exact 1:1)
+firs (1) ─────────< (0..1) chargesheets (at most 1 per FIR)
                               │
                               v
                         Accused (people)
@@ -324,8 +324,8 @@ firs (1) ─────────< (1) chargesheets (exact 1:1)
 | people | firs | `firs.Complainant_ID` | 1:N | 0 |
 | people | firs | `firs.Victim_ID` | 1:N | 0 |
 | people | firs | `firs.Accused_ID` (may be CSV) | 1:N | 0 |
-| firs | arrests | `arrests.FIR_ID` | 1:1 | 0 |
-| firs | chargesheets | `chargesheets.FIR_ID` | 1:1 | 0 |
+| firs | arrests | `arrests.FIR_ID` | 1:0..1 | 0 |
+| firs | chargesheets | `chargesheets.FIR_ID` | 1:0..1 | 0 |
 | people | arrests | `arrests.Person_ID` | 1:N | 0 |
 | people | chargesheets | `chargesheets.Accused_ID` | 1:N | 0 |
 | stations | people | `people.Station_ID` | 1:N | 0 |

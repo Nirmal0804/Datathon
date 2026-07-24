@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
+
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 
 class Settings(BaseSettings):
@@ -14,6 +21,8 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://localhost:3000",
     ]
+
+    DATA_DIR: str = str(_PROJECT_ROOT / "data" / "schema_reference")
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
