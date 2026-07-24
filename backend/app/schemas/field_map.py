@@ -9,7 +9,7 @@ coordinates for map marker rendering.  No person-level PII is included.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -113,4 +113,39 @@ class FieldMapFiltersResponse(BaseModel):
     )
     statuses: List[str] = Field(
         ..., description="Distinct FIR statuses (sorted)"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Hotspots (shared between field and intelligence endpoints)
+# ---------------------------------------------------------------------------
+
+
+class FieldMapHotspotCell(BaseModel):
+    """Single qualifying grid-cell hotspot for field officer view."""
+
+    hotspot_id: str = Field(
+        ..., description="Deterministic identifier for the grid cell"
+    )
+    center_latitude: float = Field(..., description="Grid cell center latitude")
+    center_longitude: float = Field(
+        ..., description="Grid cell center longitude"
+    )
+    fir_count: int = Field(..., description="Number of FIRs in this cell")
+    dominant_crime_type: Optional[str] = Field(
+        None, description="Most common Crime_Head in this cell"
+    )
+    districts: List[str] = Field(
+        ..., description="Distinct districts represented in this cell"
+    )
+
+
+class FieldMapHotspotResponse(BaseModel):
+    """Response for GET /api/v1/map/field/hotspots."""
+
+    hotspots: List[FieldMapHotspotCell] = Field(
+        ..., description="Qualifying hotspot grid cells"
+    )
+    total_hotspots: int = Field(
+        ..., description="Number of qualifying hotspot cells"
     )

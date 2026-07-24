@@ -372,6 +372,98 @@ class TestFieldMapAPIUnit:
         finally:
             app.dependency_overrides.clear()
 
+    # --- Hotspots ---
+
+    def test_hotspots_returns_200(self):
+        repos = _build_fake_repos(
+            firs=[_make_fir()],
+        )
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get("/api/v1/map/field/hotspots")
+            assert resp.status_code == 200
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_hotspots_response_schema(self):
+        repos = _build_fake_repos(
+            firs=[_make_fir()],
+        )
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get("/api/v1/map/field/hotspots")
+            data = resp.json()
+            assert "hotspots" in data
+            assert "total_hotspots" in data
+            assert isinstance(data["hotspots"], list)
+            assert isinstance(data["total_hotspots"], int)
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_hotspots_empty_data(self):
+        repos = _build_fake_repos(firs=[])
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get("/api/v1/map/field/hotspots")
+            data = resp.json()
+            assert data["hotspots"] == []
+            assert data["total_hotspots"] == 0
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_hotspots_with_qualifying_data(self):
+        repos = _build_fake_repos(
+            firs=[
+                _make_fir(fir_id=f"F{i}", lat=12.97, lon=77.59)
+                for i in range(5)
+            ],
+        )
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get("/api/v1/map/field/hotspots")
+            data = resp.json()
+            assert data["total_hotspots"] >= 1
+            assert data["hotspots"][0]["fir_count"] >= 3
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_hotspots_with_district_filter(self):
+        repos = _build_fake_repos(
+            firs=[
+                _make_fir(fir_id=f"F{i}", lat=12.97, lon=77.59, district="A")
+                for i in range(5)
+            ],
+        )
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get(
+                "/api/v1/map/field/hotspots",
+                params={"district": "A"},
+            )
+            assert resp.status_code == 200
+            assert resp.json()["total_hotspots"] == 1
+        finally:
+            app.dependency_overrides.clear()
+
+    def test_hotspots_invalid_dates_returns_400(self):
+        repos = _build_fake_repos(firs=[_make_fir()])
+        app.dependency_overrides[get_repositories] = lambda: repos
+        try:
+            client = TestClient(app)
+            resp = client.get(
+                "/api/v1/map/field/hotspots",
+                params={"start_date": "2025-12-31", "end_date": "2025-01-01"},
+            )
+            assert resp.status_code == 400
+            assert resp.json()["error"]["code"] == "INVALID_FILTER"
+        finally:
+            app.dependency_overrides.clear()
+
     # --- Existing endpoints still work ---
 
     def test_health_still_works(self):

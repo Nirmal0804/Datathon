@@ -16,6 +16,7 @@ from app.schemas.field_map import (
     FieldMapCaseDetail,
     FieldMapCaseListResponse,
     FieldMapFiltersResponse,
+    FieldMapHotspotResponse,
 )
 from app.services.field_map_service import FieldMapService
 
@@ -121,3 +122,40 @@ async def get_field_filters(
 ) -> FieldMapFiltersResponse:
     result = service.get_filters()
     return FieldMapFiltersResponse(**result)
+
+
+# ---------------------------------------------------------------------------
+# GET /map/field/hotspots
+# ---------------------------------------------------------------------------
+
+
+@router.get(
+    "/hotspots",
+    response_model=FieldMapHotspotResponse,
+    summary="Grid-based crime hotspots for field officers",
+    description="Returns deterministic grid-cell hotspots (FIR count >= 3) "
+    "for the filtered FIR scope. Shared hotspot definition with "
+    "intelligence map.",
+)
+async def get_field_hotspots(
+    district: Optional[str] = Query(None, description="Filter by district name"),
+    station_id: Optional[str] = Query(None, description="Filter by station ID"),
+    crime_head: Optional[str] = Query(None, description="Filter by crime category"),
+    status: Optional[str] = Query(None, description="Filter by case status"),
+    start_date: Optional[date] = Query(
+        None, description="Inclusive start date (YYYY-MM-DD)"
+    ),
+    end_date: Optional[date] = Query(
+        None, description="Inclusive end date (YYYY-MM-DD)"
+    ),
+    service: FieldMapService = Depends(_get_field_map_service),
+) -> FieldMapHotspotResponse:
+    result = service.get_hotspots(
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return FieldMapHotspotResponse(**result)

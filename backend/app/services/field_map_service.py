@@ -1,8 +1,8 @@
 """Field Officer Crime Map service.
 
 Owns all field map business logic: filtering, search, station-name
-resolution, pagination, and filter metadata.  Depends on repository
-Protocol types — not concrete CSV implementations.
+resolution, pagination, filter metadata, and hotspots.  Depends on
+repository Protocol types — not concrete CSV implementations.
 
 No FastAPI Request/Response objects.  No direct file access.  No
 frontend-specific logic.
@@ -11,11 +11,13 @@ frontend-specific logic.
 from __future__ import annotations
 
 import math
+from collections import Counter
 from datetime import date
 from typing import List, Optional, Protocol, runtime_checkable
 
 from app.core.exceptions import InvalidFilterError, ResourceNotFoundError
 from app.database.records import FIRRecord, StationRecord
+from app.utils.filters import dominant_crime_head, filter_firs, validate_date_range
 
 
 # ---------------------------------------------------------------------------
@@ -55,6 +57,13 @@ class StationListReader(Protocol):
 # ---------------------------------------------------------------------------
 
 _SEARCH_FIELDS = ("fir_id", "fir_number", "crime_head", "crime_subhead")
+
+# ---------------------------------------------------------------------------
+# Hotspot grid constants
+# ---------------------------------------------------------------------------
+
+_GRID_SIZE = 0.01
+_HOTSPOT_THRESHOLD = 3
 
 
 # ---------------------------------------------------------------------------
@@ -102,14 +111,28 @@ class FieldMapService:
         InvalidFilterError
             If ``start_date`` is after ``end_date``.
         """
-        if start_date is not None and end_date is not None:
-            if start_date > end_date:
-                raise InvalidFilterError(
-                    "start_date must not be after end_date"
-                )
+        validate_date_range(start_date, end_date)
 
-        firs = self._filter_firs(district, station_id, crime_head, status,
-                                 start_date, end_date, search)
+        firs = filter_firs(
+            self._firs.list_all(),
+            district=district,
+            station_id=station_id,
+            crime_head=crime_head,
+            status=status,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        if search is not None:
+            term = search.lower().strip()
+            if term:
+                firs = [
+                    f for f in firs
+                    if any(
+                        term in getattr(f, field).lower()
+                        for field in _SEARCH_FIELDS
+                    )
+                ]
 
         total = len(firs)
         total_pages = max(1, math.ceil(total / page_size))
@@ -148,6 +171,37 @@ class FieldMapService:
         return self._fir_to_detail(fir)
 
     # ------------------------------------------------------------------
+    # Hotspots
+    # ------------------------------------------------------------------
+
+    def get_hotspots(
+        self,
+        district: str | None = None,
+        station_id: str | None = None,
+        crime_head: str | None = None,
+        status: str | None = None,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> dict:
+        """Return grid-based hotspots for the filtered FIR scope.
+
+        Uses the same shared hotspot definition as IntelligenceMapService.
+        """
+        validate_date_range(start_date, end_date)
+
+        firs = filter_firs(
+            self._firs.list_all(),
+            district=district,
+            station_id=station_id,
+            crime_head=crime_head,
+            status=status,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        return compute_hotspots(firs)
+
+    # ------------------------------------------------------------------
     # Filter metadata
     # ------------------------------------------------------------------
 
@@ -176,50 +230,6 @@ class FieldMapService:
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
-
-    def _filter_firs(
-        self,
-        district: str | None,
-        station_id: str | None,
-        crime_head: str | None,
-        status: str | None,
-        start_date: date | None,
-        end_date: date | None,
-        search: str | None,
-    ) -> list[FIRRecord]:
-        """Return the subset of FIRs matching all provided filters."""
-        firs = self._firs.list_all()
-
-        if district is not None:
-            firs = [f for f in firs if f.district == district]
-
-        if station_id is not None:
-            firs = [f for f in firs if f.station_id == station_id]
-
-        if crime_head is not None:
-            firs = [f for f in firs if f.crime_head == crime_head]
-
-        if status is not None:
-            firs = [f for f in firs if f.status == status]
-
-        if start_date is not None:
-            firs = [f for f in firs if f.incident_date.date() >= start_date]
-
-        if end_date is not None:
-            firs = [f for f in firs if f.incident_date.date() <= end_date]
-
-        if search is not None:
-            term = search.lower().strip()
-            if term:
-                firs = [
-                    f for f in firs
-                    if any(
-                        term in getattr(f, field).lower()
-                        for field in _SEARCH_FIELDS
-                    )
-                ]
-
-        return firs
 
     def _resolve_station_name(self, station_id: str) -> str:
         """Look up the station name from the station repository."""
@@ -261,3 +271,63 @@ class FieldMapService:
             "fir_date": fir.fir_date,
             "investigating_officer": fir.investigating_officer,
         }
+
+
+# ---------------------------------------------------------------------------
+# Shared hotspot computation (used by both Field and Intelligence services)
+# ---------------------------------------------------------------------------
+
+
+def _grid_key(lat: float, lon: float) -> tuple[float, float]:
+    """Return deterministic grid-cell origin for the given coordinates."""
+    return (
+        math.floor(lat / _GRID_SIZE) * _GRID_SIZE,
+        math.floor(lon / _GRID_SIZE) * _GRID_SIZE,
+    )
+
+
+def _hotspot_id(grid_lat: float, grid_lon: float) -> str:
+    """Deterministic hotspot ID for a grid cell."""
+    return f"HS-{grid_lat:.2f}-{grid_lon:.2f}"
+
+
+def compute_hotspots(firs: list[FIRRecord]) -> dict:
+    """Compute grid-based hotspots from a list of FIRs.
+
+    Shared implementation used by both FieldMapService.get_hotspots and
+    IntelligenceMapService.get_hotspots to ensure consistency.
+    """
+    if not firs:
+        return {"hotspots": [], "total_hotspots": 0}
+
+    cells: dict[tuple[float, float], list[FIRRecord]] = {}
+    for fir in firs:
+        key = _grid_key(fir.latitude, fir.longitude)
+        cells.setdefault(key, []).append(fir)
+
+    hotspots = []
+    for (glat, glon), cell_firs in cells.items():
+        if len(cell_firs) < _HOTSPOT_THRESHOLD:
+            continue
+
+        crime_counter = Counter(f.crime_head for f in cell_firs)
+        dominant = dominant_crime_head(crime_counter)
+        districts = sorted({f.district for f in cell_firs})
+        center_lat = glat + _GRID_SIZE / 2
+        center_lon = glon + _GRID_SIZE / 2
+
+        hotspots.append({
+            "hotspot_id": _hotspot_id(glat, glon),
+            "center_latitude": round(center_lat, 6),
+            "center_longitude": round(center_lon, 6),
+            "fir_count": len(cell_firs),
+            "dominant_crime_type": dominant,
+            "districts": districts,
+        })
+
+    hotspots.sort(
+        key=lambda h: (-h["fir_count"], h["center_latitude"],
+                       h["center_longitude"])
+    )
+
+    return {"hotspots": hotspots, "total_hotspots": len(hotspots)}
