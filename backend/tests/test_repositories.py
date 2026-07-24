@@ -288,6 +288,62 @@ class TestCSVArrestRepository:
         # Verify 1:1 cardinality — each FIR key maps to exactly one arrest
         assert len(arrest_repo._by_fir) == 2540
 
+    def test_list_all_arrests_returns_all_records(self, arrest_repo: CSVArrestRepository) -> None:
+        all_arrests = arrest_repo.list_all_arrests()
+        assert len(all_arrests) == 2540
+
+    def test_list_all_arrests_survives_duplicate_fir_id(self) -> None:
+        """Regression: two arrests with same FIR_ID must both be returned."""
+        rows = [
+            {
+                "Arrest_ID": "ARR001",
+                "FIR_ID": "FIR001",
+                "Person_ID": "P001",
+                "Accused_Name": "Person A",
+                "Gender": "Male",
+                "Age": "30",
+                "District": "Bengaluru Urban",
+                "Station_ID": "PS0001",
+                "Arrest_Date": "2025-06-20 10:00",
+                "Arrest_Location": "Residence",
+                "Arresting_Officer": "IO1",
+                "Custody_Type": "Police Custody",
+                "Bail_Status": "Pending",
+                "Recovery_Item": "None",
+                "Recovery_Value": "0",
+                "Medical_Examination": "No",
+                "Fingerprint_Taken": "No",
+                "DNA_Sample": "No",
+                "Photograph_Taken": "No",
+            },
+            {
+                "Arrest_ID": "ARR002",
+                "FIR_ID": "FIR001",
+                "Person_ID": "P002",
+                "Accused_Name": "Person B",
+                "Gender": "Female",
+                "Age": "25",
+                "District": "Bengaluru Urban",
+                "Station_ID": "PS0001",
+                "Arrest_Date": "2025-06-21 11:00",
+                "Arrest_Location": "Lodge",
+                "Arresting_Officer": "IO2",
+                "Custody_Type": "Police Custody",
+                "Bail_Status": "Granted",
+                "Recovery_Item": "None",
+                "Recovery_Value": "0",
+                "Medical_Examination": "No",
+                "Fingerprint_Taken": "No",
+                "DNA_Sample": "No",
+                "Photograph_Taken": "No",
+            },
+        ]
+        repo = CSVArrestRepository(rows)
+        all_arrests = repo.list_all_arrests()
+        assert len(all_arrests) == 2
+        arrest_ids = {a.arrest_id for a in all_arrests}
+        assert arrest_ids == {"ARR001", "ARR002"}
+
 
 # ---------------------------------------------------------------------------
 # ChargeSheet repository
@@ -315,6 +371,46 @@ class TestCSVChargeSheetRepository:
 
     def test_one_chargesheet_per_fir(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         assert len(chargesheet_repo._by_fir) == 2469
+
+    def test_list_all_chargesheets_returns_all_records(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
+        all_cs = chargesheet_repo.list_all_chargesheets()
+        assert len(all_cs) == 2469
+
+    def test_list_all_chargesheets_survives_duplicate_fir_id(self) -> None:
+        """Regression: two chargesheets with same FIR_ID must both be returned."""
+        rows = [
+            {
+                "ChargeSheet_ID": "CS001",
+                "FIR_ID": "FIR001",
+                "Accused_ID": "P001",
+                "Crime_Type": "Theft",
+                "Sections": "BNS 379",
+                "Investigating_Officer": "IO1",
+                "Court": "Session Court",
+                "Witness_Count": "3",
+                "Evidence_Count": "5",
+                "ChargeSheet_Date": "2025-07-15",
+                "Status": "Filed",
+            },
+            {
+                "ChargeSheet_ID": "CS002",
+                "FIR_ID": "FIR001",
+                "Accused_ID": "P002",
+                "Crime_Type": "Theft",
+                "Sections": "BNS 379",
+                "Investigating_Officer": "IO1",
+                "Court": "Session Court",
+                "Witness_Count": "2",
+                "Evidence_Count": "3",
+                "ChargeSheet_Date": "2025-07-20",
+                "Status": "Accepted",
+            },
+        ]
+        repo = CSVChargeSheetRepository(rows)
+        all_cs = repo.list_all_chargesheets()
+        assert len(all_cs) == 2
+        cs_ids = {cs.chargesheet_id for cs in all_cs}
+        assert cs_ids == {"CS001", "CS002"}
 
     def test_list_by_station_returns_results(
         self, chargesheet_repo: CSVChargeSheetRepository

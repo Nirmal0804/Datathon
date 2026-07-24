@@ -13,6 +13,7 @@ class CSVArrestRepository:
 
     def __init__(self, rows: list[dict[str, str]]) -> None:
         self._rows = rows
+        self._all: list[ArrestRecord] = []
         self._by_fir: dict[str, ArrestRecord] = {}
         self._by_station: dict[str, list[ArrestRecord]] = {}
         self._by_person: dict[str, list[ArrestRecord]] = {}
@@ -21,6 +22,7 @@ class CSVArrestRepository:
     def _build_indices(self) -> None:
         for row in self._rows:
             record = self._row_to_record(row)
+            self._all.append(record)
             self._by_fir[record.fir_id] = record
             self._by_station.setdefault(record.station_id, []).append(record)
             self._by_person.setdefault(record.person_id, []).append(record)
@@ -57,3 +59,6 @@ class CSVArrestRepository:
 
     def list_by_person(self, person_id: str) -> List[ArrestRecord]:
         return list(self._by_person.get(person_id, []))
+
+    def list_all_arrests(self) -> List[ArrestRecord]:
+        return list(self._all)

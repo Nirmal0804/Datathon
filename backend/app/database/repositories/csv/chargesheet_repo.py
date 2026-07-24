@@ -26,6 +26,7 @@ class CSVChargeSheetRepository:
         fir_station_map: dict[str, str] | None = None,
     ) -> None:
         self._rows = rows
+        self._all: list[ChargeSheetRecord] = []
         self._by_fir: dict[str, ChargeSheetRecord] = {}
         self._by_station: dict[str, list[ChargeSheetRecord]] = {}
         self._build_indices(rows, fir_station_map or {})
@@ -37,6 +38,7 @@ class CSVChargeSheetRepository:
     ) -> None:
         for row in rows:
             record = self._row_to_record(row)
+            self._all.append(record)
             self._by_fir[record.fir_id] = record
             station_id = fir_station_map.get(record.fir_id)
             if station_id is not None:
@@ -63,3 +65,6 @@ class CSVChargeSheetRepository:
 
     def list_by_station(self, station_id: str) -> List[ChargeSheetRecord]:
         return list(self._by_station.get(station_id, []))
+
+    def list_all_chargesheets(self) -> List[ChargeSheetRecord]:
+        return list(self._all)

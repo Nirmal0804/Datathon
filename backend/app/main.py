@@ -28,6 +28,7 @@ from app.core.exceptions import (
     ModelUnavailableError,
     ResourceNotFoundError,
 )
+from app.api.dashboard import router as dashboard_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 
 # ---------------------------------------------------------------------------
@@ -121,3 +122,10 @@ async def health():
         "status": "healthy",
         "service": settings.APP_NAME,
     }
+
+
+# ---------------------------------------------------------------------------
+# Dashboard API
+# ---------------------------------------------------------------------------
+
+app.include_router(dashboard_router, prefix=settings.API_PREFIX)
