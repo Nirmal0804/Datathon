@@ -69,20 +69,14 @@ const jurisdictions = [
   { center: [12.2958, 76.6394], radius: 5000, name: 'Saraswathipuram PS Beat' },
 ];
 
-// Custom map events listener to track zoom and pan
-function MapEventsHandler({ onZoomChange, onMoveChange, onMapClick }) {
+// Custom map events listener to track zoom
+function MapEventsHandler({ onZoomChange, onMapClick }) {
   const map = useMapEvents({
     zoomend() {
-      onZoomChange(map.getZoom());
-    },
-    moveend() {
-      if (onMoveChange) {
-        const c = map.getCenter();
-        onMoveChange([c.lat, c.lng]);
-      }
+      if (onZoomChange) onZoomChange(map.getZoom());
     },
     click() {
-      onMapClick();
+      if (onMapClick) onMapClick();
     }
   });
   return null;
@@ -97,41 +91,47 @@ function MapController({ center, zoom, resetKey }) {
     // Only call map.setView if resetKey changed (initial load, reset click, or explicit search hit)
     if (resetKey !== prevResetKeyRef.current) {
       prevResetKeyRef.current = resetKey;
-      if (center) {
-        map.setView(center, zoom, { animate: true, duration: 0.8 });
+      if (center && Array.isArray(center) && center.length === 2) {
+        map.setView(center, zoom || 7, { animate: true, duration: 0.8 });
       }
     }
   }, [center, zoom, map, resetKey]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      map.invalidateSize();
+      if (map && map.invalidateSize) {
+        map.invalidateSize();
+      }
     }, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [map]);
 
   return null;
 }
 
 export default function GISMap({
-  filteredCases,
-  layers,
-  setLayers,
-  selectedCase,
-  setSelectedCase,
-  mapState,
-  setMapState,
-  role,
-  onExportSnapshot,
-  onDistrictClick
+  filteredCases = [],
+  layers = {},
+  setLayers = () => {},
+  selectedCase = null,
+  setSelectedCase = () => {},
+  mapState = { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 },
+  setMapState = () => {},
+  role = 'analyst',
+  onExportSnapshot = () => {},
+  onDistrictClick = () => {}
 }) {
   const [currentZoom, setCurrentZoom] = useState(7);
   const isAnalyst = role === 'analyst';
 
+  const safeCases = Array.isArray(filteredCases) ? filteredCases : [];
+  const safeLayers = layers || {};
+  const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
+
   // Group cases by district when zoom level is low for clustering
   const districtClusters = useMemo(() => {
     const clusters = {};
-    filteredCases.forEach(c => {
+    safeCases.forEach(c => {
       clusters[c.district] = (clusters[c.district] || 0) + 1;
     });
     return Object.entries(clusters).map(([district, count]) => ({
@@ -139,7 +139,7 @@ export default function GISMap({
       count,
       coords: districtCoords[district] || KARNATAKA_CENTER
     }));
-  }, [filteredCases]);
+  }, [safeCases]);
 
   // Compute dynamic hotspots from the mock dataset
   const dynamicHotspots = useMemo(() => {
