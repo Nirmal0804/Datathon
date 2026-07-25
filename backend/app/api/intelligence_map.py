@@ -12,6 +12,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import PlainTextResponse
 
+from app.core.config import settings
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.intelligence_map import (
     ClusterResponse,
@@ -270,7 +271,9 @@ async def get_intelligence_timeline(
     "/export",
     summary="Export filtered FIR scope as CSV",
     description="Returns a CSV download of filtered FIR data with only "
-    "operational non-person fields. All standard filters apply.",
+    "operational non-person fields. All standard filters apply. "
+    f"Maximum {settings.MAX_EXPORT_ROWS:,} rows per synchronous export. "
+    "Returns 413 if the matching record count exceeds the limit.",
 )
 async def get_intelligence_export(
     district: Optional[str] = Query(None, description="Filter by district name"),
@@ -292,6 +295,7 @@ async def get_intelligence_export(
         status=status,
         start_date=start_date,
         end_date=end_date,
+        max_rows=settings.MAX_EXPORT_ROWS,
     )
     return PlainTextResponse(
         content=csv_content,

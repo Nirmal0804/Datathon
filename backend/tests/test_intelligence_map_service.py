@@ -788,6 +788,52 @@ class TestIntelligenceExport:
                 start_date=date(2025, 12, 31), end_date=date(2025, 1, 1)
             )
 
+    def test_export_returns_string(self):
+        firs = [_make_fir(fir_id="F1"), _make_fir(fir_id="F2")]
+        svc = _build_service(firs)
+        result = svc.get_export()
+        assert isinstance(result, str)
+        lines = result.strip().split("\n")
+        assert len(lines) == 3  # Header + 2 data rows
+
+    def test_export_below_limit_succeeds(self):
+        firs = [_make_fir(fir_id=f"F{i}") for i in range(5)]
+        svc = _build_service(firs)
+        result = svc.get_export(max_rows=10)
+        lines = result.strip().split("\n")
+        assert len(lines) == 6  # Header + 5 data rows
+
+    def test_export_at_limit_succeeds(self):
+        firs = [_make_fir(fir_id=f"F{i}") for i in range(10)]
+        svc = _build_service(firs)
+        result = svc.get_export(max_rows=10)
+        lines = result.strip().split("\n")
+        assert len(lines) == 11  # Header + 10 data rows
+
+    def test_export_above_limit_raises(self):
+        from app.core.exceptions import ExportLimitExceededError
+        firs = [_make_fir(fir_id=f"F{i}") for i in range(5)]
+        svc = _build_service(firs)
+        with pytest.raises(ExportLimitExceededError):
+            svc.get_export(max_rows=3)
+
+    def test_export_above_limit_raises_no_partial_csv(self):
+        from app.core.exceptions import ExportLimitExceededError
+        firs = [_make_fir(fir_id=f"F{i}") for i in range(5)]
+        svc = _build_service(firs)
+        with pytest.raises(ExportLimitExceededError):
+            result = svc.get_export(max_rows=3)
+            # Should never reach here — exception raised before return
+
+    def test_export_error_has_deterministic_code(self):
+        from app.core.exceptions import ExportLimitExceededError
+        firs = [_make_fir(fir_id=f"F{i}") for i in range(5)]
+        svc = _build_service(firs)
+        with pytest.raises(ExportLimitExceededError) as exc_info:
+            svc.get_export(max_rows=3)
+        assert exc_info.value.code == "EXPORT_LIMIT_EXCEEDED"
+        assert exc_info.value.status_code == 413
+
 
 # ===================================================================
 # 8. Shared filter semantics

@@ -29,10 +29,15 @@
 | # | Method | Path | Purpose | Status |
 |---|--------|------|---------|--------|
 | 1 | GET | `/health` | Health check (tests DB connectivity if postgres) | IMPLEMENTED |
+| 35 | GET | `/health/live` | Liveness probe (always 200 if process alive) | IMPLEMENTED |
+| 36 | GET | `/health/ready` | Readiness probe (checks DB or CSV data dir) | IMPLEMENTED |
 
 **Authentication:** None
 **Pagination:** No
-**Response:** `{"status": "healthy"|"degraded", "service": str, "backend": str, "database"?: str}`
+**Response (#1):** `{"status": "healthy"|"degraded", "service": str, "backend": str, "database"?: str}`
+**Response (#35):** `{"status": "alive"}`
+**Response (#36, 200):** `{"status": "ready", "database"?: "connected", "csv_data_dir"?: str}`
+**Response (#36, 503):** `{"status": "not ready", "reason": str}`
 
 ---
 
@@ -92,9 +97,9 @@
 **#10 response:** `HotspotResponse` — identical structure to #6
 **#11 response:** `DistrictComparisonResponse` — districts (List[DistrictComparisonRow]), total_districts
 **#12 response:** `TimelineResponse` — buckets (List[TimelineBucket]), total_buckets, granularity
-**#13 response:** CSV text/plain. Columns: FIR_ID, FIR_Number, Crime_Head, Crime_Subhead, Status, District, Station_ID, Latitude, Longitude, Incident_Date, Investigating_Officer
+**#13 response:** CSV text/plain. Columns: FIR_ID, FIR_Number, Crime_Head, Crime_Subhead, Status, District, Station_ID, Latitude, Longitude, Incident_Date, Investigating_Officer. Max rows per synchronous request: `MAX_EXPORT_ROWS` (default 10,000). Returns 413 (`EXPORT_LIMIT_EXCEEDED`) if matching record count exceeds limit — no partial CSV returned.
 
-**Sensitive data:** #13 is unbounded (no pagination/limit). Exports all matching FIRs.
+**Sensitive data:** #13 is bounded (max `MAX_EXPORT_ROWS` records). No person-level PII in exported columns.
 
 ---
 
@@ -178,14 +183,15 @@ If a role-based access model later distinguishes "field" vs "intelligence" case 
 
 | # | Method | Path | Purpose | Status |
 |---|--------|------|---------|--------|
-| 16 | GET | `/api/v1/stations` | All police stations (reference) | REQUIRED |
-| 17 | GET | `/api/v1/stations/{station_id}` | Single station detail | REQUIRED |
+| 16 | GET | `/api/v1/stations` | All police stations (reference) | IMPLEMENTED |
+| 17 | GET | `/api/v1/stations/{station_id}` | Single station detail | IMPLEMENTED |
 
 **Justification:** The frontend district-intelligence module needs station-level data (PoliceStationTable component). The filters endpoint returns station IDs and names but not zone, type, personnel strength, or contact info. A dedicated stations reference API is warranted.
 
-**#16 response:** `StationListResponse` — stations (List[StationListItem]), total_stations
-**StationListItem fields:** station_id, station_name, district_id, district_name, zone, station_type, latitude, longitude, personnel_strength, patrol_vehicles
-**Sensitive data:** Contact_Number, Email should be excluded from list view; included in detail view (#17) only after auth is implemented.
+**#16 response:** `StationListResponse` — stations (List[StationListItem]), total_stations, total_pages, page, page_size
+**StationListItem fields:** station_id, station_name, district_id, district_name, zone, station_type, latitude, longitude, personnel_strength, patrol_vehicles, contact_number, email
+**#17 response:** `StationDetailResponse` — full station fields including contact_number and email
+**Sensitive data:** contact_number and email included in both list and detail views (auth not yet implemented; revisit when RBAC is added).
 
 ---
 
@@ -477,6 +483,7 @@ Stations reference API needed by district intelligence module.
 
 **Estimated endpoints:** 2
 **Blocker:** None
+**Status:** IMPLEMENTED
 
 ### Priority 3 — Network Analysis
 
@@ -501,10 +508,11 @@ Deterministic graph construction from existing data. No ML dependency.
 
 **Estimated endpoints:** 2
 **Blocker:** None
+**Status:** IMPLEMENTED
 
 ### Priority 5 — Pagination Hardening
 
-- Add max row limit to `/map/intelligence/export`
+- **DONE:** `/map/intelligence/export` — max row limit (`MAX_EXPORT_ROWS` = 10,000). Returns 413 when exceeded; no truncation.
 - Add explicit `sort_by`/`order` to case listing
 - Verify all list endpoints handle empty results gracefully
 
@@ -547,9 +555,9 @@ The following sections of BACKEND_IMPLEMENTATION_PLAN.md should be updated to re
 
 | Status | Count | Endpoints |
 |--------|-------|-----------|
-| **IMPLEMENTED** | 15 | #1–#15 |
-| **IMPLEMENTED_NEEDS_HARDENING** | 1 | #13 (unbounded export) |
-| **REQUIRED** | 7 | #16, #17, #32, #33, #34, #35, #36 |
+| **IMPLEMENTED** | 20 | #1–#17, #35, #36 |
+| **IMPLEMENTED_NEEDS_HARDENING** | 0 | — (export limit now enforced) |
+| **REQUIRED** | 3 | #32, #33, #34 (network analysis) |
 | **BLOCKED_RBAC** | 6 | #18, #19, #20, #21 + audit + user management |
 | **BLOCKED_ML** | 4 | #22, #23, #24, #25 |
 | **BLOCKED_GIS** | 2 | #26, #27 |
@@ -558,7 +566,7 @@ The following sections of BACKEND_IMPLEMENTATION_PLAN.md should be updated to re
 | **DEPRECATION_CANDIDATE** | 1 | #6 (duplicate of #10) |
 
 **Total identified endpoints:** 42
-**Implementable now (no blockers):** 7 (#16, #17, #32, #33, #34, #35, #36)
+**Implementable now (no blockers):** 3 (#32, #33, #34)
 **Awaiting RBAC:** 6+
 **Awaiting ML:** 4
 **Awaiting GIS:** 2

@@ -17,7 +17,7 @@ from collections import Counter, defaultdict
 from datetime import date
 from typing import List, Optional, Protocol, runtime_checkable
 
-from app.core.exceptions import InvalidFilterError
+from app.core.exceptions import ExportLimitExceededError, InvalidFilterError
 from app.database.records import (
     DistrictRecord,
     FIRRecord,
@@ -417,11 +417,26 @@ class IntelligenceMapService:
         status: str | None = None,
         start_date: date | None = None,
         end_date: date | None = None,
+        max_rows: int | None = None,
     ) -> str:
-        """Return filtered FIR scope as CSV string (in-memory)."""
+        """Return filtered FIR scope as CSV string (in-memory).
+
+        Raises
+        ------
+        ExportLimitExceededError
+            If the number of matching records exceeds ``max_rows``.
+            No partial CSV is generated.
+        """
         firs = self._get_filtered_firs(
             district, station_id, crime_head, status, start_date, end_date
         )
+
+        if max_rows is not None and len(firs) > max_rows:
+            raise ExportLimitExceededError(
+                f"Export contains {len(firs):,} records, exceeding the "
+                f"synchronous limit of {max_rows:,}. "
+                "Please refine your filters to reduce the result set."
+            )
 
         output = io.StringIO()
         writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)

@@ -43,3 +43,12 @@ class ModelUnavailableError(DomainError):
     code = "MODEL_UNAVAILABLE"
     status_code = 503
     message = "The ML model or analytics artifact is unavailable."
+
+
+class ExportLimitExceededError(DomainError):
+    code = "EXPORT_LIMIT_EXCEEDED"
+    status_code = 413
+    message = (
+        "The export exceeds the synchronous generation limit. "
+        "Please refine your filters to reduce the result set."
+    )

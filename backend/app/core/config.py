@@ -40,6 +40,9 @@ class Settings(BaseSettings):
     DATABASE_POOL_MIN: int = 1
     DATABASE_POOL_MAX: int = 10
 
+    # Export row limit (production safety)
+    MAX_EXPORT_ROWS: int = 10_000
+
     @model_validator(mode="before")
     @classmethod
     def _normalize_backend(cls, values: dict) -> dict:

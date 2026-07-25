@@ -33,6 +33,7 @@ from app.api.dashboard import router as dashboard_router
 from app.api.districts import router as districts_router
 from app.api.field_map import router as field_map_router
 from app.api.intelligence_map import router as intelligence_map_router
+from app.api.stations import router as stations_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 
 # ---------------------------------------------------------------------------
@@ -175,6 +176,60 @@ async def health():
     return health_status
 
 
+@app.get("/health/live")
+async def health_live():
+    """Kubernetes-style liveness probe.
+
+    Returns 200 when the process is alive and can accept traffic.
+    Does NOT check downstream dependencies.
+    """
+    return {"status": "alive"}
+
+
+@app.get("/health/ready")
+async def health_ready():
+    """Kubernetes-style readiness probe.
+
+    Returns 200 when the service is ready to handle requests.
+    Checks PostgreSQL connectivity when using the postgres backend.
+    Validates CSV data directory exists when using the csv backend.
+    Returns 503 when a critical dependency is unavailable.
+    """
+    ready_status: dict = {"status": "ready"}
+
+    if settings.DATA_BACKEND.lower() == "postgres":
+        try:
+            from app.database.postgres import execute_one
+
+            result = execute_one("SELECT 1 AS ok")
+            if not result:
+                return JSONResponse(
+                    status_code=503,
+                    content={"status": "not ready", "reason": "database query failed"},
+                )
+            ready_status["database"] = "connected"
+        except Exception:
+            return JSONResponse(
+                status_code=503,
+                content={"status": "not ready", "reason": "database unreachable"},
+            )
+    else:
+        import os
+
+        data_dir = settings.CSV_DATA_DIR
+        if not data_dir or not os.path.isdir(data_dir):
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "not ready",
+                    "reason": f"CSV data directory not found: {data_dir}",
+                },
+            )
+        ready_status["csv_data_dir"] = data_dir
+
+    return ready_status
+
+
 # ---------------------------------------------------------------------------
 # Dashboard API
 # ---------------------------------------------------------------------------
@@ -183,3 +238,4 @@ app.include_router(dashboard_router, prefix=settings.API_PREFIX)
 app.include_router(districts_router, prefix=settings.API_PREFIX)
 app.include_router(field_map_router, prefix=settings.API_PREFIX)
 app.include_router(intelligence_map_router, prefix=settings.API_PREFIX)
+app.include_router(stations_router, prefix=settings.API_PREFIX)
