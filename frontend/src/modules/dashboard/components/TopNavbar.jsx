@@ -15,17 +15,18 @@ export default function TopNavbar({ toggleMobileMenu }) {
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Search */}
-        <div className="relative hidden sm:block w-80 lg:w-[420px]">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="w-4 h-4 text-slate-400" />
+        {/* Relocated Officer Profile Card (Replacing Search Bar) */}
+        <div className="hidden sm:flex items-center gap-3 bg-white border border-[#E7ECF3] px-4 py-2 rounded-full shadow-xs text-[#0F172A]">
+          <div className="relative">
+            <div className="w-8 h-8 rounded-full bg-[#0B1F4D] text-[#C79A2B] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs">
+              RK
+            </div>
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
-          <input
-            type="text"
-            placeholder="Search cases, FIRs, districts..."
-            className="w-full bg-white border border-[#E5E7EB] text-[#0F172A] text-[13px] font-medium rounded-full h-[48px] pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] focus:border-transparent transition-all duration-200 ease-in-out shadow-sm placeholder:text-slate-400"
-            aria-label="Global search"
-          />
+          <div className="text-left min-w-0 pr-1">
+            <p className="text-xs font-bold leading-tight text-[#0F172A] truncate">Rakesh Kumar</p>
+            <p className="text-[10px] text-[#64748B] font-semibold truncate">Field Officer • Mysuru Rural Police</p>
+          </div>
         </div>
       </div>
 

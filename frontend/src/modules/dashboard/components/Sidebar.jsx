@@ -140,27 +140,25 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-[16px] border border-white/20 bg-white/5">
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white shrink-0">
-            {profile.initials}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-bold text-white truncate">{profile.name}</p>
-            <p className="text-[11px] font-medium text-white/60 truncate">{profile.roleText}</p>
-          </div>
-          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] shrink-0" title="Online" />
-        </div>
+      {/* Bottom Vertical Action Panel */}
+      <div className="p-3.5 border-t border-white/10 space-y-2">
+        <motion.button
+          onClick={() => setActiveModule('settings')}
+          whileTap={{ scale: 0.98 }}
+          className="w-full h-10 px-3.5 rounded-[14px] text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all flex items-center gap-2.5 cursor-pointer"
+        >
+          <Settings className="w-4 h-4 text-[#C79A2B] shrink-0" />
+          <span>Settings</span>
+        </motion.button>
 
         <motion.button
           onClick={onLogout}
           whileTap={{ scale: 0.98 }}
-          className="w-full h-12 flex items-center justify-center gap-2 rounded-[16px] text-[13px] font-bold text-white border border-white/20 hover:bg-white/10 transition-colors duration-200 ease-in-out bg-transparent"
+          className="w-full h-10 px-3.5 rounded-[14px] text-xs font-bold text-rose-200 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 transition-all flex items-center gap-2.5 cursor-pointer"
           aria-label="Secure logout"
         >
-          <LogOut className="w-4 h-4 shrink-0" />
-          Secure Logout
+          <LogOut className="w-4 h-4 text-rose-300 shrink-0" />
+          <span>Logout</span>
         </motion.button>
       </div>
     </aside>

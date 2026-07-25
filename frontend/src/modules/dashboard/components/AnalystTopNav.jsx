@@ -45,6 +45,12 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     ? 'SYSTEM ADMINISTRATION PLATFORM' 
     : 'INTELLIGENCE PLATFORM';
 
+  const profile = role === 'officer' 
+    ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer', station: 'Mysuru Rural Police' }
+    : role === 'admin' 
+    ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
+    : { initials: 'JD', name: 'Inspector Patil', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+
   return (
     <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-6 shrink-0 shadow-sm border border-white/10 w-full mb-3">
       {/* Left Section: Branding */}
@@ -83,16 +89,19 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
         })}
       </div>
 
-      {/* Right Section: Search & Actions */}
+      {/* Right Section: Relocated Officer Profile Card (Replacing Search Bar) */}
       <div className="flex items-center gap-3 pl-6 border-l border-white/10 shrink-0 ml-auto h-[40px]">
-        {/* Search Bar */}
-        <div className="relative hidden xl:block w-48">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-police-blue" />
-          <input
-            type="text"
-            placeholder="Search records..."
-            className="w-full h-8 pl-8 pr-3 bg-white text-slate-800 text-xs rounded-full placeholder:text-police-blue focus:outline-none focus:ring-1 focus:ring-[#C79A2B] shadow-sm font-medium"
-          />
+        <div className="hidden sm:flex items-center gap-2.5 bg-white/10 border border-white/15 px-3 py-1.5 rounded-full shadow-xs text-white">
+          <div className="relative">
+            <div className="w-7 h-7 rounded-full bg-[#C79A2B] text-[#0B1F4D] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs">
+              {profile.initials}
+            </div>
+            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#0B1F4D]" />
+          </div>
+          <div className="text-left min-w-0 pr-1">
+            <p className="text-xs font-bold leading-tight text-white truncate">{profile.name}</p>
+            <p className="text-[10px] text-[#C79A2B] font-semibold truncate">{profile.roleText} • {profile.station}</p>
+          </div>
         </div>
 
         {/* Notifications */}
