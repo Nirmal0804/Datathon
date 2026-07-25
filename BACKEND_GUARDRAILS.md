@@ -310,3 +310,84 @@ Can continue with: adapter interface + unavailable-path tests only
 ```
 
 Do not guess.
+
+---
+
+## 20. Production database and Supabase guardrails
+
+This section applies when work moves beyond the current CSV-backed adapter.
+
+### 20.1 Credentials and secrets
+
+- Never expose Supabase service-role credentials to the frontend.
+- Never commit database credentials, API keys, or secrets to source control.
+- Never hardcode production credentials in application code.
+- All secrets must come from approved environment/secret-management mechanisms.
+- Rotate credentials if exposure is suspected.
+
+### 20.2 Authentication and authorization
+
+- Backend must verify user identity before serving protected endpoints.
+- Frontend authorization state is not a security boundary.
+- Backend must enforce access control, not rely on frontend gating.
+- Do not invent final police roles without approved requirements.
+- When auth is not yet implemented, document the gap explicitly. Do not silently assume open access is acceptable for production.
+
+### 20.3 Row Level Security (RLS)
+
+- RLS may be used where appropriate but must complement, not replace, backend authorization.
+- Do not disable RLS or security features merely to simplify integration.
+- RLS policies must be reviewed and tested before deployment.
+
+### 20.4 PII and sensitive data
+
+- Minimize PII in API responses. Return only fields required by the consumer.
+- Victim/complainant data requires heightened protection.
+- Accused individuals must never be presented as guilty.
+- Biometric data (DNA, fingerprints, photographs) must not appear in public API responses.
+- Sensitive case information requires access controls.
+- Data provenance must be tracked for all records.
+
+### 20.5 Audit logging
+
+- Application request logging and security audit logging are separate concerns.
+- Audit subsystem must capture: actor/user identity, action, resource type, resource identifier (where safe), timestamp, outcome, request/correlation ID, authorization context.
+- Never log complete sensitive records or secrets into audit entries.
+- Audit storage implementation is a separate workstream from application logging.
+
+### 20.6 Migrations and schema changes
+
+- Never drop or rename production/team columns or tables without explicit approval.
+- Schema changes must be reviewed before execution.
+- Migration rollback strategy must exist.
+- Do not silently alter the production schema to satisfy a UI request.
+
+### 20.7 Data provenance and ingestion
+
+- Production must eventually have a controlled ingestion/synchronization layer.
+- Ingested data must pass schema validation, type validation, referential-integrity validation, and quality validation.
+- Provenance metadata must be tracked.
+- Do not assume CSV files will be the operational production data source.
+
+### 20.8 Safe exports
+
+- Report/export endpoints must apply authorization and redaction rules.
+- Exports must be bounded (never return unrestricted bulk sensitive records).
+- Export metadata must include filter criteria, generation timestamp, and data version.
+
+### 20.9 Production database changes
+
+- Any change to the production database schema requires team review.
+- Never execute destructive operations without backup confirmation.
+- Prefer additive changes (new columns/tables) over destructive changes (drop/rename).
+
+### 20.10 Fabrication prohibitions (production)
+
+In addition to existing fabrication rules (sections 2, 4, 6, 10):
+
+- Never fabricate government records, statistics, or case data.
+- Never fabricate severity classifications or risk levels.
+- Never fabricate ML predictions, anomaly scores, or confidence values.
+- Never fabricate GIS boundaries or spatial data.
+- Never infer unsupported criminal conclusions from data.
+- Never expose protected database fields merely because they exist.

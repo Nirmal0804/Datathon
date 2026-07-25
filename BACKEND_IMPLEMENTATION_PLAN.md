@@ -28,6 +28,51 @@ Do not build all modules in one session.
 
 ---
 
+## 1A. Current implementation status
+
+Last updated: Production Architecture Realignment checkpoint.
+
+| Phase | Module | Status | Commit |
+|-------|--------|--------|--------|
+| 0A | Repository discovery | COMPLETE | `e221943` |
+| 1A | Backend skeleton | COMPLETE | `181c75d` |
+| 1B | Logging/errors | COMPLETE | `3268175` |
+| 2A | Schema inspection | COMPLETE | `8c77454` |
+| 2B | CSV data foundation | COMPLETE | `a7cf50a` |
+| 3A-3C | Dashboard summary | COMPLETE | `3429b2e` |
+| 4 | District Intelligence | COMPLETE | `8b86e85` |
+| 5 | Field Officer Crime Map | COMPLETE | `98122cc` |
+| 5 | Intelligence Crime Map | COMPLETE | `0c96cba` |
+| 6 | Trends & Alerts | NOT STARTED | — |
+| 7 | Hotspots | NOT STARTED | — |
+| 8 | Repeat Offender | NOT STARTED | — |
+| 9 | Criminal Network | NOT STARTED | — |
+| 10 | Predictive Risk | BLOCKED (no ML artifact) | — |
+| 11 | Anomaly Detection | BLOCKED (no ML artifact) | — |
+| 12 | Socio-economic Correlation | NOT STARTED | — |
+| 13 | Reports & Exports | NOT STARTED | — |
+
+### Production infrastructure status
+
+| Area | Status |
+|------|--------|
+| Production database (Supabase PostgreSQL) | NOT STARTED |
+| PostgreSQL repository implementations | NOT STARTED |
+| Data ingestion/synchronization layer | NOT STARTED |
+| Authentication | NOT STARTED |
+| Authorization/RBAC | NOT STARTED |
+| Audit logging | NOT STARTED |
+| Migration management | NOT STARTED |
+| Backup/restore | NOT STARTED |
+| Deployment pipeline | NOT STARTED |
+| Security hardening | NOT STARTED |
+| Performance testing | NOT STARTED |
+| Load testing | NOT STARTED |
+
+**Passing functional module tests alone is not sufficient evidence of production readiness.**
+
+---
+
 # PHASE 0 — Repository discovery
 
 ## Checkpoint 0A — Inspect repository before architecture changes
@@ -757,9 +802,9 @@ Never merge your backend branch into Nirmal's branch yourself unless the team le
 
 ---
 
-# PHASE 17 — Final definition of done
+# PHASE 17 — Final definition of done (functional)
 
-Backend is ready for review when:
+Backend functional modules are complete when:
 
 - [ ] backend starts from documented instructions;
 - [ ] health endpoint works;
@@ -783,3 +828,255 @@ Backend is ready for review when:
 - [ ] OpenAPI/README are current;
 - [ ] no secrets/private dumps are tracked;
 - [ ] commit history is checkpoint-based and understandable.
+
+**Note:** Functional module completion is NOT production readiness. See Phase 18+ for production requirements.
+
+---
+
+# PHASE 18 — Production database foundation
+
+## Checkpoint 18A — Schema design
+
+### Goal
+Design the production PostgreSQL schema for Supabase.
+
+### Requirements
+- Do not copy CSV layout directly.
+- Normalize comma-separated fields (e.g., `firs.Accused_ID` → junction table).
+- Design proper foreign key relationships.
+- Add provenance metadata columns.
+- Plan indexes for common query patterns.
+- Plan access control columns where appropriate.
+
+### Deliverable
+`docs/DATABASE_SCHEMA.md` — production schema design document.
+
+---
+
+## Checkpoint 18B — Repository migration
+
+### Goal
+Implement PostgreSQL-backed repository implementations.
+
+### Requirements
+- Implement same repository protocols as CSV adapters.
+- Connection pooling and lifecycle management.
+- Environment-based configuration.
+- Transaction boundaries.
+- Migration management (Alembic or equivalent).
+- Database integration tests.
+
+---
+
+## Checkpoint 18C — Data ingestion
+
+### Goal
+Migrate data from approved CSV files to PostgreSQL.
+
+### Requirements
+- Schema validation during ingestion.
+- Type validation.
+- Referential-integrity validation.
+- Quality validation.
+- Transactional ingestion.
+- Provenance/audit metadata.
+- Ingestion verification tests.
+
+---
+
+# PHASE 19 — Authentication and authorization
+
+## Checkpoint 19A — Authentication
+
+### Goal
+Implement backend authentication.
+
+### Requirements
+- Verify user identity (Supabase Auth or equivalent).
+- Secure token/session handling.
+- Backend verification — frontend state is not a security boundary.
+- Do not invent police roles without approved requirements.
+
+---
+
+## Checkpoint 19B — Authorization/RBAC
+
+### Goal
+Implement backend authorization.
+
+### Requirements
+- Role/permission-based access (when roles are approved).
+- Jurisdiction-aware access where required.
+- Least privilege enforcement.
+- Endpoint-level enforcement.
+- Database-level protection where appropriate (RLS as complement, not replacement).
+
+---
+
+# PHASE 20 — Security hardening
+
+## Checkpoint 20A — Audit subsystem
+
+### Goal
+Implement security audit logging.
+
+### Requirements
+- Separate from application request logging.
+- Capture: actor, action, resource type, resource identifier, timestamp, outcome, correlation ID, authorization context.
+- Never log sensitive records or secrets.
+- Audit storage design.
+
+---
+
+## Checkpoint 20B — Security review
+
+### Goal
+Comprehensive security review.
+
+### Requirements
+- Secrets management review.
+- CORS review.
+- Sensitive field review.
+- Log review.
+- Unrestricted list endpoint review.
+- Report export review.
+- Error leakage review.
+- PII regression tests.
+- Dependency version audit.
+
+---
+
+# PHASE 21 — Observability and operations
+
+## Checkpoint 21A — Observability
+
+### Goal
+Production-grade observability.
+
+### Requirements
+- Structured logs.
+- Request/correlation IDs (extend existing).
+- Metrics (endpoint latency, error rates, DB query times).
+- Tracing where appropriate.
+- Error monitoring.
+- Database monitoring.
+- Readiness checks.
+- Liveness/health checks (extend existing `/health`).
+
+---
+
+## Checkpoint 21B — Reliability
+
+### Goal
+Production reliability.
+
+### Requirements
+- Database backup strategy.
+- Restore procedures and testing.
+- Migration rollback strategy.
+- Failure handling.
+- Graceful application startup/shutdown.
+- Dependency failure behavior.
+- Recovery objectives (when requirements available).
+
+---
+
+# PHASE 22 — Performance and load testing
+
+## Checkpoint 22A — Performance baseline
+
+### Goal
+Establish performance baselines.
+
+### Requirements
+- Endpoint latency measurement.
+- Database query plan analysis.
+- Payload size measurement.
+- Identify bottlenecks.
+
+---
+
+## Checkpoint 22B — Load testing
+
+### Goal
+Validate production load handling.
+
+### Requirements
+- Concurrent user testing.
+- Database connection pool testing.
+- Rate limiting/abuse protection.
+- Caching strategy validation (if implemented).
+
+---
+
+# PHASE 23 — Deployment
+
+## Checkpoint 23A — Deployment pipeline
+
+### Goal
+Production deployment infrastructure.
+
+### Requirements
+- Local development environment.
+- Test environment.
+- Staging environment.
+- Production environment.
+- Environment isolation.
+- HTTPS/TLS.
+- CI pipeline (automated testing).
+- CD/deployment workflow.
+- Database migrations during deployment.
+- Rollback strategy.
+- Dependency/version pinning.
+- Production server configuration.
+
+---
+
+# PHASE 24 — Frontend/backend integration
+
+## Checkpoint 24A — Integration validation
+
+### Goal
+End-to-end frontend/backend integration.
+
+### Requirements
+- Frontend points at production backend.
+- All API contracts match.
+- Authentication/authorization works end-to-end.
+- No frontend mock data remaining.
+- Error handling matches.
+
+---
+
+# PHASE 25 — Production acceptance
+
+## Checkpoint 25A — Production readiness review
+
+### Goal
+Final production readiness assessment.
+
+### Requirements
+- All Phase 18-24 checkpoints complete.
+- Security audit passed.
+- Performance benchmarks met.
+- Backup/restore tested.
+- Monitoring and alerting operational.
+- Documentation current.
+- Team sign-off.
+
+### Final definition of done (production)
+
+- [ ] PostgreSQL schema designed and implemented.
+- [ ] Data ingested and validated.
+- [ ] Authentication operational.
+- [ ] Authorization/RBAC enforced.
+- [ ] Audit logging operational.
+- [ ] Security review passed.
+- [ ] Observability operational.
+- [ ] Backups configured and tested.
+- [ ] Performance benchmarks established.
+- [ ] Load testing completed.
+- [ ] Deployment pipeline operational.
+- [ ] Frontend/backend integration validated.
+- [ ] Documentation current.
+- [ ] Team sign-off obtained.

@@ -4,6 +4,8 @@
 
 You are assisting with the backend of **AI-Driven Crime Analytics & Visualization Platform for Karnataka Police**.
 
+This repository targets a **production-oriented government crime analytics system**. Prototype shortcuts must not be introduced unless explicitly identified as temporary. Every architectural decision should be suitable for eventual production deployment.
+
 The backend developer owns the application/API/integration layer. Work incrementally, preserve team boundaries, and produce reviewable changes.
 
 Before making backend changes, read these files in this order:
@@ -94,6 +96,26 @@ backend/
 ```
 
 The existing repository is authoritative. Do not move an existing frontend into a new `/frontend` directory just to match this diagram.
+
+### Persistence independence
+
+The current data layer uses CSV-backed in-memory repositories. This is a **transitional adapter**, not the production persistence target.
+
+- New service/API code must remain persistence-independent through repository abstractions.
+- Services must never import CSV-specific modules directly.
+- Repository protocols define the contract; persistence adapters implement it.
+- The production persistence target is **Supabase PostgreSQL** (not yet implemented).
+- Do not describe CSV repositories as the final production database.
+
+### Security, privacy and auditability
+
+These are architectural requirements, not optional add-ons:
+
+- Authentication and authorization are required for production deployment.
+- PII must be minimized in API responses.
+- Sensitive crime/person data requires access controls.
+- Audit logging for security-relevant events is required.
+- Production-sensitive architectural decisions must be documented rather than silently assumed.
 
 ### Layer boundaries
 
@@ -276,7 +298,7 @@ Use small synthetic **test fixtures only** when necessary to verify code behavio
 
 ## 9. Security and government-data rules
 
-Treat crime/person data as sensitive even during a hackathon.
+Treat crime/person data as sensitive. This is a government crime analytics system handling PII, biometric data, and sensitive case information.
 
 - Minimize returned fields.
 - Do not log full FIR/person payloads.
@@ -286,6 +308,15 @@ Treat crime/person data as sensitive even during a hackathon.
 - Risk/anomaly outputs are decision-support signals, not facts.
 - Correlation must not be described as causation.
 - If authorization requirements are not yet defined, isolate the concern and flag it instead of inventing a production auth policy.
+
+### Production security requirements
+
+- Never expose Supabase service-role credentials to the frontend.
+- Never hardcode production database credentials.
+- Frontend authorization state is not a security boundary.
+- Privileged database operations must occur through trusted backend components.
+- Secrets must come from approved environment/secret-management mechanisms.
+- Database credentials and API secrets must never appear in source code or logs.
 
 ---
 

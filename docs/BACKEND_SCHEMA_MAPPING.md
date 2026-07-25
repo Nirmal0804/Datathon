@@ -1,9 +1,18 @@
 # BACKEND_SCHEMA_MAPPING.md — Working Data Contract (CSV)
 
 > **Checkpoint 2A deliverable.** This document is the authoritative backend
-> schema reference. It supersedes any prior PDF-based analysis.
+> schema reference for the **approved CSV working dataset**. It supersedes
+> any prior PDF-based analysis.
 >
 > Generated: 2026-07-23 | Data snapshot: `data/schema_reference/*.csv`
+>
+> **Note:** This document describes the current CSV working data contract.
+> It is **not** the final production PostgreSQL physical schema. The
+> production database schema will be designed separately during the
+> Supabase/PostgreSQL migration phase (see `BACKEND_IMPLEMENTATION_PLAN.md`
+> Phase 18). The production schema will normalize denormalized fields
+> (e.g., `firs.Accused_ID` comma-separated values) and add provenance
+> metadata.
 
 ---
 
@@ -645,9 +654,9 @@ Never return unrestricted bulk records.
 
 ### Needs resolution before 2B implementation
 
-- [ ] Production database engine choice (or confirm CSV-in-memory for hackathon)
-- [ ] Multi-accused parsing strategy confirmation
-- [ ] Authorization model (or confirm "none for hackathon")
+- [x] ~~Production database engine choice~~ → Resolved: **Supabase PostgreSQL** (production target, not yet implemented)
+- [x] Multi-accused parsing strategy confirmation
+- [ ] Authorization model (production auth required, roles TBD)
 
 ### Recommended approach for Checkpoint 2B
 
@@ -656,7 +665,9 @@ Given the CSV-based data contract and hackathon context, **recommend:**
 2. **Repository pattern** — abstract queries behind repository interfaces.
 3. **Pydantic schemas** — define request/response contracts.
 4. **No ORM** — use raw SQL for SQLite queries (simpler, faster for hackathon).
-5. **Deferred auth** — document the gap but implement without auth initially.
+5. ~~Deferred auth~~ → **Auth required for production** — document the gap but implement without auth initially.
+
+**Production direction:** CSV-in-memory is a transitional adapter. The production target is Supabase PostgreSQL with authenticated access.
 
 ---
 

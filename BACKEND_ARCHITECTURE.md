@@ -4,25 +4,146 @@
 
 This is the technical blueprint for the backend of the Karnataka Police crime analytics platform. It describes target boundaries and evolution paths without forcing unnecessary infrastructure before it is needed.
 
+This document describes both the **current implemented architecture** and the **target production architecture**. The current implementation uses CSV-backed in-memory repositories as a transitional data adapter. The production target is Supabase PostgreSQL with authenticated access.
+
 The backend is an **integration and serving layer**:
 
 ```text
 Approved Data / Database ─────┐
-                              │
-                              v
-                         BACKEND
-                              ^
-                              │
+                               │
+                               v
+                          BACKEND
+                               ^
+                               │
 ML / Analytics Artifacts ─────┘
-                              │
-                              v
-                         REST / JSON
-                              │
-                              v
-                         Frontend
+                               │
+                               v
+                          REST / JSON
+                               │
+                               v
+                          Frontend
 ```
 
 Dataset creation and model training are outside backend ownership.
+
+---
+
+## 1A. Current implemented architecture
+
+The following describes what is **actually implemented and running** as of the latest commit.
+
+### Current data flow
+
+```text
+Approved CSV files (data/schema_reference/)
+    ↓
+CSV loader (startup, in-memory)
+    ↓
+CSV-backed repositories (in-memory indices)
+    ↓
+Repository protocols (database/repositories/protocols.py)
+    ↓
+Service layer
+    ↓
+FastAPI + Pydantic schemas
+```
+
+### Current repository architecture
+
+```text
+protocols.py (FirReader, ArrestReader, ChargesheetReader, DistrictReader, StationReader)
+    ↑
+csv/ (CSVFirRepository, CSVArrestRepository, CSVChargesheetRepository, ...)
+    ↑
+csv_loader.py (startup loading into memory)
+```
+
+CSV repositories implement the same protocol interfaces that future PostgreSQL repositories will implement. Services depend only on protocols, never on CSV-specific code.
+
+### Current implemented modules
+
+| Module | API Router | Service | Status |
+|--------|-----------|---------|--------|
+| Health | `main.py` | — | COMMITTED |
+| Dashboard Summary | `api/dashboard.py` | `services/dashboard_service.py` | COMMITTED |
+| Field Officer Crime Map | `api/field_map.py` | `services/field_map_service.py` | COMMITTED |
+| Intelligence Crime Map | `api/intelligence_map.py` | `services/intelligence_map_service.py` | COMMITTED |
+| District Intelligence | `api/districts.py` | `services/district_service.py` | COMMITTED |
+| Trends & Alerts | — | — | NOT STARTED |
+
+### Current test coverage
+
+13 test files, 360 tests passing, covering all committed modules.
+
+---
+
+## 1B. Target production architecture
+
+The following describes the **production deployment target**. Components marked NOT STARTED have not been implemented.
+
+### Production data flow
+
+```text
+Authoritative operational data sources
+    ↓
+Validated ingestion / synchronization
+    ↓
+Supabase PostgreSQL (NOT STARTED)
+    ↓
+PostgreSQL-backed repository implementations (NOT STARTED)
+    ↓
+Repository protocols (EXISTING — preserved)
+    ↓
+Service layer (EXISTING — preserved)
+    ↓
+FastAPI + Pydantic schemas (EXISTING — preserved)
+    ↓
+Authenticated/authorized clients (NOT STARTED)
+```
+
+### Production persistence target
+
+Supabase PostgreSQL is the confirmed production database platform. Implementation has NOT STARTED.
+
+The future database phase must include at minimum:
+- relational schema design (not a direct copy of CSV layout)
+- normalization (e.g., `firs.Accused_ID` comma-separated field must become a junction table)
+- primary keys, foreign keys, unique constraints, check constraints
+- indexes for common query patterns
+- migration management
+- PostgreSQL-backed repository implementations (replacing CSV adapters)
+- connection lifecycle and pooling
+- environment configuration
+- transaction boundaries
+- ingestion/migration from approved source data
+- data validation at ingestion
+- provenance tracking
+- backup/restore strategy
+- database integration tests
+
+### Production security requirements
+
+Production deployment requires:
+
+**Authentication:** verified user identity, secure token/session handling, backend verification. Frontend state is not a security boundary.
+
+**Authorization:** role/permission-based access, jurisdiction-aware access where required, least privilege, endpoint-level enforcement, database-level protection where appropriate.
+
+Roles and jurisdiction semantics require an approved requirements decision. Do not invent police roles.
+
+### Existing layer architecture (preserved in production)
+
+```text
+Router (api/)
+    ↓
+Service (services/)
+    ↓
+Repository Protocol (database/repositories/protocols.py)
+    ↓
+Persistence Adapter (csv/ → PostgreSQL/ in production)
+```
+
+This architecture is preserved. The persistence adapter changes; everything above it remains.
 
 ---
 
@@ -194,12 +315,24 @@ The adapter must be replaceable without changing route contracts.
 
 ## 5. Database strategy
 
-Do not finalize a database technology until repository inspection and the data-team handoff are understood.
+### Current implementation
 
-Preferred direction for a relational crime schema:
-- PostgreSQL;
+CSV-backed in-memory repositories loaded at startup. Repository protocols abstract data access so services remain persistence-independent.
+
+### Production target
+
+**Supabase PostgreSQL** is the confirmed production database platform.
+
+Production schema design must not simply copy the CSV layout. Specific transformations required:
+- `firs.Accused_ID` (comma-separated) must become a normalized junction/relationship table.
+- Denormalized district/station text fields must use proper foreign key relationships.
+- Biometric fields (DNA, fingerprints) must be isolated with appropriate access controls.
+- Provenance metadata columns must be added.
+
+Preferred direction:
+- PostgreSQL via Supabase;
 - PostGIS if true spatial point/polygon queries are required;
-- SQLAlchemy if consistent with the repository;
+- SQLAlchemy if consistent with the repository pattern;
 - Alembic when the backend owns schema migrations.
 
 Important distinction: if the data team supplies and owns an existing database schema, do not generate migrations that redefine their source schema without agreement.
@@ -497,7 +630,9 @@ Map them consistently.
 Allow only required frontend origins through configuration.
 
 ### Authentication/authorization
-Do not invent production police roles without requirements. Keep the architecture ready for auth dependencies, and implement the agreed prototype policy when supplied.
+Do not invent production police roles without requirements. Keep the architecture ready for auth dependencies, and implement the agreed authentication mechanism when supplied.
+
+Production requirement: backend must verify user identity and enforce access control. Frontend authorization state is not a security boundary. Roles and jurisdiction semantics require an approved requirements decision.
 
 ### Caching
 Cache only where it produces value. Cache keys must include all relevant filters. Do not allow stale cache to silently cross dataset/model versions.
@@ -526,29 +661,40 @@ Potential targets for interactive dashboard endpoints can be defined later with 
 
 ## 19. Deployment evolution
 
-### Stage 1 — local hackathon development
+### Stage 1 — Current implementation (CSV adapter)
 ```text
-Frontend → local FastAPI → approved DB/data
+Frontend → local FastAPI → CSV-backed in-memory repositories
 ```
+Status: IMPLEMENTED
 
-### Stage 2 — shared integration
+### Stage 2 — Production database
 ```text
-Frontend → deployed API → managed/shared DB
-                         → supplied ML artifact/service
+Frontend → deployed API → Supabase PostgreSQL
+                        → PostgreSQL-backed repositories
 ```
+Status: NOT STARTED
 
-### Stage 3 — scale if needed
+### Stage 3 — Authenticated production
 ```text
-reverse proxy/API
+Authenticated clients → FastAPI (with auth middleware) → Supabase PostgreSQL
+                                                              ↓
+                                                    Supabase Auth (or equivalent)
+```
+Status: NOT STARTED
+
+### Stage 4 — Full production (if scale requires)
+```text
+reverse proxy/API gateway
       |
 FastAPI instances
       |
-PostgreSQL/PostGIS
+Supabase PostgreSQL
       |
 optional cache/worker
 ```
+Status: NOT STARTED — implement only when workload justifies it.
 
-Do not build Stage 3 infrastructure during Stage 1 unless a concrete requirement demands it.
+Do not build Stage 3/4 infrastructure during Stage 1 unless a concrete requirement demands it.
 
 ---
 
