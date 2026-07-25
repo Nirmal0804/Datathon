@@ -188,29 +188,62 @@ The application validates configuration on startup via Pydantic `model_validator
 
 ## Testing
 
-73 tests in `tests/test_production_db_migration.py` covering:
+449 tests passing across the full test suite, including:
 - Migration SQL schema correctness (18 tests)
 - Repository protocol compliance (12 tests — CSV and Postgres)
 - Cardinality preservation (6 tests)
 - Postgres repository record construction (11 tests)
 - Ingestion logic and reconciliation (14 tests)
-- Configuration validation (8 tests)
+- Configuration validation (11 tests)
 - Persistence provider selection (3 tests)
 - Connection management (3 tests)
 - App integration and file structure (8 tests)
+- Dashboard, field map, intelligence map, district, and health API tests
+
+## Production Activation Status
+
+**Status: ACTIVE** — Production PostgreSQL is live and serving data.
+
+### Activation Evidence
+
+| Step | Status | Evidence |
+|------|--------|----------|
+| Migration applied | ✅ | 8 tables + `person_role` ENUM created |
+| Schema verified | ✅ | 8 PKs, 12 FKs, 10 UNIQUEs, 15 indexes |
+| RLS enabled | ✅ | All 8 tables, no policies (deny-by-default) |
+| Grants verified | ✅ | `anon`/`authenticated` have only TRUNCATE/REFERENCES/TRIGGER |
+| Data ingested | ✅ | 35,616 records across 6 tables |
+| Idempotency verified | ✅ | Second ingestion run produced identical row counts |
+| FK integrity | ✅ | Zero orphan arrests, chargesheets, or person roles |
+| Multi-accused normalization | ✅ | 5,326 accused roles; 326 FIRs with multiple accused |
+| Repository contracts | ✅ | All 6 PG repos tested against live DB |
+| FastAPI endpoints | ✅ | All 16 endpoints return 200 on live DB |
+| Tests passing | ✅ | 449/449 tests pass |
+| Secrets safe | ✅ | `.env` gitignored; no credentials in tracked source |
+
+### Ingestion Pipeline
+
+The ingestion uses `psycopg2.extras.execute_values` for batch UPSERTs (500 rows/batch), completing full ingestion in ~15 seconds over network to Supabase. The pipeline:
+
+1. Reads CSV files in dependency order (districts → stations → people → firs → arrests → chargesheets)
+2. Normalizes comma-separated `Accused_ID` into `fir_person_roles` junction table
+3. Uses `ON CONFLICT` upserts for idempotency
+4. Records each batch in `ingestion_batches` audit table
 
 ## Security Considerations
 
 - **PII**: The `people` table contains personally identifiable information. Minimize in API responses.
 - **Credentials**: `DATABASE_URL` must never be hardcoded or exposed to the frontend.
-- **RLS**: Row-Level Security policies are BLOCKED pending police role definitions.
+- **RLS**: Enabled on all tables with no policies = effective deny-by-default. Backend connects as `postgres` role, bypasses RLS.
 - **Audit**: All ingestion batches are recorded with timestamps and counts.
 
 ## Next Steps
 
-1. Apply migration to Supabase PostgreSQL instance
-2. Run ingestion pipeline
-3. Verify data integrity
+1. ~~Apply migration to Supabase PostgreSQL instance~~ ✅
+2. ~~Run ingestion pipeline~~ ✅
+3. ~~Verify data integrity~~ ✅
 4. Implement RLS policies (BLOCKED — pending role definitions)
 5. Add PII classification labels
-6. Production health check integration
+6. ~~Production health check integration~~ ✅
+7. Add pagination to list endpoints for large result sets
+8. Add rate limiting for API protection

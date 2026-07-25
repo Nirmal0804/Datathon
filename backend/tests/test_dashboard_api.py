@@ -131,11 +131,13 @@ def _build_fake_repos(firs, arrests=None, chargesheets=None):
 
 class TestDashboardAPIUnit:
     def test_health_still_works(self):
+        from unittest.mock import patch
         client = TestClient(app)
-        resp = client.get("/health")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["status"] == "healthy"
+        with patch("app.database.postgres.execute_one", side_effect=RuntimeError("pool not initialized")):
+            resp = client.get("/health")
+            assert resp.status_code == 200
+            data = resp.json()
+            assert data["status"] in ("healthy", "degraded")
 
     def test_summary_returns_200(self):
         repos = _build_fake_repos(

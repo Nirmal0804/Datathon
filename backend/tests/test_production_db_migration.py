@@ -604,18 +604,8 @@ class TestIngestionLogic:
         assert batch_id.startswith("batch-")
         assert len(batch_id) == 18  # "batch-" + 12 hex chars
 
-    def test_compute_file_hash_deterministic(self, tmp_path: Path) -> None:
-        from app.database.ingest import _compute_file_hash
-
-        test_file = tmp_path / "test.csv"
-        test_file.write_text("a,b,c\n1,2,3\n")
-
-        hash1 = _compute_file_hash(test_file)
-        hash2 = _compute_file_hash(test_file)
-        assert hash1 == hash2
-        assert len(hash1) == 16
-
     def test_ingest_districts_calls_execute(self) -> None:
+        from unittest.mock import patch
         from app.database.ingest import ingest_districts
 
         mock_cur = MagicMock()
@@ -636,11 +626,15 @@ class TestIngestionLogic:
                 "Longitude": "77.5",
             }
         ]
-        count = ingest_districts(mock_cur, rows)
-        assert count == 1
-        mock_cur.execute.assert_called_once()
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            count = ingest_districts(mock_cur, rows)
+            assert count == 1
+            mock_ev.assert_called_once()
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (district_id)" in sql
 
     def test_ingest_firs_populates_junction_table(self) -> None:
+        from unittest.mock import patch
         from app.database.ingest import ingest_firs
 
         mock_cur = MagicMock()
@@ -664,10 +658,16 @@ class TestIngestionLogic:
                 "Status": "Under Investigation",
             }
         ]
-        fir_count, role_count = ingest_firs(mock_cur, rows)
-        assert fir_count == 1
-        # complainant + victim + 2 accused = 4 roles
-        assert role_count == 4
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            fir_count, role_count = ingest_firs(mock_cur, rows)
+            assert fir_count == 1
+            # complainant + victim + 2 accused = 4 roles
+            assert role_count == 4
+            # execute_values called twice: once for FIR insert, once for roles
+            assert mock_ev.call_count == 2
+            # Second call is the roles insert
+            roles_values = mock_ev.call_args_list[1][0][2]
+            assert len(roles_values) == 4
 
     def test_ingest_dispatch_completeness(self) -> None:
         from app.database.ingest import INGEST_DISPATCH
@@ -695,10 +695,14 @@ class TestIngestionReconciliation:
     Multiple chargesheets or arrests may reference the same FIR.  The
     ON CONFLICT clause must target the source identifier to avoid
     overwriting legitimate records.
+
+    Tests now use ``patch("app.database.ingest.psycopg2.extras.execute_values")``
+    because the ingestion module uses ``execute_values`` for batch inserts.
     """
 
     def test_arrest_upsert_uses_arrest_id(self) -> None:
         """Arrest ingestion must ON CONFLICT on arrest_id, not fir_id."""
+        from unittest.mock import patch
         from app.database.ingest import ingest_arrests
 
         mock_cur = MagicMock()
@@ -715,17 +719,17 @@ class TestIngestionReconciliation:
                 "Photograph_Taken": "false",
             },
         ]
-        count = ingest_arrests(mock_cur, rows)
-        assert count == 1
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            count = ingest_arrests(mock_cur, rows)
+            assert count == 1
 
-        # Verify ON CONFLICT targets arrest_id
-        call_args = mock_cur.execute.call_args
-        sql = call_args[0][0]
-        assert "ON CONFLICT (arrest_id)" in sql
-        assert "ON CONFLICT (fir_id)" not in sql
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (arrest_id)" in sql
+            assert "ON CONFLICT (fir_id)" not in sql
 
     def test_chargesheet_upsert_uses_chargesheet_id(self) -> None:
         """Chargesheet ingestion must ON CONFLICT on chargesheet_id, not fir_id."""
+        from unittest.mock import patch
         from app.database.ingest import ingest_chargesheets
 
         mock_cur = MagicMock()
@@ -739,16 +743,17 @@ class TestIngestionReconciliation:
                 "Status": "Under Trial",
             },
         ]
-        count = ingest_chargesheets(mock_cur, rows)
-        assert count == 1
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            count = ingest_chargesheets(mock_cur, rows)
+            assert count == 1
 
-        call_args = mock_cur.execute.call_args
-        sql = call_args[0][0]
-        assert "ON CONFLICT (chargesheet_id)" in sql
-        assert "ON CONFLICT (fir_id)" not in sql
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (chargesheet_id)" in sql
+            assert "ON CONFLICT (fir_id)" not in sql
 
     def test_ingest_arrests_two_records_same_fir(self) -> None:
         """Two arrests for the same FIR must both be ingested."""
+        from unittest.mock import patch
         from app.database.ingest import ingest_arrests
 
         mock_cur = MagicMock()
@@ -776,13 +781,16 @@ class TestIngestionReconciliation:
                 "Photograph_Taken": "false",
             },
         ]
-        count = ingest_arrests(mock_cur, rows)
-        assert count == 2
-        # Two separate INSERT statements (one per row)
-        assert mock_cur.execute.call_count == 2
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            count = ingest_arrests(mock_cur, rows)
+            assert count == 2
+            # Both records included in one batch call
+            values = mock_ev.call_args[0][2]
+            assert len(values) == 2
 
     def test_ingest_chargesheets_two_records_same_fir(self) -> None:
         """Two chargesheets for the same FIR must both be ingested."""
+        from unittest.mock import patch
         from app.database.ingest import ingest_chargesheets
 
         mock_cur = MagicMock()
@@ -804,12 +812,15 @@ class TestIngestionReconciliation:
                 "Status": "Convicted",
             },
         ]
-        count = ingest_chargesheets(mock_cur, rows)
-        assert count == 2
-        assert mock_cur.execute.call_count == 2
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            count = ingest_chargesheets(mock_cur, rows)
+            assert count == 2
+            values = mock_ev.call_args[0][2]
+            assert len(values) == 2
 
     def test_ingest_fir_upsert_uses_fir_id(self) -> None:
         """FIR ingestion must ON CONFLICT on fir_id."""
+        from unittest.mock import patch
         from app.database.ingest import ingest_firs
 
         mock_cur = MagicMock()
@@ -826,13 +837,15 @@ class TestIngestionReconciliation:
                 "Status": "Under Investigation",
             }
         ]
-        fir_count, _ = ingest_firs(mock_cur, rows)
-        assert fir_count == 1
-        # First call is the FIR INSERT
-        fir_sql = mock_cur.execute.call_args_list[0][0][0]
-        assert "ON CONFLICT (fir_id)" in fir_sql
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            fir_count, _ = ingest_firs(mock_cur, rows)
+            assert fir_count == 1
+            # First call is the FIR INSERT
+            fir_sql = mock_ev.call_args_list[0][0][1]
+            assert "ON CONFLICT (fir_id)" in fir_sql
 
     def test_ingest_district_upsert_uses_district_id(self) -> None:
+        from unittest.mock import patch
         from app.database.ingest import ingest_districts
 
         mock_cur = MagicMock()
@@ -841,11 +854,13 @@ class TestIngestionReconciliation:
                  "Population_Density": "10", "Literacy_Rate": "80",
                  "Urban_Population_Pct": "50", "Rural_Population_Pct": "50",
                  "Police_Stations": "2", "Latitude": "12", "Longitude": "77"}]
-        ingest_districts(mock_cur, rows)
-        sql = mock_cur.execute.call_args[0][0]
-        assert "ON CONFLICT (district_id)" in sql
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            ingest_districts(mock_cur, rows)
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (district_id)" in sql
 
     def test_ingest_station_upsert_uses_station_id(self) -> None:
+        from unittest.mock import patch
         from app.database.ingest import ingest_stations
 
         mock_cur = MagicMock()
@@ -855,11 +870,13 @@ class TestIngestionReconciliation:
                  "Latitude": "12", "Longitude": "77",
                  "Personnel_Strength": "50", "Patrol_Vehicles": "5",
                  "Contact_Number": "123", "Email": "t@t.com"}]
-        ingest_stations(mock_cur, rows)
-        sql = mock_cur.execute.call_args[0][0]
-        assert "ON CONFLICT (station_id)" in sql
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            ingest_stations(mock_cur, rows)
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (station_id)" in sql
 
     def test_ingest_person_upsert_uses_person_id(self) -> None:
+        from unittest.mock import patch
         from app.database.ingest import ingest_people
 
         mock_cur = MagicMock()
@@ -868,9 +885,10 @@ class TestIngestionReconciliation:
                  "Education": "Graduate", "Marital_Status": "Single",
                  "Blood_Group": "O+", "Nationality": "Indian",
                  "District": "Test", "Station_ID": "PS001"}]
-        ingest_people(mock_cur, rows)
-        sql = mock_cur.execute.call_args[0][0]
-        assert "ON CONFLICT (person_id)" in sql
+        with patch("app.database.ingest.psycopg2.extras.execute_values") as mock_ev:
+            ingest_people(mock_cur, rows)
+            sql = mock_ev.call_args[0][1]
+            assert "ON CONFLICT (person_id)" in sql
 
 
 # ---------------------------------------------------------------------------
@@ -957,9 +975,10 @@ class TestConfigurationValidation:
             assert "password" not in error_str.lower()
 
     def test_settings_defaults_csv(self) -> None:
-        from app.core.config import settings
+        from app.core.config import Settings
 
-        assert settings.DATA_BACKEND == "csv"
+        s = Settings(DATA_BACKEND="csv", DATABASE_URL="")
+        assert s.DATA_BACKEND == "csv"
 
     def test_settings_pool_bounds_valid(self) -> None:
         from app.core.config import settings

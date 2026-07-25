@@ -18,87 +18,63 @@ class PostgresFIRRepository:
     the junction table on every FIR read.
     """
 
-    _BASE_SELECT = (
-        "SELECT f.fir_id, f.fir_number, f.station_id, f.district, "
+    _COLUMNS = (
+        "f.fir_id, f.fir_number, f.station_id, f.district, "
         "f.incident_date, f.fir_date, f.crime_head, f.crime_subhead, "
         "f.bns_sections, f.latitude, f.longitude, f.complainant_id, "
-        "f.victim_id, f.investigating_officer, f.status "
-        "FROM firs f"
+        "f.victim_id, f.investigating_officer, f.status"
     )
 
     _ACCUSED_SUBQUERY = (
-        "SELECT COALESCE(string_agg(fpr.person_id, ',' ORDER BY fpr.id), '') "
+        "(SELECT COALESCE(string_agg(fpr.person_id, ',' ORDER BY fpr.id), '') "
         "FROM fir_person_roles fpr "
-        "WHERE fpr.fir_id = f.fir_id AND fpr.role = 'accused'"
+        "WHERE fpr.fir_id = f.fir_id AND fpr.role = 'accused')"
     )
 
-    # Alias used in f-string queries for the correlated subquery
-    _ACCUSED_ALIAS = "accused_ids_raw"
+    def _build_select(self, where: str = "", params: tuple = (), order: str = "f.fir_id") -> list[dict]:
+        sql = (
+            f"SELECT {self._COLUMNS}, {self._ACCUSED_SUBQUERY} AS accused_ids_raw "
+            f"FROM firs f "
+            f"{where} ORDER BY {order}"
+        )
+        return execute_query(sql, params) if params else execute_query(sql)
 
     def list_all(self) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "ORDER BY f.fir_id"
-        )
+        rows = self._build_select()
         return [self._to_record(r) for r in rows]
 
     def get_by_id(self, fir_id: str) -> Optional[FIRRecord]:
-        row = execute_one(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.fir_id = %s",
-            (fir_id,),
-        )
-        return self._to_record(row) if row else None
+        rows = self._build_select("WHERE f.fir_id = %s", (fir_id,))
+        return self._to_record(rows[0]) if rows else None
 
     def get_by_number(self, fir_number: str) -> Optional[FIRRecord]:
-        row = execute_one(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.fir_number = %s",
-            (fir_number,),
-        )
-        return self._to_record(row) if row else None
+        rows = self._build_select("WHERE f.fir_number = %s", (fir_number,))
+        return self._to_record(rows[0]) if rows else None
 
     def list_by_station(self, station_id: str) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.station_id = %s ORDER BY f.fir_id",
-            (station_id,),
-        )
+        rows = self._build_select("WHERE f.station_id = %s", (station_id,))
         return [self._to_record(r) for r in rows]
 
     def list_by_district(self, district: str) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.district = %s ORDER BY f.fir_id",
-            (district,),
-        )
+        rows = self._build_select("WHERE f.district = %s", (district,))
         return [self._to_record(r) for r in rows]
 
     def list_by_incident_date_range(
         self, start_date: str, end_date: str
     ) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.incident_date::date >= %s AND f.incident_date::date <= %s "
-            "ORDER BY f.incident_date",
+        rows = self._build_select(
+            "WHERE f.incident_date::date >= %s AND f.incident_date::date <= %s",
             (start_date, end_date),
+            order="f.incident_date",
         )
         return [self._to_record(r) for r in rows]
 
     def list_by_crime_head(self, crime_head: str) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.crime_head = %s ORDER BY f.fir_id",
-            (crime_head,),
-        )
+        rows = self._build_select("WHERE f.crime_head = %s", (crime_head,))
         return [self._to_record(r) for r in rows]
 
     def list_by_status(self, status: str) -> list[FIRRecord]:
-        rows = execute_query(
-            f"{self._BASE_SELECT}, ({self._ACCUSED_SUBQUERY}) AS accused_ids_raw "
-            "WHERE f.status = %s ORDER BY f.fir_id",
-            (status,),
-        )
+        rows = self._build_select("WHERE f.status = %s", (status,))
         return [self._to_record(r) for r in rows]
 
     @staticmethod
