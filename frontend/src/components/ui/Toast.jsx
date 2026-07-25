@@ -9,7 +9,7 @@ const ToastContext = createContext(null);
 
 export function useToast() {
   const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useToast must be used inside ToastProvider');
+  if (!ctx) return { addToast: () => {}, removeToast: () => {} };
   return ctx;
 }
 

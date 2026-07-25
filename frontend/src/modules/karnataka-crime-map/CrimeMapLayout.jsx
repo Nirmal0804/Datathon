@@ -311,10 +311,9 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
     }
   };
 
-  // Case details contextual analytics metrics (Analyst extensions)
+  // Compute metrics for selected case drawer
   const caseMetrics = useMemo(() => {
     if (!selectedCase) return null;
-
     const districtCases = MOCK_CASES.filter(c => c.district === selectedCase.district);
     const totalDistrictCrimes = districtCases.length;
     const highSeverityCount = districtCases.filter(c => c.risk === 'Critical' || c.risk === 'High').length;
