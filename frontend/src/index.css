@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-[#F7F8FA] text-[#0F172A] font-sans antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(15, 23, 42, 0.1);
+    color: #0F172A;
+  }
+
+  /* Slim scrollbars */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+}
+
+/* ============================================================
+   COMPONENT LAYER — Design System Primitives
+   ============================================================ */
+@layer components {
+
+  /* ── Hide scrollbars ── */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ── Modern Government Dashboard Cards (20px rounded, clean border, soft shadow) ── */
+  .gov-card {
+    @apply bg-white border border-[#E7EAF0] rounded-[24px] shadow-sm transition-all duration-300;
+  }
+  .gov-card-hover {
+    @apply gov-card hover:border-slate-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white border border-[#E7EAF0] rounded-[24px] shadow-sm;
+  }
+  .card-hover {
+    @apply card transition-all duration-300 hover:border-slate-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1;
+  }
+  .card-active {
+    @apply bg-slate-50 border-[#0F172A] ring-1 ring-[#0F172A]/10;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold
+           transition-all duration-200 select-none
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A] focus-visible:ring-offset-2 focus-visible:ring-offset-white
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-[#0F172A] text-white hover:bg-[#1E3A8A] active:scale-[0.98] shadow-sm hover:shadow-md;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-[#0F172A] border border-[#E7EAF0] hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm;
+  }
+  .btn-ghost {
+    @apply btn text-slate-500 hover:text-[#0F172A] hover:bg-slate-100 active:scale-[0.98];
+  }
+  .btn-danger {
+    @apply btn bg-red-50 text-red-600 border border-red-100 hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-[0.98] shadow-sm;
+  }
+  .btn-sm  { @apply px-3.5 py-1.5 text-xs rounded-lg; }
+  .btn-icon { @apply p-2 rounded-xl; }
+
+  /* ── Inputs ── */
+  .input {
+    @apply w-full bg-[#F7F8FA] border border-[#E7EAF0] rounded-full py-2.5 px-4 text-[13px] font-medium text-[#0F172A] placeholder:text-slate-400
+           focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#0F172A] focus:border-transparent transition-all duration-200 shadow-sm;
+  }
+  .select { @apply input appearance-none cursor-pointer pr-10; }
+
+  /* ── Labels ── */
+  .label { @apply block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2; }
+
+  /* ── Badges ── */
+  .badge { @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm; }
+  .badge-critical { @apply badge bg-red-50   text-red-700   border-red-200;   }
+  .badge-high     { @apply badge bg-amber-50 text-amber-700 border-amber-200; }
+  .badge-medium   { @apply badge bg-blue-50  text-blue-700  border-blue-200;  }
+  .badge-low      { @apply badge bg-emerald-50 text-emerald-700 border-emerald-200; }
+  .badge-neutral  { @apply badge bg-slate-100 text-slate-600 border-slate-200; }
+
+  /* ── Status dots ── */
+  .status-dot { @apply w-2.5 h-2.5 rounded-full shadow-sm; }
+  .status-dot-live { @apply status-dot bg-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.4)] animate-pulse; }
+
+  /* ── Section headers ── */
+  .section-title   { @apply text-xl font-extrabold text-[#0F172A] tracking-tight; }
+  .section-subtitle { @apply text-[13px] font-medium text-slate-500 mt-1; }
+
+  /* ── Tables ── */
+  .table-header { @apply text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-[#E7EAF0] px-6 py-4 sticky top-0; }
+  .table-cell   { @apply px-6 py-4 text-[13px] font-medium text-[#0F172A]; }
+  .table-row    { @apply border-b border-[#E7EAF0] hover:bg-slate-50 transition-colors duration-150; }
+
+  /* ── Dividers ── */
+  .divider { @apply border-t border-[#E7EAF0]; }
+
+  /* ── Glassmorphism ── */
+  .glass-card  { @apply bg-white/80 backdrop-blur-xl border border-[#E7EAF0] rounded-[24px] shadow-sm; }
+  .glass-panel { @apply bg-white/95 backdrop-blur-xl border-b border-[#E7EAF0]; }
+
+  /* ── Skeleton Shimmer ── */
+  .skeleton {
+    @apply rounded-xl bg-slate-100 overflow-hidden relative;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* ── Nav items ── */
+  .nav-item {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-[13px] font-bold cursor-pointer;
+  }
+  .nav-item-active {
+    @apply nav-item bg-[#0F172A] text-white shadow-sm;
+  }
+  .nav-item-inactive {
+    @apply nav-item text-slate-500 hover:text-[#0F172A] hover:bg-slate-50;
+  }
+
+  /* ── KPI ── */
+  .kpi-value { @apply text-3xl font-extrabold text-[#0F172A] tracking-tight; }
+  .kpi-label { @apply text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1; }
+}
+
+/* ============================================================
+   UTILITY LAYER — animations, helpers
+   ============================================================ */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .elevation-1 { box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+  .elevation-2 { box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  .elevation-3 { box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+
+  .transition-base { @apply transition-all duration-200; }
+
+  /* Glow effects */
+  .glow-success { animation: glowSuccess 2s ease-in-out infinite; }
+  .glow-danger  { animation: glowDanger  2s ease-in-out infinite; }
+}
+
+/* ── Keyframes (outside @layer so they're always available) ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes glowSuccess {
+  0%, 100% { box-shadow: 0 0 4px rgba(16,185,129,0.4);  }
+  50%       { box-shadow: 0 0 12px rgba(16,185,129,0.8); }
+}
+@keyframes glowDanger {
+  0%, 100% { box-shadow: 0 0 4px rgba(239,68,68,0.4);  }
+  50%       { box-shadow: 0 0 12px rgba(239,68,68,0.8); }
+}
