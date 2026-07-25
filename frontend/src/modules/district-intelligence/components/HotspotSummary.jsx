@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Flame } from 'lucide-react';
 
 const hotspots = [
@@ -11,15 +12,22 @@ export default function HotspotSummary() {
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
       <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <Flame className="w-5 h-5 text-red-500" />
+        <Flame className="w-5 h-5 text-red-500 animate-pulse" />
         Emerging Hotspots
       </h3>
       <div className="space-y-3">
         {hotspots.map((hs, idx) => (
-          <div key={idx} className="flex justify-between items-center p-3 bg-slate-800/30 border border-slate-800 rounded-lg">
+          <motion.div 
+            key={idx} 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.05 }}
+            whileHover={{ y: -3, scale: 1.01, border: '1px solid #3b82f6/40' }}
+            className="flex justify-between items-center p-3 bg-slate-800/30 border border-slate-800 rounded-lg transition-all duration-200 cursor-default"
+          >
             <div>
               <p className="text-sm font-semibold text-slate-200">{hs.area}</p>
-              <p className={`text-xs mt-0.5 ${hs.trend.startsWith('+') ? 'text-red-400' : 'text-emerald-400'}`}>
+              <p className={`text-xs mt-0.5 ${hs.trend.startsWith('+') ? 'text-red-400' : 'text-emerald-450'}`}>
                 {hs.trend} this week
               </p>
             </div>
@@ -30,7 +38,7 @@ export default function HotspotSummary() {
             }`}>
               {hs.priority}
             </span>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

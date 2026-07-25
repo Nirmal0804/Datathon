@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const stations = [
   { id: 'PS-101', name: 'Central Station', inspector: 'R. K. Sharma', activeCases: 142, efficiency: '89%', status: 'Optimal' },
@@ -27,15 +28,26 @@ export default function PoliceStationTable() {
           </thead>
           <tbody>
             {stations.map((row, idx) => (
-              <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+              <motion.tr 
+                key={idx} 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.35, delay: idx * 0.08 }}
+                className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors"
+              >
                 <td className="px-6 py-4 font-mono font-medium text-slate-200">{row.id}</td>
                 <td className="px-6 py-4 font-semibold text-white">{row.name}</td>
                 <td className="px-6 py-4">{row.inspector}</td>
                 <td className="px-6 py-4">{row.activeCases}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-16 bg-slate-700 rounded-full h-1.5">
-                      <div className={`h-1.5 rounded-full ${parseInt(row.efficiency) > 80 ? 'bg-emerald-500' : 'bg-amber-500'}`} style={{ width: row.efficiency }}></div>
+                    <div className="w-16 bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: row.efficiency }}
+                        transition={{ duration: 1.0, ease: 'easeOut', delay: idx * 0.1 }}
+                        className={`h-1.5 rounded-full ${parseInt(row.efficiency) > 80 ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                      />
                     </div>
                     <span>{row.efficiency}</span>
                   </div>
@@ -49,7 +61,7 @@ export default function PoliceStationTable() {
                     {row.status}
                   </span>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>

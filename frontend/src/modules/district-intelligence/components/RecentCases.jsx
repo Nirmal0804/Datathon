@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
+import { useToast } from '../../../components/ui/Toast';
 
 const cases = [
   { id: 'FIR-2023-0892', category: 'Cybercrime', time: '2 hours ago', risk: 'High' },
@@ -8,12 +10,25 @@ const cases = [
 ];
 
 export default function RecentCases() {
+  const toast = useToast();
+
+  const handleInspect = (caseId) => {
+    toast.success('Inspection Mode Active', `Opening database dossier log for Case ${caseId}.`);
+  };
+
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
       <h3 className="text-lg font-semibold text-white mb-4">Recent Case Intake</h3>
       <div className="space-y-3">
-        {cases.map((c) => (
-          <div key={c.id} className="flex justify-between items-center p-3 bg-slate-800/30 border border-slate-800 rounded-lg">
+        {cases.map((c, idx) => (
+          <motion.div 
+            key={c.id} 
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.05 }}
+            whileHover={{ scale: 1.02 }}
+            className="flex justify-between items-center p-3 bg-slate-800/30 border border-slate-800 rounded-lg transition-all duration-200"
+          >
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-mono text-sm text-slate-200">{c.id}</span>
@@ -26,8 +41,13 @@ export default function RecentCases() {
               </div>
               <p className="text-xs text-slate-400">{c.category} • {c.time}</p>
             </div>
-            <button className="text-primary hover:text-primary-hover text-sm">View</button>
-          </div>
+            <button 
+              onClick={() => handleInspect(c.id)}
+              className="text-primary hover:text-primary-hover text-sm cursor-pointer transition-all hover:underline"
+            >
+              View
+            </button>
+          </motion.div>
         ))}
       </div>
     </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { FileText, Download, Printer, Share2, X, Shield, BarChart2, Map, AlertTriangle } from 'lucide-react';
+import { downloadReportFile } from './ReportList';
 
-export default function ReportPreview({ report, onClose }) {
+export default function ReportPreview({ report, onClose, role = 'analyst' }) {
   if (!report) {
     return (
       <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-600 h-full">
@@ -12,6 +13,38 @@ export default function ReportPreview({ report, onClose }) {
     );
   }
 
+  // Resolve dynamic officer identity from current authenticated session
+  const officerInfo = {
+    analyst: { name: 'Inspector Patil', role: 'Intelligence Analyst' },
+    officer: { name: 'Insp. R. Kumar', role: 'Field Officer' },
+    admin: { name: 'Super Admin S. Kumar', role: 'System Administrator' },
+  }[role] || { name: 'Officer in Charge', role: 'Departmental Admin' };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = () => {
+    const secureUrl = `${window.location.origin}/reports/secure-view/${report.id}`;
+    navigator.clipboard.writeText(secureUrl).then(() => {
+      alert(`CONFIDENTIAL secure link copied to clipboard: ${secureUrl}`);
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
+  const handleExportCSV = () => {
+    downloadReportFile(report, 'csv', officerInfo);
+  };
+
+  const handleExportExcel = () => {
+    downloadReportFile(report, 'excel', officerInfo);
+  };
+
+  const handleExportPDF = () => {
+    downloadReportFile(report, 'pdf', officerInfo);
+  };
+
   return (
     <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl flex flex-col h-full overflow-hidden">
       {/* Preview Header */}
@@ -20,17 +53,23 @@ export default function ReportPreview({ report, onClose }) {
           <FileText className="w-5 h-5 text-primary" />
           <span className="text-sm font-medium text-white truncate max-w-xs">{report.title}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors">
+        <div className="flex flex-wrap items-center gap-2">
+          <button onClick={handlePrint} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
             <Printer className="w-3.5 h-3.5" /> Print
           </button>
-          <button className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors">
+          <button onClick={handleShare} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
             <Share2 className="w-3.5 h-3.5" /> Share
           </button>
-          <button className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-primary hover:bg-indigo-500 text-white rounded-md transition-colors font-medium">
+          <button onClick={handleExportCSV} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
+            <Download className="w-3.5 h-3.5" /> CSV
+          </button>
+          <button onClick={handleExportExcel} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
+            <Download className="w-3.5 h-3.5" /> Excel
+          </button>
+          <button onClick={handleExportPDF} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-primary hover:bg-indigo-500 text-white rounded-md transition-colors font-medium cursor-pointer">
             <Download className="w-3.5 h-3.5" /> Export PDF
           </button>
-          <button onClick={onClose} className="p-1.5 text-slate-500 hover:text-white hover:bg-slate-700 rounded-md transition-colors">
+          <button onClick={onClose} className="p-1.5 text-slate-500 hover:text-white hover:bg-slate-700 rounded-md transition-colors cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -38,23 +77,32 @@ export default function ReportPreview({ report, onClose }) {
 
       {/* Report Document */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {/* Cover Page */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Shield className="w-10 h-10 text-primary" />
-            <div className="text-left">
-              <p className="text-white font-bold text-lg uppercase tracking-widest">Karnataka Police</p>
-              <p className="text-slate-400 text-xs uppercase tracking-widest">Intelligence & Analytics Division</p>
+        {/* Cover Page / Enhanced Report Header Metadata */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <Shield className="w-6 h-6 text-primary" />
+              <div>
+                <p className="text-white font-bold text-[10px] uppercase tracking-widest leading-none">Karnataka Police Department</p>
+                <p className="text-slate-550 text-[7px] uppercase tracking-widest">Confidential Security Document</p>
+              </div>
             </div>
+            <span className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-[8px] font-bold text-red-400 uppercase tracking-wider rounded">
+              INTERNAL USE ONLY
+            </span>
           </div>
-          <div className="border-t border-b border-slate-700 py-6 my-6">
-            <h1 className="text-2xl font-bold text-white mb-2">{report.title}</h1>
-            <p className="text-slate-400 text-sm font-mono">{report.id}</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[10px] font-mono text-slate-400">
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Report ID</span><span className="text-slate-200 font-bold">{report.id}</span></div>
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">District Jurisdiction</span><span className="text-slate-200 font-bold">{report.district}</span></div>
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Date & Time Generated</span><span className="text-slate-200 font-bold">{report.generated} 09:30 AM</span></div>
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Reporting Officer</span><span className="text-slate-200 font-bold">{officerInfo.name}</span></div>
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Officer Role</span><span className="text-slate-200 font-bold">{officerInfo.role}</span></div>
+            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Classification</span><span className="text-red-400 font-bold">CONFIDENTIAL</span></div>
           </div>
-          <div className="flex justify-center gap-8 text-sm text-slate-400">
-            <div><span className="block text-white font-semibold">{report.district}</span><span>Jurisdiction</span></div>
-            <div><span className="block text-white font-semibold">{report.generated}</span><span>Generated</span></div>
-            <div><span className="block text-white font-semibold">CONFIDENTIAL</span><span>Classification</span></div>
+
+          <div className="border-t border-slate-800 pt-3 mt-1">
+            <h1 className="text-sm font-bold text-white leading-tight uppercase tracking-wider">{report.title}</h1>
           </div>
         </div>
 

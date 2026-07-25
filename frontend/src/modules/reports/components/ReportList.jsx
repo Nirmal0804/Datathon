@@ -1,5 +1,6 @@
 import React from 'react';
 import { FileText, BarChart2, Map, Network, Download, Eye, MoreHorizontal, Clock } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 
 const iconMap = {
   'Crime Summary': FileText,
@@ -18,8 +19,124 @@ const reports = [
   { id: 'RPT-2023-0037', title: 'Mysuru District Q3 Summary', type: 'District Report', district: 'Mysuru', generated: '2023-10-10', size: '980 KB', status: 'Ready', pages: 19 },
 ];
 
-export default function ReportList({ searchQuery, onSelect, selectedId }) {
-  const filtered = reports.filter(r =>
+export const downloadReportFile = (report, format, officerInfo = { name: 'Inspector Patil', role: 'Intelligence Analyst' }) => {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const filename = `Crime_Report_${todayStr}.${format === 'excel' ? 'xlsx' : format}`;
+  
+  const reportTitle = report.title || 'Jurisdictional Crime Intelligence Brief';
+  const reportId = report.id || 'RPT-2026';
+  const district = report.district || 'All Karnataka';
+  const generatedDate = report.generated || todayStr;
+  const officerName = officerInfo.name;
+  const officerRole = officerInfo.role;
+
+  if (format === 'csv') {
+    const headers = 'Metadata Field,Value\n';
+    const content = [
+      `"Report ID","${reportId}"`,
+      `"Report Title","${reportTitle}"`,
+      `"District Jurisdiction","${district}"`,
+      `"Classification","CONFIDENTIAL - INTERNAL USE ONLY"`,
+      `"Date Generated","${generatedDate} 09:30 AM"`,
+      `"Reporting Officer","${officerName}"`,
+      `"Officer Role","${officerRole}"`,
+      `"Total Incidents","1248"`,
+      `"Clearance Rate","+12%"`,
+      `"AI Risk Score","84"`,
+      `"Key Findings","1. Property crimes increased 18% in Tech Corridor; increased patrol presence recommended. 2. Narcotics-related arrests show strong correlation with international-transit nodes. 3. AI model predicts 12% increase in incidents in the upcoming festival period."`
+    ].join('\n');
+    
+    const blob = new Blob([headers + content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } 
+  else if (format === 'excel') {
+    const headers = 'Metadata Field\tValue\n';
+    const content = [
+      `"Report ID"\t"${reportId}"`,
+      `"Report Title"\t"${reportTitle}"`,
+      `"District Jurisdiction"\t"${district}"`,
+      `"Classification"\t"CONFIDENTIAL - INTERNAL USE ONLY"`,
+      `"Date Generated"\t"${generatedDate} 09:30 AM"`,
+      `"Reporting Officer"\t"${officerName}"`,
+      `"Officer Role"\t"${officerRole}"`,
+      `"Total Incidents"\t"1248"`,
+      `"Clearance Rate"\t"+12%"`,
+      `"AI Risk Score"\t"84"`,
+      `"Key Findings"\t"1. Property crimes increased 18% in Tech Corridor. 2. Narcotics arrests correlate with international transit nodes. 3. AI predicts 12% increase in holiday season."`
+    ].join('\n');
+    
+    const blob = new Blob([headers + content], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } 
+  else {
+    // Generate valid PDF document using jsPDF
+    const doc = new jsPDF();
+    doc.setFont('Courier');
+    doc.setFontSize(14);
+    
+    doc.text('CONFIDENTIAL - INTERNAL USE ONLY', 10, 15);
+    doc.text('===================================================', 10, 22);
+    
+    doc.setFontSize(10);
+    doc.text(`Report ID:             ${reportId}`, 10, 30);
+    doc.text(`Report Title:          ${reportTitle}`, 10, 37);
+    doc.text(`District Jurisdiction: ${district}`, 10, 44);
+    doc.text(`Date & Time Generated: ${generatedDate} 09:30 AM`, 10, 51);
+    doc.text(`Reporting Officer:     ${officerName}`, 10, 58);
+    doc.text(`Officer Role:          ${officerRole}`, 10, 65);
+    doc.text(`Classification:        CONFIDENTIAL - INTERNAL USE ONLY`, 10, 72);
+    doc.text('---------------------------------------------------', 10, 79);
+    
+    doc.setFontSize(12);
+    doc.text('1. EXECUTIVE SUMMARY', 10, 88);
+    doc.text('--------------------', 10, 93);
+    doc.setFontSize(10);
+    doc.text('Total Incidents: 1,248', 10, 100);
+    doc.text('Clearance Rate:  +12%', 10, 107);
+    doc.text('AI Risk Score:   84', 10, 114);
+    
+    const summaryText = 'This report presents a comprehensive analysis of crime data for the district. The analysis integrates AI-driven risk scoring, historical trend modeling, and geospatial hotspot detection to provide actionable intelligence.';
+    const splitSummary = doc.splitTextToSize(summaryText, 180);
+    doc.text(splitSummary, 10, 122);
+    
+    doc.setFontSize(12);
+    doc.text('2. SPATIAL DISTRIBUTION', 10, 142);
+    doc.text('-----------------------', 10, 147);
+    doc.setFontSize(10);
+    doc.text('Choropleth Map - Crime Density by Area', 10, 154);
+    doc.text('Expected weekly averages, crime counts, and category shifts compiled for analysis.', 10, 161);
+    
+    doc.setFontSize(12);
+    doc.text('3. KEY FINDINGS & RECOMMENDATIONS', 10, 175);
+    doc.text('---------------------------------', 10, 180);
+    doc.setFontSize(10);
+    doc.text('1. Property crimes increased 18% in Tech Corridor; patrols recommended.', 10, 187);
+    doc.text('2. Narcotics-related arrests show correlation with transit nodes.', 10, 194);
+    doc.text('3. AI model predicts 12% increase in incidents in festival period.', 10, 201);
+    
+    doc.text('CONFIDENTIAL REPORT DOCUMENT END', 10, 215);
+    
+    doc.save(filename);
+  }
+};
+
+export const INITIAL_REPORTS = reports;
+
+export default function ReportList({ searchQuery, onSelect, selectedId, reports: propsReports }) {
+  const activeReports = propsReports || reports;
+  const filtered = activeReports.filter(r =>
     r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     r.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
     r.district.toLowerCase().includes(searchQuery.toLowerCase())
@@ -89,7 +206,7 @@ export default function ReportList({ searchQuery, onSelect, selectedId }) {
                     <Eye className="w-3 h-3" /> Preview
                   </button>
                   <button
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => { e.stopPropagation(); downloadReportFile(report, 'pdf'); }}
                     className="flex items-center gap-1 text-xs text-primary hover:text-white px-2 py-1 rounded hover:bg-slate-700 transition-colors"
                   >
                     <Download className="w-3 h-3" /> PDF

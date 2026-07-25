@@ -33,7 +33,7 @@ function AppContent() {
       case 'dashboard':
         return (
           <PageTransition key="dashboard">
-            <DashboardLayout onLogout={navigateToLanding} />
+            <DashboardLayout onLogout={navigateToLanding} role={selectedRole} />
           </PageTransition>
         );
       case 'auth-role':

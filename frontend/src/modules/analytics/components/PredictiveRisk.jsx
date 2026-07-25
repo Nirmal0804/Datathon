@@ -1,56 +1,166 @@
-import React from 'react';
-import { Target, BarChart } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { FORECAST_DATA } from '../../../mock/analyticsData';
+import { Target, TrendingUp, Sparkles, Brain } from 'lucide-react';
 
-export default function PredictiveRisk() {
+export default function PredictiveRisk({ timeFilter }) {
+  const [forecastPeriod, setForecastPeriod] = useState('Next 30 Days');
+
+  const periods = ['Next 7 Days', 'Next 30 Days', 'Next 90 Days'];
+
+  const forecast = useMemo(() => {
+    return FORECAST_DATA[forecastPeriod] || FORECAST_DATA['Next 30 Days'];
+  }, [forecastPeriod]);
+
+  // Compute SVG line points for historical and predicted lines
+  const points = useMemo(() => {
+    const width = 500;
+    const height = 150;
+    const padding = 20;
+    const { historical, predicted, maxVal } = forecast;
+
+    const histPoints = historical.map((val, i) => {
+      const x = (i / (historical.length + predicted.length - 1)) * (width - padding * 2) + padding;
+      const y = height - (val / maxVal) * (height - padding * 2) - padding;
+      return { x, y, val };
+    });
+
+    const predPoints = predicted.map((val, i) => {
+      const idx = historical.length - 1 + i;
+      const x = (idx / (historical.length + predicted.length - 1)) * (width - padding * 2) + padding;
+      const y = height - (val / maxVal) * (height - padding * 2) - padding;
+      return { x, y, val };
+    });
+
+    return {
+      histPoints,
+      predPoints
+    };
+  }, [forecast]);
+
+  // Generate SVG path for historical line
+  const histPath = useMemo(() => {
+    const { histPoints } = points;
+    if (histPoints.length === 0) return '';
+    return histPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  }, [points]);
+
+  // Generate SVG path for predicted line
+  const predPath = useMemo(() => {
+    const { predPoints } = points;
+    if (predPoints.length === 0) return '';
+    return predPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  }, [points]);
+
+  // Generate shaded confidence bounds path
+  const boundsPath = useMemo(() => {
+    const { predPoints } = points;
+    if (predPoints.length === 0) return '';
+    
+    // Create upper and lower offsets for shading
+    const upperPoints = predPoints.map(p => ({ x: p.x, y: p.y - 12 }));
+    const lowerPoints = [...predPoints].reverse().map(p => ({ x: p.x, y: p.y + 12 }));
+
+    const topPath = upperPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    const bottomPath = lowerPoints.map(p => `L ${p.x} ${p.y}`).join(' ');
+
+    return `${topPath} ${bottomPath} Z`;
+  }, [points]);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold text-white">Predictive Risk Modeling</h2>
-          <p className="text-sm text-slate-400">Forecasting future crime volumes using historical data and environmental factors.</p>
+    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-6">
+      
+      {/* Title */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800/60">
+        <div className="flex items-center gap-2">
+          <Brain className="w-5 h-5 text-indigo-400 animate-pulse-soft" />
+          <div>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">AI Crime Forecast</h3>
+            <p className="text-4xs text-slate-400 mt-0.5">Predictive forecasting models simulating seasonal offsets and boundaries.</p>
+          </div>
+        </div>
+
+        {/* Period tabs */}
+        <div className="flex bg-slate-950/45 p-1 rounded-lg border border-slate-850 shrink-0">
+          {periods.map(p => (
+            <button
+              key={p}
+              onClick={() => setForecastPeriod(p)}
+              className={`px-3 py-1 text-3xs font-bold uppercase tracking-wider rounded cursor-pointer transition-all ${
+                forecastPeriod === p
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm text-center">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Statewide Threat Level</h3>
-            <div className="w-32 h-32 mx-auto rounded-full border-8 border-slate-800 flex items-center justify-center border-t-amber-500 border-r-amber-500 transform rotate-45 mb-4">
-              <div className="transform -rotate-45 text-3xl font-bold text-amber-500">62%</div>
-            </div>
-            <p className="text-sm text-slate-300">Elevated risk predicted for upcoming festival weekend.</p>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+        
+        {/* Left Side: Confidence score */}
+        <div className="md:col-span-1 p-5 bg-slate-950/40 border border-slate-850 rounded-xl text-center space-y-2.5">
+          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Forecast Confidence</span>
+          <div className="text-4xl font-bold font-mono text-indigo-400">
+            {forecast.confidence}%
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded uppercase">
+            High Accuracy
+          </span>
+          <p className="text-[10px] text-slate-500 leading-relaxed font-sans mt-2">
+            Derived using spatial-temporal Prophet regression coefficients.
+          </p>
+        </div>
+
+        {/* Right Side: Area chart with prediction shading */}
+        <div className="md:col-span-3 p-4 bg-slate-950/30 border border-slate-850/60 rounded-xl relative overflow-hidden">
+          
+          {/* Legend */}
+          <div className="absolute top-4 right-4 flex gap-4 text-[9px] font-mono text-slate-400 select-none">
+            <div className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 bg-slate-500" /> Historical</div>
+            <div className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 border-t border-dashed border-indigo-400" /> Predicted</div>
+            <div className="flex items-center gap-1.5"><span className="w-2.5 h-2 bg-indigo-500/10 border border-indigo-500/20" /> Confidence bounds</div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Top At-Risk Districts</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-white font-medium">Bengaluru South</span><span className="text-red-400 font-bold">89%</span></div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5"><div className="bg-red-500 h-1.5 rounded-full" style={{width: '89%'}}></div></div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-white font-medium">Mysuru Central</span><span className="text-amber-400 font-bold">74%</span></div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5"><div className="bg-amber-500 h-1.5 rounded-full" style={{width: '74%'}}></div></div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-white font-medium">Belagavi</span><span className="text-amber-400 font-bold">68%</span></div>
-                <div className="w-full bg-slate-800 rounded-full h-1.5"><div className="bg-amber-500 h-1.5 rounded-full" style={{width: '68%'}}></div></div>
-              </div>
-            </div>
+          <div className="h-44 w-full relative pt-6">
+            <svg viewBox="0 0 500 150" className="w-full h-full overflow-visible">
+              
+              {/* Confidence Interval Shading Area */}
+              <path d={boundsPath} fill="#6366f1" fillOpacity="0.08" stroke="#6366f1" strokeWidth="0.5" strokeDasharray="2 2" />
+
+              {/* Historical solid line */}
+              <path d={histPath} fill="none" stroke="#94a3b8" strokeWidth="2.0" />
+
+              {/* Predicted dashed line */}
+              <path d={predPath} fill="none" stroke="#6366f1" strokeWidth="2.0" strokeDasharray="4 4" />
+
+              {/* Separator divider dot */}
+              {points.histPoints.length > 0 && (
+                <circle 
+                  cx={points.histPoints[points.histPoints.length - 1].x} 
+                  cy={points.histPoints[points.histPoints.length - 1].y} 
+                  r="4" 
+                  fill="#ffffff" 
+                  stroke="#6366f1" 
+                  strokeWidth="1.5"
+                />
+              )}
+
+            </svg>
+          </div>
+
+          {/* X Axis labels */}
+          <div className="flex justify-between px-3 text-[10px] text-slate-500 font-mono select-none">
+            {forecast.labels.map(l => (
+              <span key={l}>{l}</span>
+            ))}
           </div>
         </div>
 
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm flex flex-col">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart className="w-5 h-5 text-emerald-500" /> Next 30 Days Forecast
-          </h3>
-          <div className="flex-1 border-2 border-dashed border-slate-700 rounded-lg flex flex-col items-center justify-center text-slate-500">
-            <Target className="w-12 h-12 mb-3 opacity-50 text-emerald-500" />
-            <p className="text-sm font-medium">Prophet / ARIMA Forecast Visualization</p>
-            <p className="text-xs mt-1 opacity-70">Showing confidence intervals (bounds) and predicted volume.</p>
-          </div>
-        </div>
       </div>
+
     </div>
   );
 }
