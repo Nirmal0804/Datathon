@@ -354,10 +354,10 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
   };
 
   return (
-    <div className="w-full p-8 bg-[#F7F8FA] min-h-[calc(100vh-90px)] space-y-6 flex flex-col font-sans">
+    <div className="w-full space-y-6 flex flex-col font-sans">
 
       {/* Top GIS Floating Command Bar (Relocated Horizontal Filters) */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div className="w-full bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
           
           {/* Search Box */}
@@ -496,11 +496,11 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
         </div>
       </div>
 
-      {/* Main 3-Column Workspace: Left Sidebar (15%), Center Map Hero (68%), Right Intelligence Panel (17%) */}
-      <div className="flex flex-col md:flex-row gap-6 items-stretch w-full flex-1">
+      {/* Main 3-Column Workspace: Left Sidebar (15%), Center Map Hero (70%), Right Intelligence Panel (15%) */}
+      <div className="flex flex-col md:flex-row gap-6 items-stretch w-full">
 
-        {/* 1. Left Command Filter panel (15% width) */}
-        <div className={`hidden md:block shrink-0 transition-all duration-300 ${sidebarOpen ? 'w-[15%] min-w-[200px] max-w-[240px]' : 'w-0 overflow-hidden'}`}>
+        {/* 1. Left Command Filter panel (15% width, 750px height) */}
+        <div className={`hidden md:block shrink-0 h-[750px] transition-all duration-300 ${sidebarOpen ? 'w-[15%] min-w-[200px] max-w-[240px]' : 'w-0 overflow-hidden'}`}>
           <div className="w-full h-full">
             <GISSidebar
               filters={filters}
@@ -513,8 +513,8 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </div>
         </div>
 
-        {/* 2. Center GIS Map Canvas (~68% width - Map as Hero) */}
-        <div className="flex-1 w-full md:w-[68%] bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[680px] flex flex-col min-w-0">
+        {/* 2. Center GIS Map Canvas (70% width, 750px height - Map as Hero) */}
+        <div className="flex-1 w-full md:w-[70%] bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[750px] flex flex-col min-w-0">
           {isLoading && <SkeletonMapOverlay />}
 
           <GISMap
@@ -548,8 +548,8 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           )}
         </div>
 
-        {/* 3. Right Intelligence Panel (~17% width) */}
-        <div className="hidden md:block shrink-0 w-[17%] min-w-[220px] max-w-[260px] h-[680px]">
+        {/* 3. Right Intelligence Panel (15% width, 750px height) */}
+        <div className="hidden md:block shrink-0 w-[15%] min-w-[200px] max-w-[240px] h-[750px]">
           <AnalyticsPanel
             filteredCases={filteredCases}
             onClose={null}

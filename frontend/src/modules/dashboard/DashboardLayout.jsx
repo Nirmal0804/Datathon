@@ -55,7 +55,7 @@ import {
 } from './components/mockData';
 
 // Map modules that should be full-height (no scroll container)
-const FULL_HEIGHT_MODULES = new Set(['map', 'network']);
+const FULL_HEIGHT_MODULES = new Set(['network']);
 
 export default function DashboardLayout({ onLogout, role }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -145,6 +145,7 @@ export default function DashboardLayout({ onLogout, role }) {
         assigned_cases: <FieldOfficerAssignedCases />,
         fir_management: <FieldOfficerFIRManagement />,
         alerts:         <FieldOfficerAlerts />,
+        map:            <CrimeMapLayout role={role} />,
         hotspots:       <HotspotDetectionLayout onNavigate={setActiveModule} />,
         settings:       <SettingsLayout />,
       };
@@ -167,6 +168,7 @@ export default function DashboardLayout({ onLogout, role }) {
         audit_logs:    <AdminAuditLogs />,
         system_health: <AdminSystemHealth />,
         config:        <AdminConfiguration />,
+        map:           <CrimeMapLayout role={role} />,
         settings:      <SettingsLayout />,
       };
       
@@ -227,6 +229,7 @@ export default function DashboardLayout({ onLogout, role }) {
           )}
         </div>
       ),
+      map:       <CrimeMapLayout role={role} />,
       district:  <DistrictIntelligenceLayout />,
       analytics: <AnalyticsLayout />,
       reports:   <ReportsLayout role={role} />,
