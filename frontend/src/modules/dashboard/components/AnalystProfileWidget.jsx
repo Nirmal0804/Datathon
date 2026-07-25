@@ -16,13 +16,6 @@ export default function AnalystProfileWidget({ onLogout, onNavigate, role }) {
         animate={{ y: 0, opacity: 1 }}
         className="bg-white rounded-[20px] p-2 flex flex-col items-center gap-2 shadow-md border border-[#E7ECF3] transition-all"
       >
-        {/* Avatar Icon */}
-        <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center font-bold text-xs shrink-0 shadow-xs" title={`${profile.name} (${profile.roleText})`}>
-          {profile.initials}
-        </div>
-        
-        <div className="w-6 h-[1px] bg-[#E7ECF3]" />
-
         {/* Settings Button */}
         <motion.button
           onClick={() => onNavigate('settings')}
