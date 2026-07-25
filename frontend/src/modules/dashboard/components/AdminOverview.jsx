@@ -65,25 +65,25 @@ export default function AdminOverview({ onNavigate }) {
 
   return (
     <div className="space-y-6">
-      {/* Header (Compact Hero) */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5 p-4 sm:p-5 bg-white border border-[#E5E7EB] rounded-[20px] shadow-sm transition-all duration-200 ease-in-out">
+      {/* Header (Spacious Hero) */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6 p-7 sm:p-8 bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm transition-all duration-200 ease-in-out">
         {/* Left Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           {/* Karnataka Police Official Badge */}
-          <img src={kspBadge} alt="Karnataka Police Badge" className="h-[54px] w-auto object-contain shrink-0 drop-shadow-sm" />
+          <img src={kspBadge} alt="Karnataka Police Badge" className="h-[60px] w-auto object-contain shrink-0 drop-shadow-sm" />
           <div className="flex flex-col justify-center">
-            <h1 className="text-2xl sm:text-[28px] font-bold text-[#0F172A] leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
               System Administration
             </h1>
-            <p className="text-xs sm:text-sm font-medium text-[#64748B] mt-0.5 leading-normal">
+            <p className="text-xs sm:text-sm font-normal text-[#64748B] mt-1 leading-normal">
               Platform status monitoring, user management roster, and diagnostics controls.
             </p>
           </div>
         </div>
 
         {/* Right Section: Compact Status Chips */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-          <div className="flex items-center gap-2 bg-[#F8F9FB] px-3.5 h-9 rounded-[12px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-2.5 bg-[#F8F9FB] px-4 h-10 rounded-[999px] border border-[#E7ECF3] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
             <Activity className="w-4 h-4 text-emerald-600 animate-pulse" />
             <span className="text-xs font-bold text-[#0F172A]">Server Version: v4.12.2-stable</span>
           </div>
@@ -116,11 +116,11 @@ export default function AdminOverview({ onNavigate }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Diagnostics (CPU & Database performance) */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm h-[340px] flex flex-col justify-between">
-            <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
-              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                <div className="p-1.5 rounded-full bg-emerald-500/10">
-                  <Cpu className="w-5 h-5 text-emerald-600" />
+          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm h-[360px] flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4 mb-3 shrink-0">
+              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-[12px] bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <Cpu className="w-5 h-5" />
                 </div>
                 Resource Utilization & Database Latency
               </h3>
@@ -135,9 +135,9 @@ export default function AdminOverview({ onNavigate }) {
                   <span>Server Core Load (CPU/Memory)</span>
                   <span className="font-mono text-emerald-600">42% CPU / 61% RAM</span>
                 </div>
-                <div className="relative w-full h-32 bg-[#F8F9FB] rounded-[12px] border border-[#E5E7EB] flex items-center justify-center overflow-hidden">
+                <div className="relative w-full h-36 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] flex items-center justify-center overflow-hidden">
                   <svg className="w-full h-full" viewBox="0 0 240 100" preserveAspectRatio="none">
-                    <line x1="0" y1="50" x2="240" y2="50" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <line x1="0" y1="50" x2="240" y2="50" stroke="#E7ECF3" strokeDasharray="3 3" />
                     <path
                       d="M0,80 L30,75 L60,85 L90,60 L120,40 L150,55 L180,45 L210,38 L240,42"
                       fill="none"
@@ -154,9 +154,9 @@ export default function AdminOverview({ onNavigate }) {
                   <span>PostgreSQL API Queries / Latency</span>
                   <span className="font-mono text-police-blue">12ms avg delay</span>
                 </div>
-                <div className="relative w-full h-32 bg-[#F8F9FB] rounded-[12px] border border-[#E5E7EB] flex items-center justify-center overflow-hidden">
+                <div className="relative w-full h-36 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] flex items-center justify-center overflow-hidden">
                   <svg className="w-full h-full" viewBox="0 0 240 100" preserveAspectRatio="none">
-                    <line x1="0" y1="70" x2="240" y2="70" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <line x1="0" y1="70" x2="240" y2="70" stroke="#E7ECF3" strokeDasharray="3 3" />
                     <path
                       d="M0,75 L30,78 L60,72 L90,70 L120,68 L150,85 L180,74 L210,77 L240,78"
                       fill="none"
@@ -172,32 +172,32 @@ export default function AdminOverview({ onNavigate }) {
 
         {/* Right Column: Database Status & Configuration Toggles */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm h-[340px] flex flex-col justify-between">
-            <div className="border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
-              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                <div className="p-1.5 rounded-full bg-police-blue/10">
-                  <Database className="w-5 h-5 text-police-blue" />
+          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm h-[360px] flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div className="border-b border-[#E7ECF3] pb-4 mb-3 shrink-0">
+              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-[12px] bg-indigo-50 text-[#0B1F4D] flex items-center justify-center shrink-0">
+                  <Database className="w-5 h-5" />
                 </div>
                 Database & Server Status
               </h3>
             </div>
             
             <div className="flex-1 py-1 space-y-2.5 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded-[12px] bg-[#F8F9FB] border border-[#E5E7EB]">
+              <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
                 <span className="font-bold text-[#334155]">PostgreSQL Status</span>
-                <span className="badge badge-success px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold">Online</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 rounded-[12px] bg-[#F8F9FB] border border-[#E5E7EB]">
+              <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
                 <span className="font-bold text-[#334155]">GIS Location Tile Server</span>
-                <span className="badge badge-success px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold">Online</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 rounded-[12px] bg-[#F8F9FB] border border-[#E5E7EB]">
+              <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
                 <span className="font-bold text-[#334155]">Redis Cache Instance</span>
-                <span className="badge badge-success px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold">Online</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 rounded-[12px] bg-[#F8F9FB] border border-[#E5E7EB]">
+              <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
                 <span className="font-bold text-[#334155]">ML Forecast Engine</span>
-                <span className="badge badge-success px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold">Online</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
               </div>
             </div>
 
@@ -205,17 +205,17 @@ export default function AdminOverview({ onNavigate }) {
               <button 
                 onClick={handleFlushCache} 
                 disabled={isRefreshing}
-                className="flex-1 gap-2 h-10 rounded-[12px] bg-white border border-[#E5E7EB] hover:bg-[#F8F9FB] hover:border-police-gold text-[#0F172A] font-bold text-xs transition-all flex items-center justify-center shadow-sm cursor-pointer"
+                className="flex-1 gap-2 h-11 rounded-[999px] bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] hover:border-police-gold text-[#0F172A] font-bold text-xs transition-all duration-200 flex items-center justify-center shadow-sm cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-police-blue ${isRefreshing ? 'animate-spin' : ''}`} />
                 <span>Flush Cache</span>
               </button>
               <button 
                 onClick={handleMaintenanceToggle}
-                className={`flex-1 gap-2 h-10 rounded-[12px] font-bold text-xs transition-all flex items-center justify-center cursor-pointer shadow-sm ${
+                className={`flex-1 gap-2 h-11 rounded-[999px] font-bold text-xs transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm ${
                   maintenanceMode 
                     ? 'bg-amber-500 hover:bg-amber-600 text-white' 
-                    : 'bg-[#F8F9FB] border border-[#E5E7EB] hover:bg-white hover:border-police-gold text-[#0F172A]'
+                    : 'bg-[#F8F9FB] border border-[#E7ECF3] hover:bg-white hover:border-police-gold text-[#0F172A]'
                 }`}
               >
                 <Lock className="w-3.5 h-3.5 text-amber-600" />
@@ -230,11 +230,11 @@ export default function AdminOverview({ onNavigate }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: System Audit Logs (Wide) */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm h-[340px] flex flex-col justify-between">
-            <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
-              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                <div className="p-1.5 rounded-full bg-police-blue/10">
-                  <ShieldAlert className="w-5 h-5 text-police-blue" />
+          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm h-[380px] flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4 mb-3 shrink-0">
+              <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-[12px] bg-indigo-50 text-[#0B1F4D] flex items-center justify-center shrink-0">
+                  <ShieldAlert className="w-5 h-5" />
                 </div>
                 Security Audit Logs
               </h3>
@@ -249,25 +249,25 @@ export default function AdminOverview({ onNavigate }) {
             <div className="flex-1 overflow-y-auto no-scrollbar min-h-0">
               <table className="w-full text-left" aria-label="System audit log">
                 <thead>
-                  <tr className="border-b border-[#E7EAF0] text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
-                    <th className="py-2.5 px-3">Audit ID</th>
-                    <th className="py-2.5 px-3">Operator</th>
-                    <th className="py-2.5 px-3">Action Description</th>
-                    <th className="py-2.5 px-3">Target Resource</th>
-                    <th className="py-2.5 px-3">Time</th>
-                    <th className="py-2.5 px-3 text-right">Status</th>
+                  <tr className="border-b border-[#E7ECF3] text-[11px] font-bold text-[#64748B] uppercase tracking-wider bg-[#F8F9FB]">
+                    <th className="py-3 px-4">Audit ID</th>
+                    <th className="py-3 px-4">Operator</th>
+                    <th className="py-3 px-4">Action Description</th>
+                    <th className="py-3 px-4">Target Resource</th>
+                    <th className="py-3 px-4">Time</th>
+                    <th className="py-3 px-4 text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {auditLogs.map((log) => (
-                    <tr key={log.id} className="border-b border-[#E7EAF0] hover:bg-[#F7F8FA] text-[13px] transition-colors">
-                      <td className="py-2.5 px-3 font-mono font-bold text-police-navy">{log.id}</td>
-                      <td className="py-2.5 px-3 font-bold text-[#0F172A]">{log.user}</td>
-                      <td className="py-2.5 px-3 text-[#334155]">{log.action}</td>
-                      <td className="py-2.5 px-3 font-mono text-[#64748B] text-[11px]">{log.target}</td>
-                      <td className="py-2.5 px-3 text-[#64748B]">{log.time}</td>
-                      <td className="py-2.5 px-3 text-right">
-                        <span className={`badge ${log.status === 'Success' ? 'badge-success' : 'badge-high'} py-0.5 px-2 text-[10px] font-bold uppercase`}>
+                    <tr key={log.id} className="border-b border-[#F1F5F9] hover:bg-[#F8F9FB] text-[13px] transition-colors">
+                      <td className="py-3.5 px-4 font-mono font-bold text-police-navy">{log.id}</td>
+                      <td className="py-3.5 px-4 font-bold text-[#0F172A]">{log.user}</td>
+                      <td className="py-3.5 px-4 text-[#334155]">{log.action}</td>
+                      <td className="py-3.5 px-4 font-mono text-[#64748B] text-[11px]">{log.target}</td>
+                      <td className="py-3.5 px-4 text-[#64748B]">{log.time}</td>
+                      <td className="py-3.5 px-4 text-right">
+                        <span className={`badge ${log.status === 'Success' ? 'badge-success' : 'badge-high'} rounded-full py-0.5 px-2.5 text-[10px] font-bold uppercase`}>
                           {log.status}
                         </span>
                       </td>
@@ -281,14 +281,14 @@ export default function AdminOverview({ onNavigate }) {
 
         {/* Right Column: Recent Login Activity */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm h-[340px] flex flex-col justify-between">
-            <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
+          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm h-[380px] flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4 mb-3 shrink-0">
               <h3 className="text-base font-bold text-[#0F172A]">Recent Admin/User Logins</h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar space-y-2.5 pt-1">
+            <div className="flex-1 overflow-y-auto no-scrollbar space-y-3 pt-1">
               {recentLogins.map((login, idx) => (
-                <div key={idx} className="p-3 bg-[#F8F9FB] border border-[#E5E7EB] rounded-[12px] text-xs flex justify-between items-center hover:border-[#CBD5E1] transition-all">
+                <div key={idx} className="p-3.5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs flex justify-between items-center hover:border-[#CBD5E1] hover:bg-white transition-all duration-200">
                   <div>
                     <p className="font-bold text-[#0F172A]">{login.user}</p>
                     <p className="text-[#64748B] text-[11px] mt-0.5">{login.role} • {login.station}</p>
