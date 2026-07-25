@@ -125,10 +125,10 @@
 | Item | Status | Notes |
 |------|--------|-------|
 | Application request logging | COMPLETE | Structured logging with request IDs |
-| Security audit logging | NOT STARTED | Separate subsystem required |
-| Audit event capture | NOT STARTED | actor, action, resource, timestamp, outcome |
-| Audit storage design | NOT STARTED | — |
-| Audit review/testing | NOT STARTED | — |
+| Security audit logging | COMPLETE | AuditMiddleware + AuditService + PostgreSQL persistence |
+| Audit event capture | COMPLETE | user_id, action, resource_type, resource_id, route, outcome, status_code, request_id, timestamp |
+| Audit storage design | COMPLETE | `audit_events` table with append-only repository, RLS deny-by-default |
+| Audit review/testing | COMPLETE | 71 tests covering classification, privacy, failure handling, middleware integration |
 
 ---
 
@@ -312,7 +312,7 @@
 | Production readiness tracker | COMPLETE | This document |
 | Database schema design | NOT STARTED | `docs/DATABASE_SCHEMA.md` (Phase 18) |
 | Deployment guide | NOT STARTED | — |
-| Security audit report | NOT STARTED | — |
+| Security audit report | COMPLETE | Audit logging implemented; append-only with field allowlisting |
 
 ---
 
@@ -337,7 +337,7 @@ Production deployment requires ALL of the following:
 - [ ] Data ingested and validated
 - [ ] Authentication operational
 - [ ] Authorization/RBAC enforced
-- [ ] Audit logging operational
+- [x] Audit logging operational
 - [ ] Security review passed
 - [ ] PII regression tests passing
 - [ ] Observability operational

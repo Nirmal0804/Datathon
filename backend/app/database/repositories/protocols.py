@@ -94,3 +94,16 @@ class ChargeSheetRepository(Protocol):
     def get_by_fir_id(self, fir_id: str) -> List[ChargeSheetRecord]: ...
 
     def list_by_station(self, station_id: str) -> List[ChargeSheetRecord]: ...
+
+
+@runtime_checkable
+class AuditRepository(Protocol):
+    """Append-only audit event persistence.
+
+    Implementations must NOT provide update or delete methods.
+    Audit events are written once and never modified.
+    """
+
+    def append(self, event: dict) -> None:
+        """Persist a single audit event. Must be append-only."""
+        ...

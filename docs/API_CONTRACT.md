@@ -232,7 +232,7 @@ If a role-based access model later distinguishes "field" vs "intelligence" case 
 | **PII** | Person-identifiable information | **NONE currently exposed** (complainant_id, victim_id, accused_ids exist in FIRRecord but are NOT in any API response) |
 | **BIOMETRIC** | DNA, fingerprints, photographs | **NOT exposed** (exists in ArrestRecord.dna_sample etc. but NOT in any API response) |
 | **ADMINISTRATIVE** | User management, RBAC | #18–#21 (BLOCKED_RBAC) |
-| **AUDIT_SECURITY** | Audit logs, security events | Not implemented |
+| **AUDIT_SECURITY** | Audit logs, security events | COMPLETE — append-only audit trail; read API BLOCKED_RBAC |
 
 ### Currently exposed sensitive fields
 

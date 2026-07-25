@@ -69,11 +69,14 @@ CSV repositories implement the same protocol interfaces that future PostgreSQL r
 | Field Officer Crime Map | `api/field_map.py` | `services/field_map_service.py` | COMMITTED |
 | Intelligence Crime Map | `api/intelligence_map.py` | `services/intelligence_map_service.py` | COMMITTED |
 | District Intelligence | `api/districts.py` | `services/district_service.py` | COMMITTED |
+| Network Analysis | `api/network.py` | `services/network_service.py` | COMMITTED |
+| Authentication | `api/auth.py` | — | COMMITTED |
+| Audit Logging | `core/audit.py` (middleware) | `services/audit_service.py` | COMMITTED |
 | Trends & Alerts | — | — | NOT STARTED |
 
 ### Current test coverage
 
-13 test files, 360 tests passing, covering all committed modules.
+19 test files, 678 tests passing, covering all committed modules including audit logging.
 
 ---
 
@@ -631,6 +634,8 @@ Allow only required frontend origins through configuration.
 
 ### Authentication/authorization
 Authentication is implemented via Supabase Auth JWT verification (HS256/JWKS) with deny-by-default ASGI middleware. Do not invent production police roles without requirements. Keep the architecture ready for auth dependencies.
+
+Audit logging is implemented via ASGI middleware that records append-only security events for classified routes. Health probes are excluded. Audit persistence fails open with CRITICAL-level operational logging.
 
 Production requirement: backend must verify user identity and enforce access control. Frontend authorization state is not a security boundary. Roles and jurisdiction semantics require an approved requirements decision.
 

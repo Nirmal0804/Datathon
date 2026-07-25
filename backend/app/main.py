@@ -3,9 +3,10 @@
 Middleware order (outermost first):
   1. CORSMiddleware          – CORS headers
   2. SecurityHeadersMiddleware – cache/security headers
-  3. AuthenticationMiddleware – JWT verification for protected routes
-  4. StructuredLoggingMiddleware – request line after completion
-  5. RequestIDMiddleware     – correlation ID on every request
+  3. AuditMiddleware         – security audit trail (classified routes only)
+  4. AuthenticationMiddleware – JWT verification for protected routes
+  5. StructuredLoggingMiddleware – request line after completion
+  6. RequestIDMiddleware     – correlation ID on every request
 
 Centralized exception handlers convert domain and framework errors into
 a consistent ``{"error": {"code", "message", "request_id"}}`` JSON body.
@@ -42,6 +43,7 @@ from app.api.stations import router as stations_router
 from app.api.auth import router as auth_router
 from app.api.network import router as network_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
+from app.core.audit import AuditMiddleware
 
 # ---------------------------------------------------------------------------
 # Logging setup
@@ -110,6 +112,16 @@ async def lifespan(app: FastAPI):
         audience=settings.SUPABASE_JWT_AUDIENCE,
         jwks_cache_ttl=settings.JWKS_CACHE_TTL,
     )
+
+    # Startup: Audit repository
+    from app.services.audit_service import init_audit_repository
+
+    if settings.DATA_BACKEND.lower() == "postgres":
+        from app.database.postgres.audit_repo import PostgresAuditRepository
+        init_audit_repository(PostgresAuditRepository())
+    else:
+        from app.database.repositories.csv.audit_repo import NoOpAuditRepository
+        init_audit_repository(NoOpAuditRepository())
 
     yield
 
@@ -336,7 +348,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Middleware – added outermost-first: CORS → Security → Auth → Logging → RequestID
+# Middleware – added outermost-first: CORS → Security → Audit → Auth → Logging → RequestID
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -346,6 +358,7 @@ app.add_middleware(
     expose_headers=["X-Request-ID"],
 )
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(AuditMiddleware)
 app.add_middleware(AuthenticationMiddleware)
 app.add_middleware(StructuredLoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
