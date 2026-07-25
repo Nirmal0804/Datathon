@@ -82,13 +82,17 @@ function MapEventsHandler({ onZoomChange, onMapClick }) {
   return null;
 }
 
-// Controller to smoothly pan & zoom map
+// Controller to smoothly pan & zoom map and invalidate size on render
 function MapController({ center, zoom, resetKey }) {
   const map = useMap();
   useEffect(() => {
     if (center) {
       map.setView(center, zoom, { animate: true, duration: 0.8 });
     }
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+    return () => clearTimeout(timer);
   }, [center, zoom, map, resetKey]);
   return null;
 }

@@ -496,11 +496,11 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
         </div>
       </div>
 
-      {/* Main Map Workspace: Left Map Layers Panel (22%) & Expanded Map Hero (78%) */}
-      <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full">
+      {/* Main Map Workspace: Fixed 280px Left Map Layers Panel & Stable Map Hero Canvas */}
+      <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full shrink-0">
 
-        {/* 1. Left Map Layers Panel (22% width, 750px height) */}
-        <div className={`hidden lg:block shrink-0 h-[750px] transition-all duration-300 ${sidebarOpen ? 'w-[22%] min-w-[240px] max-w-[280px]' : 'w-0 overflow-hidden'}`}>
+        {/* 1. Left Map Layers Panel (Strict Fixed 280px width, 750px height) */}
+        <div className={`hidden lg:block shrink-0 h-[750px] w-[280px] transition-all duration-300 ${sidebarOpen ? 'w-[280px]' : 'w-0 overflow-hidden'}`}>
           <div className="w-full h-full">
             <GISSidebar
               filters={filters}
@@ -513,8 +513,8 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </div>
         </div>
 
-        {/* 2. Expanded GIS Map Hero Canvas (78% width, 750px height - Primary Map Workspace) */}
-        <div className="flex-1 w-full lg:w-[78%] bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[750px] flex flex-col min-w-0">
+        {/* 2. Stable GIS Map Hero Canvas (Flex-1, Fixed 750px Height - No Layout Shifts) */}
+        <div className="flex-1 w-full lg:w-auto bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[750px] min-h-[750px] max-h-[750px] flex flex-col min-w-0 shrink-0">
           {isLoading && <SkeletonMapOverlay />}
 
           <GISMap
