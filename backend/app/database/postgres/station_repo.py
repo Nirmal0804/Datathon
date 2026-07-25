@@ -41,6 +41,16 @@ class PostgresStationRepository:
         )
         return [self._to_record(r) for r in rows]
 
+    def get_by_name(self, station_name: str) -> Optional[StationRecord]:
+        row = execute_one(
+            "SELECT station_id, station_name, district_id, district_name, "
+            "zone, station_type, latitude, longitude, "
+            "personnel_strength, patrol_vehicles, contact_number, email "
+            "FROM police_stations WHERE station_name = %s LIMIT 1",
+            (station_name,),
+        )
+        return self._to_record(row) if row else None
+
     def list_by_district_and_type(
         self, district_id: int, station_type: str
     ) -> list[StationRecord]:

@@ -69,3 +69,33 @@ class CSVFIRRepository:
 
     def list_by_status(self, status: str) -> List[FIRRecord]:
         return list(self._by_status.get(status, []))
+
+    def list_filtered(
+        self,
+        district: str | None = None,
+        station_id: str | None = None,
+        crime_head: str | None = None,
+        status: str | None = None,
+        start_date: "date | None" = None,
+        end_date: "date | None" = None,
+    ) -> List[FIRRecord]:
+        result = list(self._by_id.values())
+        if district is not None:
+            result = [f for f in result if f.district == district]
+        if station_id is not None:
+            result = [f for f in result if f.station_id == station_id]
+        if crime_head is not None:
+            result = [f for f in result if f.crime_head == crime_head]
+        if status is not None:
+            result = [f for f in result if f.status == status]
+        if start_date is not None:
+            result = [
+                f for f in result
+                if f.incident_date is not None and f.incident_date.date() >= start_date
+            ]
+        if end_date is not None:
+            result = [
+                f for f in result
+                if f.incident_date is not None and f.incident_date.date() <= end_date
+            ]
+        return result

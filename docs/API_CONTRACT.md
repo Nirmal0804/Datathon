@@ -14,7 +14,7 @@
 |------------|-------|
 | API prefix | `/api/v1` |
 | Health endpoint | `GET /health` |
-| Authentication | **NOT IMPLEMENTED** — all endpoints are open |
+| Authentication | **COMPLETE** — ASGI middleware; deny-by-default for `/api/v1/*`; public paths whitelisted |
 | Pagination | `page` (1-indexed), `page_size` (1–200, default 50) |
 | Date format | ISO 8601 date (`YYYY-MM-DD`) |
 | Error response | `{"error": {"code": str, "message": str, "request_id": str}}` |
@@ -330,7 +330,7 @@ Reports should be modeled as resources **only if** the project requires generate
 
 ---
 
-## 12. Criminal Network API Decision
+## 12. Network Analysis API
 
 ### Deterministic capabilities from existing data
 
@@ -338,27 +338,59 @@ The data model supports these deterministic graph relationships:
 
 | Relationship | Source | Edge type |
 |-------------|--------|-----------|
-| Person ↔ FIR (as accused) | `fir_person_roles` junction | `accused_in` |
-| Person ↔ FIR (as complainant) | `firs.complainant_id` | `complainant_in` |
-| Person ↔ FIR (as victim) | `firs.victim_id` | `victim_of` |
-| Co-accused (same FIR) | Multiple accused in same FIR | `co_accused` |
-| Person ↔ Arrest | `arrests.person_id` | `arrested_for` |
-| FIR ↔ Arrest | `arrests.fir_id` | `has_arrest` |
-| FIR ↔ Chargesheet | `chargesheets.fir_id` | `has_chargesheet` |
-| Station ↔ FIR | `firs.station_id` | `reported_at` |
+| Person → FIR (as accused) | `firs.accused_ids` (reconstructed from `fir_person_roles`) | `accused_in` |
+| Person → FIR (as complainant) | `firs.complainant_id` | `complainant_in` |
+| Person → FIR (as victim) | `firs.victim_id` | `victim_of` |
+| Co-accused (same FIR) | Multiple accused persons in same FIR | `co_accused` |
+| FIR → Police Station | `firs.station_id` → `police_stations.station_id` | `station_fir` |
+| Police Station → District | `police_stations.district_id` → `districts.district_id` | `district_station` |
 
 | # | Method | Path | Purpose | Status |
 |---|--------|------|---------|--------|
-| 32 | GET | `/api/v1/network/graph` | Graph nodes + edges for FIR or person | REQUIRED |
-| 33 | GET | `/api/v1/network/entities/{id}` | Entity detail (person, FIR, station) | REQUIRED |
-| 34 | GET | `/api/v1/network/search` | Search entities by name/ID | REQUIRED |
+| 32 | GET | `/api/v1/network/graph` | Privacy-safe graph nodes + edges with filters and bounds | IMPLEMENTED |
+| 33 | GET | `/api/v1/network/entities/{entity_type}/{entity_id}` | Entity detail (person, FIR, station, district) | IMPLEMENTED |
+| 34 | GET | `/api/v1/network/search` | Search FIR IDs, numbers, station names, district names | IMPLEMENTED |
+
+**Authentication:** Required on all endpoints (ASGI middleware).
+
+**Graph node types:** `person`, `fir`, `station`, `district`
+
+**Graph edge types:** `accused_in`, `complainant_in`, `victim_of`, `co_accused`, `station_fir`, `district_station`
+
+**Co-accused derivation rules:**
+- Both persons must have `accused` role in the same FIR
+- Complainants and victims are NOT included in co-accused edges
+- Multiple shared FIRs → single edge with `shared_fir_count`
+- No self-edges, no duplicate reverse edges
+- Deterministic ordering: sorted by node type, then ID
+
+**Graph bounds:**
+- Max nodes: 500, Max edges: 2000
+- Truncation indicated in `metadata.truncated`
+- Filters: `district`, `station_id`, `fir_id`, `crime_head`, `start_date`, `end_date`
+
+**Privacy model:**
+- Person nodes expose only `entity_id`, `linked_fir_count`, `co_accused_count`
+- No `full_name`, `dob`, `age`, `gender`, `address`, `phone`, `email`, `blood_group`, `biometrics`
+- No `complainant_id` or `victim_id` in person entity responses
+- Search does NOT search person names, phone numbers, or PII
+- Raw `PersonRecord` is never serialized
 
 **Rules:**
 - Every edge must have evidence-backed relationship type
 - No gang membership, conspiracy, or guilt inference
-- Neutral labels only ("co_accused_in", "named_in", "arrested_for")
-- Person names should be minimized; use person_id references
-- **BLOCKED_RBAC** for person-level detail (requires auth)
+- Neutral labels only (co_accused, not accomplice/associate)
+- No edges created from shared district, station, crime category, surname, or demographics
+
+**BLOCKED_RBAC capabilities (not implemented):**
+- Person name search
+- Full person profiles
+- Complainant identity
+- Victim identity
+- Unrestricted accused identity
+- Addresses/contact information
+- Biometrics
+- Role-scoped person access
 
 ### Unsupported semantic outputs
 
@@ -450,9 +482,9 @@ All data endpoints (#2–#15) support the same filter set: `district`, `station_
 | **Anomaly Detection** | AnomalyDetection.jsx | Anomaly results | — | Yes | BLOCKED_ML |
 | **Predictive Risk** | PredictiveRisk.jsx | Risk scores + forecast | — | Yes | BLOCKED_ML |
 | **Hotspot Analytics** | HotspotAnalytics.jsx | Spatial analytics | #10 hotspots (partial) | Yes (spatial shift, generators) | BLOCKED_REQUIREMENTS |
-| **Network Graph** | GraphCanvas.jsx | Nodes + edges | — | Yes | REQUIRED |
-| **Network Entity Detail** | NodeInfoPanel.jsx | Entity info | — | Yes | REQUIRED |
-| **Network Search** | RelationshipSidebar.jsx | Entity search | — | Yes | REQUIRED |
+| **Network Graph** | GraphCanvas.jsx | Nodes + edges | #32 `/network/graph` | No | IMPLEMENTED |
+| **Network Entity Detail** | NodeInfoPanel.jsx | Entity info | #33 `/network/entities/{type}/{id}` | No | IMPLEMENTED |
+| **Network Search** | RelationshipSidebar.jsx | Entity search | #34 `/network/search` | No | IMPLEMENTED |
 | **Report List** | ReportList.jsx | Report metadata | — | Yes | NOT_REQUIRED |
 | **Report Generate** | ReportFilters.jsx | Report trigger | — | Yes | NOT_REQUIRED |
 | **Report Download** | ReportPreview.jsx | Report file | #13 export (CSV only) | Partial | NOT_REQUIRED |
@@ -487,17 +519,17 @@ Stations reference API needed by district intelligence module.
 
 ### Priority 3 — Network Analysis
 
-Deterministic graph construction from existing data. No ML dependency.
+Privacy-safe deterministic graph construction from existing data. No ML dependency. All person data is privacy-safe (entity_id only, no PII).
 
 | # | Endpoint | Depends on |
 |---|----------|-----------|
-| 32 | `GET /api/v1/network/graph` | FIR + Person + Arrest repositories |
-| 33 | `GET /api/v1/network/entities/{id}` | FIR + Person repositories |
-| 34 | `GET /api/v1/network/search` | Person + FIR repositories |
+| 32 | `GET /api/v1/network/graph` | FIR + Station + District repositories |
+| 33 | `GET /api/v1/network/entities/{entity_type}/{entity_id}` | FIR + Station + District repositories |
+| 34 | `GET /api/v1/network/search` | FIR + Station + District repositories |
 
 **Estimated endpoints:** 3
 **Blocker:** None (deterministic data only)
-**Note:** Person-level data requires RBAC. Mark as BLOCKED_RBAC for production; implementable for development/demo without auth.
+**Status:** IMPLEMENTED — privacy-safe, authentication required. Person-level PII remains BLOCKED_RBAC.
 
 ### Priority 4 — Operational Health Probes
 
@@ -555,9 +587,8 @@ The following sections of BACKEND_IMPLEMENTATION_PLAN.md should be updated to re
 
 | Status | Count | Endpoints |
 |--------|-------|-----------|
-| **IMPLEMENTED** | 20 | #1–#17, #35, #36 |
+| **IMPLEMENTED** | 23 | #1–#17, #32, #33, #34, #35, #36 |
 | **IMPLEMENTED_NEEDS_HARDENING** | 0 | — (export limit now enforced) |
-| **REQUIRED** | 3 | #32, #33, #34 (network analysis) |
 | **BLOCKED_RBAC** | 6 | #18, #19, #20, #21 + audit + user management |
 | **BLOCKED_ML** | 4 | #22, #23, #24, #25 |
 | **BLOCKED_GIS** | 2 | #26, #27 |
@@ -566,7 +597,7 @@ The following sections of BACKEND_IMPLEMENTATION_PLAN.md should be updated to re
 | **DEPRECATION_CANDIDATE** | 1 | #6 (duplicate of #10) |
 
 **Total identified endpoints:** 42
-**Implementable now (no blockers):** 3 (#32, #33, #34)
+**Implementable now (no blockers):** 0 remaining — all deterministic endpoints implemented
 **Awaiting RBAC:** 6+
 **Awaiting ML:** 4
 **Awaiting GIS:** 2

@@ -46,7 +46,7 @@ Last updated: Production Architecture Realignment checkpoint.
 | 6 | Trends & Alerts | NOT STARTED | — |
 | 7 | Hotspots | NOT STARTED | — |
 | 8 | Repeat Offender | NOT STARTED | — |
-| 9 | Criminal Network | NOT STARTED | — |
+| 9 | Criminal Network Analysis | COMPLETE | Privacy-safe deterministic graph; co-accused derivation; entity detail; search |
 | 10 | Predictive Risk | BLOCKED (no ML artifact) | — |
 | 11 | Anomaly Detection | BLOCKED (no ML artifact) | — |
 | 12 | Socio-economic Correlation | NOT STARTED | — |
@@ -56,8 +56,8 @@ Last updated: Production Architecture Realignment checkpoint.
 
 | Area | Status |
 |------|--------|
-| Production database (Supabase PostgreSQL) | NOT STARTED |
-| PostgreSQL repository implementations | NOT STARTED |
+| Production database (Supabase PostgreSQL) | IN PROGRESS | CSV adapter active; PostgreSQL repos implemented |
+| PostgreSQL repository implementations | COMPLETE | All 6 repositories with CSV and PostgreSQL adapters |
 | Data ingestion/synchronization layer | NOT STARTED |
 | Authentication | COMPLETE | JWT verification, deny-by-default middleware, algorithm confusion prevention |
 | Authorization/RBAC | NOT STARTED |
@@ -516,30 +516,37 @@ Stable accused identifier and team-approved definition.
 
 # PHASE 9 — Module 6: Criminal Network Analysis
 
-## Prerequisite
-Relationship source fields understood.
+## Status: COMPLETE
 
-## Files
-- `api/networks.py`
-- `services/network_service.py`
-- `analytics/network_analysis.py`
-- `database/repositories/network_repository.py`
+### What was implemented
 
-## Endpoints
-- `/api/v1/networks/case/{case_id}`
-- `/api/v1/networks/accused/{accused_id}`
+Privacy-safe, deterministic Network Analysis API using authoritative database relationships. No ML, no risk scoring, no criminal association inference.
 
-## Rules
-Every edge requires:
-- relationship type;
-- evidence/reference where allowed.
+**Files created/modified:**
+- `backend/app/api/network.py` — 3 API endpoints (graph, entity detail, search)
+- `backend/app/services/network_service.py` — NetworkService with graph construction, co-accused derivation, entity detail, search
+- `backend/app/schemas/network.py` — Pydantic response schemas
+- `backend/app/database/repositories/protocols.py` — Extended FIRRepository with `list_filtered()`, StationRepository with `get_by_name()`
+- `backend/app/database/repositories/csv/fir_repo.py` — CSV `list_filtered()` implementation
+- `backend/app/database/repositories/csv/station_repo.py` — CSV `get_by_name()` implementation
+- `backend/app/database/postgres/fir_repo.py` — PostgreSQL `list_filtered()` with dynamic SQL
+- `backend/app/database/postgres/station_repo.py` — PostgreSQL `get_by_name()`
+- `backend/app/main.py` — Network router registered
+- `backend/tests/test_network.py` — 62 tests (service, API, co-accused derivation, PII absence)
 
-Do not label co-occurrence as gang membership.
+**Endpoints:**
+- `GET /api/v1/network/graph` — Bounded graph with node/edge types, filters, truncation metadata
+- `GET /api/v1/network/entities/{entity_type}/{entity_id}` — Privacy-safe entity detail
+- `GET /api/v1/network/search` — Search FIR IDs, numbers, station names, district names
 
-Start without Neo4j. Add graph infrastructure only if required.
+**Graph node types:** person, fir, station, district
+**Graph edge types:** accused_in, complainant_in, victim_of, co_accused, station_fir, district_station
+**Graph bounds:** max 500 nodes, max 2000 edges
+**Privacy model:** Person nodes expose only entity_id, linked_fir_count, co_accused_count
 
-### Suggested commit
-`feat(network): add evidence-backed criminal network API`
+**Authentication:** All endpoints protected by ASGI AuthenticationMiddleware (deny-by-default)
+
+**BLOCKED_RBAC:** Person name search, full person profiles, complainant/victim identity, unrestricted accused identity, addresses/contact, biometrics
 
 ---
 

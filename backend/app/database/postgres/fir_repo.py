@@ -77,6 +77,39 @@ class PostgresFIRRepository:
         rows = self._build_select("WHERE f.status = %s", (status,))
         return [self._to_record(r) for r in rows]
 
+    def list_filtered(
+        self,
+        district: str | None = None,
+        station_id: str | None = None,
+        crime_head: str | None = None,
+        status: str | None = None,
+        start_date=None,
+        end_date=None,
+    ) -> list[FIRRecord]:
+        conditions: list[str] = []
+        params: list = []
+        if district is not None:
+            conditions.append("f.district = %s")
+            params.append(district)
+        if station_id is not None:
+            conditions.append("f.station_id = %s")
+            params.append(station_id)
+        if crime_head is not None:
+            conditions.append("f.crime_head = %s")
+            params.append(crime_head)
+        if status is not None:
+            conditions.append("f.status = %s")
+            params.append(status)
+        if start_date is not None:
+            conditions.append("f.incident_date::date >= %s")
+            params.append(start_date)
+        if end_date is not None:
+            conditions.append("f.incident_date::date <= %s")
+            params.append(end_date)
+        where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+        rows = self._build_select(where, tuple(params))
+        return [self._to_record(r) for r in rows]
+
     @staticmethod
     def _parse_accused_ids(raw: str) -> tuple[str, ...]:
         """Parse comma-separated accused IDs into a tuple."""

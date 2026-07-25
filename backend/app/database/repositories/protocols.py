@@ -11,6 +11,7 @@ that a concrete class satisfies the interface with ``isinstance()``.
 
 from __future__ import annotations
 
+from datetime import date
 from typing import List, Optional, Protocol, runtime_checkable
 
 from app.database.records import (
@@ -38,6 +39,8 @@ class StationRepository(Protocol):
 
     def get_by_id(self, station_id: str) -> Optional[StationRecord]: ...
 
+    def get_by_name(self, station_name: str) -> Optional[StationRecord]: ...
+
     def list_by_district(self, district_id: int) -> List[StationRecord]: ...
 
 
@@ -61,6 +64,16 @@ class FIRRepository(Protocol):
     def list_by_district(self, district: str) -> List[FIRRecord]: ...
 
     def list_by_status(self, status: str) -> List[FIRRecord]: ...
+
+    def list_filtered(
+        self,
+        district: Optional[str] = ...,
+        station_id: Optional[str] = ...,
+        crime_head: Optional[str] = ...,
+        status: Optional[str] = ...,
+        start_date: Optional[date] = ...,
+        end_date: Optional[date] = ...,
+    ) -> List[FIRRecord]: ...
 
 
 @runtime_checkable

@@ -40,6 +40,7 @@ from app.api.field_map import router as field_map_router
 from app.api.intelligence_map import router as intelligence_map_router
 from app.api.stations import router as stations_router
 from app.api.auth import router as auth_router
+from app.api.network import router as network_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 
 # ---------------------------------------------------------------------------
@@ -483,6 +484,7 @@ async def health_ready():
 # ---------------------------------------------------------------------------
 
 app.include_router(auth_router, prefix=settings.API_PREFIX)
+app.include_router(network_router, prefix=settings.API_PREFIX)
 app.include_router(dashboard_router, prefix=settings.API_PREFIX)
 app.include_router(districts_router, prefix=settings.API_PREFIX)
 app.include_router(field_map_router, prefix=settings.API_PREFIX)

@@ -254,6 +254,18 @@ class TestRouteProtection:
         resp = auth_client.get("/api/v1/auth/me")
         assert resp.status_code == 401
 
+    def test_network_graph_rejects_anonymous(self, auth_client):
+        resp = auth_client.get("/api/v1/network/graph")
+        assert resp.status_code == 401
+
+    def test_network_entity_detail_rejects_anonymous(self, auth_client):
+        resp = auth_client.get("/api/v1/network/entities/fir/FIR001")
+        assert resp.status_code == 401
+
+    def test_network_search_rejects_anonymous(self, auth_client):
+        resp = auth_client.get("/api/v1/network/search", params={"q": "FIR"})
+        assert resp.status_code == 401
+
     def test_401_includes_www_authenticate_header(self, auth_client):
         resp = auth_client.get("/api/v1/dashboard/summary")
         assert resp.status_code == 401

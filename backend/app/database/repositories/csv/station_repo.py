@@ -48,3 +48,9 @@ class CSVStationRepository:
 
     def list_by_district(self, district_id: int) -> List[StationRecord]:
         return list(self._by_district.get(district_id, []))
+
+    def get_by_name(self, station_name: str) -> Optional[StationRecord]:
+        for record in self._by_id.values():
+            if record.station_name == station_name:
+                return record
+        return None

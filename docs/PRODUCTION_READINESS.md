@@ -20,13 +20,13 @@
 | Item | Status | Notes |
 |------|--------|-------|
 | FastAPI application framework | COMPLETE | `backend/app/main.py` |
-| API routing layer | COMPLETE | 5 routers: dashboard, field_map, intelligence_map, districts, stations |
-| Service layer | COMPLETE | 5 services with repository protocol dependencies |
+| API routing layer | COMPLETE | 6 routers: dashboard, field_map, intelligence_map, districts, stations, network |
+| Service layer | COMPLETE | 6 services with repository protocol dependencies |
 | Repository protocol abstraction | COMPLETE | `database/repositories/protocols.py` |
 | CSV-backed repository implementations | COMPLETE | 6 CSV repositories with in-memory indices |
 | PostgreSQL-backed repositories | COMPLETE | 8 PG repositories with connection pool |
 | Persistence independence | COMPLETE | Services depend on protocols, not CSV code |
-| Pydantic API schemas | COMPLETE | 5 schema modules |
+| Pydantic API schemas | COMPLETE | 6 schema modules |
 | Shared filter utilities | COMPLETE | `utils/filters.py` |
 | Shared exception handling | COMPLETE | `core/exceptions.py` |
 
@@ -42,10 +42,10 @@
 | Intelligence crime map | COMPLETE | 6 endpoints | includes timeline, export, analytics |
 | District intelligence | COMPLETE | 2 endpoints | list + detail with stats |
 | Station reference | COMPLETE | `GET /api/v1/stations`, `GET /api/v1/stations/{id}` | List with pagination + district filter |
+| Network analysis | COMPLETE | 3 endpoints | Deterministic, privacy-safe graph; co-accused; search; authentication required |
 | Trends & alerts | NOT STARTED | — | Deterministic trends implementable; alerts blocked |
 | Hotspots (dedicated) | NOT STARTED | — | Grid-based hotspot shared from field_map |
 | Repeat offender tracking | NOT STARTED | — | Requires stable accused identifier |
-| Criminal network analysis | NOT STARTED | — | Requires relationship source fields |
 | Predictive risk scoring | BLOCKED | — | No ML artifact supplied |
 | Anomaly detection | BLOCKED | — | No ML artifact supplied |
 | Socio-economic correlation | NOT STARTED | — | Requires approved external data |
@@ -236,15 +236,16 @@
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Unit tests | COMPLETE | 444+ tests passing |
-| Service tests | COMPLETE | Dashboard, district, field_map, intelligence_map services |
-| API tests | COMPLETE | All 4 routers tested |
+| Unit tests | COMPLETE | 507+ tests passing |
+| Service tests | COMPLETE | Dashboard, district, field_map, intelligence_map, network services |
+| API tests | COMPLETE | All 5 routers tested |
 | Repository tests | COMPLETE | CSV repository tests exist |
 | PostgreSQL integration tests | NOT STARTED | — |
 | Migration tests | NOT STARTED | — |
 | Authorization tests | NOT STARTED | — |
 | Authentication tests | COMPLETE | 59 tests: JWT verification, route protection, algorithm confusion, production guards |
-| PII/security regression tests | NOT STARTED | — |
+| Network PII/security tests | COMPLETE | 62 tests: graph construction, co-accused derivation, privacy-safe person nodes, entity detail, search, PII absence, API schema |
+| PII/security regression tests | PARTIAL | Network PII tests exist; not yet systematic across all modules |
 | Concurrency tests | NOT STARTED | — |
 | Performance/load tests | NOT STARTED | — |
 | Failure-path tests | PARTIAL | Unavailable ML paths tested |
