@@ -256,35 +256,9 @@ export default function DashboardLayout({ onLogout, role }) {
 
   return (
     <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
-      {/* Analyst Profile Widget */}
-      {isCompact && (
-        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
-      )}
-
-      {/* Desktop Sidebar */}
-      {!isCompact && (
-        <div className="hidden md:block flex-shrink-0">
-          <Sidebar
-            role={role}
-            onLogout={onLogout}
-            activeModule={activeModule}
-            setActiveModule={handleModuleChange}
-          />
-        </div>
-      )}
-
-      {/* Mobile backdrop */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <div
-            className="fixed inset-0 bg-[#0F172A]/40 z-40 md:hidden backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile sidebar drawer */}
-      <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-smooth md:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      
+      {/* Desktop Sidebar Navigation (Vertical Sidebar) */}
+      <div className="hidden lg:block shrink-0 h-full">
         <Sidebar
           role={role}
           onLogout={onLogout}
@@ -293,20 +267,30 @@ export default function DashboardLayout({ onLogout, role }) {
         />
       </div>
 
-      {/* Main content area */}
-      <div className={`flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
-        {isCompact && (
-          <div className="hidden md:block shrink-0">
-            <AnalystTopNav
-              activeModule={activeModule}
-              setActiveModule={handleModuleChange}
-              role={role}
-            />
-          </div>
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-[#0F172A]/40 z-40 lg:hidden backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
         )}
+      </AnimatePresence>
 
-        <div className={`flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
-          <div className={isCompact ? 'block md:hidden' : 'block'}>
+      {/* Mobile Sidebar Drawer */}
+      <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-smooth lg:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Sidebar
+          role={role}
+          onLogout={onLogout}
+          activeModule={activeModule}
+          setActiveModule={handleModuleChange}
+        />
+      </div>
+
+      {/* Main Content Workspace Area */}
+      <div className={`flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
+        <div className={`flex-1 flex flex-col min-w-0 bg-white rounded-[24px] border border-[#E7ECF3] shadow-sm overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
+          <div className="block lg:hidden">
             <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
           </div>
 
