@@ -4,21 +4,21 @@ import { MoreHorizontal, Download, ArrowUpDown, Search, X, Calendar, Shield, Use
 
 const riskBadge = (risk) => {
   switch (risk) {
-    case 'Critical': return 'badge-critical';
-    case 'High':     return 'badge-high';
-    case 'Medium':   return 'badge-medium';
-    default:         return 'badge-neutral';
+    case 'Critical': return 'bg-rose-50 text-rose-600 border border-rose-200';
+    case 'High':     return 'bg-amber-50 text-amber-600 border border-amber-200';
+    case 'Medium':   return 'bg-sky-50 text-sky-600 border border-sky-200';
+    default:         return 'bg-emerald-50 text-emerald-600 border border-emerald-200';
   }
 };
 
 const statusDot = (status) => {
   if (status === 'Closed') return 'bg-slate-400';
-  if (status === 'Active') return 'bg-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.4)] animate-pulse';
-  if (status === 'Under Review') return 'bg-[#1E3A8A]';
-  return 'bg-[#B45309]';
+  if (status === 'Active') return 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse';
+  if (status === 'Under Review') return 'bg-[#0B1F4D]';
+  return 'bg-amber-500';
 };
 
-export default function CrimeTablePlaceholder({ data }) {
+export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsPerPage, title, subtitle }) {
   const cases = data || [];
 
   // Table states
@@ -27,7 +27,7 @@ export default function CrimeTablePlaceholder({ data }) {
   const [sortDirection, setSortDirection] = useState('desc'); // default latest first
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCase, setSelectedCase] = useState(null); // for Case Detail Modal
-  const itemsPerPage = 6;
+  const itemsPerPage = customItemsPerPage || 6;
 
   // 1. Filtering based on search query
   const filteredCases = useMemo(() => {
@@ -66,13 +66,12 @@ export default function CrimeTablePlaceholder({ data }) {
   const paginatedCases = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return sortedCases.slice(startIndex, startIndex + itemsPerPage);
-  }, [sortedCases, currentPage]);
+  }, [sortedCases, currentPage, itemsPerPage]);
 
   const totalPages = Math.ceil(sortedCases.length / itemsPerPage) || 1;
 
   const handleSort = (field) => {
     if (sortField === field) {
-      // cycle: asc -> desc -> no sort
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
@@ -97,24 +96,24 @@ export default function CrimeTablePlaceholder({ data }) {
   };
 
   return (
-    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between overflow-hidden">
-      {/* Header and Controls */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 px-6 py-4 border-b border-[#E7EAF0] bg-slate-50">
+    <div className="bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm flex flex-col min-h-[560px] justify-between overflow-hidden">
+      {/* 3. Improved Table Header & Toolbar (One Clean Horizontal Row) */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#E7ECF3] bg-[#F8F9FB]">
         <div>
-          <h3 className="section-title text-[15px] font-extrabold text-[#0F172A] tracking-tight">Recent Intelligence Records</h3>
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-1">Real-time case intakes</p>
+          <h3 className="text-base font-black text-[#0F172A] tracking-tight">{title || 'Recent Intelligence Records'}</h3>
+          <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{subtitle || 'Real-time case intakes'}</p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Search Box */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <div className="relative flex-1 sm:flex-none">
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search FIR, category..."
+              placeholder="Search FIR, category, district..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input pl-10 text-[12px] h-9 w-44 sm:w-64 border-transparent shadow-sm"
+              className="w-full sm:w-72 h-10 pl-10 pr-8 bg-white border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all shadow-xs placeholder:text-slate-400 font-sans"
               aria-label="Search cases table"
             />
             {searchQuery && (
@@ -127,18 +126,22 @@ export default function CrimeTablePlaceholder({ data }) {
             )}
           </div>
 
-          <button onClick={exportCSV} className="btn-secondary h-9 gap-2 px-4 shadow-sm" title="Export matching records">
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline text-[12px]">Export</span>
+          <button 
+            onClick={exportCSV} 
+            className="h-10 px-4 rounded-[14px] bg-[#0B1F4D] text-white hover:bg-[#143275] font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-2" 
+            title="Export matching records"
+          >
+            <Download className="w-4 h-4 text-[#C79A2B]" />
+            <span className="hidden sm:inline">Export</span>
           </button>
         </div>
       </div>
 
-      {/* Table Element */}
+      {/* 4. Table Element with Sticky Header & Row Hover Effects */}
       <div className="flex-1 overflow-y-auto overflow-x-auto min-h-0">
-        <table className="w-full text-left" aria-label="Recent crime cases">
+        <table className="w-full text-left border-collapse" aria-label="Recent crime cases">
           <thead>
-            <tr className="sticky top-0 bg-slate-50 z-10 shadow-sm">
+            <tr className="sticky top-0 bg-[#F8F9FB] z-10 border-b border-[#E7ECF3]">
               {[
                 { label: 'Case ID', field: 'id' },
                 { label: 'Category', field: 'category' },
@@ -148,15 +151,15 @@ export default function CrimeTablePlaceholder({ data }) {
                 { label: 'Status', field: 'status' },
                 { label: '', field: null }
               ].map((h, i) => (
-                <th key={i} className="table-header !py-2">
+                <th key={i} className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider text-left bg-[#F8F9FB]">
                   {h.label && (
                     <button
                       onClick={() => h.field && handleSort(h.field)}
-                      className={`flex items-center gap-2 text-left w-full h-full hover:text-[#0F172A] transition-colors ${h.field ? 'cursor-pointer' : 'cursor-default pointer-events-none'}`}
+                      className={`flex items-center gap-2 text-left w-full h-full hover:text-[#0B1F4D] transition-colors ${h.field ? 'cursor-pointer' : 'cursor-default pointer-events-none'}`}
                     >
                       {h.label}
                       {h.field && (
-                        <ArrowUpDown className={`w-3.5 h-3.5 transition-opacity ${sortField === h.field ? 'opacity-100 text-[#0F172A]' : 'opacity-30'}`} />
+                        <ArrowUpDown className={`w-3.5 h-3.5 transition-opacity ${sortField === h.field ? 'opacity-100 text-[#0B1F4D]' : 'opacity-30'}`} />
                       )}
                     </button>
                   )}
@@ -164,10 +167,10 @@ export default function CrimeTablePlaceholder({ data }) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[#E7ECF3]/60">
             {paginatedCases.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-16 text-slate-500 text-[13px] font-medium">
+                <td colSpan="7" className="text-center py-16 text-[#64748B] text-xs font-semibold">
                   No cases found matching query.
                 </td>
               </tr>
@@ -177,33 +180,33 @@ export default function CrimeTablePlaceholder({ data }) {
                   key={row.id}
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}
+                  transition={{ delay: i * 0.03 }}
                   onClick={() => setSelectedCase(row)}
-                  className="table-row cursor-pointer"
+                  className="h-14 border-b border-[#E7ECF3]/60 hover:bg-[#F8F9FB]/80 transition-colors duration-150 cursor-pointer align-middle"
                 >
-                  <td className="table-cell !px-6 !py-2 font-mono text-[11px] font-extrabold text-[#1E3A8A]">{row.id}</td>
-                  <td className="table-cell !px-6 !py-2 font-bold text-[#0F172A] text-[13px]">{row.category}</td>
-                  <td className="table-cell !px-6 !py-2">
-                    <p className="text-[#0F172A] font-bold text-[12px]">{row.policeStation}</p>
-                    <p className="text-slate-500 font-medium text-[11px] mt-0.5">{row.district}</p>
+                  <td className="px-6 py-3.5 align-middle font-mono text-xs font-extrabold text-[#0B1F4D]">{row.id}</td>
+                  <td className="px-6 py-3.5 align-middle font-bold text-[#0F172A] text-xs">{row.category}</td>
+                  <td className="px-6 py-3.5 align-middle">
+                    <p className="text-[#0F172A] font-bold text-xs">{row.policeStation}</p>
+                    <p className="text-[#64748B] font-semibold text-[11px] mt-0.5">{row.district}</p>
                   </td>
-                  <td className="table-cell !px-6 !py-2 text-[12px] font-medium text-slate-500">{row.date}</td>
-                  <td className="table-cell !px-6 !py-2">
-                    <span className={`badge ${riskBadge(row.risk)} !py-0.5 !px-2 text-[9px]`}>{row.risk}</span>
+                  <td className="px-6 py-3.5 align-middle text-xs font-medium text-[#64748B]">{row.date}</td>
+                  <td className="px-6 py-3.5 align-middle">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-bold text-[11px] ${riskBadge(row.risk)}`}>{row.risk}</span>
                   </td>
-                  <td className="table-cell !px-6 !py-2">
-                    <span className="flex items-center gap-2 text-[11px] text-[#0F172A] font-bold uppercase tracking-widest">
-                      <span className={`w-2 h-2 rounded-full shadow-sm ${statusDot(row.status)}`} />
+                  <td className="px-6 py-3.5 align-middle">
+                    <span className="inline-flex items-center gap-2 text-xs text-[#0F172A] font-bold">
+                      <span className={`w-2 h-2 rounded-full ${statusDot(row.status)}`} />
                       {row.status}
                     </span>
                   </td>
-                  <td className="table-cell !px-6 !py-2 text-right" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-6 py-3.5 align-middle text-right" onClick={(e) => e.stopPropagation()}>
                     <button 
                       onClick={() => setSelectedCase(row)} 
-                      className="btn-ghost btn-icon hover:bg-slate-100 rounded-lg p-1.5 transition-colors"
+                      className="w-8 h-8 rounded-[10px] flex items-center justify-center text-slate-400 hover:text-[#0B1F4D] hover:bg-slate-100 transition-colors cursor-pointer ml-auto"
                       aria-label={`View details of ${row.id}`}
                     >
-                      <MoreHorizontal className="w-4 h-4 text-slate-400 hover:text-[#0F172A]" />
+                      <MoreHorizontal className="w-4 h-4" />
                     </button>
                   </td>
                 </motion.tr>
@@ -213,26 +216,26 @@ export default function CrimeTablePlaceholder({ data }) {
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      <div className="flex items-center justify-between px-6 py-3 border-t border-[#E7EAF0] bg-white shrink-0">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-          Showing <span className="font-extrabold text-[#0F172A]">{sortedCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, sortedCases.length)}</span> of <span className="font-extrabold text-[#0F172A]">{sortedCases.length}</span> cases
+      {/* 6. Improved Pagination Footer */}
+      <div className="flex items-center justify-between px-6 sm:px-8 py-4 border-t border-[#E7ECF3] bg-[#F8F9FB]/40 shrink-0 rounded-b-[24px]">
+        <p className="text-xs font-semibold text-[#64748B]">
+          Showing <span className="font-extrabold text-[#0F172A]">{sortedCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, sortedCases.length)}</span> of <span className="font-extrabold text-[#0F172A]">{sortedCases.length}</span> records
         </p>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
-            className="btn-secondary h-7 px-3 text-[10px] uppercase tracking-widest shadow-sm rounded-lg"
+            className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
           >
             Prev
           </button>
-          <div className="flex items-center px-2 text-[11px] font-bold text-slate-500">
+          <div className="px-3 text-xs font-bold text-[#0F172A]">
             Page {currentPage} of {totalPages}
           </div>
           <button
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
-            className="btn-secondary h-7 px-3 text-[10px] uppercase tracking-widest shadow-sm rounded-lg"
+            className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
           >
             Next
           </button>
