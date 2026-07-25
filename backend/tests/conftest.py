@@ -250,3 +250,18 @@ def create_rsa_test_jwt() -> str:
 TEST_JWT_SECRET = _TEST_JWT_SECRET
 TEST_ISSUER = _TEST_ISSUER
 TEST_AUDIENCE = _TEST_AUDIENCE
+
+
+# ---------------------------------------------------------------------------
+# Integration test helper — always returns CSV-backed repositories
+# ---------------------------------------------------------------------------
+
+
+def get_csv_repositories():
+    """Build CSV-backed repositories regardless of DATA_BACKEND setting.
+
+    Integration tests use this to avoid depending on a reachable
+    PostgreSQL instance.
+    """
+    from app.database.dependencies import RepositoryCollection, _build_csv_repositories
+    return _build_csv_repositories()

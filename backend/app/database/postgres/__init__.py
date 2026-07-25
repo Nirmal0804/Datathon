@@ -24,12 +24,16 @@ def init_pool(
     dsn: str,
     minconn: int = 1,
     maxconn: int = 10,
+    connect_timeout: int = 5,
 ) -> None:
     """Initialize the connection pool. Call once at startup."""
     global _pool
     if _pool is not None:
         logger.warning("Connection pool already initialized; ignoring re-init")
         return
+    if "connect_timeout" not in dsn:
+        sep = "&" if "?" in dsn else "?"
+        dsn = f"{dsn}{sep}connect_timeout={connect_timeout}"
     _pool = ThreadedConnectionPool(minconn, maxconn, dsn)
     logger.info("PostgreSQL connection pool initialized (min=%d, max=%d)", minconn, maxconn)
 

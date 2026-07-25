@@ -490,11 +490,14 @@ class TestFieldMapAPIUnit:
 class TestFieldMapAPIIntegration:
     """Uses real CSV-backed repositories loaded from settings.DATA_DIR."""
 
+    def _get_repos(self):
+        from tests.conftest import get_csv_repositories
+        return get_csv_repositories()
+
     def test_unfiltered_case_count(self):
-        from app.database.dependencies import _load_repositories
         from app.services.field_map_service import FieldMapService
 
-        repos = _load_repositories()
+        repos = self._get_repos()
         svc = FieldMapService(
             fir_reader=repos.firs,
             fir_number_reader=repos.firs,
@@ -506,10 +509,9 @@ class TestFieldMapAPIIntegration:
         assert result["total"] == 5000
 
     def test_station_names_resolved_from_csv(self):
-        from app.database.dependencies import _load_repositories
         from app.services.field_map_service import FieldMapService
 
-        repos = _load_repositories()
+        repos = self._get_repos()
         svc = FieldMapService(
             fir_reader=repos.firs,
             fir_number_reader=repos.firs,
@@ -523,10 +525,9 @@ class TestFieldMapAPIIntegration:
         assert item["station_name"] != item["station_id"]
 
     def test_filter_metadata_from_csv(self):
-        from app.database.dependencies import _load_repositories
         from app.services.field_map_service import FieldMapService
 
-        repos = _load_repositories()
+        repos = self._get_repos()
         svc = FieldMapService(
             fir_reader=repos.firs,
             fir_number_reader=repos.firs,
@@ -541,10 +542,9 @@ class TestFieldMapAPIIntegration:
         assert len(filters["statuses"]) > 0
 
     def test_case_detail_from_csv(self):
-        from app.database.dependencies import _load_repositories
         from app.services.field_map_service import FieldMapService
 
-        repos = _load_repositories()
+        repos = self._get_repos()
         svc = FieldMapService(
             fir_reader=repos.firs,
             fir_number_reader=repos.firs,

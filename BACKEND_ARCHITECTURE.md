@@ -89,11 +89,11 @@ The following describes the **production deployment target**. Components marked 
 ```text
 Authoritative operational data sources
     ↓
-Validated ingestion / synchronization
+Validated ingestion / synchronization (ingestion framework implemented)
     ↓
-Supabase PostgreSQL (NOT STARTED)
+Supabase PostgreSQL (IMPLEMENTED — schema, repos, connection pool)
     ↓
-PostgreSQL-backed repository implementations (NOT STARTED)
+PostgreSQL-backed repository implementations (IMPLEMENTED — 6 repos + audit)
     ↓
 Repository protocols (EXISTING — preserved)
     ↓
@@ -106,23 +106,23 @@ Authenticated/authorized clients (PARTIAL — auth implemented, RBAC blocked)
 
 ### Production persistence target
 
-Supabase PostgreSQL is the confirmed production database platform. Implementation has NOT STARTED.
+Supabase PostgreSQL is the confirmed production database platform. Implementation is COMPLETE for the repository and schema layer.
 
-The future database phase must include at minimum:
-- relational schema design (not a direct copy of CSV layout)
-- normalization (e.g., `firs.Accused_ID` comma-separated field must become a junction table)
-- primary keys, foreign keys, unique constraints, check constraints
-- indexes for common query patterns
-- migration management
-- PostgreSQL-backed repository implementations (replacing CSV adapters)
-- connection lifecycle and pooling
-- environment configuration
-- transaction boundaries
-- ingestion/migration from approved source data
-- data validation at ingestion
-- provenance tracking
-- backup/restore strategy
-- database integration tests
+**Implemented:**
+- Relational schema design (normalized with junction tables, FKs, constraints, indexes)
+- PostgreSQL migration files (`001_initial_schema.sql`, `002_audit_events.sql`)
+- Connection pooling (psycopg2 `ThreadedConnectionPool`)
+- 6 PostgreSQL repository implementations (districts, stations, people, FIRs, arrests, chargesheets)
+- Audit events repository (append-only)
+- Data ingestion framework (batched upsert for all entities + junction table)
+- Configuration validation (pydantic settings)
+- 50+ database-specific tests
+
+**Not yet implemented:**
+- Alembic migration management
+- Database integration tests against live Supabase
+- Backup/restore strategy
+- Production secret rotation
 
 ### Production security requirements
 
@@ -677,7 +677,7 @@ Status: IMPLEMENTED
 Frontend → deployed API → Supabase PostgreSQL
                         → PostgreSQL-backed repositories
 ```
-Status: NOT STARTED
+Status: IMPLEMENTED — Schema, repos, connection pool, ingestion framework. Not yet deployed.
 
 ### Stage 3 — Authenticated production
 ```text
@@ -685,7 +685,7 @@ Authenticated clients → FastAPI (with auth middleware) → Supabase PostgreSQL
                                                               ↓
                                                     Supabase Auth (or equivalent)
 ```
-Status: PARTIAL — Auth middleware and JWT verification implemented; PostgreSQL migration pending
+Status: PARTIAL — Auth middleware, JWT verification, and security headers implemented; RBAC blocked on role definitions
 
 ### Stage 4 — Full production (if scale requires)
 ```text

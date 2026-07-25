@@ -292,8 +292,8 @@ class TestDashboardAPIIntegration:
 
     def test_unfiltered_summary_counts(self):
         """Unfiltered summary returns expected baselines from real data."""
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
 
         svc = DashboardService(
             fir_reader=repos.firs,
@@ -308,8 +308,8 @@ class TestDashboardAPIIntegration:
 
     def test_unfiltered_status_breakdown(self):
         """Status counts sum to total_firs."""
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
 
         svc = DashboardService(
             fir_reader=repos.firs,
@@ -328,8 +328,8 @@ class TestDashboardAPIIntegration:
 
     def test_status_values_match_expected(self):
         """Status breakdown matches known baselines from real data."""
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
 
         svc = DashboardService(
             fir_reader=repos.firs,

@@ -286,8 +286,8 @@ class TestStationAPIIntegration:
     """Uses real repositories loaded from settings.DATA_DIR."""
 
     def test_list_returns_stations(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -300,8 +300,8 @@ class TestStationAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_detail_returns_station(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -317,8 +317,8 @@ class TestStationAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_unknown_station_returns_404(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -328,8 +328,8 @@ class TestStationAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_district_filter_works(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)

@@ -746,10 +746,9 @@ class TestIntelligenceAPIIntegration:
     """Uses real CSV-backed repositories loaded from settings.DATA_DIR."""
 
     def test_unfiltered_analytics_count(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,
@@ -761,10 +760,9 @@ class TestIntelligenceAPIIntegration:
         assert result["dominant_crime_type"] is not None
 
     def test_heatmap_from_csv(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,
@@ -775,10 +773,9 @@ class TestIntelligenceAPIIntegration:
         assert result["total_points"] > 0
 
     def test_clusters_from_csv(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,
@@ -789,10 +786,9 @@ class TestIntelligenceAPIIntegration:
         assert result["total_clusters"] > 0
 
     def test_export_from_csv(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,
@@ -804,10 +800,9 @@ class TestIntelligenceAPIIntegration:
         assert len(lines) > 1  # Header + data rows
 
     def test_timeline_from_csv(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,
@@ -818,10 +813,9 @@ class TestIntelligenceAPIIntegration:
         assert result["total_buckets"] > 0
 
     def test_district_comparison_from_csv(self):
-        from app.database.dependencies import _load_repositories
+        from tests.conftest import get_csv_repositories
         from app.services.intelligence_map_service import IntelligenceMapService
-
-        repos = _load_repositories()
+        repos = get_csv_repositories()
         svc = IntelligenceMapService(
             fir_reader=repos.firs,
             district_reader=repos.districts,

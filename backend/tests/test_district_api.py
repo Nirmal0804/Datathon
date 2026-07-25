@@ -371,8 +371,8 @@ class TestDistrictAPIIntegration:
     """Uses real CSV-backed repositories loaded from settings.DATA_DIR."""
 
     def test_list_returns_31_districts(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -385,8 +385,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_transactional_district_has_data(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -399,8 +399,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_zero_data_district_preserves_reference(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -414,8 +414,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_unknown_district_returns_404(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -425,8 +425,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_crime_head_filter_works(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -445,8 +445,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_invalid_date_range_returns_400(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -466,8 +466,8 @@ class TestDistrictAPIIntegration:
         assert resp.status_code == 200
 
     def test_dashboard_still_works(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
@@ -477,8 +477,8 @@ class TestDistrictAPIIntegration:
             app.dependency_overrides.clear()
 
     def test_intelligence_map_still_works(self):
-        from app.database.dependencies import _load_repositories
-        repos = _load_repositories()
+        from tests.conftest import get_csv_repositories
+        repos = get_csv_repositories()
         app.dependency_overrides[get_repositories] = lambda: repos
         try:
             client = TestClient(app)
