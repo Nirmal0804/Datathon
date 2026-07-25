@@ -227,34 +227,34 @@ export default function FieldOfficerOverview({ onNavigate }) {
   }, [localCases]);
 
   return (
-    <div className="space-y-6">
-      {/* Header and Live shift details (Compact Hero) */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5 p-4 sm:p-5 bg-white border border-[#E5E7EB] rounded-[20px] shadow-sm transition-all duration-200 ease-in-out">
+    <div className="space-y-12">
+      {/* Header and Live shift details (Spacious Hero) */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 p-7 sm:p-8 bg-white border border-[#E5E7EB] rounded-[24px] shadow-sm transition-all duration-200 ease-in-out">
         {/* Left Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           {/* Karnataka Police Official Badge */}
-          <img src={kspBadge} alt="Karnataka Police Badge" className="h-[54px] w-auto object-contain shrink-0 drop-shadow-sm" />
+          <img src={kspBadge} alt="Karnataka Police Badge" className="h-[60px] w-auto object-contain shrink-0 drop-shadow-sm" />
           <div className="flex flex-col justify-center">
-            <h1 className="text-2xl sm:text-[28px] font-bold text-[#0F172A] leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
               Field Officer Operations
             </h1>
-            <p className="text-xs sm:text-sm font-medium text-[#64748B] mt-0.5 leading-normal">
+            <p className="text-xs sm:text-sm font-normal text-[#64748B] mt-1 leading-normal">
               Assigned cases dashboard, FIR registry utilities, and precinct alerts feed.
             </p>
           </div>
         </div>
 
         {/* Right Section: Compact Status Chips */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-          <div className="flex items-center gap-2 bg-[#F8F9FB] px-3.5 h-9 rounded-[12px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
-            <Clock className="w-4 h-4 text-police-blue" />
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-2.5 bg-[#F8F9FB] px-4 h-10 rounded-[16px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
+            <Clock className="w-4.5 h-4.5 text-police-blue" />
             <span className="text-xs font-bold text-[#0F172A]">Active Shift: 14:00 - 22:00</span>
           </div>
         </div>
       </div>
 
-      {/* Field Officer KPIs (Compact Proportions) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+      {/* Field Officer KPIs (Spacious Minimal Proportions) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {[
           { title: 'Active Station FIRs', value: activeFIRs, note: 'Station total', icon: FileText, type: 'info' },
           { title: 'Cases Assigned to You', value: casesAssigned, note: 'Inspector Patil roster', icon: User, type: 'info' },
@@ -278,8 +278,8 @@ export default function FieldOfficerOverview({ onNavigate }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Assigned Cases */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm flex flex-col h-[360px] justify-between">
-            <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
+          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
+            <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
                 <h3 className="text-base font-bold text-[#0F172A]">Your Assigned Cases</h3>
                 <p className="text-xs text-[#64748B] mt-0.5">Assigned to Inspector Patil. Select a row to update status.</p>
@@ -295,35 +295,35 @@ export default function FieldOfficerOverview({ onNavigate }) {
             <div className="flex-1 overflow-y-auto no-scrollbar min-h-0">
               <table className="w-full text-left" aria-label="Assigned cases log">
                 <thead>
-                  <tr className="border-b border-[#E7EAF0] text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
-                    <th className="py-2.5 px-3">FIR ID</th>
-                    <th className="py-2.5 px-3">Classification</th>
-                    <th className="py-2.5 px-3">Date Logged</th>
-                    <th className="py-2.5 px-3">Risk</th>
-                    <th className="py-2.5 px-3">Status</th>
+                  <tr className="border-b border-[#E7EAF0] text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
+                    <th className="py-3 px-4">FIR ID</th>
+                    <th className="py-3 px-4">Classification</th>
+                    <th className="py-3 px-4">Date Logged</th>
+                    <th className="py-3 px-4">Risk</th>
+                    <th className="py-3 px-4">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {patilCases.slice(0, 4).map((c) => (
                     <tr 
                       key={c.id} 
-                      className="border-b border-[#E7EAF0] hover:bg-[#F7F8FA] cursor-pointer text-[13px] transition-colors"
+                      className="border-b border-[#F1F5F9] hover:bg-[#F8F9FB] cursor-pointer text-[13px] transition-colors"
                       onClick={() => {
                         setStatusForm(prev => ({ ...prev, caseId: c.id }));
                         setActiveModal('status');
                       }}
                     >
-                      <td className="py-3 px-3 font-mono font-bold text-police-navy">{c.id}</td>
-                      <td className="py-3 px-3 text-[#334155] font-medium">{c.category}</td>
-                      <td className="py-3 px-3 text-[#64748B]">{c.date}</td>
-                      <td className="py-3 px-3">
+                      <td className="py-3.5 px-4 font-mono font-bold text-police-navy">{c.id}</td>
+                      <td className="py-3.5 px-4 text-[#334155] font-medium">{c.category}</td>
+                      <td className="py-3.5 px-4 text-[#64748B]">{c.date}</td>
+                      <td className="py-3.5 px-4">
                         <span className={`badge ${
                           c.risk === 'Critical' ? 'badge-critical' : c.risk === 'High' ? 'badge-high' : 'badge-medium'
-                        } py-0 px-2 text-[10px]`}>
+                        } py-0.5 px-2 text-[10px]`}>
                           {c.risk}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-[#334155] font-bold">
+                      <td className="py-3.5 px-4 text-[#334155] font-bold">
                         <span className="inline-flex items-center gap-2">
                           <span className={`w-2 h-2 rounded-full ${
                             c.status === 'Closed' ? 'bg-[#94A3B8]' : 'bg-emerald-500 glow-success'
@@ -341,8 +341,8 @@ export default function FieldOfficerOverview({ onNavigate }) {
 
         {/* Right Column: Quick Actions */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm flex flex-col h-[360px] justify-between">
-            <div className="border-b border-[#E7EAF0] pb-4 mb-3 shrink-0">
+          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
+            <div className="border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <h3 className="text-base font-bold text-[#0F172A]">Operations Utility Tool</h3>
               <p className="text-xs text-[#64748B] mt-0.5">Quick station-level actions.</p>
             </div>
@@ -350,9 +350,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
             <div className="grid grid-cols-2 gap-4 flex-1 pt-1">
               <button 
                 onClick={() => setActiveModal('fir')}
-                className="flex flex-col items-center justify-center p-4 rounded-[16px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:shadow-md transition-all text-center gap-3 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
               >
-                <div className="p-2 rounded-full bg-police-blue/10 group-hover:bg-police-gold/10 transition-colors">
+                <div className="p-2.5 rounded-full bg-police-blue/10 group-hover:bg-police-gold/10 transition-colors">
                   <Plus className="w-6 h-6 text-police-blue group-hover:text-police-gold transition-colors" />
                 </div>
                 <span className="text-xs font-bold text-[#0F172A]">Register FIR</span>
@@ -367,9 +367,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     toast.info('No Cases', 'You have no assigned cases to update.');
                   }
                 }}
-                className="flex flex-col items-center justify-center p-4 rounded-[16px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:shadow-md transition-all text-center gap-3 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
               >
-                <div className="p-2 rounded-full bg-police-navy/10 group-hover:bg-police-gold/10 transition-colors">
+                <div className="p-2.5 rounded-full bg-police-navy/10 group-hover:bg-police-gold/10 transition-colors">
                   <RefreshCw className="w-6 h-6 text-police-navy group-hover:text-police-gold transition-colors" />
                 </div>
                 <span className="text-xs font-bold text-[#0F172A]">Update Status</span>
@@ -384,9 +384,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     toast.info('No Cases', 'You have no assigned cases to link files.');
                   }
                 }}
-                className="flex flex-col items-center justify-center p-4 rounded-[16px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:shadow-md transition-all text-center gap-3 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
               >
-                <div className="p-2 rounded-full bg-emerald-500/10 group-hover:bg-police-gold/10 transition-colors">
+                <div className="p-2.5 rounded-full bg-emerald-500/10 group-hover:bg-police-gold/10 transition-colors">
                   <Upload className="w-6 h-6 text-emerald-600 group-hover:text-police-gold transition-colors" />
                 </div>
                 <span className="text-xs font-bold text-[#0F172A]">Link Evidence</span>
@@ -394,9 +394,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
 
               <button 
                 onClick={() => onNavigate('assigned_cases')}
-                className="flex flex-col items-center justify-center p-4 rounded-[16px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:shadow-md transition-all text-center gap-3 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
               >
-                <div className="p-2 rounded-full bg-indigo-500/10 group-hover:bg-police-gold/10 transition-colors">
+                <div className="p-2.5 rounded-full bg-indigo-500/10 group-hover:bg-police-gold/10 transition-colors">
                   <Eye className="w-6 h-6 text-indigo-600 group-hover:text-police-gold transition-colors" />
                 </div>
                 <span className="text-xs font-bold text-[#0F172A]">View Cases</span>
@@ -410,7 +410,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Recent Precinct Activity (wide left panel) */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm flex flex-col h-[380px]">
+          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px]">
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
                 <h3 className="text-base font-bold text-[#0F172A]">Recent Precinct Activity</h3>
@@ -422,15 +422,15 @@ export default function FieldOfficerOverview({ onNavigate }) {
               </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar space-y-3">
+            <div className="flex-1 overflow-y-auto no-scrollbar space-y-3.5">
               {allActivities.map((act, i) => {
                 const cfg = activityIcons[act.type] || activityIcons.fir_registration;
                 const ActIcon = cfg.Icon;
                 return (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-[12px] bg-[#F8F9FB] border border-[#E5E7EB] text-xs hover:border-[#CBD5E1] hover:bg-white hover:shadow-sm transition-all">
+                  <div key={i} className="flex items-center justify-between p-3.5 rounded-[14px] bg-[#F8F9FB] border border-[#E5E7EB] text-xs hover:border-[#CBD5E1] hover:bg-white hover:shadow-sm transition-all duration-200">
                     <div className="flex items-center gap-3.5 min-w-0">
                       <div className={`p-2 rounded-lg shrink-0 ${cfg.bg.replace('10', '20')}`}>
-                        <ActIcon className={`w-4 h-4 ${cfg.color.replace('400', '600').replace('500', '700')}`} />
+                        <ActIcon className={`w-4.5 h-4.5 ${cfg.color.replace('400', '600').replace('500', '700')}`} />
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-[#0F172A] truncate">{act.title}</p>
@@ -440,7 +440,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     
                     <div className="flex items-center gap-3.5 shrink-0 pl-3">
                       {act.status && (
-                        <span className="badge badge-neutral bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-wider py-1 px-2">
+                        <span className="badge badge-neutral bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-wider py-1 px-2.5">
                           {act.status}
                         </span>
                       )}
@@ -455,7 +455,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
 
         {/* Right Column: BOLO Alerts */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-sm flex flex-col h-[380px] justify-between">
+          <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-police-alert" />
@@ -471,8 +471,8 @@ export default function FieldOfficerOverview({ onNavigate }) {
 
             <div className="flex-1 overflow-y-auto no-scrollbar space-y-3.5">
               {MOCK_ALERTS.slice(0, 3).map((alert, i) => (
-                <div key={i} className="flex gap-3 p-3 rounded-[12px] bg-[#FEF2F2] border-l-4 border-l-police-alert border-y border-r border-y-[#FCA5A5] border-r-[#FCA5A5] text-xs transition-colors">
-                  <div className="p-2 rounded-[8px] bg-white border border-[#FCA5A5] shrink-0 h-9 w-9 flex items-center justify-center shadow-sm">
+                <div key={i} className="flex gap-3 p-3.5 rounded-[14px] bg-[#FEF2F2] border-l-4 border-l-police-alert border-y border-r border-y-[#FCA5A5] border-r-[#FCA5A5] text-xs transition-colors">
+                  <div className="p-2 rounded-[10px] bg-white border border-[#FCA5A5] shrink-0 h-9 w-9 flex items-center justify-center shadow-sm">
                     <AlertTriangle className="w-5 h-5 text-police-alert" />
                   </div>
                   <div className="min-w-0 flex-1">

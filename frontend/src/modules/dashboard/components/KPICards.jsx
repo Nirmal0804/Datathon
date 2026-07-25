@@ -55,7 +55,7 @@ export default function KPICards({ data, compact = false }) {
   ];
 
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${compact ? 'gap-3 md:gap-4 mb-4 md:mb-6' : 'gap-6 mb-8'}`}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       {cards.map((card, i) => (
         <GlobalKPICard
           key={i}

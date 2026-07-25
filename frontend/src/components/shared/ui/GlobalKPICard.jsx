@@ -54,30 +54,30 @@ export default function GlobalKPICard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.2 }}
-      whileHover={{ y: -2 }}
-      className={`bg-white border border-[#E5E7EB] rounded-[24px] shadow-sm flex flex-col justify-between transition-all duration-200 ease-in-out cursor-default ${compact ? 'p-5 h-[116px]' : 'p-6 h-[136px]'}`}
+      whileHover={{ y: -3 }}
+      className={`bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm flex flex-col justify-between transition-all duration-200 ease-in-out cursor-default ${compact ? 'p-6 h-[130px]' : 'p-7 h-[144px]'}`}
     >
       {/* Top Row: Title & Icon */}
       <div className="flex justify-between items-start">
-        <h3 className={`${compact ? 'text-[11px]' : 'text-[12px]'} font-medium text-[#64748B] uppercase tracking-wider leading-tight pr-2`}>{title}</h3>
+        <h3 className="text-xs font-semibold text-[#64748B] uppercase tracking-wider leading-tight pr-2">{title}</h3>
         {Icon && (
-          <div className={`${compact ? 'w-[32px] h-[32px] rounded-[10px]' : 'w-[44px] h-[44px] rounded-[14px]'} flex items-center justify-center shrink-0 ${getIconStyles()}`}>
-            <Icon className={`${compact ? 'w-[16px] h-[16px]' : 'w-[20px] h-[20px]'}`} />
+          <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 shadow-sm bg-slate-100/80">
+            <Icon className="w-5 h-5 text-police-navy" />
           </div>
         )}
       </div>
 
       {/* Bottom Row: Value & Description/Trend */}
-      <div className={`flex items-end justify-between mt-auto gap-4`}>
+      <div className="flex items-end justify-between mt-auto gap-4">
         <div className="flex items-baseline gap-3">
-          <p className={`${compact ? 'text-[38px]' : 'text-[36px]'} font-bold text-[#0F172A] leading-none tracking-tight`}>{value}</p>
+          <p className="text-3xl font-extrabold text-[#0F172A] leading-none tracking-tight">{value}</p>
         </div>
         
         {/* Support Text & Trend */}
         {(description || trend || children) && (
           <div className="flex items-baseline gap-1.5 shrink-0">
             {trend && <TrendPill />}
-            {description && <span className={`${compact ? 'text-[12px]' : 'text-[14px]'} font-medium text-[#64748B]`}>{description}</span>}
+            {description && <span className="text-xs font-normal text-[#64748B]">{description}</span>}
             {children}
           </div>
         )}

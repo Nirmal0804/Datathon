@@ -30,7 +30,7 @@ export default function RecentAlerts({ data }) {
   const alerts = (data || []).slice(0, 3);
 
   return (
-    <div className="card p-6 shadow-sm flex flex-col h-auto lg:h-[400px] justify-between w-full">
+    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-auto lg:h-[400px] justify-between w-full">
       <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
         <div className="flex items-center gap-3">
           <div className="p-1.5 rounded-lg bg-red-50 text-red-700">
@@ -70,7 +70,7 @@ export default function RecentAlerts({ data }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 8 }}
                   transition={{ delay: i * 0.04, duration: 0.2 }}
-                  className={`flex gap-4 p-5 rounded-[20px] border hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer group shadow-sm ${cfg.cardClass}`}
+                  className={`flex gap-4 p-4.5 rounded-[16px] border hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer group shadow-sm ${cfg.cardClass}`}
                   role="listitem"
                 >
                   {/* Left severity indicator icon */}

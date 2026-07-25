@@ -44,9 +44,9 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* ── Modern Government Dashboard Cards (20px rounded, clean border, soft shadow) ── */
+  /* ── Modern Government Dashboard Cards (24px rounded, clean border, soft shadow) ── */
   .gov-card {
-    @apply bg-white border border-[#E7EAF0] rounded-[24px] shadow-sm transition-all duration-300;
+    @apply bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm transition-all duration-300;
   }
   .gov-card-hover {
     @apply gov-card hover:border-slate-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1;
@@ -54,7 +54,7 @@
 
   /* ── Cards ── */
   .card {
-    @apply bg-white border border-[#E7EAF0] rounded-[24px] shadow-sm;
+    @apply bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm;
   }
   .card-hover {
     @apply card transition-all duration-300 hover:border-slate-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1;
@@ -65,16 +65,16 @@
 
   /* ── Buttons ── */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[16px] text-[13px] font-bold
            transition-all duration-200 select-none
            focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F172A] focus-visible:ring-offset-2 focus-visible:ring-offset-white
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply btn bg-[#0F172A] text-white hover:bg-[#1E3A8A] active:scale-[0.98] shadow-sm hover:shadow-md;
+    @apply btn bg-[#0B1F4D] text-white hover:bg-[#0A192F] active:scale-[0.98] shadow-sm hover:shadow-md;
   }
   .btn-secondary {
-    @apply btn bg-white text-[#0F172A] border border-[#E7EAF0] hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm;
+    @apply btn bg-white text-[#0F172A] border border-[#E7ECF3] hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm;
   }
   .btn-ghost {
     @apply btn text-slate-500 hover:text-[#0F172A] hover:bg-slate-100 active:scale-[0.98];
@@ -82,13 +82,13 @@
   .btn-danger {
     @apply btn bg-red-50 text-red-600 border border-red-100 hover:bg-red-600 hover:text-white hover:border-red-600 active:scale-[0.98] shadow-sm;
   }
-  .btn-sm  { @apply px-3.5 py-1.5 text-xs rounded-lg; }
-  .btn-icon { @apply p-2 rounded-xl; }
+  .btn-sm  { @apply px-3.5 py-1.5 text-xs rounded-[12px]; }
+  .btn-icon { @apply p-2 rounded-[14px]; }
 
   /* ── Inputs ── */
   .input {
-    @apply w-full bg-[#F7F8FA] border border-[#E7EAF0] rounded-full py-2.5 px-4 text-[13px] font-medium text-[#0F172A] placeholder:text-slate-400
-           focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#0F172A] focus:border-transparent transition-all duration-200 shadow-sm;
+    @apply w-full bg-[#F8F9FB] border border-[#D9E2EC] rounded-full py-2.5 px-4 text-[13px] font-medium text-[#0F172A] placeholder:text-slate-400
+           focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#0B1F4D] focus:border-[#0B1F4D] transition-all duration-200 shadow-sm;
   }
   .select { @apply input appearance-none cursor-pointer pr-10; }
 

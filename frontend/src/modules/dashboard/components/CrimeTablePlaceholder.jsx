@@ -97,7 +97,7 @@ export default function CrimeTablePlaceholder({ data }) {
   };
 
   return (
-    <div className="card overflow-hidden flex flex-col h-[400px] justify-between">
+    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between overflow-hidden">
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 px-6 py-4 border-b border-[#E7EAF0] bg-slate-50">
         <div>

@@ -17,7 +17,7 @@ export default function GlobalFilterSelect({ label, icon: Icon, className, compa
         ) : null}
         <select 
           {...props}
-          className={`w-full ${compact ? 'h-[42px] text-[13px] rounded-[10px]' : 'h-[44px] text-[14px] rounded-[14px]'} bg-white border border-[#E5E7EB] ${Icon ? 'pl-9' : 'pl-4'} pr-10 text-[#0F172A] focus:outline-none focus:border-[#0B1F4D] transition-colors appearance-none cursor-pointer shadow-sm ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className || ''}`}
+          className={`w-full h-11 text-xs font-semibold rounded-[16px] bg-[#F8F9FB] hover:bg-white border border-[#D9E2EC] ${Icon ? 'pl-9' : 'pl-4'} pr-10 text-[#0F172A] focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#0B1F4D] focus:border-[#0B1F4D] transition-all duration-200 appearance-none cursor-pointer shadow-sm ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className || ''}`}
         >
           {props.children}
         </select>

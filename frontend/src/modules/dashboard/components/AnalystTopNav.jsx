@@ -23,9 +23,27 @@ const OFFICER_NAV_ITEMS = [
   { id: 'alerts', name: 'Alerts Feed' },
 ];
 
+const ADMIN_NAV_ITEMS = [
+  { id: 'overview', name: 'Overview' },
+  { id: 'users', name: 'Users Control' },
+  { id: 'roles', name: 'Roles & Privileges' },
+  { id: 'audit_logs', name: 'System Audit Logs' },
+  { id: 'system_health', name: 'System Health' },
+  { id: 'config', name: 'Configuration' },
+];
+
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
-  const navItems = role === 'officer' ? OFFICER_NAV_ITEMS : ANALYST_NAV_ITEMS;
-  const platformSubtitle = role === 'officer' ? 'FIELD OPERATIONS' : 'INTELLIGENCE PLATFORM';
+  const navItems = role === 'officer' 
+    ? OFFICER_NAV_ITEMS 
+    : role === 'admin' 
+    ? ADMIN_NAV_ITEMS 
+    : ANALYST_NAV_ITEMS;
+
+  const platformSubtitle = role === 'officer' 
+    ? 'FIELD OPERATIONS' 
+    : role === 'admin' 
+    ? 'SYSTEM ADMINISTRATION PLATFORM' 
+    : 'INTELLIGENCE PLATFORM';
 
   return (
     <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-6 shrink-0 shadow-sm border border-white/10 w-full mb-3">

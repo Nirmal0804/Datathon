@@ -339,7 +339,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
 
   if (overview) {
     return (
-      <div className="card p-6 lg:p-8 h-auto lg:h-[400px] flex flex-col justify-between w-full mb-8">
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm h-auto lg:h-[400px] flex flex-col justify-between w-full">
         <div className="flex items-center gap-3 border-b border-[#E7EAF0] pb-5 mb-6 shrink-0">
           <div className="p-2 rounded-xl bg-[#0F172A]/5 text-[#0F172A]">
             <Activity className="w-4 h-4" />

@@ -10,13 +10,13 @@ export default function AnalystProfileWidget({ onLogout, onNavigate, role }) {
     : { initials: 'JD', name: 'John Doe', roleText: 'Analyst' };
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 hidden md:flex">
+    <div className="fixed bottom-6 left-10 z-40 hidden md:flex">
       <motion.div 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white rounded-[18px] p-2 flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E5E7EB] cursor-pointer hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all"
+        className="bg-white rounded-[20px] p-2.5 flex items-center gap-3 shadow-sm border border-[#E5E7EB] cursor-pointer hover:shadow-md transition-all"
       >
-        <div className="w-9 h-9 rounded-xl bg-[#0B1F4D] text-white flex items-center justify-center font-bold text-[13px] shrink-0 shadow-sm">
+        <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
           {profile.initials}
         </div>
         

@@ -27,7 +27,7 @@ export default function EmergingCrimePatterns() {
   ];
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-5 shadow-sm flex flex-col h-[400px] justify-between transition-all duration-200">
+    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between transition-all duration-200">
       
       {/* Header */}
       <div className="flex items-start justify-between border-b border-[#E7EAF0] pb-3 mb-3 shrink-0">
