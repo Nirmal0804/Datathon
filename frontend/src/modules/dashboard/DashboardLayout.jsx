@@ -61,7 +61,7 @@ export default function DashboardLayout({ onLogout, role }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeModule, setActiveModule] = useState('overview');
 
-  const isCompact = role === 'analyst';
+  const isCompact = role === 'analyst' || role === 'officer';
 
   // Filter States
   const [filters, setFilters] = useState({
@@ -152,7 +152,7 @@ export default function DashboardLayout({ onLogout, role }) {
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
       
       return (
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
           {content}
         </main>
       );
@@ -255,7 +255,7 @@ export default function DashboardLayout({ onLogout, role }) {
     <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
       {/* Analyst Profile Widget */}
       {isCompact && (
-        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} />
+        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
       )}
 
       {/* Desktop Sidebar */}
@@ -297,6 +297,7 @@ export default function DashboardLayout({ onLogout, role }) {
             <AnalystTopNav
               activeModule={activeModule}
               setActiveModule={handleModuleChange}
+              role={role}
             />
           </div>
         )}

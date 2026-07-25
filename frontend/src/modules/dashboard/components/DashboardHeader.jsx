@@ -20,40 +20,40 @@ export default function DashboardHeader({ compact = false }) {
   });
 
   return (
-    <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-white border border-[#E5E7EB] rounded-[24px] shadow-sm transition-all duration-200 ease-in-out ${compact ? 'p-3 mb-4' : 'p-6 mb-6'}`}>
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5 p-4 sm:p-5 bg-white border border-[#E5E7EB] rounded-[20px] shadow-sm transition-all duration-200 ease-in-out">
       
       {/* Left Section */}
-      <div className={`flex items-center ${compact ? 'gap-3 md:gap-4' : 'gap-4 md:gap-5'}`}>
+      <div className="flex items-center gap-4">
         {/* Karnataka Police Official Badge */}
-        <img src={kspBadge} alt="Karnataka Police Badge" className={`${compact ? 'h-[48px]' : 'h-[72px]'} w-auto object-contain shrink-0 drop-shadow-md`} />
+        <img src={kspBadge} alt="Karnataka Police Badge" className="h-[54px] w-auto object-contain shrink-0 drop-shadow-sm" />
         <div className="flex flex-col justify-center">
-          <h1 className={`${compact ? 'text-[28px]' : 'text-[34px]'} font-bold text-[#0F172A] leading-none tracking-tight`}>
+          <h1 className="text-2xl sm:text-[28px] font-bold text-[#0F172A] leading-tight tracking-tight">
             Crime Intelligence Dashboard
           </h1>
-          <p className={`${compact ? 'text-[13px] mt-0.5' : 'text-[15px] mt-2'} font-medium text-[#64748B] leading-none`}>
+          <p className="text-xs sm:text-sm font-medium text-[#64748B] mt-0.5 leading-normal">
             State-level crime monitoring and intelligence overview
           </p>
         </div>
       </div>
 
       {/* Right Section: Compact Status Chips */}
-      <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
+      <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
         {/* System Online Chip */}
-        <div className={`flex items-center gap-2 bg-white px-3 md:px-4 ${compact ? 'h-8' : 'h-10'} rounded-[14px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default`}>
-          <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.4)] animate-pulse" />
-          <span className={`${compact ? 'text-[11px]' : 'text-[13px]'} font-bold text-[#0F172A]`}>System Online</span>
+        <div className="flex items-center gap-2 bg-[#F8F9FB] px-3.5 h-9 rounded-[12px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.4)] animate-pulse" />
+          <span className="text-xs font-bold text-[#0F172A]">System Online</span>
         </div>
 
         {/* Updated Chip */}
-        <div className={`flex items-center gap-2 bg-white px-3 md:px-4 ${compact ? 'h-8' : 'h-10'} rounded-[14px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default`}>
-          <RefreshCw className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-[#64748B]`} />
-          <span className={`${compact ? 'text-[11px]' : 'text-[13px]'} font-bold text-[#0F172A]`}>Updated just now</span>
+        <div className="flex items-center gap-2 bg-[#F8F9FB] px-3.5 h-9 rounded-[12px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
+          <RefreshCw className="w-4 h-4 text-police-blue" />
+          <span className="text-xs font-bold text-[#0F172A]">Updated just now</span>
         </div>
 
         {/* Time Chip */}
-        <div className={`flex items-center gap-2 bg-white px-3 md:px-4 ${compact ? 'h-8' : 'h-10'} rounded-[14px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default`}>
-          <Clock className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-[#64748B]`} />
-          <span className={`${compact ? 'text-[12px]' : 'text-[14px]'} font-bold text-[#0F172A] font-mono tracking-tight`}>{formattedTime}</span>
+        <div className="flex items-center gap-2 bg-[#F8F9FB] px-3.5 h-9 rounded-[12px] border border-[#E5E7EB] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
+          <Clock className="w-4 h-4 text-police-blue" />
+          <span className="text-xs font-bold text-[#0F172A] font-mono tracking-tight">{formattedTime}</span>
         </div>
       </div>
 

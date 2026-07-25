@@ -2,7 +2,13 @@ import React from 'react';
 import { Settings, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function AnalystProfileWidget({ onLogout, onNavigate }) {
+export default function AnalystProfileWidget({ onLogout, onNavigate, role }) {
+  const profile = role === 'officer' 
+    ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer' }
+    : role === 'admin'
+    ? { initials: 'SA', name: 'Admin Gowda', roleText: 'Administrator' }
+    : { initials: 'JD', name: 'John Doe', roleText: 'Analyst' };
+
   return (
     <div className="fixed bottom-6 left-6 z-40 hidden md:flex">
       <motion.div 
@@ -11,12 +17,12 @@ export default function AnalystProfileWidget({ onLogout, onNavigate }) {
         className="bg-white rounded-[18px] p-2 flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E5E7EB] cursor-pointer hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all"
       >
         <div className="w-9 h-9 rounded-xl bg-[#0B1F4D] text-white flex items-center justify-center font-bold text-[13px] shrink-0 shadow-sm">
-          JD
+          {profile.initials}
         </div>
         
         <div className="flex-1 min-w-[90px] pr-1">
-          <p className="text-[13px] font-bold text-[#0F172A] leading-tight group-hover:text-[#0B1F4D] transition-colors">John Doe</p>
-          <p className="text-[10px] font-bold text-[#64748B] mt-0.5 uppercase tracking-wider">Analyst</p>
+          <p className="text-[13px] font-bold text-[#0F172A] leading-tight group-hover:text-[#0B1F4D] transition-colors">{profile.name}</p>
+          <p className="text-[10px] font-bold text-[#64748B] mt-0.5 uppercase tracking-wider">{profile.roleText}</p>
         </div>
 
         <div className="flex items-center gap-0.5 border-l border-[#E5E7EB] pl-2">
