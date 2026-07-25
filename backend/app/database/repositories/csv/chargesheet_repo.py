@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 
 from app.database.csv_loader import parse_date, parse_int
 from app.database.records import ChargeSheetRecord
@@ -27,7 +27,7 @@ class CSVChargeSheetRepository:
     ) -> None:
         self._rows = rows
         self._all: list[ChargeSheetRecord] = []
-        self._by_fir: dict[str, ChargeSheetRecord] = {}
+        self._by_fir: dict[str, list[ChargeSheetRecord]] = {}
         self._by_station: dict[str, list[ChargeSheetRecord]] = {}
         self._build_indices(rows, fir_station_map or {})
 
@@ -39,7 +39,7 @@ class CSVChargeSheetRepository:
         for row in rows:
             record = self._row_to_record(row)
             self._all.append(record)
-            self._by_fir[record.fir_id] = record
+            self._by_fir.setdefault(record.fir_id, []).append(record)
             station_id = fir_station_map.get(record.fir_id)
             if station_id is not None:
                 self._by_station.setdefault(station_id, []).append(record)
@@ -60,8 +60,8 @@ class CSVChargeSheetRepository:
             status=row["Status"],
         )
 
-    def get_by_fir_id(self, fir_id: str) -> Optional[ChargeSheetRecord]:
-        return self._by_fir.get(fir_id)
+    def get_by_fir_id(self, fir_id: str) -> List[ChargeSheetRecord]:
+        return list(self._by_fir.get(fir_id, []))
 
     def list_by_station(self, station_id: str) -> List[ChargeSheetRecord]:
         return list(self._by_station.get(station_id, []))

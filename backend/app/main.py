@@ -13,6 +13,7 @@ Stack traces and sensitive internals are never exposed.
 from __future__ import annotations
 
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -44,6 +45,38 @@ logging.basicConfig(
 )
 _logger = logging.getLogger("crime_analytics")
 
+
+# ---------------------------------------------------------------------------
+# Lifespan: PostgreSQL connection pool
+# ---------------------------------------------------------------------------
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage PostgreSQL connection pool lifecycle."""
+    # Startup
+    if settings.DATA_BACKEND.lower() == "postgres":
+        from app.database.postgres import init_pool
+
+        if not settings.DATABASE_URL:
+            raise RuntimeError(
+                "DATABASE_URL must be set when DATA_BACKEND='postgres'"
+            )
+        init_pool(
+            dsn=settings.DATABASE_URL,
+            minconn=settings.DATABASE_POOL_MIN,
+            maxconn=settings.DATABASE_POOL_MAX,
+        )
+
+    yield
+
+    # Shutdown
+    if settings.DATA_BACKEND.lower() == "postgres":
+        from app.database.postgres import close_pool
+
+        close_pool()
+
+
 # ---------------------------------------------------------------------------
 # Application
 # ---------------------------------------------------------------------------
@@ -53,6 +86,7 @@ app = FastAPI(
     version=settings.APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Middleware – added outermost-first: CORS → Logging → RequestID
@@ -121,10 +155,24 @@ async def handle_uncaught_exception(request: Request, exc: Exception) -> JSONRes
 
 @app.get("/health")
 async def health():
-    return {
+    """Health check endpoint. Reports backend status."""
+    health_status = {
         "status": "healthy",
         "service": settings.APP_NAME,
+        "backend": settings.DATA_BACKEND,
     }
+
+    if settings.DATA_BACKEND.lower() == "postgres":
+        try:
+            from app.database.postgres import execute_one
+
+            result = execute_one("SELECT 1 AS ok")
+            health_status["database"] = "connected" if result else "error"
+        except Exception:
+            health_status["database"] = "disconnected"
+            health_status["status"] = "degraded"
+
+    return health_status
 
 
 # ---------------------------------------------------------------------------

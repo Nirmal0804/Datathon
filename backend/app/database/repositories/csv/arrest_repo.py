@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 
 from app.database.csv_loader import parse_bool, parse_datetime, parse_int
 from app.database.records import ArrestRecord
@@ -14,7 +14,7 @@ class CSVArrestRepository:
     def __init__(self, rows: list[dict[str, str]]) -> None:
         self._rows = rows
         self._all: list[ArrestRecord] = []
-        self._by_fir: dict[str, ArrestRecord] = {}
+        self._by_fir: dict[str, list[ArrestRecord]] = {}
         self._by_station: dict[str, list[ArrestRecord]] = {}
         self._by_person: dict[str, list[ArrestRecord]] = {}
         self._build_indices()
@@ -23,7 +23,7 @@ class CSVArrestRepository:
         for row in self._rows:
             record = self._row_to_record(row)
             self._all.append(record)
-            self._by_fir[record.fir_id] = record
+            self._by_fir.setdefault(record.fir_id, []).append(record)
             self._by_station.setdefault(record.station_id, []).append(record)
             self._by_person.setdefault(record.person_id, []).append(record)
 
@@ -51,8 +51,8 @@ class CSVArrestRepository:
             photograph_taken=parse_bool(row["Photograph_Taken"]),
         )
 
-    def get_by_fir_id(self, fir_id: str) -> Optional[ArrestRecord]:
-        return self._by_fir.get(fir_id)
+    def get_by_fir_id(self, fir_id: str) -> List[ArrestRecord]:
+        return list(self._by_fir.get(fir_id, []))
 
     def list_by_station(self, station_id: str) -> List[ArrestRecord]:
         return list(self._by_station.get(station_id, []))

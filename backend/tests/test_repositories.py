@@ -262,40 +262,43 @@ class TestCSVArrestRepository:
     def test_get_by_fir_id(self, arrest_repo: CSVArrestRepository) -> None:
         firs_with_arrests = list(arrest_repo._by_fir.keys())
         first_fir = firs_with_arrests[0]
-        a = arrest_repo.get_by_fir_id(first_fir)
-        assert a is not None
-        assert isinstance(a, ArrestRecord)
-        assert a.fir_id == first_fir
+        result = arrest_repo.get_by_fir_id(first_fir)
+        assert len(result) > 0
+        assert isinstance(result[0], ArrestRecord)
+        assert result[0].fir_id == first_fir
 
     def test_get_by_fir_id_missing(self, arrest_repo: CSVArrestRepository) -> None:
-        assert arrest_repo.get_by_fir_id("FIR999999999") is None
+        assert arrest_repo.get_by_fir_id("FIR999999999") == []
 
     def test_boolean_normalization(self, arrest_repo: CSVArrestRepository) -> None:
-        for a in arrest_repo._by_fir.values():
-            assert isinstance(a.medical_examination, bool)
-            assert isinstance(a.fingerprint_taken, bool)
-            assert isinstance(a.dna_sample, bool)
-            assert isinstance(a.photograph_taken, bool)
+        for arrests in arrest_repo._by_fir.values():
+            for a in arrests:
+                assert isinstance(a.medical_examination, bool)
+                assert isinstance(a.fingerprint_taken, bool)
+                assert isinstance(a.dna_sample, bool)
+                assert isinstance(a.photograph_taken, bool)
 
     def test_list_by_station(self, arrest_repo: CSVArrestRepository) -> None:
-        # Find a station with arrests
-        first = list(arrest_repo._by_fir.values())[0]
+        first = arrest_repo.list_all_arrests()[0]
         result = arrest_repo.list_by_station(first.station_id)
         assert len(result) > 0
 
     def test_list_by_person(self, arrest_repo: CSVArrestRepository) -> None:
-        first = list(arrest_repo._by_fir.values())[0]
+        first = arrest_repo.list_all_arrests()[0]
         result = arrest_repo.list_by_person(first.person_id)
         assert len(result) > 0
 
     def test_arrest_date_is_datetime(self, arrest_repo: CSVArrestRepository) -> None:
         from datetime import datetime
-        a = list(arrest_repo._by_fir.values())[0]
+        a = arrest_repo.list_all_arrests()[0]
         assert isinstance(a.arrest_date, datetime)
 
     def test_one_arrest_per_fir(self, arrest_repo: CSVArrestRepository) -> None:
-        # Verify 1:1 cardinality — each FIR key maps to exactly one arrest
+        # Current dataset has one arrest per FIR; verify unique FIR key count
         assert len(arrest_repo._by_fir) == 2540
+        # Each FIR key maps to a list (not a single record)
+        for v in arrest_repo._by_fir.values():
+            assert isinstance(v, list)
 
     def test_list_all_arrests_returns_all_records(self, arrest_repo: CSVArrestRepository) -> None:
         all_arrests = arrest_repo.list_all_arrests()
@@ -365,21 +368,24 @@ class TestCSVChargeSheetRepository:
 
     def test_get_by_fir_id(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         first_fir = list(chargesheet_repo._by_fir.keys())[0]
-        cs = chargesheet_repo.get_by_fir_id(first_fir)
-        assert cs is not None
-        assert isinstance(cs, ChargeSheetRecord)
-        assert cs.fir_id == first_fir
+        result = chargesheet_repo.get_by_fir_id(first_fir)
+        assert len(result) > 0
+        assert isinstance(result[0], ChargeSheetRecord)
+        assert result[0].fir_id == first_fir
 
     def test_get_by_fir_id_missing(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
-        assert chargesheet_repo.get_by_fir_id("FIR999999999") is None
+        assert chargesheet_repo.get_by_fir_id("FIR999999999") == []
 
     def test_chargesheet_date_is_date(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         from datetime import date
-        cs = list(chargesheet_repo._by_fir.values())[0]
+        all_cs = chargesheet_repo.list_all_chargesheets()
+        cs = all_cs[0]
         assert isinstance(cs.chargesheet_date, date)
 
     def test_one_chargesheet_per_fir(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         assert len(chargesheet_repo._by_fir) == 2469
+        for v in chargesheet_repo._by_fir.values():
+            assert isinstance(v, list)
 
     def test_list_all_chargesheets_returns_all_records(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         all_cs = chargesheet_repo.list_all_chargesheets()
@@ -424,10 +430,8 @@ class TestCSVChargeSheetRepository:
     def test_list_by_station_returns_results(
         self, chargesheet_repo: CSVChargeSheetRepository
     ) -> None:
-        # Pick a chargesheet and verify its station lookup works
-        first_cs = list(chargesheet_repo._by_fir.values())[0]
+        first_cs = chargesheet_repo.list_all_chargesheets()[0]
         first_fir_id = first_cs.fir_id
-        # Resolve expected station via fir_station_map test fixture
         from app.core.config import settings
         from app.database.csv_loader import load_all
         from app.database.repositories.csv.fir_repo import CSVFIRRepository
@@ -436,8 +440,8 @@ class TestCSVChargeSheetRepository:
         expected_station = fir_repo_local.get_by_id(first_fir_id).station_id
         result = chargesheet_repo.list_by_station(expected_station)
         assert len(result) > 0
-        for cs in result:
-            assert cs.fir_id == first_fir_id or chargesheet_repo._by_fir[cs.fir_id] is not None
+        result_cs_ids = {cs.chargesheet_id for cs in result}
+        assert first_cs.chargesheet_id in result_cs_ids
 
     def test_list_by_station_empty(self, chargesheet_repo: CSVChargeSheetRepository) -> None:
         assert chargesheet_repo.list_by_station("PS9999") == []
