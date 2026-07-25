@@ -1,7 +1,7 @@
 import React from 'react';
 import RiskBadge from './RiskBadge';
 import TrendBadge from './TrendBadge';
-import { Shield, MapPin, Navigation, Eye, FileText, CheckCircle2 } from 'lucide-react';
+import { Shield, MapPin, Eye, FileText, CheckCircle2, X } from 'lucide-react';
 
 export default function HotspotDetailPanel({ 
   hotspot, 
@@ -10,18 +10,20 @@ export default function HotspotDetailPanel({
   role
 }) {
   const isAnalyst = role === 'analyst';
+  
   if (!hotspot) {
     return (
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-center h-full flex flex-col justify-center items-center text-slate-500 shadow-md">
-        <Shield className="w-10 h-10 text-slate-700 mb-3 animate-pulse-soft" />
-        <h3 className="text-sm font-bold text-white mb-1">Select a Hotspot</h3>
-        <p className="text-4xs text-slate-400">Click a record in the registry to inspect threat details and recommended patrol activities.</p>
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-8 text-center h-full flex flex-col justify-center items-center text-[#64748B] shadow-sm min-h-[400px]">
+        <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center mb-3">
+          <Shield className="w-6 h-6 animate-pulse" />
+        </div>
+        <h3 className="text-base font-black text-[#0F172A] mb-1">Select a Hotspot Zone</h3>
+        <p className="text-xs font-semibold text-[#64748B] max-w-xs">Click a record in the registry to inspect threat details and recommended patrol activities.</p>
       </div>
     );
   }
 
   const handleViewOnMap = () => {
-    // Save map coordinates in localStorage to be consumed by CrimeMapLayout on mount
     localStorage.setItem('selectedMapPosition', JSON.stringify({
       center: [hotspot.latitude, hotspot.longitude],
       zoom: 12
@@ -30,115 +32,107 @@ export default function HotspotDetailPanel({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-5 shadow-md flex flex-col justify-between h-full">
-      <div className="space-y-4">
-        
-        {/* Header */}
-        <div className="flex justify-between items-start pb-3 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-primary" />
-            <div>
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">{hotspot.hotspotId}</span>
-              <h3 className="text-sm font-bold text-white">{hotspot.policeStation}</h3>
-            </div>
+    <div className="space-y-4">
+      {/* Header Card */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-xs flex justify-between items-start">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0">
+            <MapPin className="w-5 h-5" />
           </div>
-          {onClose && (
-            <button 
-              onClick={onClose} 
-              className="text-slate-400 hover:text-white text-xs px-2 py-1 rounded bg-slate-850 cursor-pointer"
-            >
-              Close
-            </button>
-          )}
-        </div>
-
-        {/* Dynamic Threat Metrics */}
-        <div className="grid grid-cols-2 gap-3.5">
-          <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-            <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Risk Score</span>
-            <RiskBadge risk={hotspot.riskLevel} />
-          </div>
-          <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-            <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Trend Status</span>
-            <TrendBadge trend={hotspot.trend} />
+          <div>
+            <span className="text-[11px] font-mono font-extrabold text-[#0B1F4D] bg-[#0B1F4D]/5 px-2.5 py-0.5 rounded-full border border-[#0B1F4D]/10">{hotspot.hotspotId}</span>
+            <h3 className="text-sm font-black text-[#0F172A] mt-1">{hotspot.policeStation}</h3>
           </div>
         </div>
-
-        {/* Hotspot details data list */}
-        <div className="space-y-2.5 p-3.5 bg-slate-950/40 rounded-lg border border-slate-850 text-xs">
-          <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-            <span className="text-slate-400">Total Incident Count</span>
-            <span className="font-semibold text-slate-200 font-mono">{hotspot.crimeCount} cases</span>
-          </div>
-          <div className="flex justify-between items-center py-1.5 border-b border-slate-8-40 border-slate-850/40">
-            <span className="text-slate-400">Dominant Category</span>
-            <span className="font-semibold text-slate-200">{hotspot.dominantCrime}</span>
-          </div>
-          {isAnalyst && hotspot.densityIndex !== undefined && (
-            <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40 font-mono">
-              <span className="text-slate-400">Density Index</span>
-              <span className="font-semibold text-slate-200">{hotspot.densityIndex} /10</span>
-            </div>
-          )}
-          {isAnalyst && hotspot.growthPercentage !== undefined && (
-            <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40 font-mono">
-              <span className="text-slate-400">Growth Rate (YoY)</span>
-              <span className={`font-semibold ${hotspot.growthPercentage >= 0 ? 'text-rose-450' : 'text-emerald-450'}`}>
-                {hotspot.growthPercentage >= 0 ? '+' : ''}{hotspot.growthPercentage}%
-              </span>
-            </div>
-          )}
-          {isAnalyst && hotspot.historicalAverage !== undefined && (
-            <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40 font-mono">
-              <span className="text-slate-400">Historical Average</span>
-              <span className="font-semibold text-slate-200">{hotspot.historicalAverage}</span>
-            </div>
-          )}
-          <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-            <span className="text-slate-400">Patrol Priority</span>
-            <span className="font-semibold text-rose-450 uppercase">{hotspot.patrolPriority}</span>
-          </div>
-          <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-            <span className="text-slate-400">District Center</span>
-            <span className="font-semibold text-slate-200">{hotspot.district}</span>
-          </div>
-          <div className="flex justify-between items-center py-1.5">
-            <span className="text-slate-400">Last Incident Date</span>
-            <span className="font-semibold text-slate-200 font-mono">{hotspot.lastIncidentDate}</span>
-          </div>
-        </div>
-
-        {/* Activity log details description */}
-        <div className="space-y-1.5">
-          <h4 className="text-slate-500 font-bold uppercase text-4xs tracking-widest flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5 text-primary" /> Active Incident log
-          </h4>
-          <div className="p-3 bg-slate-950/40 border border-slate-850 rounded-lg text-slate-350 leading-relaxed text-xs">
-            {hotspot.activitySummary}
-          </div>
-        </div>
-
-        {/* Recommended action list */}
-        <div className="space-y-1.5">
-          <h4 className="text-slate-500 font-bold uppercase text-4xs tracking-widest flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Recommended Action
-          </h4>
-          <div className="p-3 bg-slate-950/40 border border-slate-850 rounded-lg text-slate-200 font-medium text-xs leading-relaxed">
-            {hotspot.recommendedAction}
-          </div>
-        </div>
-
+        {onClose && (
+          <button 
+            onClick={onClose} 
+            className="w-8 h-8 rounded-full bg-[#F8F9FB] hover:bg-[#E7ECF3] text-slate-500 flex items-center justify-center transition-colors cursor-pointer"
+            aria-label="Close detail panel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {/* View on Crime Map Button */}
+      {/* Card 1: Risk Score & Trend Status */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-xs grid grid-cols-2 gap-4">
+        <div className="p-3.5 bg-[#F8F9FB] rounded-[14px] border border-[#E7ECF3]">
+          <span className="block text-[10px] text-[#64748B] font-extrabold uppercase tracking-wider mb-1.5">Risk Score</span>
+          <RiskBadge risk={hotspot.riskLevel} />
+        </div>
+        <div className="p-3.5 bg-[#F8F9FB] rounded-[14px] border border-[#E7ECF3]">
+          <span className="block text-[10px] text-[#64748B] font-extrabold uppercase tracking-wider mb-1.5">Trend Status</span>
+          <TrendBadge trend={hotspot.trend} />
+        </div>
+      </div>
+
+      {/* Card 2: Incident Metrics List */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-xs space-y-3 text-xs">
+        <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+          <span className="text-[#64748B] font-semibold">Incident Count</span>
+          <span className="font-mono font-extrabold text-[#0F172A]">{hotspot.crimeCount} cases</span>
+        </div>
+        <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+          <span className="text-[#64748B] font-semibold">Dominant Category</span>
+          <span className="font-bold text-[#0F172A]">{hotspot.dominantCrime}</span>
+        </div>
+        {isAnalyst && hotspot.densityIndex !== undefined && (
+          <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+            <span className="text-[#64748B] font-semibold">Density Index</span>
+            <span className="font-mono font-extrabold text-[#0F172A]">{hotspot.densityIndex} /10</span>
+          </div>
+        )}
+        {isAnalyst && hotspot.growthPercentage !== undefined && (
+          <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+            <span className="text-[#64748B] font-semibold">Growth Rate (YoY)</span>
+            <span className={`font-mono font-extrabold ${hotspot.growthPercentage >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+              {hotspot.growthPercentage >= 0 ? '+' : ''}{hotspot.growthPercentage}%
+            </span>
+          </div>
+        )}
+        <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+          <span className="text-[#64748B] font-semibold">Patrol Priority</span>
+          <span className="font-extrabold text-rose-600 uppercase text-[11px]">{hotspot.patrolPriority}</span>
+        </div>
+        <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]/60">
+          <span className="text-[#64748B] font-semibold">District Center</span>
+          <span className="font-bold text-[#0F172A]">{hotspot.district}</span>
+        </div>
+        <div className="flex justify-between items-center py-1.5">
+          <span className="text-[#64748B] font-semibold">Last Incident Date</span>
+          <span className="font-mono font-bold text-[#0F172A]">{hotspot.lastIncidentDate}</span>
+        </div>
+      </div>
+
+      {/* Card 3: Active Incident Summary */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-xs space-y-2">
+        <h4 className="text-[11px] font-black text-[#0F172A] uppercase tracking-wider flex items-center gap-2">
+          <FileText className="w-4 h-4 text-[#0B1F4D]" /> Active Incident Log
+        </h4>
+        <div className="p-3.5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-[#0F172A] font-medium text-xs leading-relaxed">
+          {hotspot.activitySummary}
+        </div>
+      </div>
+
+      {/* Card 4: Recommended Action */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-xs space-y-2">
+        <h4 className="text-[11px] font-black text-[#0F172A] uppercase tracking-wider flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Recommended Action
+        </h4>
+        <div className="p-3.5 bg-[#F0FDF4] border border-[#DCFCE7] rounded-[14px] text-[#166534] font-bold text-xs leading-relaxed">
+          {hotspot.recommendedAction}
+        </div>
+      </div>
+
+      {/* Card 5: View on Crime Map Button */}
       <button
         onClick={handleViewOnMap}
-        className="w-full btn-primary btn-sm h-10 gap-2 cursor-pointer mt-4"
+        className="w-full h-11 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
       >
-        <Eye className="w-4.5 h-4.5" />
+        <Eye className="w-4 h-4 text-[#C79A2B]" />
         <span>View on Crime Map</span>
       </button>
-
     </div>
   );
 }

@@ -64,12 +64,12 @@ export default function PatrolRecommendationCard({ hotspot }) {
   }
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4 shadow-md">
-      <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-        <ClipboardList className="w-5 h-5 text-indigo-400" />
+    <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 space-y-4 shadow-xs">
+      <div className="flex items-center gap-2 pb-3 border-b border-[#E7ECF3]">
+        <ClipboardList className="w-5 h-5 text-[#0B1F4D]" />
         <div>
-          <h3 className="text-sm font-bold text-white">Patrol Directives Checklist</h3>
-          <p className="text-4xs text-slate-400 mt-0.5 font-mono">Dynamic patrol plan for {hotspot.hotspotId}.</p>
+          <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Patrol Directives Checklist</h3>
+          <p className="text-[11px] font-mono font-bold text-[#64748B] mt-0.5">Dynamic patrol plan for {hotspot.hotspotId}</p>
         </div>
       </div>
 
@@ -80,24 +80,24 @@ export default function PatrolRecommendationCard({ hotspot }) {
             <button
               key={item.id}
               onClick={() => toggleTask(item.id, item.task)}
-              className={`w-full text-left p-3 rounded-lg border transition-all flex items-start gap-3 cursor-pointer ${
+              className={`w-full text-left p-3.5 rounded-[14px] border transition-all flex items-start gap-3 cursor-pointer ${
                 isDone 
-                  ? 'bg-slate-950/20 border-slate-850/60 opacity-60' 
-                  : 'bg-slate-950/40 border-slate-850 hover:border-slate-800 hover:bg-slate-950/60'
+                  ? 'bg-[#F8F9FB] border-[#E7ECF3] opacity-60' 
+                  : 'bg-white border-[#E7ECF3] hover:border-[#0B1F4D]/40 hover:bg-[#F8F9FB]'
               }`}
             >
               <div className="shrink-0 mt-0.5">
                 {isDone ? (
-                  <CheckSquare className="w-4.5 h-4.5 text-indigo-400 fill-indigo-500/10" />
+                  <CheckSquare className="w-4.5 h-4.5 text-emerald-600 fill-emerald-100" />
                 ) : (
-                  <Square className="w-4.5 h-4.5 text-slate-500" />
+                  <Square className="w-4.5 h-4.5 text-slate-400" />
                 )}
               </div>
               <div>
-                <p className={`text-xs font-semibold ${isDone ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                <p className={`text-xs font-bold ${isDone ? 'line-through text-[#64748B]' : 'text-[#0F172A]'}`}>
                   {item.task}
                 </p>
-                <p className="text-4xs text-slate-500 mt-0.5">{item.desc}</p>
+                <p className="text-[11px] font-medium text-[#64748B] mt-0.5">{item.desc}</p>
               </div>
             </button>
           );

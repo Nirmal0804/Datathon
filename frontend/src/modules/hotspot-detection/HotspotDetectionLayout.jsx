@@ -4,25 +4,22 @@ import HotspotTable from './components/HotspotTable';
 import HotspotDetailPanel from './components/HotspotDetailPanel';
 import PatrolRecommendationCard from './components/PatrolRecommendationCard';
 import { MOCK_HOTSPOTS } from '../../mock/hotspotData';
-import { Shield, ShieldAlert, Zap, Activity, Navigation, Radio, MapPin, Eye } from 'lucide-react';
+import { ShieldAlert, Radio, ShieldCheck, Activity, Zap, AlertTriangle } from 'lucide-react';
 
-// Custom Skeleton for Top KPIs & Registry Tables
 function SkeletonDashboard() {
   return (
     <div className="space-y-6">
-      {/* KPIs Skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-slate-900/60 border border-slate-850 rounded-xl p-5 space-y-3 animate-pulse">
-            <div className="h-3.5 bg-slate-800 rounded w-1/2" />
-            <div className="h-6 bg-slate-800 rounded w-1/3" />
+          <div key={i} className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 space-y-3 animate-pulse">
+            <div className="h-3.5 bg-slate-100 rounded w-1/2" />
+            <div className="h-6 bg-slate-100 rounded w-1/3" />
           </div>
         ))}
       </div>
-      {/* Main Grid Skeleton */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-slate-900/60 border border-slate-850 rounded-xl p-5 h-96 animate-pulse" />
-        <div className="bg-slate-900/60 border border-slate-850 rounded-xl p-5 h-96 animate-pulse" />
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="w-full lg:w-[70%] bg-white border border-[#E7ECF3] rounded-[24px] p-6 h-96 animate-pulse" />
+        <div className="w-full lg:w-[30%] bg-white border border-[#E7ECF3] rounded-[24px] p-6 h-96 animate-pulse" />
       </div>
     </div>
   );
@@ -66,7 +63,6 @@ export default function HotspotDetectionLayout({ onNavigate }) {
   const filteredHotspots = useMemo(() => {
     let list = [...MOCK_HOTSPOTS];
 
-    // Search query match (Hotspot ID or Police Station)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       list = list.filter(h => 
@@ -75,7 +71,6 @@ export default function HotspotDetectionLayout({ onNavigate }) {
       );
     }
 
-    // Dropdown filters
     if (filters.district !== 'All') {
       list = list.filter(h => h.district === filters.district);
     }
@@ -86,7 +81,6 @@ export default function HotspotDetectionLayout({ onNavigate }) {
       list = list.filter(h => h.dominantCrime === filters.crimeCategory);
     }
 
-    // Date range filters
     if (filters.startDate) {
       const start = new Date(filters.startDate);
       list = list.filter(h => new Date(h.lastIncidentDate) >= start);
@@ -99,7 +93,6 @@ export default function HotspotDetectionLayout({ onNavigate }) {
     return list;
   }, [filters, searchQuery]);
 
-  // If selected hotspot is filtered out, clear selection
   useEffect(() => {
     if (selectedHotspot) {
       const stillExists = filteredHotspots.some(h => h.hotspotId === selectedHotspot.hotspotId);
@@ -109,13 +102,11 @@ export default function HotspotDetectionLayout({ onNavigate }) {
     }
   }, [filteredHotspots, selectedHotspot]);
 
-  // Compute Top KPI Cards dynamically from filtered list
   const kpis = useMemo(() => {
     const total = filteredHotspots.length;
     const critical = filteredHotspots.filter(h => h.riskLevel === 'Critical').length;
     const highPatrol = filteredHotspots.filter(h => h.patrolPriority === 'Critical' || h.patrolPriority === 'High').length;
     
-    // Calculate Average Risk index
     const riskWeights = { Critical: 4, High: 3, Medium: 2, Low: 1 };
     const totalWeight = filteredHotspots.reduce((acc, h) => acc + (riskWeights[h.riskLevel] || 0), 0);
     const avgWeight = total > 0 ? totalWeight / total : 0;
@@ -134,18 +125,30 @@ export default function HotspotDetectionLayout({ onNavigate }) {
   }, [filteredHotspots]);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-12">
+    <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-12">
       
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 border border-slate-800 p-5 rounded-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
-            <Radio className="w-5 h-5 text-primary animate-pulse-soft" />
+      {/* 1. Compact White Page Header Banner */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px] shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
+            <Radio className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white uppercase tracking-wider">Crime Hotspot Detection</h1>
-            <p className="text-2xs text-slate-400 mt-0.5 font-sans">AI-driven hotspot telemetry for tactical officer deployments.</p>
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Detection</h1>
+              <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
+                {filteredHotspots.length} Active Zones
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-[#64748B] mt-0.5">
+              AI-driven geospatial hotspot telemetry for tactical officer deployments.
+            </p>
           </div>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
+          <ShieldCheck className="w-4 h-4 text-emerald-500" />
+          <span>Telemetry Status: Live Sync</span>
         </div>
       </div>
 
@@ -153,27 +156,50 @@ export default function HotspotDetectionLayout({ onNavigate }) {
         <SkeletonDashboard />
       ) : (
         <>
-          {/* 1. Dynamic KPI Indicators */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Active Hotspots</span>
-              <span className="text-xl font-bold text-white font-mono mt-1">{kpis.total}</span>
+          {/* 2. White KPI Cards Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Hotspots</p>
+                <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">{kpis.total}</h3>
+              </div>
+              <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 flex items-center justify-center text-[#0B1F4D] font-extrabold">
+                <Radio className="w-5 h-5" />
+              </div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Critical Threat Zones</span>
-              <span className="text-xl font-bold text-rose-500 font-mono mt-1">{kpis.critical}</span>
+
+            <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Critical Threat Zones</p>
+                <h3 className="text-2xl font-black text-rose-600 tracking-tight mt-1">{kpis.critical}</h3>
+              </div>
+              <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-extrabold">
+                <Zap className="w-5 h-5" />
+              </div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">High Priority Patrols</span>
-              <span className="text-xl font-bold text-amber-500 font-mono mt-1">{kpis.highPatrol}</span>
+
+            <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">High Priority Patrols</p>
+                <h3 className="text-2xl font-black text-amber-600 tracking-tight mt-1">{kpis.highPatrol}</h3>
+              </div>
+              <div className="w-10 h-10 rounded-[14px] bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 font-extrabold">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Average Threat Rating</span>
-              <span className="text-sm font-bold text-indigo-400 uppercase mt-1.5">{kpis.avgLabel} Risk</span>
+
+            <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg Threat Rating</p>
+                <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">{kpis.avgLabel}</h3>
+              </div>
+              <div className="w-10 h-10 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-extrabold">
+                <Activity className="w-5 h-5" />
+              </div>
             </div>
           </div>
 
-          {/* 2. Collapsible Filters */}
+          {/* 3. Compact Filters Toolbar */}
           <HotspotFilters 
             filters={filters}
             setFilters={setFilters}
@@ -182,17 +208,17 @@ export default function HotspotDetectionLayout({ onNavigate }) {
             onReset={handleResetFilters}
           />
 
-          {/* 3. Splitted Column Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* 4 & 5. 70/30 Split Grid (Registry Table & Right Inspector Panel) */}
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
             
-            {/* Table area */}
-            <div className="lg:col-span-2 space-y-4">
+            {/* Table Area (70% Width) */}
+            <div className="w-full lg:w-[70%] space-y-4">
               {filteredHotspots.length === 0 ? (
-                <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-xl max-w-md mx-auto">
-                  <ShieldAlert className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <h4 className="text-sm font-bold text-white">No hotspots matches filters</h4>
-                  <p className="text-4xs text-slate-400 mt-1 mb-4">Try clearing date ranges or search terms.</p>
-                  <button onClick={handleResetFilters} className="btn-secondary btn-sm w-full">
+                <div className="p-12 text-center bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm max-w-md mx-auto">
+                  <ShieldAlert className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                  <h4 className="text-base font-black text-[#0F172A]">No hotspots match your filters</h4>
+                  <p className="text-xs font-semibold text-[#64748B] mt-1 mb-4">Try clearing date ranges or search terms.</p>
+                  <button onClick={handleResetFilters} className="h-10 px-6 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors cursor-pointer">
                     Clear Filters
                   </button>
                 </div>
@@ -205,8 +231,8 @@ export default function HotspotDetectionLayout({ onNavigate }) {
               )}
             </div>
 
-            {/* Inspection details sidebar */}
-            <div className="space-y-6">
+            {/* Inspector Details Sidebar (30% Width) */}
+            <div className="w-full lg:w-[30%] space-y-4">
               <HotspotDetailPanel 
                 hotspot={selectedHotspot}
                 onClose={() => setSelectedHotspot(null)}
