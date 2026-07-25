@@ -507,44 +507,44 @@ export default function GISMap({
         </div>
       )}
 
-      {/* Floating Map Controls */}
-      <div className="absolute bottom-6 right-6 z-[400] flex flex-col gap-2 shadow-2xl">
+      {/* Floating Map Controls (Circular White Buttons) */}
+      <div className="absolute bottom-6 right-6 z-[400] flex flex-col gap-2.5 shadow-sm">
         <button 
           onClick={handleZoomIn}
-          className="p-3 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white rounded-lg border border-slate-700 shadow-md transition-colors flex items-center justify-center cursor-pointer"
+          className="w-12 h-12 rounded-full bg-white text-[#0F172A] border border-[#E7ECF3] shadow-md hover:bg-slate-50 hover:-translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
           title="Zoom In"
         >
-          <ZoomIn className="w-5 h-5" />
+          <ZoomIn className="w-5 h-5 text-[#0F172A]" />
         </button>
         <button 
           onClick={handleZoomOut}
-          className="p-3 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white rounded-lg border border-slate-700 shadow-md transition-colors flex items-center justify-center cursor-pointer"
+          className="w-12 h-12 rounded-full bg-white text-[#0F172A] border border-[#E7ECF3] shadow-md hover:bg-slate-50 hover:-translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
           title="Zoom Out"
         >
-          <ZoomOut className="w-5 h-5" />
+          <ZoomOut className="w-5 h-5 text-[#0F172A]" />
         </button>
         <button 
           onClick={handleResetView}
-          className="p-3 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white rounded-lg border border-slate-700 shadow-md transition-colors flex items-center justify-center cursor-pointer"
+          className="w-12 h-12 rounded-full bg-white text-[#0F172A] border border-[#E7ECF3] shadow-md hover:bg-slate-50 hover:-translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
           title="Reset View"
         >
-          <Maximize2 className="w-5 h-5" />
+          <Maximize2 className="w-5 h-5 text-[#0F172A]" />
         </button>
         {onExportSnapshot && (
           <button 
             onClick={onExportSnapshot}
-            className="p-3 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white rounded-lg border border-slate-700 shadow-md transition-colors flex items-center justify-center cursor-pointer"
+            className="w-12 h-12 rounded-full bg-white text-[#0F172A] border border-[#E7ECF3] shadow-md hover:bg-slate-50 hover:-translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
             title="Export Map Snapshot"
           >
-            <Download className="w-5 h-5" />
+            <Download className="w-5 h-5 text-[#0F172A]" />
           </button>
         )}
 
-        {/* Quick Toggles (Expanded for Analyst) */}
-        <div className="flex flex-col gap-1.5 p-1.5 bg-slate-900/95 border border-slate-700 rounded-lg shadow-lg mt-2">
+        {/* Quick Layer Toggles */}
+        <div className="flex flex-col gap-2 p-2 bg-white border border-[#E7ECF3] rounded-full shadow-md mt-2 items-center">
           <button 
             onClick={() => toggleLayer('showMarkers')}
-            className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showMarkers ? 'bg-primary/20 text-primary border border-primary/30' : 'text-slate-400 hover:text-slate-200'}`}
+            className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showMarkers ? 'bg-[#0B1F4D] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
             title="Toggle Markers"
           >
             <MapPin className="w-4 h-4" />
@@ -554,45 +554,45 @@ export default function GISMap({
             <>
               <button 
                 onClick={() => toggleLayer('showHeatmap')}
-                className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showHeatmap ? 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showHeatmap ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
                 title="Toggle Heatmap"
               >
                 <Activity className="w-4 h-4" />
               </button>
               <button 
                 onClick={() => toggleLayer('showClusters')}
-                className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showClusters ? 'bg-primary/20 text-primary border border-primary/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showClusters ? 'bg-[#0B1F4D] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
                 title="Toggle Cluster Layer"
               >
                 <Layers className="w-4 h-4" />
               </button>
               <button 
                 onClick={() => toggleLayer('showDensity')}
-                className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showDensity ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showDensity ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
                 title="Toggle Density Layer"
               >
                 <Network className="w-4 h-4" />
               </button>
               <button 
                 onClick={() => toggleLayer('showJurisdictions')}
-                className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showJurisdictions ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200'}`}
-                title="Toggle Police Jurisdictions"
+                className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showJurisdictions ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
+                title="Toggle Beat Sectors"
               >
-                <Layers className="w-4 h-4" />
+                <Globe className="w-4 h-4" />
               </button>
             </>
           )}
 
           <button 
             onClick={() => toggleLayer('showHotspots')}
-            className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showHotspots ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+            className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showHotspots ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
             title="Toggle Hotspots"
           >
             <Zap className="w-4 h-4" />
           </button>
           <button 
             onClick={() => toggleLayer('showBoundaries')}
-            className={`p-1.5 rounded transition-colors flex items-center justify-center ${layers.showBoundaries ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'text-slate-400 hover:text-slate-200'}`}
+            className={`w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer ${layers.showBoundaries ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
             title="Toggle Boundaries"
           >
             <ShieldAlert className="w-4 h-4" />

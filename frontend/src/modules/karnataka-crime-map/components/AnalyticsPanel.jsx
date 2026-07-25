@@ -78,19 +78,21 @@ export default function AnalyticsPanel({
   }, [allCases, districtA, districtB]);
 
   return (
-    <div className="h-full bg-slate-900 border-l border-slate-800 flex flex-col justify-between overflow-hidden text-xs">
+    <div className="h-full bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col justify-between overflow-hidden text-xs">
       
       {/* Header & Tabs */}
-      <div className="shrink-0 bg-slate-950/40 p-4 pb-0 border-b border-slate-800">
+      <div className="shrink-0 bg-white p-5 pb-0 border-b border-[#E7ECF3]">
         <div className="flex items-center justify-between pb-3">
-          <div className="flex items-center gap-2">
-            <BarChart2 className="w-5 h-5 text-primary animate-pulse-soft" />
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider">Spatial Intelligence</h2>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-[12px] bg-[#0B1F4D]/10 text-[#0B1F4D] flex items-center justify-center shrink-0">
+              <BarChart2 className="w-4.5 h-4.5" />
+            </div>
+            <h2 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Spatial Intelligence</h2>
           </div>
           {onClose && (
             <button 
               onClick={onClose} 
-              className="p-1 rounded bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-white md:hidden cursor-pointer"
+              className="p-2 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] text-slate-500 hover:text-[#0F172A] md:hidden cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -98,7 +100,7 @@ export default function AnalyticsPanel({
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex gap-2 text-2xs font-semibold text-slate-400 pb-3">
+        <div className="flex gap-2 text-xs font-semibold text-slate-500 pb-4">
           {[
             { id: 'analytics', label: 'Analytics' },
             { id: 'comparison', label: 'Comparison' },
@@ -107,10 +109,10 @@ export default function AnalyticsPanel({
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`flex-1 py-1.5 text-center rounded transition-colors cursor-pointer ${
+              className={`flex-1 py-2 text-center rounded-[999px] transition-all cursor-pointer ${
                 activeTab === t.id 
-                  ? 'bg-primary/20 text-primary border border-primary/30 font-bold' 
-                  : 'hover:bg-slate-800 text-slate-400'
+                  ? 'bg-[#0B1F4D] text-white font-bold shadow-sm' 
+                  : 'bg-[#F8F9FB] border border-[#E7ECF3] hover:bg-slate-100 text-[#0F172A]'
               }`}
             >
               {t.label}
@@ -120,48 +122,52 @@ export default function AnalyticsPanel({
       </div>
 
       {/* Independent Scrollable Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6">
         
         {/* Tab Content 1: Analytics */}
         {activeTab === 'analytics' && (
           <div className="space-y-5">
             <div>
-              <h3 className="text-2xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <Activity className="w-3.5 h-3.5 text-primary" /> Key Performance Indicators
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <Activity className="w-3.5 h-3.5 text-police-blue" /> Key Performance Indicators
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                 <GlobalKPICard
                   title="Total Crimes"
                   value={stats.total}
                   type="info"
+                  compact={true}
                 />
                 <GlobalKPICard
                   title="Active Cases"
                   value={stats.active}
                   type="warning"
+                  compact={true}
                 />
                 <GlobalKPICard
                   title="High Severity"
                   value={stats.highSeverity}
                   type="critical"
+                  compact={true}
                 />
                 <GlobalKPICard
                   title="Density Index"
                   value={stats.densityScore}
                   description="/ 10"
                   type="warning"
+                  compact={true}
                 />
               </div>
             </div>
 
-            <div className="p-4 bg-slate-950/40 border border-slate-850 rounded-lg space-y-3">
-              <div className="flex justify-between items-center text-3xs">
-                <span className="text-slate-500 font-bold uppercase">Detected Hotspots</span>
-                <span className="font-semibold text-rose-400 font-mono">{stats.hotspotsCount} zones</span>
+            <div className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] space-y-3">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#64748B] font-bold uppercase text-[10px]">Detected Hotspots</span>
+                <span className="font-extrabold text-rose-600 font-mono">{stats.hotspotsCount} zones</span>
               </div>
-              <div className="flex justify-between items-center text-3xs pt-2 border-t border-slate-850/50">
-                <span className="text-slate-500 font-bold uppercase">Dominant Crime Type</span>
-                <span className="font-semibold text-slate-200 truncate max-w-[150px]">{stats.commonCat}</span>
+              <div className="flex justify-between items-center text-xs pt-2.5 border-t border-[#E7ECF3]">
+                <span className="text-[#64748B] font-bold uppercase text-[10px]">Dominant Crime Type</span>
+                <span className="font-extrabold text-[#0F172A] truncate max-w-[140px]">{stats.commonCat}</span>
               </div>
             </div>
           </div>

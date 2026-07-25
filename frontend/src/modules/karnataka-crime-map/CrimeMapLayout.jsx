@@ -6,7 +6,7 @@ import GISMap, { getCoordinatesForCase } from './components/GISMap';
 import GISSidebar from './components/GISSidebar';
 import AnalyticsPanel from './components/AnalyticsPanel';
 import TimelineSlider from './components/TimelineSlider';
-import { MOCK_CASES } from '../dashboard/components/mockData';
+import { MOCK_CASES, DISTRICTS, POLICE_STATIONS, CATEGORIES, STATUSES } from '../dashboard/components/mockData';
 import { useToast } from '../../components/ui/Toast';
 import { DISTRICT_PREDICTION_DATA } from '../../mock/districtPredictionData';
 
@@ -331,66 +331,53 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
     };
   }, [selectedCase]);
 
+  // Available police stations based on selected district
+  const availableStations = useMemo(() => {
+    if (!filters.district || filters.district === 'All') {
+      const list = [];
+      Object.keys(POLICE_STATIONS).slice(0, 5).forEach(d => {
+        list.push(...POLICE_STATIONS[d] || []);
+      });
+      return ['All', ...new Set(list)];
+    }
+    return ['All', ...(POLICE_STATIONS[filters.district] || [])];
+  }, [filters.district]);
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => {
+      const next = { ...prev, [key]: value };
+      if (key === 'district') {
+        next.policeStation = 'All';
+      }
+      return next;
+    });
+  };
+
   return (
-    <div className="flex h-full w-full relative overflow-hidden bg-slate-950 rounded-xl border border-slate-800 shadow-xl">
+    <div className="w-full p-8 bg-[#F7F8FA] min-h-[calc(100vh-90px)] space-y-6 flex flex-col font-sans">
 
-      {/* 1. Left Command Filter panel (Desktop only) */}
-      <div className={`hidden md:block shrink-0 transition-all duration-300 ${sidebarOpen ? 'w-[20%] min-w-[220px] max-w-[280px]' : 'w-0 overflow-hidden'}`}>
-        <div className="w-full h-full">
-          <GISSidebar
-            filters={filters}
-            setFilters={setFilters}
-            layers={layers}
-            setLayers={setLayers}
-            onReset={handleResetAll}
-            role={role}
-          />
-        </div>
-      </div>
-
-      {/* 2. Center Map Area */}
-      <div className="flex-1 relative h-full flex flex-col min-w-0">
-
-        {/* Top Control Bar */}
-        <div className="absolute top-4 left-4 right-4 z-[400] flex gap-3 pointer-events-none">
-          {/* Desktop Left Sidebar Toggle */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="hidden md:flex p-2.5 bg-slate-900/95 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 hover:text-white shadow-lg transition-colors pointer-events-auto shrink-0 cursor-pointer"
-            title="Toggle Filters Panel"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-
-          {/* Mobile Filters Toggle */}
-          <button
-            onClick={() => setMobileFiltersOpen(true)}
-            className="md:hidden p-2.5 bg-slate-900/95 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 hover:text-white shadow-lg transition-colors pointer-events-auto shrink-0 cursor-pointer"
-            title="Filter Coordinates"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-
-          {/* Search suggestions Box */}
-          <div className="flex-1 max-w-sm relative pointer-events-auto">
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search FIR, category, station..."
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="input pl-9 pr-8 text-xs h-10 w-full bg-slate-900/95 border-slate-700 focus:border-slate-500 shadow-lg text-slate-200"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => handleSearchChange('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+      {/* Top GIS Floating Command Bar (Relocated Horizontal Filters) */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
+          
+          {/* Search Box */}
+          <div className="relative w-64 sm:w-72">
+            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search FIR, category, station..."
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-full h-11 pl-10 pr-9 text-xs bg-[#F8F9FB] border border-[#D9E2EC] rounded-full focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] text-[#0F172A] font-medium shadow-sm transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => handleSearchChange('')}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0F172A]"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
 
             {/* Results Auto-complete List */}
             <AnimatePresence>
@@ -399,20 +386,19 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute left-0 right-0 mt-1 bg-slate-900/95 border border-slate-700 rounded-lg shadow-2xl overflow-hidden max-h-60 overflow-y-auto z-[500]"
+                  className="absolute left-0 right-0 mt-2 bg-white border border-[#E7ECF3] rounded-[16px] shadow-xl overflow-hidden max-h-60 overflow-y-auto z-[500]"
                 >
                   {searchResults.map(c => (
                     <button
                       key={c.id}
                       onClick={() => handleSelectSearchResult(c)}
-                      className="w-full px-4 py-2.5 text-left text-xs text-slate-300 hover:text-white hover:bg-slate-800 border-b border-slate-800/60 last:border-b-0 transition-colors flex items-center justify-between"
+                      className="w-full px-4 py-2.5 text-left text-xs text-[#0F172A] hover:bg-[#F8F9FB] border-b border-[#F1F5F9] last:border-b-0 transition-colors flex items-center justify-between"
                     >
                       <div>
-                        <span className="font-mono font-bold text-primary mr-2">{c.id}</span>
-                        <span className="text-slate-500 truncate text-[10px]">{c.category} - {c.policeStation}</span>
+                        <span className="font-mono font-bold text-police-navy mr-2">{c.id}</span>
+                        <span className="text-slate-500 truncate text-[11px]">{c.category} - {c.policeStation}</span>
                       </div>
-                      <span className={`badge ${c.risk === 'Critical' || c.risk === 'High' ? 'badge-critical' : c.risk === 'Medium' ? 'badge-high' : 'badge-neutral'
-                        } text-4xs py-0`}>
+                      <span className={`badge ${c.risk === 'Critical' || c.risk === 'High' ? 'badge-critical' : c.risk === 'Medium' ? 'badge-high' : 'badge-neutral'} text-[10px] py-0.5 px-2 rounded-full font-bold`}>
                         {c.risk}
                       </span>
                     </button>
@@ -422,44 +408,113 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             </AnimatePresence>
           </div>
 
-          {/* Export Map Snapshot & Desktop Analytics Panel Toggle */}
-          <div className="flex gap-2 pointer-events-auto ml-auto">
-            <button
-              onClick={handleExportSnapshot}
-              className="p-2.5 bg-slate-900/95 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 hover:text-white shadow-lg transition-colors flex items-center gap-1.5 cursor-pointer text-xs font-semibold"
-              title="Export GIS Snapshot"
-            >
-              <Download className="w-4.5 h-4.5" />
-              <span className="hidden sm:inline">Export Snapshot</span>
-            </button>
+          {/* District Dropdown */}
+          <select 
+            value={filters.district}
+            onChange={(e) => handleFilterChange('district', e.target.value)}
+            className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
+          >
+            <option value="All">All Districts</option>
+            {DISTRICTS.map(d => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
 
-            {isAnalyst && (
-              <>
-                {/* Desktop Analytics Toggle */}
-                <button
-                  onClick={() => setAnalyticsOpen(!analyticsOpen)}
-                  className="hidden md:flex p-2.5 bg-slate-900/95 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 hover:text-white shadow-lg transition-colors items-center gap-1.5 cursor-pointer text-xs font-semibold"
-                  title="Toggle Analytics Panel"
-                >
-                  <BarChart2 className="w-4.5 h-4.5 text-primary" />
-                  <span>Indicators</span>
-                </button>
+          {/* Police Station Dropdown */}
+          <select 
+            value={filters.policeStation}
+            onChange={(e) => handleFilterChange('policeStation', e.target.value)}
+            className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
+          >
+            {availableStations.map(station => (
+              <option key={station} value={station}>{station}</option>
+            ))}
+          </select>
 
-                {/* Mobile Analytics Toggle */}
-                <button
-                  onClick={() => setMobileAnalyticsOpen(true)}
-                  className="md:hidden p-2.5 bg-slate-900/95 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 hover:text-white shadow-lg transition-colors items-center gap-1.5 cursor-pointer text-xs font-semibold"
-                  title="Toggle Analytics Panel"
-                >
-                  <BarChart2 className="w-4.5 h-4.5 text-primary" />
-                </button>
-              </>
-            )}
+          {/* Crime Category Dropdown */}
+          <select 
+            value={filters.category}
+            onChange={(e) => handleFilterChange('category', e.target.value)}
+            className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
+          >
+            <option value="All">All Categories</option>
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+
+          {/* Severity Dropdown */}
+          <select 
+            value={filters.severity}
+            onChange={(e) => handleFilterChange('severity', e.target.value)}
+            className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
+          >
+            <option value="All">All Severities</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+          {/* Date Range Inputs */}
+          <div className="flex items-center gap-2">
+            <input 
+              type="date" 
+              value={filters.startDate}
+              onChange={(e) => handleFilterChange('startDate', e.target.value)}
+              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]" 
+            />
+            <span className="text-slate-400 text-xs">to</span>
+            <input 
+              type="date" 
+              value={filters.endDate}
+              onChange={(e) => handleFilterChange('endDate', e.target.value)}
+              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]" 
+            />
+          </div>
+
+        </div>
+
+        {/* Action Buttons: Reset & Export */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={handleResetAll}
+            className="h-11 px-4 rounded-[999px] bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] text-[#0F172A] font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+            title="Reset Filters"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+            <span>Reset</span>
+          </button>
+
+          <button
+            onClick={handleExportSnapshot}
+            className="h-11 px-5 rounded-[999px] bg-[#0B1F4D] text-white hover:bg-[#0A192F] font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-2"
+          >
+            <Download className="w-4 h-4 text-white" />
+            <span>Export Snapshot</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main 3-Column Workspace: Left Sidebar (15%), Center Map Hero (68%), Right Intelligence Panel (17%) */}
+      <div className="flex flex-col md:flex-row gap-6 items-stretch w-full flex-1">
+
+        {/* 1. Left Command Filter panel (15% width) */}
+        <div className={`hidden md:block shrink-0 transition-all duration-300 ${sidebarOpen ? 'w-[15%] min-w-[200px] max-w-[240px]' : 'w-0 overflow-hidden'}`}>
+          <div className="w-full h-full">
+            <GISSidebar
+              filters={filters}
+              setFilters={setFilters}
+              layers={layers}
+              setLayers={setLayers}
+              onReset={handleResetAll}
+              role={role}
+            />
           </div>
         </div>
 
-        {/* Map Visualizer Frame */}
-        <div className="flex-1 h-full w-full relative">
+        {/* 2. Center GIS Map Canvas (~68% width - Map as Hero) */}
+        <div className="flex-1 w-full md:w-[68%] bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[680px] flex flex-col min-w-0">
           {isLoading && <SkeletonMapOverlay />}
 
           <GISMap
@@ -477,40 +532,36 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
           {/* Empty State overlay */}
           {filteredCases.length === 0 && !isLoading && (
-            <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-[2px]">
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-center max-w-sm shadow-2xl">
-                <ShieldAlert className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-                <h3 className="text-sm font-bold text-white mb-1">No crime records found.</h3>
-                <p className="text-4xs text-slate-400 mb-4">No crime records found for the selected filters.</p>
+            <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-white/70 backdrop-blur-[2px]">
+              <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 text-center max-w-sm shadow-xl">
+                <ShieldAlert className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                <h3 className="text-sm font-bold text-[#0F172A] mb-1">No crime records found</h3>
+                <p className="text-xs text-[#64748B] mb-4">No crime incidents match the selected filter criteria.</p>
                 <button
                   onClick={handleResetAll}
-                  className="btn-secondary btn-sm gap-2 w-full hover:bg-slate-800"
+                  className="h-10 px-5 rounded-[999px] bg-[#0B1F4D] text-white text-xs font-bold w-full hover:bg-[#0A192F] shadow-sm cursor-pointer"
                 >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Reset All Filters</span>
+                  Clear Filters
                 </button>
               </div>
             </div>
           )}
         </div>
-      </div>
 
-      {/* 3. Collapsible Analytics Panel beside map (Desktop Analyst only) */}
-      {isAnalyst && (
-        <div className={`hidden md:block shrink-0 transition-all duration-300 ${analyticsOpen ? 'w-[24%] min-w-[260px] max-w-[340px]' : 'w-0 overflow-hidden'}`}>
-          <div className="w-full h-full">
-            <AnalyticsPanel
-              filteredCases={filteredCases}
-              onClose={() => setAnalyticsOpen(false)}
-              allCases={MOCK_CASES}
-              role={role}
-              onTimeChange={setTimelineCutoff}
-              startDate={filters.startDate}
-              endDate={filters.endDate}
-            />
-          </div>
+        {/* 3. Right Intelligence Panel (~17% width) */}
+        <div className="hidden md:block shrink-0 w-[17%] min-w-[220px] max-w-[260px] h-[680px]">
+          <AnalyticsPanel
+            filteredCases={filteredCases}
+            onClose={null}
+            allCases={MOCK_CASES}
+            role={role}
+            onTimeChange={setTimelineCutoff}
+            startDate={filters.startDate}
+            endDate={filters.endDate}
+          />
         </div>
-      )}
+
+      </div>
 
       {/* 4. Sliding Context Information Drawer (Shared) */}
       <AnimatePresence>
