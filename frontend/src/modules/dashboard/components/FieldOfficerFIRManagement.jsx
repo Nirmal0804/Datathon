@@ -1,14 +1,43 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Plus, Search, X, ShieldAlert } from 'lucide-react';
+import { FileText, Plus, Search, X, ChevronRight, ShieldCheck } from 'lucide-react';
 import { MOCK_CASES } from './mockData';
 import { useToast } from '../../../components/ui/Toast';
+
+const riskBadgeClass = (risk) => {
+  switch (risk) {
+    case 'Critical': return 'bg-rose-50 text-rose-600 border border-rose-200';
+    case 'High':     return 'bg-amber-50 text-amber-700 border border-amber-200';
+    case 'Medium':   return 'bg-sky-50 text-sky-700 border border-sky-200';
+    default:         return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+  }
+};
+
+const statusBadgeClass = (status) => {
+  switch (status) {
+    case 'Active':        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+    case 'Closed':        return 'bg-slate-100 text-slate-600 border border-slate-200';
+    case 'Investigating': return 'bg-amber-50 text-amber-700 border border-amber-200';
+    default:              return 'bg-blue-50 text-blue-700 border border-blue-200';
+  }
+};
+
+const statusDotClass = (status) => {
+  switch (status) {
+    case 'Active':        return 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse';
+    case 'Closed':        return 'bg-slate-400';
+    case 'Investigating': return 'bg-amber-500';
+    default:              return 'bg-blue-500';
+  }
+};
 
 export default function FieldOfficerFIRManagement() {
   const { addToast } = useToast();
   const [localCases, setLocalCases] = useState(MOCK_CASES);
   const [searchQuery, setSearchQuery] = useState('');
   const [registerModal, setRegisterModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   // Form State
   const [firForm, setFirForm] = useState({
@@ -22,6 +51,7 @@ export default function FieldOfficerFIRManagement() {
   });
 
   const filteredCases = useMemo(() => {
+    setCurrentPage(1);
     if (!searchQuery.trim()) return localCases;
     const q = searchQuery.toLowerCase();
     return localCases.filter(c => 
@@ -31,6 +61,13 @@ export default function FieldOfficerFIRManagement() {
       c.status.toLowerCase().includes(q)
     );
   }, [localCases, searchQuery]);
+
+  const paginatedCases = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredCases.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredCases, currentPage]);
+
+  const totalPages = Math.ceil(filteredCases.length / itemsPerPage) || 1;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -74,89 +111,164 @@ export default function FieldOfficerFIRManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-slate-900 border border-slate-800 rounded-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
-            <FileText className="w-5 h-5" />
+    <div className="space-y-6 w-full max-w-[1600px] mx-auto">
+      {/* 1. Dark Navy Hero Banner with Gold Hover Button */}
+      <div className="bg-[#0B1F4D] rounded-[24px] p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-[#0B1F4D]/20 text-white min-h-[96px]">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-[16px] bg-white/10 border border-white/20 text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
+            <FileText className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">FIR Management</h2>
-            <p className="text-2xs text-slate-400 mt-0.5">Register new incident complaints and view precinct intake logs.</p>
+            <h2 className="text-xl font-black text-white tracking-tight">FIR Management</h2>
+            <p className="text-xs font-semibold text-slate-300 mt-0.5">
+              Register new incident complaints and view precinct intake logs.
+            </p>
           </div>
         </div>
         
-        <button onClick={() => setRegisterModal(true)} className="btn-primary btn-sm gap-2">
+        <button 
+          onClick={() => setRegisterModal(true)} 
+          className="h-11 px-6 rounded-full bg-[#C79A2B] hover:bg-white text-[#0B1F4D] font-extrabold text-xs shadow-md transition-all duration-200 flex items-center gap-2 cursor-pointer shrink-0"
+        >
           <Plus className="w-4 h-4" />
           <span>Register New FIR</span>
         </button>
       </div>
 
-      {/* Grid search and lists */}
-      <div className="card p-5">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-sm font-semibold text-slate-300">Precinct FIR Records</h3>
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* 2 & 3. Search Toolbar & FIR Records Section */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7ECF3] pb-5">
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-black text-[#0F172A] tracking-tight">Precinct FIR Records</h3>
+            <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-1 rounded-full font-extrabold text-xs">
+              {filteredCases.length} Records
+            </span>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-80">
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter precinct records..."
+              placeholder="Search FIR number, category, station..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input pl-8 text-xs h-8 w-60"
+              className="w-full h-11 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[16px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400 font-sans"
             />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0F172A] transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1 no-scrollbar">
-          {filteredCases.map(c => (
-            <div key={c.id} className="p-3 bg-slate-950/40 border border-slate-850 rounded-lg flex items-center justify-between text-xs hover:border-slate-700 transition-colors">
-              <div className="flex items-center gap-4">
-                <span className="font-mono font-bold text-primary">{c.id}</span>
-                <div>
-                  <p className="text-slate-200 font-semibold">{c.category}</p>
-                  <p className="text-slate-500 text-3xs">{c.date} • {c.policeStation}</p>
+        {/* 4 & 5. Modern Horizontal FIR Cards */}
+        <div className="space-y-4">
+          {paginatedCases.length === 0 ? (
+            <div className="p-12 text-center text-[#64748B] text-xs font-semibold bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
+              No FIR records match your filter criteria.
+            </div>
+          ) : (
+            paginatedCases.map(c => (
+              <div 
+                key={c.id} 
+                className="bg-white rounded-[24px] border border-[#E7ECF3] p-5 sm:p-6 shadow-xs hover:-translate-y-0.5 hover:shadow-md hover:border-l-4 hover:border-l-[#C79A2B] transition-all duration-250 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                {/* Left: FIR Metadata */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <span className="font-mono font-extrabold text-[#0B1F4D] text-sm tracking-tight bg-[#0B1F4D]/5 px-3 py-1.5 rounded-[12px] border border-[#0B1F4D]/10 shrink-0 w-fit">
+                    {c.id}
+                  </span>
+                  <div>
+                    <h4 className="font-extrabold text-[#0F172A] text-sm tracking-tight">{c.category}</h4>
+                    <div className="flex items-center gap-3 text-xs text-[#64748B] font-semibold mt-0.5">
+                      <span>{c.policeStation}</span>
+                      <span>•</span>
+                      <span>{c.date}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Risk Badge, Status Badge & Chevron */}
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-xs ${riskBadgeClass(c.risk)}`}>
+                    {c.risk}
+                  </span>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs ${statusBadgeClass(c.status)}`}>
+                    <span className={`w-2 h-2 rounded-full ${statusDotClass(c.status)}`} />
+                    {c.status}
+                  </span>
+                  <ChevronRight className="w-5 h-5 text-slate-400 ml-1" />
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className={`badge ${c.risk === 'Critical' ? 'badge-critical' : c.risk === 'High' ? 'badge-high' : 'badge-medium'} py-0 px-1 text-3xs`}>
-                  {c.risk}
-                </span>
-                <span className="text-slate-300 font-medium">{c.status}</span>
-              </div>
+            ))
+          )}
+        </div>
+
+        {/* 10. Clean Pagination Footer */}
+        <div className="flex items-center justify-between px-2 pt-4 border-t border-[#E7ECF3]">
+          <p className="text-xs font-semibold text-[#64748B]">
+            Showing <span className="font-extrabold text-[#0F172A]">{filteredCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, filteredCases.length)}</span> of <span className="font-extrabold text-[#0F172A]">{filteredCases.length}</span> records
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
+            >
+              Previous
+            </button>
+            <div className="px-3 text-xs font-bold text-[#0F172A]">
+              Page {currentPage} of {totalPages}
             </div>
-          ))}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Register Modal */}
+      {/* 11. Register FIR Modal */}
       <AnimatePresence>
         {registerModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-[#0F172A]/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <motion.form 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onSubmit={handleRegister}
-              className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg overflow-hidden shadow-2xl"
+              className="bg-white border border-[#E7ECF3] rounded-[24px] w-full max-w-lg overflow-hidden shadow-2xl"
             >
-              <div className="flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-slate-800">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Plus className="w-5 h-5 text-primary" />
+              <div className="flex items-center justify-between px-6 py-5 bg-[#0B1F4D] text-white">
+                <h3 className="text-base font-black flex items-center gap-2 tracking-tight">
+                  <Plus className="w-5 h-5 text-[#C79A2B]" />
                   Log New Incident Report (FIR)
                 </h3>
-                <button type="button" onClick={() => setRegisterModal(false)} className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white">
+                <button 
+                  type="button" 
+                  onClick={() => setRegisterModal(false)} 
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                >
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar">
+
+              <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label text-3xs">Crime Category</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Crime Category</label>
                     <select 
                       value={firForm.category} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, category: e.target.value }))}
-                      className="select text-xs h-9"
+                      className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     >
                       <option value="Cybercrime">Cybercrime</option>
                       <option value="Property Theft">Property Theft</option>
@@ -167,11 +279,11 @@ export default function FieldOfficerFIRManagement() {
                     </select>
                   </div>
                   <div>
-                    <label className="label text-3xs">AI Risk Scoring Estimate</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">AI Risk Scoring Estimate</label>
                     <select 
                       value={firForm.risk} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, risk: e.target.value }))}
-                      className="select text-xs h-9"
+                      className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     >
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
@@ -183,14 +295,14 @@ export default function FieldOfficerFIRManagement() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label text-3xs">Jurisdiction Station</label>
-                    <input type="text" disabled className="input text-xs h-9 opacity-60" value={firForm.policeStation} />
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Jurisdiction Station</label>
+                    <input type="text" disabled className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-slate-400 opacity-70" value={firForm.policeStation} />
                   </div>
                   <div>
-                    <label className="label text-3xs">Penal Section Code</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Penal Section Code</label>
                     <input 
                       type="text" 
-                      className="input text-xs h-9" 
+                      className="w-full h-11 px-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]" 
                       value={firForm.section}
                       onChange={(e) => setFirForm(prev => ({ ...prev, section: e.target.value }))}
                     />
@@ -198,32 +310,44 @@ export default function FieldOfficerFIRManagement() {
                 </div>
 
                 <div>
-                  <label className="label text-3xs">Complainant / Witness Name</label>
+                  <label className="block text-xs font-bold text-[#0F172A] mb-1">Complainant / Witness Name</label>
                   <input 
                     type="text" 
                     required 
-                    placeholder="Enter name"
-                    className="input text-xs h-9"
+                    placeholder="Enter full name"
+                    className="w-full h-11 px-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     value={firForm.complainant}
                     onChange={(e) => setFirForm(prev => ({ ...prev, complainant: e.target.value }))}
                   />
                 </div>
 
                 <div>
-                  <label className="label text-3xs">Brief Briefing Narrative</label>
+                  <label className="block text-xs font-bold text-[#0F172A] mb-1">Brief Narrative</label>
                   <textarea 
                     required 
                     rows="3" 
                     placeholder="Describe incident in detail..."
-                    className="input text-xs pt-2"
+                    className="w-full p-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-medium text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     value={firForm.description}
                     onChange={(e) => setFirForm(prev => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
               </div>
-              <div className="px-6 py-4 bg-slate-950 border-t border-slate-800 flex justify-end gap-3">
-                <button type="button" onClick={() => setRegisterModal(false)} className="btn-secondary btn-sm px-4">Cancel</button>
-                <button type="submit" className="btn-primary btn-sm px-5">Submit FIR</button>
+
+              <div className="px-6 py-4 bg-[#F8F9FB] border-t border-[#E7ECF3] flex justify-end gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setRegisterModal(false)} 
+                  className="h-10 px-5 rounded-full bg-white border border-[#E7ECF3] text-[#0F172A] font-bold text-xs hover:bg-[#F8F9FB] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="h-10 px-6 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-sm transition-colors cursor-pointer"
+                >
+                  Submit FIR
+                </button>
               </div>
             </motion.form>
           </div>
