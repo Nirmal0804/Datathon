@@ -94,34 +94,25 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
   const profile = role === 'officer' 
     ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer', station: 'Cubbon Park PS' }
     : role === 'admin'
-    ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
-    : { initials: 'JD', name: 'Inspector Patil', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+    ? { initials: 'SA', name: 'Admin Gowda', roleText: 'System Administrator', station: 'State Tech HQ' }
+    : { initials: 'JD', name: 'John Doe', roleText: 'Intelligence Analyst', station: 'State Command' };
 
   return (
-    <aside className="w-[270px] flex flex-col h-full bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden text-[#0F172A]">
-      
-      {/* Top Header & Branding Section */}
-      <div className="p-5 border-b border-[#E7ECF3]">
-        <div className="flex items-center gap-3">
-          <img src={kspLogo} alt="Karnataka Police Logo" className="h-10 w-auto object-contain shrink-0 drop-shadow-xs" />
-          <div className="min-w-0 flex-1">
-            <h2 className="text-[#0B1F4D] font-extrabold tracking-tight text-xs uppercase leading-tight truncate">Karnataka Police</h2>
-            <p className="text-[10px] text-[#64748B] uppercase tracking-wider font-bold mt-0.5 truncate">Crime Analytics Platform</p>
-          </div>
-        </div>
-        
-        {/* Role Badge Chip */}
-        <div className="mt-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#C79A2B]" />
-          <span>{profile.roleText}</span>
+    <aside className="w-[260px] flex flex-col h-full bg-[#0B1F4D] rounded-[24px] overflow-hidden">
+      {/* Logo */}
+      <div className="p-6 flex items-center gap-3 border-b border-white/10">
+        <img src={kspLogo} alt="Karnataka Police Logo" className="h-10 w-auto object-contain shrink-0 drop-shadow-sm" />
+        <div>
+          <h2 className="text-white font-extrabold tracking-wide text-[13px] uppercase leading-tight">Karnataka Police</h2>
+          <p className="text-[10px] text-white/60 uppercase tracking-widest font-semibold mt-1">Intelligence Platform</p>
         </div>
       </div>
 
-      {/* Main Vertical Navigation */}
-      <nav className="flex-1 overflow-y-auto py-5 px-3.5 space-y-5 no-scrollbar" aria-label="Main navigation">
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6 no-scrollbar" aria-label="Main navigation">
         {navSections.map(section => (
           <div key={section.label}>
-            <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest px-3 mb-2">
+            <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest px-3 mb-2">
               {section.label}
             </p>
             <div className="space-y-1">
@@ -132,18 +123,15 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
                     key={item.id}
                     onClick={() => setActiveModule(item.id)}
                     whileTap={{ scale: 0.98 }}
-                    className={`w-full h-11 flex items-center gap-3 px-3.5 rounded-[14px] text-xs font-bold transition-all duration-200 ease-in-out relative cursor-pointer ${
+                    className={`w-full h-12 flex items-center gap-3 px-3 rounded-[16px] text-[13px] font-semibold transition-all duration-200 ease-in-out ${
                       isActive 
-                        ? 'bg-[#0B1F4D] text-white shadow-xs' 
-                        : 'bg-transparent text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A]'
+                        ? 'bg-white text-[#C79A2B]' 
+                        : 'bg-transparent text-white hover:bg-white/10'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#C79A2B] rounded-r-full" />
-                    )}
-                    <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-[#64748B]'}`} aria-hidden="true" />
-                    <span className="truncate">{item.name}</span>
+                    <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#C79A2B]' : 'text-white'}`} aria-hidden="true" />
+                    <span>{item.name}</span>
                   </motion.button>
                 );
               })}
@@ -152,36 +140,28 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
         ))}
       </nav>
 
-      {/* Bottom Profile Card */}
-      <div className="p-3.5 border-t border-[#E7ECF3] bg-[#F8F9FB]/50">
-        <div className="p-3.5 bg-white border border-[#E7ECF3] rounded-[18px] shadow-xs space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#0B1F4D] flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-xs">
-              {profile.initials}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-[#0F172A] truncate">{profile.name}</p>
-              <p className="text-[10px] font-semibold text-[#64748B] truncate">{profile.station}</p>
-            </div>
+      {/* Footer */}
+      <div className="p-4 border-t border-white/10">
+        <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-[16px] border border-white/20 bg-white/5">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white shrink-0">
+            {profile.initials}
           </div>
-
-          <div className="flex items-center gap-2 pt-1 border-t border-[#F1F5F9]">
-            <button
-              onClick={() => setActiveModule('settings')}
-              className="flex-1 h-8 rounded-[10px] bg-[#F8F9FB] hover:bg-slate-100 text-[#0F172A] font-bold text-[11px] border border-[#E7ECF3] transition-all cursor-pointer flex items-center justify-center gap-1.5"
-            >
-              <Settings className="w-3.5 h-3.5 text-slate-500" />
-              <span>Settings</span>
-            </button>
-            <button
-              onClick={onLogout}
-              className="h-8 px-3 rounded-[10px] bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[11px] border border-rose-200 transition-all cursor-pointer flex items-center justify-center gap-1.5"
-              title="Logout"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-bold text-white truncate">{profile.name}</p>
+            <p className="text-[11px] font-medium text-white/60 truncate">{profile.roleText}</p>
           </div>
+          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] shrink-0" title="Online" />
         </div>
+
+        <motion.button
+          onClick={onLogout}
+          whileTap={{ scale: 0.98 }}
+          className="w-full h-12 flex items-center justify-center gap-2 rounded-[16px] text-[13px] font-bold text-white border border-white/20 hover:bg-white/10 transition-colors duration-200 ease-in-out bg-transparent"
+          aria-label="Secure logout"
+        >
+          <LogOut className="w-4 h-4 shrink-0" />
+          Secure Logout
+        </motion.button>
       </div>
     </aside>
   );
