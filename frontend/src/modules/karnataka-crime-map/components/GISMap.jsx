@@ -69,11 +69,17 @@ const jurisdictions = [
   { center: [12.2958, 76.6394], radius: 5000, name: 'Saraswathipuram PS Beat' },
 ];
 
-// Custom map events listener to track zoom
-function MapEventsHandler({ onZoomChange, onMapClick }) {
+// Custom map events listener to track zoom and pan
+function MapEventsHandler({ onZoomChange, onMoveChange, onMapClick }) {
   const map = useMapEvents({
     zoomend() {
       onZoomChange(map.getZoom());
+    },
+    moveend() {
+      if (onMoveChange) {
+        const c = map.getCenter();
+        onMoveChange([c.lat, c.lng]);
+      }
     },
     click() {
       onMapClick();
@@ -82,18 +88,28 @@ function MapEventsHandler({ onZoomChange, onMapClick }) {
   return null;
 }
 
-// Controller to smoothly pan & zoom map and invalidate size on render
+// Controller to smoothly pan & zoom map ONLY when resetKey changes (prevents snapping to Hubli on re-renders)
 function MapController({ center, zoom, resetKey }) {
   const map = useMap();
+  const prevResetKeyRef = React.useRef(null);
+
   useEffect(() => {
-    if (center) {
-      map.setView(center, zoom, { animate: true, duration: 0.8 });
+    // Only call map.setView if resetKey changed (initial load, reset click, or explicit search hit)
+    if (resetKey !== prevResetKeyRef.current) {
+      prevResetKeyRef.current = resetKey;
+      if (center) {
+        map.setView(center, zoom, { animate: true, duration: 0.8 });
+      }
     }
+  }, [center, zoom, map, resetKey]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       map.invalidateSize();
     }, 100);
     return () => clearTimeout(timer);
-  }, [center, zoom, map, resetKey]);
+  }, []);
+
   return null;
 }
 
@@ -236,6 +252,9 @@ export default function GISMap({
             setCurrentZoom(z);
             setMapState(prev => ({ ...prev, zoom: z }));
           }} 
+          onMoveChange={(coords) => {
+            setMapState(prev => ({ ...prev, center: coords }));
+          }}
           onMapClick={() => {}}
         />
         
