@@ -1,0 +1,32 @@
+District_ID,District,Police_Range,State,Population,Area_sq_km,Population_Density,Literacy_Rate,Urban_Population_%,Rural_Population_%,Police_Stations,Latitude,Longitude
+1,Bagalkote,Belagavi Range,Karnataka,3281950,4324,759,60.8,55,45,25,16.1817,75.6961
+2,Ballari,Kalyana Karnataka Range,Karnataka,1536213,4786,321,83.57,89,11,20,15.1394,76.9214
+3,Belagavi,Belagavi Range,Karnataka,3076705,9412,327,61.02,31,69,24,15.8497,74.4977
+4,Bengaluru Rural,Bengaluru Range,Karnataka,1575850,10779,146,79.26,45,55,40,13.2257,77.575
+5,Bengaluru Urban,Bengaluru City,Karnataka,3325812,9373,355,67.05,55,45,43,12.9716,77.5946
+6,Bidar,Kalyana Karnataka Range,Karnataka,4246109,2606,1629,84.28,40,60,40,17.9104,77.5199
+7,Chamarajanagar,Mysuru Range,Karnataka,2372573,8074,294,68.89,47,53,42,11.9261,76.9437
+8,Chikkaballapura,Bengaluru Range,Karnataka,2011779,4174,482,62.97,32,68,29,13.4355,77.7279
+9,Chikkamagaluru,Western Range,Karnataka,4154649,8135,511,79.32,25,75,41,13.3161,75.772
+10,Chitradurga,Central Range,Karnataka,2526967,4545,556,91.14,68,32,20,14.2251,76.398
+11,Dakshina Kannada,Mangaluru City,Karnataka,2915426,7303,399,86.54,66,34,36,12.9141,74.856
+12,Davanagere,Central Range,Karnataka,1406516,3639,387,61.47,49,51,42,14.4644,75.9218
+13,Dharwad,Hubballi-Dharwad City,Karnataka,1813781,3807,476,87.37,32,68,30,15.4589,75.0078
+14,Gadag,Central Range,Karnataka,1765905,9928,178,80.34,66,34,23,15.4319,75.6355
+15,Hassan,Western Range,Karnataka,2152651,8320,259,66.7,54,46,40,13.0072,76.1017
+16,Haveri,Central Range,Karnataka,3467006,3669,945,79.49,41,59,35,14.7954,75.4022
+17,Kalaburagi,Kalyana Karnataka Range,Karnataka,3658179,6510,562,65.23,68,32,26,17.3297,76.8343
+18,Kodagu,Western Range,Karnataka,4481371,6098,735,81.91,27,73,25,12.4244,75.7382
+19,Kolar,Bengaluru Range,Karnataka,4046889,3025,1338,85.76,71,29,26,13.1367,78.1292
+20,Koppal,Central Range,Karnataka,877615,5956,147,89.22,60,40,24,15.3477,76.1548
+21,Mandya,Mysuru Range,Karnataka,3349109,10679,314,72.66,78,22,22,12.5218,76.8951
+22,Mysuru,Mysuru City,Karnataka,1710987,4787,357,67.89,88,12,26,12.2958,76.6394
+23,Raichur,Kalyana Karnataka Range,Karnataka,3733203,9519,392,88.73,71,29,29,16.2076,77.3463
+24,Ramanagara,Bengaluru Range,Karnataka,1519897,4766,319,76.3,31,69,42,12.715,77.2814
+25,Shivamogga,Western Range,Karnataka,797620,4296,186,64.89,40,60,43,13.9299,75.5681
+26,Tumakuru,Bengaluru Range,Karnataka,3454145,9416,367,79.09,69,31,30,13.3379,77.1173
+27,Udupi,Western Range,Karnataka,3099337,10168,305,76.93,90,10,45,13.3409,74.7421
+28,Uttara Kannada,Karwar Range,Karnataka,648154,4376,148,81.81,88,12,42,14.8095,74.1303
+29,Vijayapura,Belagavi Range,Karnataka,1719145,8073,213,63.57,75,25,23,16.8302,75.71
+30,Vijayanagara,Central Range,Karnataka,2503055,2553,980,90.52,53,47,34,15.269,76.386
+31,Yadgir,Kalyana Karnataka Range,Karnataka,3795901,5427,699,76.25,33,67,45,16.77,77.1375
