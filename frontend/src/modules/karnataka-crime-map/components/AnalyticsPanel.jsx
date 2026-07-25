@@ -5,10 +5,10 @@ import TimelineSlider from './TimelineSlider';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
 
 export default function AnalyticsPanel({ 
-  filteredCases, 
+  filteredCases = [], 
   onClose,
-  allCases,
-  role,
+  allCases = [],
+  role = 'analyst',
   onTimeChange,
   startDate,
   endDate
@@ -18,16 +18,21 @@ export default function AnalyticsPanel({
   const [districtA, setDistrictA] = useState('Bengaluru City');
   const [districtB, setDistrictB] = useState('Mysuru');
 
+  const safeCases = Array.isArray(filteredCases) ? filteredCases : [];
+  const safeAllCases = Array.isArray(allCases) && allCases.length > 0 ? allCases : safeCases;
+
   // Compute stats on filteredCases
   const stats = useMemo(() => {
-    const total = filteredCases.length;
-    const active = filteredCases.filter(c => c.status === 'Active' || c.status === 'Investigating').length;
-    const highSeverity = filteredCases.filter(c => c.risk === 'Critical' || c.risk === 'High').length;
+    const total = safeCases.length;
+    const active = safeCases.filter(c => c.status === 'Active' || c.status === 'Investigating').length;
+    const highSeverity = safeCases.filter(c => c.risk === 'Critical' || c.risk === 'High').length;
     
     // Most common category
     const catCounts = {};
-    filteredCases.forEach(c => {
-      catCounts[c.category] = (catCounts[c.category] || 0) + 1;
+    safeCases.forEach(c => {
+      if (c && c.category) {
+        catCounts[c.category] = (catCounts[c.category] || 0) + 1;
+      }
     });
     let commonCat = 'N/A';
     let maxCatCount = 0;
@@ -40,8 +45,10 @@ export default function AnalyticsPanel({
 
     // Compute hotspots count (districts with > 4 cases in dataset)
     const distCounts = {};
-    allCases.forEach(c => {
-      distCounts[c.district] = (distCounts[c.district] || 0) + 1;
+    safeAllCases.forEach(c => {
+      if (c && c.district) {
+        distCounts[c.district] = (distCounts[c.district] || 0) + 1;
+      }
     });
     const hotspotsCount = Object.values(distCounts).filter(count => count > 4).length;
 

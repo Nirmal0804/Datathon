@@ -46,8 +46,11 @@ const districtCoords = {
 
 // Compute jitter coordinates for case
 export const getCoordinatesForCase = (caseItem) => {
-  const base = districtCoords[caseItem.district] || KARNATAKA_CENTER;
-  const hash = caseItem.id.split('-').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  if (!caseItem) return KARNATAKA_CENTER;
+  const districtName = caseItem.district || 'Bengaluru City';
+  const base = districtCoords[districtName] || KARNATAKA_CENTER;
+  const caseId = String(caseItem.id || 'FIR-000');
+  const hash = caseId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const latOffset = ((hash % 100) / 100 - 0.5) * 0.12; 
   const lngOffset = (((hash * 13) % 100) / 100 - 0.5) * 0.12;
   return [base[0] + latOffset, base[1] + lngOffset];
@@ -109,7 +112,48 @@ function MapController({ center, zoom, resetKey }) {
   return null;
 }
 
-export default function GISMap({
+class GISMapErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error, info) {
+    console.error('GIS Map Canvas error caught safely:', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full bg-[#090d16] flex flex-col items-center justify-center p-6 text-center text-white">
+          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-3">
+            <Zap className="w-6 h-6 text-[#C79A2B] animate-pulse" />
+          </div>
+          <h4 className="font-bold text-sm text-white mb-1">GIS Map Canvas Initializing</h4>
+          <p className="text-xs text-slate-400 mb-4 max-w-xs">Geospatial Leaflet layer re-centering in progress.</p>
+          <button
+            onClick={() => this.setState({ hasError: false })}
+            className="px-4 py-2 bg-[#0B1F4D] hover:bg-[#143275] text-white text-xs font-bold rounded-full border border-white/20 shadow-sm cursor-pointer"
+          >
+            Reload Map Canvas
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default function GISMap(props) {
+  return (
+    <GISMapErrorBoundary>
+      <GISMapContent {...props} />
+    </GISMapErrorBoundary>
+  );
+}
+
+function GISMapContent({
   filteredCases = [],
   layers = {},
   setLayers = () => {},
@@ -145,10 +189,13 @@ export default function GISMap({
   const dynamicHotspots = useMemo(() => {
     const counts = {};
     const categories = {};
-    filteredCases.forEach(c => {
+    safeCases.forEach(c => {
+      if (!c || !c.district) return;
       counts[c.district] = (counts[c.district] || 0) + 1;
       if (!categories[c.district]) categories[c.district] = {};
-      categories[c.district][c.category] = (categories[c.district][c.category] || 0) + 1;
+      if (c.category) {
+        categories[c.district][c.category] = (categories[c.district][c.category] || 0) + 1;
+      }
     });
 
     return Object.entries(counts)
@@ -156,12 +203,14 @@ export default function GISMap({
       .map(([district, count]) => {
         let dominantCat = '';
         let maxCount = 0;
-        Object.entries(categories[district]).forEach(([cat, cCount]) => {
-          if (cCount > maxCount) {
-            maxCount = cCount;
-            dominantCat = cat;
-          }
-        });
+        if (categories[district]) {
+          Object.entries(categories[district]).forEach(([cat, cCount]) => {
+            if (cCount > maxCount) {
+              maxCount = cCount;
+              dominantCat = cat;
+            }
+          });
+        }
         const level = count > 10 ? 'Critical' : 'High';
         const color = level === 'Critical' ? '#ef4444' : '#f59e0b';
         return {
@@ -173,7 +222,7 @@ export default function GISMap({
           color
         };
       });
-  }, [filteredCases]);
+  }, [safeCases]);
 
   // Leaflet div icon with color-coded severities
   const getMarkerIcon = (severity, isSelected) => {
@@ -250,23 +299,22 @@ export default function GISMap({
         <MapEventsHandler 
           onZoomChange={(z) => {
             setCurrentZoom(z);
-            setMapState(prev => ({ ...prev, zoom: z }));
+            if (setMapState) {
+              setMapState(prev => prev ? ({ ...prev, zoom: z }) : { center: [15.3173, 75.7139], zoom: z, resetKey: 0 });
+            }
           }} 
-          onMoveChange={(coords) => {
-            setMapState(prev => ({ ...prev, center: coords }));
-          }}
           onMapClick={() => {}}
         />
         
         <MapController 
-          center={mapState.center} 
-          zoom={mapState.zoom} 
-          resetKey={mapState.resetKey} 
+          center={safeMapState.center} 
+          zoom={safeMapState.zoom} 
+          resetKey={safeMapState.resetKey} 
         />
 
         {/* 1. Heatmap Layer overlay */}
-        {isAnalyst && layers.showHeatmap && (
-          filteredCases.map((c, idx) => {
+        {isAnalyst && safeLayers.showHeatmap && (
+          safeCases.map((c, idx) => {
             const coords = getCoordinatesForCase(c);
             const color = c.risk === 'Critical' || c.risk === 'High' ? '#ef4444' : c.risk === 'Medium' ? '#f59e0b' : '#10b981';
             return (
@@ -286,8 +334,8 @@ export default function GISMap({
         )}
 
         {/* 2. Crime Density Layer overlay */}
-        {isAnalyst && layers.showDensity && (
-          filteredCases.map((c, idx) => {
+        {isAnalyst && safeLayers.showDensity && (
+          safeCases.map((c, idx) => {
             const coords = getCoordinatesForCase(c);
             return (
               <Circle
@@ -306,7 +354,7 @@ export default function GISMap({
         )}
 
         {/* 3. Emerging Hotspot Layer (Dynamic circles) */}
-        {layers.showHotspots && (
+        {safeLayers.showHotspots && (
           isAnalyst ? (
             dynamicHotspots.map((h, i) => (
               <Circle
@@ -350,12 +398,13 @@ export default function GISMap({
         )}
 
         {/* 4. District Boundary Layer (GeoJSON) */}
-        {layers.showBoundaries && (
+        {safeLayers.showBoundaries && KARNATAKA_DISTRICTS_GEOJSON && (
           <GeoJSON 
-            key="karnataka-districts-geojson"
+            key={`karnataka-districts-geojson-${safeMapState.resetKey || 0}`}
             data={KARNATAKA_DISTRICTS_GEOJSON}
             style={(feature) => {
-              const p = DISTRICT_PREDICTION_DATA[feature.properties.districtId];
+              const districtId = feature?.properties?.districtId;
+              const p = districtId ? (DISTRICT_PREDICTION_DATA[districtId] || null) : null;
               const riskColor = !p ? '#6366f1' :
                 p.riskLevel === 'Critical' ? '#ef4444' :
                 p.riskLevel === 'High' ? '#f97316' :
@@ -371,17 +420,18 @@ export default function GISMap({
               };
             }}
             onEachFeature={(feature, layer) => {
-              const p = DISTRICT_PREDICTION_DATA[feature.properties.districtId];
+              const districtId = feature?.properties?.districtId;
+              const p = districtId ? (DISTRICT_PREDICTION_DATA[districtId] || null) : null;
               if (!p || !isAnalyst) return;
 
               // Hover/Tooltip overlay
               layer.bindTooltip(`
                 <div style="font-family: sans-serif; line-height: 1.4; padding: 4px; color: #fff;">
-                  <h4 style="margin: 0 0 4px 0; font-weight: bold; font-size: 11px;">${p.districtName}</h4>
+                  <h4 style="margin: 0 0 4px 0; font-weight: bold; font-size: 11px;">${p.districtName || p.name || 'District'}</h4>
                   <div style="font-family: monospace; font-size: 9px; color: #cbd5e1; margin-bottom: 6px;">
-                    Risk Score: <strong style="color: #f43f5e;">${p.riskScore}/100</strong><br/>
-                    Risk Category: <strong>${p.riskLevel}</strong><br/>
-                    Crime Growth: <strong style="color: #ef4444;">${p.growth}</strong>
+                    Risk Score: <strong style="color: #f43f5e;">${p.riskScore || 0}/100</strong><br/>
+                    Risk Category: <strong>${p.riskLevel || 'Normal'}</strong><br/>
+                    Crime Growth: <strong style="color: #ef4444;">${p.growth || '0%'}</strong>
                   </div>
                   <p style="margin: 0; font-size: 8px; color: #818cf8; font-style: italic;">Click to view AI Prediction</p>
                 </div>
@@ -389,31 +439,36 @@ export default function GISMap({
 
               layer.on({
                 click: () => {
-                  if (onDistrictClick) {
-                    onDistrictClick(feature.properties.districtId);
+                  if (onDistrictClick && districtId) {
+                    onDistrictClick(districtId);
                   }
                 },
                 mouseover: (e) => {
-                  e.target.setStyle({
-                    fillOpacity: 0.3,
-                    weight: 3,
-                    color: '#ffffff'
-                  });
+                  if (e?.target?.setStyle) {
+                    e.target.setStyle({
+                      fillOpacity: 0.3,
+                      weight: 3,
+                      color: '#ffffff'
+                    });
+                  }
                 },
                 mouseout: (e) => {
-                  const p = DISTRICT_PREDICTION_DATA[feature.properties.districtId];
+                  const districtId = feature?.properties?.districtId;
+                  const p = districtId ? (DISTRICT_PREDICTION_DATA[districtId] || null) : null;
                   const riskColor = !p ? '#6366f1' :
                     p.riskLevel === 'Critical' ? '#ef4444' :
                     p.riskLevel === 'High' ? '#f97316' :
                     p.riskLevel === 'Medium' ? '#eab308' : '#10b981';
 
-                  e.target.setStyle({
-                    color: riskColor,
-                    fillColor: riskColor,
-                    fillOpacity: 0.15,
-                    weight: 2,
-                    opacity: 0.9
-                  });
+                  if (e?.target?.setStyle) {
+                    e.target.setStyle({
+                      color: riskColor,
+                      fillColor: riskColor,
+                      fillOpacity: 0.15,
+                      weight: 2,
+                      opacity: 0.9
+                    });
+                  }
                 }
               });
             }}
@@ -421,7 +476,7 @@ export default function GISMap({
         )}
 
         {/* Custom Centroid District Labels (Clickable) */}
-        {isAnalyst && layers.showBoundaries && districtCentroids.map((dc) => (
+        {isAnalyst && safeLayers.showBoundaries && districtCentroids.map((dc) => (
           <Marker
             key={`centroid-label-${dc.id}`}
             position={dc.coords}
@@ -442,7 +497,7 @@ export default function GISMap({
         ))}
 
         {/* 5. Police Jurisdiction Layer overlay */}
-        {isAnalyst && layers.showJurisdictions && jurisdictions.map((j, i) => (
+        {isAnalyst && safeLayers.showJurisdictions && jurisdictions.map((j, i) => (
           <Circle
             key={`jurisdiction-${i}`}
             center={j.center}
@@ -459,8 +514,8 @@ export default function GISMap({
         ))}
 
         {/* Crime Markers (clustered vs. individual) */}
-        {layers.showMarkers && (
-          (layers.showClusters && currentZoom <= 7) ? (
+        {safeLayers.showMarkers && (
+          (safeLayers.showClusters && currentZoom <= 7) ? (
             // Render clustered counts
             districtClusters.map((cluster) => (
               <Marker
@@ -469,23 +524,25 @@ export default function GISMap({
                 icon={getClusterIcon(cluster.count)}
                 eventHandlers={{
                   click: () => {
-                    setMapState({
+                    setMapState(prev => ({
+                      ...prev,
                       center: cluster.coords,
                       zoom: 9,
-                      resetKey: mapState.resetKey + 1
-                    });
+                      resetKey: (prev?.resetKey || 0) + 1
+                    }));
                   }
                 }}
               />
             ))
           ) : (
             // Render individual markers
-            filteredCases.map((c) => {
+            safeCases.map((c, idx) => {
+              if (!c) return null;
               const coords = getCoordinatesForCase(c);
               const isSelected = selectedCase?.id === c.id;
               return (
                 <Marker
-                  key={c.id}
+                  key={c.id || `marker-${idx}`}
                   position={coords}
                   icon={getMarkerIcon(c.risk, isSelected)}
                   eventHandlers={{
@@ -494,7 +551,7 @@ export default function GISMap({
                       setMapState(prev => ({
                         ...prev,
                         center: coords,
-                        resetKey: prev.resetKey + 1
+                        resetKey: (prev?.resetKey || 0) + 1
                       }));
                     }
                   }}

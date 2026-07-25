@@ -310,7 +310,7 @@ export default function DashboardLayout({ onLogout, role }) {
             <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
           </div>
 
-          <ErrorBoundary>
+          <ErrorBoundary key={activeModule}>
             <Suspense fallback={<div className="p-8"><SkeletonDashboard /></div>}>
               <AnimatePresence mode="wait">
                 <PageTransition key={activeModule} className={isNetwork ? 'w-full' : 'flex-1 flex flex-col min-h-0'}>
