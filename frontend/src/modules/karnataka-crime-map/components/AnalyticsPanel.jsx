@@ -78,22 +78,22 @@ export default function AnalyticsPanel({
   }, [allCases, districtA, districtB]);
 
   return (
-    <div className="w-full bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm p-7 sm:p-8 space-y-6">
+    <div className="w-full bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm p-6 space-y-5">
       
       {/* Section Header & Tabs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-[#E7ECF3]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-5 border-b border-[#E7ECF3]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[12px] bg-[#0B1F4D] text-white flex items-center justify-center shrink-0 shadow-sm">
-            <BarChart2 className="w-5 h-5 text-police-gold" />
+          <div className="w-9 h-9 rounded-[10px] bg-[#0B1F4D] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <BarChart2 className="w-4.5 h-4.5 text-police-gold" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-[#0F172A] tracking-tight">Spatial Intelligence & Analytics</h2>
-            <p className="text-xs text-[#64748B] font-medium mt-0.5">Geospatial metrics, district comparative analysis, and temporal trends telemetry.</p>
+            <h2 className="text-lg font-bold text-[#0F172A] tracking-tight">Spatial Intelligence & Analytics</h2>
+            <p className="text-xs text-[#64748B] font-medium mt-0.5">Geospatial metrics, district comparative analysis, and temporal telemetry.</p>
           </div>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex gap-2 bg-[#F8F9FB] p-1.5 rounded-[999px] border border-[#E7ECF3]">
+        <div className="flex gap-1.5 bg-[#F8F9FB] p-1 rounded-[999px] border border-[#E7ECF3]">
           {[
             { id: 'analytics', label: 'Spatial Analytics' },
             { id: 'comparison', label: 'District Comparison' }
@@ -101,9 +101,9 @@ export default function AnalyticsPanel({
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`px-5 py-2 text-xs font-bold rounded-[999px] transition-all cursor-pointer ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-[999px] transition-all cursor-pointer ${
                 activeTab === t.id 
-                  ? 'bg-[#0B1F4D] text-white shadow-sm' 
+                  ? 'bg-[#0B1F4D] text-white shadow-xs' 
                   : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
@@ -114,17 +114,17 @@ export default function AnalyticsPanel({
       </div>
 
       {/* Main Content Area */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         
         {/* Tab Content 1: Spatial Analytics */}
         {activeTab === 'analytics' && (
-          <div className="space-y-6">
-            {/* KPI Cards in 4-column responsive grid */}
+          <div className="space-y-5">
+            {/* KPI Cards in 4-column responsive grid matching dashboard scale */}
             <div>
-              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-police-blue" /> Key Spatial Indicators
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Activity className="w-3.5 h-3.5 text-police-blue" /> Key Spatial Indicators
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <GlobalKPICard
                   title="Total Crimes"
                   value={stats.total}
@@ -153,25 +153,25 @@ export default function AnalyticsPanel({
               </div>
             </div>
 
-            {/* Additional Analytics Widgets Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="p-6 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] flex items-center justify-between">
+            {/* Normalized Analytics Widgets Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex items-center justify-between">
                 <div>
-                  <span className="text-[#64748B] font-bold uppercase text-xs tracking-wider">Detected Hotspot Zones</span>
-                  <p className="text-2xl font-extrabold text-rose-600 font-mono mt-1">{stats.hotspotsCount} Critical Clusters</p>
+                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">Detected Hotspot Zones</span>
+                  <p className="text-xl font-extrabold text-rose-600 font-mono mt-0.5">{stats.hotspotsCount} Critical Clusters</p>
                 </div>
-                <div className="w-12 h-12 rounded-[14px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
-                  <Activity className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-[10px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
+                  <Activity className="w-5 h-5" />
                 </div>
               </div>
 
-              <div className="p-6 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] flex items-center justify-between">
+              <div className="p-5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex items-center justify-between">
                 <div>
-                  <span className="text-[#64748B] font-bold uppercase text-xs tracking-wider">Dominant Crime Category</span>
-                  <p className="text-xl font-extrabold text-[#0F172A] mt-1">{stats.commonCat}</p>
+                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">Dominant Crime Category</span>
+                  <p className="text-lg font-extrabold text-[#0F172A] mt-0.5">{stats.commonCat}</p>
                 </div>
-                <div className="w-12 h-12 rounded-[14px] bg-indigo-50 border border-indigo-200 text-[#0B1F4D] flex items-center justify-center">
-                  <Layers className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-[10px] bg-indigo-50 border border-indigo-200 text-[#0B1F4D] flex items-center justify-center">
+                  <Layers className="w-5 h-5" />
                 </div>
               </div>
             </div>
@@ -180,21 +180,21 @@ export default function AnalyticsPanel({
 
         {/* Tab Content 2: District Comparison */}
         {activeTab === 'comparison' && (
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest flex items-center gap-2">
-                <Layers className="w-4 h-4 text-police-blue" /> District Comparative Matrix
+          <div className="space-y-5">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider flex items-center gap-2">
+                <Layers className="w-3.5 h-3.5 text-police-blue" /> District Comparative Matrix
               </h3>
 
               {/* District Dropdown Selectors */}
-              <div className="flex items-center gap-4 w-full sm:w-auto">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
                 <div className="flex items-center gap-2">
                   <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-a">District A:</label>
                   <select 
                     id="compare-dist-a"
                     value={districtA} 
                     onChange={(e) => setDistrictA(e.target.value)}
-                    className="h-10 rounded-[14px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A]"
+                    className="h-9 rounded-[12px] bg-white border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A] shadow-xs"
                   >
                     {DISTRICTS.map(d => (
                       <option key={d} value={d}>{d}</option>
@@ -210,7 +210,7 @@ export default function AnalyticsPanel({
                     id="compare-dist-b"
                     value={districtB} 
                     onChange={(e) => setDistrictB(e.target.value)}
-                    className="h-10 rounded-[14px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A]"
+                    className="h-9 rounded-[12px] bg-white border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A] shadow-xs"
                   >
                     {DISTRICTS.map(d => (
                       <option key={d} value={d}>{d}</option>
@@ -221,8 +221,8 @@ export default function AnalyticsPanel({
             </div>
 
             {/* Comparison Matrix Table */}
-            <div className="p-6 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
-              <div className="grid grid-cols-3 text-center font-bold text-[#64748B] text-xs uppercase tracking-wider pb-3 border-b border-[#E7ECF3]">
+            <div className="p-5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+              <div className="grid grid-cols-3 text-center font-bold text-[#64748B] text-xs uppercase tracking-wider pb-2.5 border-b border-[#E7ECF3]">
                 <span className="text-left font-extrabold text-[#0B1F4D]">{districtA}</span>
                 <span>Comparative Indicator</span>
                 <span className="text-right font-extrabold text-police-blue">{districtB}</span>
@@ -236,7 +236,7 @@ export default function AnalyticsPanel({
                   { label: 'High Severity Incidents', valA: comparison.a.high, valB: comparison.b.high, isMono: true },
                   { label: 'High Risk Hotspot Zone', valA: comparison.a.hotspot ? 'Yes' : 'No', valB: comparison.b.hotspot ? 'Yes' : 'No' },
                 ].map((row, i) => (
-                  <div key={i} className="grid grid-cols-3 text-center text-xs py-3.5 items-center">
+                  <div key={i} className="grid grid-cols-3 text-center text-xs py-2.5 items-center">
                     <span className={`text-left font-extrabold ${row.isMono ? 'font-mono text-[#0F172A]' : 'text-[#334155]'}`}>{row.valA}</span>
                     <span className="text-xs text-[#64748B] font-semibold">{row.label}</span>
                     <span className={`text-right font-extrabold ${row.isMono ? 'font-mono text-[#0F172A]' : 'text-[#334155]'} ${row.highlight ? (parseFloat(row.valB) > parseFloat(row.valA) ? 'text-rose-600' : 'text-emerald-600') : ''}`}>{row.valB}</span>
