@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Map, Network, FileText, Settings, LogOut, Shield, Activity, BookOpen, BarChart2 } from 'lucide-react';
+import { 
+  LayoutDashboard, Map, Network, FileText, Settings, LogOut, 
+  Shield, Activity, BookOpen, BarChart2, Bell, ShieldAlert, Briefcase,
+  Users, Database
+} from 'lucide-react';
 
-const NAV_SECTIONS = [
+const ANALYST_NAV_SECTIONS = [
   {
     label: 'Command',
     items: [
@@ -17,6 +21,8 @@ const NAV_SECTIONS = [
     items: [
       { id: 'analytics', name: 'Analytics Suite',   icon: Activity  },
       { id: 'reports',   name: 'Reports',            icon: BookOpen  },
+      { id: 'hotspots',  name: 'Crime Hotspot Detection', icon: ShieldAlert },
+      { id: 'correlation', name: 'Socio-economic Crime Correlation', icon: Database },
     ],
   },
   {
@@ -27,7 +33,69 @@ const NAV_SECTIONS = [
   },
 ];
 
-export default function Sidebar({ onLogout, activeModule, setActiveModule }) {
+const ADMIN_NAV_SECTIONS = [
+  {
+    label: 'Administration',
+    items: [
+      { id: 'overview',      name: 'Overview',           icon: LayoutDashboard },
+      { id: 'users',         name: 'Users Control',      icon: Users           },
+      { id: 'roles',         name: 'Roles & Privileges', icon: Shield          },
+      { id: 'audit_logs',    name: 'System Audit Logs',  icon: FileText        },
+    ],
+  },
+  {
+    label: 'Diagnostics',
+    items: [
+      { id: 'system_health', name: 'System Health',      icon: Activity        },
+      { id: 'config',        name: 'Configuration',      icon: Settings        },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { id: 'settings',      name: 'Settings',           icon: Settings        },
+    ],
+  },
+];
+
+const OFFICER_NAV_SECTIONS = [
+  {
+    label: 'Operations',
+    items: [
+      { id: 'overview',       name: 'Overview',          icon: LayoutDashboard },
+      { id: 'assigned_cases', name: 'Assigned Cases',    icon: Briefcase       },
+      { id: 'fir_management', name: 'FIR Management',    icon: FileText        },
+      { id: 'map',            name: 'Crime Map',          icon: Map             },
+      { id: 'hotspots',       name: 'Crime Hotspot Detection', icon: ShieldAlert     },
+    ],
+  },
+  {
+    label: 'Notifications',
+    items: [
+      { id: 'alerts',         name: 'Alerts Feed',       icon: Bell            },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { id: 'settings',       name: 'Settings',          icon: Settings        },
+    ],
+  },
+];
+
+export default function Sidebar({ onLogout, activeModule, setActiveModule, role }) {
+  const navSections = role === 'officer' 
+    ? OFFICER_NAV_SECTIONS 
+    : role === 'admin'
+    ? ADMIN_NAV_SECTIONS
+    : ANALYST_NAV_SECTIONS;
+
+  const profile = role === 'officer' 
+    ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer', station: 'Cubbon Park PS' }
+    : role === 'admin'
+    ? { initials: 'SA', name: 'Admin Gowda', roleText: 'System Administrator', station: 'State Tech HQ' }
+    : { initials: 'JD', name: 'John Doe', roleText: 'Intelligence Analyst', station: 'State Command' };
+
   return (
     <aside className="w-64 bg-surface border-r border-border flex flex-col h-screen fixed left-0 top-0 hidden md:flex z-20">
       {/* Logo */}
@@ -43,7 +111,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule }) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5 no-scrollbar" aria-label="Main navigation">
-        {NAV_SECTIONS.map(section => (
+        {navSections.map(section => (
           <div key={section.label}>
             <p className="text-2xs font-semibold text-text-muted uppercase tracking-wider px-3 mb-2">
               {section.label}
@@ -79,10 +147,12 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule }) {
       {/* Footer */}
       <div className="p-3 border-t border-border">
         <div className="flex items-center gap-3 px-3 py-2.5 mb-2 rounded-lg bg-surface-2/50">
-          <div className="w-7 h-7 rounded-full bg-surface-3 flex items-center justify-center text-xs font-bold text-text-secondary shrink-0">JD</div>
+          <div className="w-7 h-7 rounded-full bg-surface-3 flex items-center justify-center text-xs font-bold text-text-secondary shrink-0">
+            {profile.initials}
+          </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-text-primary truncate">John Doe</p>
-            <p className="text-2xs text-text-muted truncate">Intelligence Analyst</p>
+            <p className="text-xs font-semibold text-text-primary truncate">{profile.name}</p>
+            <p className="text-2xs text-text-muted truncate">{profile.roleText}</p>
           </div>
           <div className="w-1.5 h-1.5 rounded-full bg-success glow-success shrink-0" title="Online" />
         </div>

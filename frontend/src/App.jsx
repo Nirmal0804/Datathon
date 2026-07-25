@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './components/ui/Toast';
 import { ErrorBoundary } from './components/ui/ErrorState';
 import { PageTransition } from './components/ui/PageTransition';
+import { AuthProvider, useAuth } from './api/auth';
 
 import Navbar from './components/shared/navigation/Navbar';
 import Hero from './modules/dashboard/Hero';
@@ -24,16 +25,34 @@ import DashboardLayout from './modules/dashboard/DashboardLayout';
 function AppContent() {
   const [currentView, setCurrentView] = useState('landing');
   const [selectedRole, setSelectedRole] = useState(null);
+  const { isAuthenticated, loading: authLoading, signOut } = useAuth();
 
   const navigateToAuth    = () => setCurrentView('auth-role');
   const navigateToLanding = () => setCurrentView('landing');
 
   const renderView = () => {
+    if (authLoading) {
+      return (
+        <PageTransition key="loading">
+          <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="text-slate-400 text-sm">Loading...</div>
+          </div>
+        </PageTransition>
+      );
+    }
+
+    if (isAuthenticated && currentView !== 'landing') {
+      return (
+        <PageTransition key="dashboard">
+          <DashboardLayout onLogout={async () => { await signOut(); setSelectedRole(null); navigateToLanding(); }} role={selectedRole || 'analyst'} />
+        </PageTransition>
+      );
+    }
     switch (currentView) {
       case 'dashboard':
         return (
           <PageTransition key="dashboard">
-            <DashboardLayout onLogout={navigateToLanding} />
+            <DashboardLayout onLogout={async () => { await signOut(); setSelectedRole(null); navigateToLanding(); }} role={selectedRole} />
           </PageTransition>
         );
       case 'auth-role':
@@ -92,9 +111,11 @@ function AppContent() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

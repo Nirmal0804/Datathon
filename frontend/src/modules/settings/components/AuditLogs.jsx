@@ -26,6 +26,22 @@ export default function AuditLogs() {
     l.module.toLowerCase().includes(search.toLowerCase())
   );
 
+  const exportCSV = () => {
+    const headers = 'ID,Type,Action,User,Role,Module,Detail,Timestamp\n';
+    const csvContent = filtered.map(l => 
+      `"${l.id}","${l.type}","${l.action}","${l.user}","${l.role}","${l.module}","${l.detail}","${l.time}"`
+    ).join('\n');
+    
+    const blob = new Blob([headers + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `karnataka_police_audit_logs_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -33,7 +49,7 @@ export default function AuditLogs() {
           <h3 className="text-base font-semibold text-white">Audit & Activity Logs</h3>
           <p className="text-sm text-slate-400 mt-0.5">Tamper-proof record of all user actions on the platform.</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm text-white rounded-md transition-colors shrink-0">
+        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm text-white rounded-md transition-colors shrink-0 cursor-pointer">
           <Download className="w-4 h-4" /> Export Logs
         </button>
       </div>

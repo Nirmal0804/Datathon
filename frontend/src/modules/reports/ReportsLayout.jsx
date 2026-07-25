@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
 import ReportFilters from './components/ReportFilters';
-import ReportList from './components/ReportList';
+import ReportList, { INITIAL_REPORTS } from './components/ReportList';
 import ReportPreview from './components/ReportPreview';
 import ReportHistory from './components/ReportHistory';
 import { Plus, History } from 'lucide-react';
+import { useToast } from '../../components/ui/Toast';
 
-export default function ReportsLayout() {
+export default function ReportsLayout({ role = 'analyst' }) {
+  const { addToast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [reportsList, setReportsList] = useState(INITIAL_REPORTS);
+  const [selectedReport, setSelectedReport] = useState(INITIAL_REPORTS[0] || null);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Authenticated user session info mapping
+  const officerInfo = {
+    analyst: { name: 'Inspector Patil', role: 'Intelligence Analyst' },
+    officer: { name: 'Insp. R. Kumar', role: 'Field Officer' },
+    admin: { name: 'Super Admin S. Kumar', role: 'System Administrator' },
+  }[role] || { name: 'Officer in Charge', role: 'Departmental Admin' };
+
+  const handleGenerateReport = () => {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const newId = `RPT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newReport = {
+      id: newId,
+      title: `Ad-hoc Precinct Intelligence Briefing - ${newId}`,
+      type: 'Crime Summary',
+      district: 'Bengaluru City',
+      generated: todayStr,
+      size: '1.4 MB',
+      status: 'Ready',
+      pages: 18
+    };
+
+    setReportsList([newReport, ...reportsList]);
+    setSelectedReport(newReport);
+
+    addToast({
+      title: 'Report Compiled Successfully',
+      message: `${newId} generated for district Bengaluru City by ${officerInfo.name}.`,
+      type: 'success'
+    });
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 h-full flex flex-col">
@@ -25,7 +59,10 @@ export default function ReportsLayout() {
           >
             <History className="w-4 h-4" /> Activity Log
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors">
+          <button 
+            onClick={handleGenerateReport}
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors cursor-pointer"
+          >
             <Plus className="w-4 h-4" /> Generate New Report
           </button>
         </div>
@@ -45,6 +82,7 @@ export default function ReportsLayout() {
             searchQuery={searchQuery}
             onSelect={setSelectedReport}
             selectedId={selectedReport?.id}
+            reports={reportsList}
           />
         </div>
 
@@ -54,6 +92,7 @@ export default function ReportsLayout() {
             <ReportPreview
               report={selectedReport}
               onClose={() => setSelectedReport(null)}
+              role={role}
             />
           </div>
         )}

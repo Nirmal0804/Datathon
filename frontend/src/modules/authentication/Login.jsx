@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { Shield, Mail, Lock, Loader2 } from 'lucide-react';
+import { Shield, Mail, Lock, Loader2, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../api/auth';
 
 export default function Login({ role, onBack, onForgot, onLogin }) {
+  const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    setError('');
+    try {
+      await signIn(email, password);
       onLogin();
-    }, 1500);
+    } catch (err) {
+      setError(err.message || 'Login failed. Check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -34,6 +42,13 @@ export default function Login({ role, onBack, onForgot, onLogin }) {
             {role} Access
           </p>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-xs text-red-400">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
