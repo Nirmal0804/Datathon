@@ -112,27 +112,39 @@ export default function FieldOfficerFIRManagement() {
 
   return (
     <div className="space-y-6 w-full max-w-[1600px] mx-auto">
-      {/* 1. Dark Navy Hero Banner with Gold Hover Button */}
-      <div className="bg-[#0B1F4D] rounded-[24px] p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-[#0B1F4D]/20 text-white min-h-[96px]">
+      {/* 1. Compact White Page Header Banner (Matching exact screenshot spec) */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px] shrink-0">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[16px] bg-white/10 border border-white/20 text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
             <FileText className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white tracking-tight">FIR Management</h2>
-            <p className="text-xs font-semibold text-slate-300 mt-0.5">
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-black text-[#0F172A] tracking-tight">FIR Management</h2>
+              <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
+                {localCases.length} Active Records
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-[#64748B] mt-0.5">
               Register new incident complaints and view precinct intake logs.
             </p>
           </div>
         </div>
-        
-        <button 
-          onClick={() => setRegisterModal(true)} 
-          className="h-11 px-6 rounded-full bg-[#C79A2B] hover:bg-white text-[#0B1F4D] font-extrabold text-xs shadow-md transition-all duration-200 flex items-center gap-2 cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Register New FIR</span>
-        </button>
+
+        <div className="flex items-center gap-3 self-end sm:self-auto">
+          <div className="hidden md:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <span>Duty Status: Active On-Field</span>
+          </div>
+
+          <button 
+            onClick={() => setRegisterModal(true)} 
+            className="h-10 px-5 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4 text-[#C79A2B]" />
+            <span>Register New FIR</span>
+          </button>
+        </div>
       </div>
 
       {/* 2 & 3. Search Toolbar & FIR Records Section */}
