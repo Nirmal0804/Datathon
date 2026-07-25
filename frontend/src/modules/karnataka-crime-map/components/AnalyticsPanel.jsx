@@ -78,41 +78,34 @@ export default function AnalyticsPanel({
   }, [allCases, districtA, districtB]);
 
   return (
-    <div className="h-full bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col justify-between overflow-hidden text-xs">
+    <div className="w-full bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm p-7 sm:p-8 space-y-6">
       
-      {/* Header & Tabs */}
-      <div className="shrink-0 bg-white p-5 pb-0 border-b border-[#E7ECF3]">
-        <div className="flex items-center justify-between pb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-[12px] bg-[#0B1F4D]/10 text-[#0B1F4D] flex items-center justify-center shrink-0">
-              <BarChart2 className="w-4.5 h-4.5" />
-            </div>
-            <h2 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Spatial Intelligence</h2>
+      {/* Section Header & Tabs */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-[#E7ECF3]">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-[12px] bg-[#0B1F4D] text-white flex items-center justify-center shrink-0 shadow-sm">
+            <BarChart2 className="w-5 h-5 text-police-gold" />
           </div>
-          {onClose && (
-            <button 
-              onClick={onClose} 
-              className="p-2 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] text-slate-500 hover:text-[#0F172A] md:hidden cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+          <div>
+            <h2 className="text-xl font-extrabold text-[#0F172A] tracking-tight">Spatial Intelligence & Analytics</h2>
+            <p className="text-xs text-[#64748B] font-medium mt-0.5">Geospatial metrics, district comparative analysis, and temporal trends telemetry.</p>
+          </div>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex gap-2 text-xs font-semibold text-slate-500 pb-4">
+        <div className="flex gap-2 bg-[#F8F9FB] p-1.5 rounded-[999px] border border-[#E7ECF3]">
           {[
-            { id: 'analytics', label: 'Analytics' },
-            { id: 'comparison', label: 'Comparison' },
-            { id: 'timeline', label: 'Timeline' }
+            { id: 'analytics', label: 'Spatial Analytics' },
+            { id: 'comparison', label: 'District Comparison' },
+            { id: 'timeline', label: 'Timeline Series' }
           ].map(t => (
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`flex-1 py-2 text-center rounded-[999px] transition-all cursor-pointer ${
+              className={`px-5 py-2 text-xs font-bold rounded-[999px] transition-all cursor-pointer ${
                 activeTab === t.id 
-                  ? 'bg-[#0B1F4D] text-white font-bold shadow-sm' 
-                  : 'bg-[#F8F9FB] border border-[#E7ECF3] hover:bg-slate-100 text-[#0F172A]'
+                  ? 'bg-[#0B1F4D] text-white shadow-sm' 
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               {t.label}
@@ -121,17 +114,18 @@ export default function AnalyticsPanel({
         </div>
       </div>
 
-      {/* Independent Scrollable Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6">
+      {/* Main Content Area */}
+      <div className="space-y-6">
         
-        {/* Tab Content 1: Analytics */}
+        {/* Tab Content 1: Spatial Analytics */}
         {activeTab === 'analytics' && (
-          <div className="space-y-5">
+          <div className="space-y-6">
+            {/* KPI Cards in 4-column responsive grid */}
             <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <Activity className="w-3.5 h-3.5 text-police-blue" /> Key Performance Indicators
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest mb-4 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-police-blue" /> Key Spatial Indicators
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <GlobalKPICard
                   title="Total Crimes"
                   value={stats.total}
@@ -160,14 +154,26 @@ export default function AnalyticsPanel({
               </div>
             </div>
 
-            <div className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] space-y-3">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-[#64748B] font-bold uppercase text-[10px]">Detected Hotspots</span>
-                <span className="font-extrabold text-rose-600 font-mono">{stats.hotspotsCount} zones</span>
+            {/* Additional Analytics Widgets Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="p-6 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] flex items-center justify-between">
+                <div>
+                  <span className="text-[#64748B] font-bold uppercase text-xs tracking-wider">Detected Hotspot Zones</span>
+                  <p className="text-2xl font-extrabold text-rose-600 font-mono mt-1">{stats.hotspotsCount} Critical Clusters</p>
+                </div>
+                <div className="w-12 h-12 rounded-[14px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
+                  <Activity className="w-6 h-6" />
+                </div>
               </div>
-              <div className="flex justify-between items-center text-xs pt-2.5 border-t border-[#E7ECF3]">
-                <span className="text-[#64748B] font-bold uppercase text-[10px]">Dominant Crime Type</span>
-                <span className="font-extrabold text-[#0F172A] truncate max-w-[140px]">{stats.commonCat}</span>
+
+              <div className="p-6 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] flex items-center justify-between">
+                <div>
+                  <span className="text-[#64748B] font-bold uppercase text-xs tracking-wider">Dominant Crime Category</span>
+                  <p className="text-xl font-extrabold text-[#0F172A] mt-1">{stats.commonCat}</p>
+                </div>
+                <div className="w-12 h-12 rounded-[14px] bg-indigo-50 border border-indigo-200 text-[#0B1F4D] flex items-center justify-center">
+                  <Layers className="w-6 h-6" />
+                </div>
               </div>
             </div>
           </div>
@@ -175,60 +181,69 @@ export default function AnalyticsPanel({
 
         {/* Tab Content 2: District Comparison */}
         {activeTab === 'comparison' && (
-          <div className="space-y-4">
-            <h3 className="text-2xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-              <Layers className="w-3.5 h-3.5 text-primary" /> District Comparison Tool
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[9px] text-slate-500 mb-1" htmlFor="compare-dist-a">District A</label>
-                <select 
-                  id="compare-dist-a"
-                  value={districtA} 
-                  onChange={(e) => setDistrictA(e.target.value)}
-                  className="select text-3xs h-8 bg-slate-800 border-slate-700 p-1"
-                >
-                  {DISTRICTS.map(d => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[9px] text-slate-500 mb-1" htmlFor="compare-dist-b">District B</label>
-                <select 
-                  id="compare-dist-b"
-                  value={districtB} 
-                  onChange={(e) => setDistrictB(e.target.value)}
-                  className="select text-3xs h-8 bg-slate-800 border-slate-700 p-1"
-                >
-                  {DISTRICTS.map(d => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest flex items-center gap-2">
+                <Layers className="w-4 h-4 text-police-blue" /> District Comparative Matrix
+              </h3>
+
+              {/* District Dropdown Selectors */}
+              <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-a">District A:</label>
+                  <select 
+                    id="compare-dist-a"
+                    value={districtA} 
+                    onChange={(e) => setDistrictA(e.target.value)}
+                    className="h-10 rounded-[14px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A]"
+                  >
+                    {DISTRICTS.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <span className="text-xs font-bold text-slate-400">VS</span>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-b">District B:</label>
+                  <select 
+                    id="compare-dist-b"
+                    value={districtB} 
+                    onChange={(e) => setDistrictB(e.target.value)}
+                    className="h-10 rounded-[14px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-bold text-[#0F172A]"
+                  >
+                    {DISTRICTS.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div className="p-3.5 bg-slate-950/50 rounded-xl border border-slate-850 space-y-3.5">
-              <div className="grid grid-cols-3 text-center font-semibold text-slate-500 text-4xs uppercase tracking-wider pb-1.5 border-b border-slate-850/40">
-                <span className="text-left truncate">{districtA.split(' ')[0]}</span>
-                <span>Indicator</span>
-                <span className="text-right truncate">{districtB.split(' ')[0]}</span>
+            {/* Comparison Matrix Table */}
+            <div className="p-6 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
+              <div className="grid grid-cols-3 text-center font-bold text-[#64748B] text-xs uppercase tracking-wider pb-3 border-b border-[#E7ECF3]">
+                <span className="text-left font-extrabold text-[#0B1F4D]">{districtA}</span>
+                <span>Comparative Indicator</span>
+                <span className="text-right font-extrabold text-police-blue">{districtB}</span>
               </div>
 
-              {[
-                { label: 'Total Crimes', valA: comparison.a.total, valB: comparison.b.total, isMono: true },
-                { label: 'YoY Growth', valA: `${comparison.a.growth >= 0 ? '+' : ''}${comparison.a.growth}%`, valB: `${comparison.b.growth >= 0 ? '+' : ''}${comparison.b.growth}%`, isMono: true, highlight: true },
-                { label: 'Active cases', valA: comparison.a.active, valB: comparison.b.active, isMono: true },
-                { label: 'High Severity', valA: comparison.a.high, valB: comparison.b.high, isMono: true },
-                { label: 'Hotspot Area', valA: comparison.a.hotspot ? 'Yes' : 'No', valB: comparison.b.hotspot ? 'Yes' : 'No' },
-              ].map((row, i) => (
-                <div key={i} className="grid grid-cols-3 text-center text-xs">
-                  <span className={`text-left font-semibold ${row.isMono ? 'font-mono text-slate-200' : 'text-slate-350'}`}>{row.valA}</span>
-                  <span className="text-[10px] text-slate-500">{row.label}</span>
-                  <span className={`text-right font-semibold ${row.isMono ? 'font-mono text-slate-200' : 'text-slate-350'} ${row.highlight ? (parseFloat(row.valB) > parseFloat(row.valA) ? 'text-rose-400' : 'text-emerald-400') : ''}`}>{row.valB}</span>
-                </div>
-              ))}
+              <div className="divide-y divide-[#E7ECF3]">
+                {[
+                  { label: 'Total Crimes Recorded', valA: comparison.a.total, valB: comparison.b.total, isMono: true },
+                  { label: 'YoY Rate of Growth', valA: `${comparison.a.growth >= 0 ? '+' : ''}${comparison.a.growth}%`, valB: `${comparison.b.growth >= 0 ? '+' : ''}${comparison.b.growth}%`, isMono: true, highlight: true },
+                  { label: 'Active Investigation Cases', valA: comparison.a.active, valB: comparison.b.active, isMono: true },
+                  { label: 'High Severity Incidents', valA: comparison.a.high, valB: comparison.b.high, isMono: true },
+                  { label: 'High Risk Hotspot Zone', valA: comparison.a.hotspot ? 'Yes' : 'No', valB: comparison.b.hotspot ? 'Yes' : 'No' },
+                ].map((row, i) => (
+                  <div key={i} className="grid grid-cols-3 text-center text-xs py-3.5 items-center">
+                    <span className={`text-left font-extrabold ${row.isMono ? 'font-mono text-[#0F172A]' : 'text-[#334155]'}`}>{row.valA}</span>
+                    <span className="text-xs text-[#64748B] font-semibold">{row.label}</span>
+                    <span className={`text-right font-extrabold ${row.isMono ? 'font-mono text-[#0F172A]' : 'text-[#334155]'} ${row.highlight ? (parseFloat(row.valB) > parseFloat(row.valA) ? 'text-rose-600' : 'text-emerald-600') : ''}`}>{row.valB}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -236,19 +251,21 @@ export default function AnalyticsPanel({
         {/* Tab Content 3: Timeline Slider Playback */}
         {activeTab === 'timeline' && (
           <div className="space-y-4">
-            <h3 className="text-2xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-              <Calendar className="w-3.5 h-3.5 text-primary" /> Time Series Playback
+            <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-police-blue" /> Temporal Time-Series Playback
             </h3>
             
             {onTimeChange ? (
-              <TimelineSlider 
-                onTimeChange={onTimeChange}
-                startDate={startDate}
-                endDate={endDate}
-              />
+              <div className="p-6 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
+                <TimelineSlider 
+                  onTimeChange={onTimeChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </div>
             ) : (
-              <div className="text-center p-6 bg-slate-950/40 rounded border border-slate-850 text-slate-500">
-                Time playback controls unavailable.
+              <div className="text-center p-8 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3] text-slate-500 font-medium">
+                Time-series playback controls unavailable for current view.
               </div>
             )}
           </div>
