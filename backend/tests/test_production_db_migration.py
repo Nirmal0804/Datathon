@@ -986,6 +986,44 @@ class TestConfigurationValidation:
         assert settings.DATABASE_POOL_MIN >= 1
         assert settings.DATABASE_POOL_MAX >= settings.DATABASE_POOL_MIN
 
+    def test_production_rejects_require_auth_false(self) -> None:
+        """Production environment must not allow REQUIRE_AUTH=False."""
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError, match="REQUIRE_AUTH"):
+            from app.core.config import Settings
+            Settings(
+                ENVIRONMENT="production",
+                REQUIRE_AUTH=False,
+                DATA_BACKEND="csv",
+                DATABASE_URL="",
+            )
+
+    def test_production_rejects_prod_env_require_auth_false(self) -> None:
+        """'prod' environment alias must also enforce REQUIRE_AUTH."""
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError, match="REQUIRE_AUTH"):
+            from app.core.config import Settings
+            Settings(
+                ENVIRONMENT="prod",
+                REQUIRE_AUTH=False,
+                DATA_BACKEND="csv",
+                DATABASE_URL="",
+            )
+
+    def test_development_allows_require_auth_false(self) -> None:
+        """Development environment may set REQUIRE_AUTH=False."""
+        from app.core.config import Settings
+
+        s = Settings(
+            ENVIRONMENT="development",
+            REQUIRE_AUTH=False,
+            DATA_BACKEND="csv",
+            DATABASE_URL="",
+        )
+        assert s.REQUIRE_AUTH is False
+
 
 # ---------------------------------------------------------------------------
 # Persistence provider selection tests

@@ -98,7 +98,7 @@ Service layer (EXISTING — preserved)
     ↓
 FastAPI + Pydantic schemas (EXISTING — preserved)
     ↓
-Authenticated/authorized clients (NOT STARTED)
+Authenticated/authorized clients (PARTIAL — auth implemented, RBAC blocked)
 ```
 
 ### Production persistence target
@@ -630,7 +630,7 @@ Map them consistently.
 Allow only required frontend origins through configuration.
 
 ### Authentication/authorization
-Do not invent production police roles without requirements. Keep the architecture ready for auth dependencies, and implement the agreed authentication mechanism when supplied.
+Authentication is implemented via Supabase Auth JWT verification (HS256/JWKS) with deny-by-default ASGI middleware. Do not invent production police roles without requirements. Keep the architecture ready for auth dependencies.
 
 Production requirement: backend must verify user identity and enforce access control. Frontend authorization state is not a security boundary. Roles and jurisdiction semantics require an approved requirements decision.
 
@@ -680,7 +680,7 @@ Authenticated clients → FastAPI (with auth middleware) → Supabase PostgreSQL
                                                               ↓
                                                     Supabase Auth (or equivalent)
 ```
-Status: NOT STARTED
+Status: PARTIAL — Auth middleware and JWT verification implemented; PostgreSQL migration pending
 
 ### Stage 4 — Full production (if scale requires)
 ```text

@@ -2,8 +2,10 @@
 
 Middleware order (outermost first):
   1. CORSMiddleware          – CORS headers
-  2. StructuredLoggingMiddleware – request line after completion
-  3. RequestIDMiddleware     – correlation ID on every request
+  2. SecurityHeadersMiddleware – cache/security headers
+  3. AuthenticationMiddleware – JWT verification for protected routes
+  4. StructuredLoggingMiddleware – request line after completion
+  5. RequestIDMiddleware     – correlation ID on every request
 
 Centralized exception handlers convert domain and framework errors into
 a consistent ``{"error": {"code", "message", "request_id"}}`` JSON body.
@@ -12,7 +14,9 @@ Stack traces and sensitive internals are never exposed.
 
 from __future__ import annotations
 
+import json
 import logging
+import re
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -20,6 +24,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.types import ASGIApp, Receive, Scope, Send
 
 from app.core.config import settings
 from app.core.exceptions import (
@@ -34,6 +39,7 @@ from app.api.districts import router as districts_router
 from app.api.field_map import router as field_map_router
 from app.api.intelligence_map import router as intelligence_map_router
 from app.api.stations import router as stations_router
+from app.api.auth import router as auth_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 
 # ---------------------------------------------------------------------------
@@ -46,16 +52,40 @@ logging.basicConfig(
 )
 _logger = logging.getLogger("crime_analytics")
 
+# ---------------------------------------------------------------------------
+# Public path patterns (no authentication required)
+# ---------------------------------------------------------------------------
+
+_PUBLIC_PATHS: list[str | re.Pattern] = [
+    "/health",
+    "/health/live",
+    "/health/ready",
+    "/docs",
+    "/redoc",
+    "/openapi.json",
+]
+
+
+def _is_public_path(path: str) -> bool:
+    """Return True if the path does not require authentication."""
+    for pattern in _PUBLIC_PATHS:
+        if isinstance(pattern, re.Pattern):
+            if pattern.match(path):
+                return True
+        elif path == pattern:
+            return True
+    return False
+
 
 # ---------------------------------------------------------------------------
-# Lifespan: PostgreSQL connection pool
+# Lifespan: PostgreSQL connection pool + JWT verifier
 # ---------------------------------------------------------------------------
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage PostgreSQL connection pool lifecycle."""
-    # Startup
+    """Manage PostgreSQL connection pool and JWT verifier lifecycle."""
+    # Startup: PostgreSQL
     if settings.DATA_BACKEND.lower() == "postgres":
         from app.database.postgres import init_pool
 
@@ -69,9 +99,20 @@ async def lifespan(app: FastAPI):
             maxconn=settings.DATABASE_POOL_MAX,
         )
 
+    # Startup: JWT verifier
+    from app.core.jwt_auth import init_verifier
+
+    init_verifier(
+        jwt_secret=settings.SUPABASE_JWT_SECRET,
+        jwks_url=settings.SUPABASE_JWKS_URL,
+        issuer=settings.SUPABASE_JWT_ISSUER,
+        audience=settings.SUPABASE_JWT_AUDIENCE,
+        jwks_cache_ttl=settings.JWKS_CACHE_TTL,
+    )
+
     yield
 
-    # Shutdown
+    # Shutdown: PostgreSQL
     if settings.DATA_BACKEND.lower() == "postgres":
         from app.database.postgres import close_pool
 
@@ -79,25 +120,232 @@ async def lifespan(app: FastAPI):
 
 
 # ---------------------------------------------------------------------------
+# Security headers middleware
+# ---------------------------------------------------------------------------
+
+
+class SecurityHeadersMiddleware:
+    """Add security-relevant headers to all API responses.
+
+    - Cache-Control: no-store for sensitive authenticated responses.
+    - X-Content-Type-Options: nosniff
+    - Referrer-Policy: strict-origin-when-cross-origin
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                headers = list(message.get("headers", []))
+
+                # Add security headers
+                headers.append((b"x-content-type-options", b"nosniff"))
+                headers.append(
+                    (b"referrer-policy", b"strict-origin-when-cross-origin")
+                )
+
+                # Cache-Control for authenticated API responses
+                path = scope.get("path", "")
+                if path.startswith("/api/v1/"):
+                    # Protected API responses: no-store
+                    headers.append((b"cache-control", b"no-store"))
+                elif path.startswith("/health"):
+                    # Health endpoints: short cache acceptable
+                    headers.append((b"cache-control", b"max-age=10"))
+
+                message["headers"] = headers
+            await send(message)
+
+        await self.app(scope, receive, send_wrapper)
+
+
+# ---------------------------------------------------------------------------
+# Authentication middleware (deny-by-default for protected routes)
+# ---------------------------------------------------------------------------
+
+
+class AuthenticationMiddleware:
+    """JWT authentication middleware — deny-by-default for protected routes.
+
+    Public paths (health probes, docs) pass through without verification.
+    All ``/api/v1/*`` paths require a valid Supabase Auth JWT unless
+    ``REQUIRE_AUTH`` is set to False (development mode only).
+
+    The verified identity is stored on ``request.state.authenticated_identity``
+    for downstream route handlers to use.
+    """
+
+    _AUTH_FAILED_BODY = {
+        "error": {
+            "code": "AUTHENTICATION_FAILED",
+            "message": "Valid authentication is required.",
+        }
+    }
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        path = scope.get("path", "")
+
+        # Public paths pass through
+        if _is_public_path(path):
+            await self.app(scope, receive, send)
+            return
+
+        # Auth disabled (development mode)
+        if not settings.REQUIRE_AUTH:
+            state = scope.setdefault("state", {})
+            state["authenticated_identity"] = {
+                "user_id": "dev-user-000",
+                "issuer": "development",
+            }
+            await self.app(scope, receive, send)
+            return
+
+        # Check auth is configured
+        if not settings.SUPABASE_JWT_SECRET and not settings.SUPABASE_JWKS_URL:
+            await self._reject(
+                scope, receive, send,
+                code="AUTH_NOT_CONFIGURED",
+                message="Authentication is not configured on the server.",
+            )
+            return
+
+        # Extract Authorization header
+        authorization = None
+        for name, value in scope.get("headers", []):
+            if name == b"authorization":
+                authorization = value.decode("latin-1")
+                break
+
+        # Parse Bearer token
+        token = self._extract_token(authorization)
+        if token is None:
+            await self._reject(
+                scope, receive, send,
+                code="TOKEN_MISSING",
+                message="Missing or malformed Authorization header.",
+            )
+            return
+
+        # Verify JWT
+        try:
+            from app.core.jwt_auth import verify_token, AuthenticationError
+            claims = verify_token(token)
+        except AuthenticationError as exc:
+            await self._reject(
+                scope, receive, send,
+                code=exc.code,
+                message=exc.message,
+            )
+            return
+        except Exception:
+            _logger.exception("unexpected auth middleware error")
+            await self._reject(
+                scope, receive, send,
+                code="VERIFICATION_FAILED",
+                message="Token verification failed.",
+            )
+            return
+
+        # Store verified identity on request state
+        state = scope.setdefault("state", {})
+        state["authenticated_identity"] = {
+            "user_id": claims.get("sub", ""),
+            "issuer": claims.get("iss", ""),
+            "email": claims.get("email"),
+            "audience": claims.get("aud"),
+            "expires_at": claims.get("exp"),
+            "issued_at": claims.get("iat"),
+        }
+
+        await self.app(scope, receive, send)
+
+    @staticmethod
+    def _extract_token(authorization: str | None) -> str | None:
+        """Extract Bearer token from Authorization header."""
+        if not authorization:
+            return None
+        prefix = "Bearer "
+        if not authorization.startswith(prefix):
+            return None
+        token = authorization[len(prefix) :].strip()
+        return token if token else None
+
+    async def _reject(
+        self,
+        scope: Scope,
+        receive: Receive,
+        send: Send,
+        *,
+        code: str,
+        message: str,
+    ) -> None:
+        """Send a 401 JSON response and terminate the request."""
+        request_id = scope.get("state", {}).get("request_id", "") if isinstance(scope.get("state"), dict) else ""
+
+        body = json.dumps({
+            "error": {
+                "code": code,
+                "message": message,
+                "request_id": request_id,
+            }
+        }).encode("utf-8")
+
+        await send({
+            "type": "http.response.start",
+            "status": 401,
+            "headers": [
+                (b"content-type", b"application/json"),
+                (b"content-length", str(len(body)).encode()),
+                (b"www-authenticate", b'Bearer realm="api"'),
+            ],
+        })
+        await send({
+            "type": "http.response.body",
+            "body": body,
+            "more_body": False,
+        })
+
+
+# ---------------------------------------------------------------------------
 # Application
 # ---------------------------------------------------------------------------
+
+# Disable interactive docs in production for security
+_is_production = settings.ENVIRONMENT.lower() in ("production", "prod")
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=None if _is_production else "/docs",
+    redoc_url=None if _is_production else "/redoc",
+    openapi_url=None if _is_production else "/openapi.json",
     lifespan=lifespan,
 )
 
-# Middleware – added outermost-first: CORS → Logging → RequestID
+# Middleware – added outermost-first: CORS → Security → Auth → Logging → RequestID
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+    expose_headers=["X-Request-ID"],
 )
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(AuthenticationMiddleware)
 app.add_middleware(StructuredLoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
 
@@ -150,7 +398,7 @@ async def handle_uncaught_exception(request: Request, exc: Exception) -> JSONRes
 
 
 # ---------------------------------------------------------------------------
-# Routes
+# Routes: Health (public)
 # ---------------------------------------------------------------------------
 
 
@@ -216,7 +464,7 @@ async def health_ready():
     else:
         import os
 
-        data_dir = settings.CSV_DATA_DIR
+        data_dir = getattr(settings, "CSV_DATA_DIR", settings.DATA_DIR)
         if not data_dir or not os.path.isdir(data_dir):
             return JSONResponse(
                 status_code=503,
@@ -231,9 +479,10 @@ async def health_ready():
 
 
 # ---------------------------------------------------------------------------
-# Dashboard API
+# Protected API routes (under /api/v1 — authentication enforced by middleware)
 # ---------------------------------------------------------------------------
 
+app.include_router(auth_router, prefix=settings.API_PREFIX)
 app.include_router(dashboard_router, prefix=settings.API_PREFIX)
 app.include_router(districts_router, prefix=settings.API_PREFIX)
 app.include_router(field_map_router, prefix=settings.API_PREFIX)

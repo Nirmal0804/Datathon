@@ -87,10 +87,10 @@
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Authentication mechanism | NOT STARTED | Supabase Auth may be evaluated |
-| User identity verification | NOT STARTED | — |
-| Secure token/session handling | NOT STARTED | — |
-| Backend verification | NOT STARTED | Frontend state is not a security boundary |
+| Authentication mechanism | COMPLETE | Supabase Auth; JWT verification (HS256/JWKS) |
+| User identity verification | COMPLETE | JWT claims verified; AuthenticatedIdentity model |
+| Secure token/session handling | COMPLETE | JWT-only; no server-side sessions |
+| Backend verification | COMPLETE | ASGI middleware; deny-by-default for /api/v1/* |
 | Police role definitions | BLOCKED | Requires approved requirements decision |
 
 ---
@@ -136,7 +136,7 @@
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Authentication on endpoints | NOT STARTED | — |
+| Authentication on endpoints | COMPLETE | Middleware on /api/v1/*; public paths whitelisted |
 | Authorization on endpoints | NOT STARTED | — |
 | Rate limiting | NOT STARTED | — |
 | Abuse protection | NOT STARTED | — |
@@ -243,7 +243,7 @@
 | PostgreSQL integration tests | NOT STARTED | — |
 | Migration tests | NOT STARTED | — |
 | Authorization tests | NOT STARTED | — |
-| Authentication tests | NOT STARTED | — |
+| Authentication tests | COMPLETE | 59 tests: JWT verification, route protection, algorithm confusion, production guards |
 | PII/security regression tests | NOT STARTED | — |
 | Concurrency tests | NOT STARTED | — |
 | Performance/load tests | NOT STARTED | — |
@@ -272,7 +272,7 @@
 |------|--------|-------|
 | API contract alignment | PARTIAL | Some contracts documented; not systematically verified |
 | Frontend mock data removal | NOT STARTED | Frontend still contains mock data |
-| Authentication integration | NOT STARTED | — |
+| Authentication integration | PARTIAL | Backend auth complete; frontend integration pending |
 | Error handling alignment | NOT STARTED | — |
 | End-to-end validation | NOT STARTED | — |
 
