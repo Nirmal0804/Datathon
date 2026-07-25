@@ -96,8 +96,7 @@ export default function AnalyticsPanel({
         <div className="flex gap-2 bg-[#F8F9FB] p-1.5 rounded-[999px] border border-[#E7ECF3]">
           {[
             { id: 'analytics', label: 'Spatial Analytics' },
-            { id: 'comparison', label: 'District Comparison' },
-            { id: 'timeline', label: 'Timeline Series' }
+            { id: 'comparison', label: 'District Comparison' }
           ].map(t => (
             <button
               key={t.id}
@@ -245,29 +244,6 @@ export default function AnalyticsPanel({
                 ))}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Tab Content 3: Timeline Slider Playback */}
-        {activeTab === 'timeline' && (
-          <div className="space-y-4">
-            <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-widest flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-police-blue" /> Temporal Time-Series Playback
-            </h3>
-            
-            {onTimeChange ? (
-              <div className="p-6 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
-                <TimelineSlider 
-                  onTimeChange={onTimeChange}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </div>
-            ) : (
-              <div className="text-center p-8 bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3] text-slate-500 font-medium">
-                Time-series playback controls unavailable for current view.
-              </div>
-            )}
           </div>
         )}
 
