@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useToast } from '../components/ui/Toast';
 
 const NotificationContext = createContext();
 
@@ -45,6 +46,7 @@ export function NotificationProvider({ children, role }) {
   const [notifications, setNotifications] = useState([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const { addToast } = useToast();
 
   // Initialize notifications based on role
   useEffect(() => {
@@ -73,6 +75,11 @@ export function NotificationProvider({ children, role }) {
         location: 'Analytics Suite'
       };
       setNotifications(prev => [newNotif, ...prev]);
+      addToast({
+        title: 'New Notification',
+        message: newNotif.title,
+        type: 'info'
+      });
     }, 15000); // 15 seconds after load
     return () => clearTimeout(timer);
   }, []);

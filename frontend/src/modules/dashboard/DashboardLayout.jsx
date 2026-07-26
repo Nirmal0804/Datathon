@@ -132,7 +132,7 @@ export default function DashboardLayout({ onLogout, role }) {
   const renderContent = () => {
     if (FULL_HEIGHT_MODULES.has(activeModule)) {
       return (
-        <div className="h-[calc(100vh-4rem)] w-full p-4 sm:p-6">
+        <div className="h-[calc(100vh-4rem)] w-full p-4 sm:p-6 overflow-y-auto">
           {activeModule === 'map'     && <CrimeMapLayout role={role} />}
         </div>
       );
@@ -141,13 +141,13 @@ export default function DashboardLayout({ onLogout, role }) {
     // Conditionally load the Field Officer modules
     if (role === 'officer') {
       const officerModuleMap = {
-        overview:       <FieldOfficerOverview onNavigate={setActiveModule} />,
+        overview: <FieldOfficerOverview onNavigate={setActiveModule} />,
         assigned_cases: <FieldOfficerAssignedCases />,
         fir_management: <FieldOfficerFIRManagement />,
-        alerts:         <FieldOfficerAlerts />,
-        map:            <CrimeMapLayout role={role} />,
-        hotspots:       <HotspotDetectionLayout onNavigate={setActiveModule} />,
-        settings:       <SettingsLayout role={role} />,
+        alerts: <FieldOfficerAlerts />,
+        hotspots: <HotspotDetectionLayout role={role} />,
+        map: <CrimeMapLayout role={role} />,
+        settings: <SettingsLayout role={role} />
       };
       
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
@@ -162,14 +162,13 @@ export default function DashboardLayout({ onLogout, role }) {
     // Conditionally load the System Administrator modules
     if (role === 'admin') {
       const adminModuleMap = {
-        overview:      <AdminOverview onNavigate={setActiveModule} />,
-        users:         <AdminUsers />,
-        roles:         <AdminRoles />,
-        audit_logs:    <AdminAuditLogs />,
+        overview: <AdminOverview onNavigate={setActiveModule} />,
+        users: <AdminUsers />,
+        roles: <AdminRoles />,
+        audit_logs: <AdminAuditLogs />,
         system_health: <AdminSystemHealth />,
-        config:        <AdminConfiguration />,
-        map:           <CrimeMapLayout role={role} />,
-        settings:      <SettingsLayout role={role} />,
+        config: <AdminConfiguration />,
+        settings: <SettingsLayout role={role} />
       };
       
       const content = adminModuleMap[activeModule] || adminModuleMap.overview;
