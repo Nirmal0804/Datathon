@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-export default function GraphCanvas({ 
-  nodes, 
-  edges, 
-  selectedNode, 
-  onSelectNode, 
-  searchQuery, 
-  onNodeDrag 
+export default function GraphCanvas({
+  nodes,
+  edges,
+  selectedNode,
+  onSelectNode,
+  searchQuery,
+  onNodeDrag
 }) {
   const containerRef = useRef(null);
   const [draggedNodeId, setDraggedNodeId] = useState(null);
@@ -18,32 +17,29 @@ export default function GraphCanvas({
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
 
-  // Handle wheel events for zooming
-  const handleWheel = (e) => {
-    // Only zoom if Ctrl/Cmd is pressed, otherwise allow normal page scrolling
+  // Scroll fix: only capture wheel when Ctrl/Cmd is held; otherwise let page scroll
+  const handleWheel = useCallback((e) => {
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
-      const zoomFactor = 1.05;
+      const zoomFactor = 1.08;
       if (e.deltaY < 0) {
         setZoom(z => Math.min(z * zoomFactor, 3.0));
       } else {
-        setZoom(z => Math.max(z / zoomFactor, 0.5));
+        setZoom(z => Math.max(z / zoomFactor, 0.4));
       }
     }
-  };
-
-  // Attach non-passive wheel event listener
-  useEffect(() => {
-    const el = containerRef.current;
-    if (el) {
-      el.addEventListener('wheel', handleWheel, { passive: false });
-      return () => el.removeEventListener('wheel', handleWheel);
-    }
+    // else: do nothing — let browser scroll the page naturally
   }, []);
 
-  // Handle Drag / Pan Mouse Actions
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, [handleWheel]);
+
+  // Pointer events for drag / pan
   const handleMouseDown = (e) => {
-    // If clicking background canvas, initiate panning
     if (e.target.tagName === 'svg' || e.target.id === 'bg-grid') {
       setIsPanning(true);
       setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
@@ -51,18 +47,16 @@ export default function GraphCanvas({
   };
 
   const handleMouseMove = (e) => {
+    if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-
     if (draggedNodeId) {
-      // Calculate coordinates relative to canvas taking pan and zoom into consideration
       const x = (e.clientX - rect.left - pan.x) / zoom;
       const y = (e.clientY - rect.top - pan.y) / zoom;
-      // boundary controls
-      onNodeDrag(draggedNodeId, Math.max(10, Math.min(x, 490)), Math.max(10, Math.min(y, 390)));
+      onNodeDrag(draggedNodeId, Math.max(15, Math.min(x, 485)), Math.max(15, Math.min(y, 385)));
     } else if (isPanning) {
       setPan({
         x: e.clientX - panStart.x,
-        y: e.clientY - panStart.y
+        y: e.clientY - panStart.y,
       });
     }
   };
@@ -72,101 +66,89 @@ export default function GraphCanvas({
     setIsPanning(false);
   };
 
-  // Node styles configuration
+  // Node visual styles
   const getNodeColor = (type, risk) => {
     if (type === 'Accused') {
-      if (risk === 'Critical') return '#ef4444'; // red
-      if (risk === 'High') return '#f97316'; // orange
-      if (risk === 'Medium') return '#f59e0b'; // amber
-      return '#10b981'; // green
+      if (risk === 'Critical') return '#EF4444';
+      if (risk === 'High')     return '#F97316';
+      if (risk === 'Medium')   return '#F59E0B';
+      return '#10B981';
     }
-    if (type === 'Case') return '#818cf8'; // indigo
-    if (type === 'Police Station') return '#60a5fa'; // light blue
-    if (type === 'District') return '#a78bfa'; // violet
-    return '#64748b'; // slate
+    if (type === 'Case')           return '#818CF8';
+    if (type === 'Police Station') return '#60A5FA';
+    if (type === 'District')       return '#A78BFA';
+    return '#94A3B8';
   };
 
-  // Search highlighting match
   const matchesSearch = (label) => {
     if (!searchQuery.trim()) return false;
     return label.toLowerCase().includes(searchQuery.toLowerCase());
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="flex-1 w-full h-full bg-slate-950 relative overflow-hidden select-none cursor-grab active:cursor-grabbing border border-slate-850/60 rounded-xl mt-3"
+      className="w-full bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+      style={{ height: '520px' }}
     >
-      
-      {/* Interactive controls overlay */}
+      {/* Zoom Controls */}
       <div className="absolute bottom-4 left-4 flex gap-2 z-10">
-        <button 
-          onClick={() => setZoom(z => Math.min(z + 0.1, 3.0))}
-          className="w-7 h-7 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white font-bold text-xs cursor-pointer flex items-center justify-center"
-        >
-          +
-        </button>
-        <button 
-          onClick={() => setZoom(z => Math.max(z - 0.1, 0.5))}
-          className="w-7 h-7 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white font-bold text-xs cursor-pointer flex items-center justify-center"
-        >
-          -
-        </button>
-        <button 
+        <button
+          onClick={() => setZoom(z => Math.min(z + 0.15, 3.0))}
+          className="w-8 h-8 rounded-[8px] bg-white border border-[#E7ECF3] text-[#0B1F4D] hover:border-[#1A2F63]/40 font-bold text-sm cursor-pointer flex items-center justify-center shadow-sm transition-all"
+        >+</button>
+        <button
+          onClick={() => setZoom(z => Math.max(z - 0.15, 0.4))}
+          className="w-8 h-8 rounded-[8px] bg-white border border-[#E7ECF3] text-[#0B1F4D] hover:border-[#1A2F63]/40 font-bold text-sm cursor-pointer flex items-center justify-center shadow-sm transition-all"
+        >−</button>
+        <button
           onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-          className="px-2 h-7 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-3xs font-semibold cursor-pointer flex items-center justify-center"
-        >
-          Reset View
-        </button>
+          className="px-3 h-8 rounded-[8px] bg-white border border-[#E7ECF3] text-[#0B1F4D] hover:border-[#1A2F63]/40 text-[11px] font-bold cursor-pointer flex items-center justify-center shadow-sm transition-all"
+        >Reset View</button>
+      </div>
+
+      {/* Hint */}
+      <div className="absolute top-3 right-3 z-10 bg-white/80 border border-[#E7ECF3] rounded-[8px] px-2.5 py-1 text-[10px] font-semibold text-[#64748B] pointer-events-none">
+        Ctrl + scroll to zoom
       </div>
 
       <svg className="w-full h-full">
-        {/* Background Grid Pattern */}
+        {/* Dot Grid Pattern */}
         <defs>
-          <pattern id="bg-grid-pattern" width="30" height="30" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="1.5" fill="#1e293b" />
+          <pattern id="ksp-grid-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="1.5" cy="1.5" r="1" fill="#CBD5E1" opacity="0.5" />
           </pattern>
         </defs>
-        <rect 
-          id="bg-grid"
-          width="100%" 
-          height="100%" 
-          fill="url(#bg-grid-pattern)" 
-          x={pan.x}
-          y={pan.y}
-        />
+        <rect id="bg-grid" width="100%" height="100%" fill="url(#ksp-grid-dots)" />
 
-        {/* Translation Transform Wrapper */}
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          
-          {/* Connection Edges lines */}
-          {edges.map((edge, i) => {
-            const sourceNode = nodes.find(n => n.id === edge.source);
-            const targetNode = nodes.find(n => n.id === edge.target);
-            if (!sourceNode || !targetNode) return null;
 
+          {/* Edges */}
+          {edges.map((edge, i) => {
+            const src = nodes.find(n => n.id === edge.source);
+            const tgt = nodes.find(n => n.id === edge.target);
+            if (!src || !tgt) return null;
+            const mx = (src.x + tgt.x) / 2;
+            const my = (src.y + tgt.y) / 2;
             return (
               <g key={i}>
                 <line
-                  x1={sourceNode.x}
-                  y1={sourceNode.y}
-                  x2={targetNode.x}
-                  y2={targetNode.y}
-                  stroke="#334155"
-                  strokeWidth="1.5"
+                  x1={src.x} y1={src.y}
+                  x2={tgt.x} y2={tgt.y}
+                  stroke="#CBD5E1"
+                  strokeWidth="1.2"
+                  strokeDasharray={edge.label === 'Repeat Co-Offender' ? '4,3' : undefined}
                 />
-                {/* Edge Label */}
                 <text
-                  x={(sourceNode.x + targetNode.x) / 2}
-                  y={(sourceNode.y + targetNode.y) / 2 - 4}
-                  fill="#475569"
+                  x={mx} y={my - 4}
+                  fill="#94A3B8"
                   fontSize="5"
                   textAnchor="middle"
-                  className="font-mono bg-slate-950 px-1"
+                  className="font-mono pointer-events-none"
                 >
                   {edge.label}
                 </text>
@@ -174,14 +156,14 @@ export default function GraphCanvas({
             );
           })}
 
-          {/* Node items circles */}
+          {/* Nodes */}
           {nodes.map((node) => {
             const isSelected = selectedNode?.id === node.id;
-            const isMatch = matchesSearch(node.label);
-            const color = getNodeColor(node.type, node.risk);
+            const isMatch    = matchesSearch(node.label);
+            const color      = getNodeColor(node.type, node.risk);
 
             return (
-              <g 
+              <g
                 key={node.id}
                 onMouseDown={(e) => {
                   e.stopPropagation();
@@ -190,88 +172,74 @@ export default function GraphCanvas({
                 }}
                 className="cursor-pointer group/node"
               >
-                {/* Search Match Halo */}
+                {/* Search Highlight Halo */}
                 {isMatch && (
-                  <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r="18"
-                    fill="transparent"
-                    stroke="#818cf8"
-                    strokeWidth="2.5"
+                  <circle cx={node.x} cy={node.y} r="20"
+                    fill="transparent" stroke="#818CF8" strokeWidth="2"
                     className="animate-pulse"
                   />
                 )}
 
-                {/* Selected Node Halo */}
+                {/* Selected Ring */}
                 {isSelected && (
-                  <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r="15"
-                    fill="transparent"
-                    stroke="#ffffff"
-                    strokeWidth="1.5"
+                  <circle cx={node.x} cy={node.y} r="16"
+                    fill="transparent" stroke={color} strokeWidth="2" opacity="0.5"
                   />
                 )}
 
-                {/* Main Node circle */}
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="10"
-                  fill="#090d16"
+                {/* White drop shadow behind node */}
+                <circle cx={node.x} cy={node.y + 1} r="11"
+                  fill="rgba(0,0,0,0.08)" />
+
+                {/* Node circle */}
+                <circle cx={node.x} cy={node.y} r="11"
+                  fill="white"
                   stroke={color}
                   strokeWidth="2.5"
-                  className="group-hover/node:stroke-white transition-colors duration-200"
+                  className="group-hover/node:stroke-[3px] transition-all duration-150"
                 />
 
-                {/* Initials Text */}
+                {/* Initials */}
                 <text
-                  x={node.x}
-                  y={node.y + 2.5}
-                  fill="#ffffff"
+                  x={node.x} y={node.y + 3}
+                  fill={color}
                   fontSize="7"
                   fontWeight="bold"
                   textAnchor="middle"
                   className="select-none pointer-events-none"
                 >
-                  {node.label.substring(0, 2)}
+                  {node.label.substring(0, 2).toUpperCase()}
                 </text>
 
-                {/* Name Label */}
+                {/* Label */}
                 <text
-                  x={node.x}
-                  y={node.y + 18}
-                  fill="#e2e8f0"
+                  x={node.x} y={node.y + 22}
+                  fill="#374151"
                   fontSize="6.5"
+                  fontWeight="600"
                   textAnchor="middle"
-                  className="font-sans font-semibold opacity-80 group-hover/node:opacity-100 transition-opacity"
+                  className="select-none pointer-events-none opacity-80 group-hover/node:opacity-100 transition-opacity"
                 >
                   {node.label}
                 </text>
 
-                {/* Hover Tooltip Overlay Box */}
-                <g className="opacity-0 group-hover/node:opacity-100 pointer-events-none transition-opacity duration-200">
+                {/* Hover Tooltip */}
+                <g className="opacity-0 group-hover/node:opacity-100 pointer-events-none transition-opacity duration-150">
                   <rect
-                    x={node.x - 45}
-                    y={node.y - 32}
-                    width="90"
-                    height="18"
-                    rx="3"
-                    fill="#0f172a"
-                    stroke="#334155"
-                    strokeWidth="1"
+                    x={node.x - 40} y={node.y - 34}
+                    width="80" height="16"
+                    rx="4"
+                    fill="#0B1F4D"
+                    opacity="0.9"
                   />
                   <text
-                    x={node.x}
-                    y={node.y - 20}
-                    fill="#94a3b8"
+                    x={node.x} y={node.y - 22}
+                    fill="#E2E8F0"
                     fontSize="5.5"
                     textAnchor="middle"
                     className="font-mono"
                   >
-                    Type: {node.type}
+                    {node.type}{node.risk ? ` · ${node.risk}` : ''}
                   </text>
                 </g>
 

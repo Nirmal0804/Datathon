@@ -56,7 +56,7 @@ import {
 } from './components/mockData';
 
 // Map modules that should be full-height (no scroll container)
-const FULL_HEIGHT_MODULES = new Set(['network']);
+const FULL_HEIGHT_MODULES = new Set(['map']);
 
 export default function DashboardLayout({ onLogout, role }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -134,7 +134,6 @@ export default function DashboardLayout({ onLogout, role }) {
       return (
         <div className="h-[calc(100vh-4rem)] w-full p-4 sm:p-6">
           {activeModule === 'map'     && <CrimeMapLayout role={role} />}
-          {activeModule === 'network' && <NetworkAnalysisLayout />}
         </div>
       );
     }
@@ -231,6 +230,7 @@ export default function DashboardLayout({ onLogout, role }) {
         </div>
       ),
       map:       <CrimeMapLayout role={role} />,
+      network:   <NetworkAnalysisLayout />,
       district:  <DistrictIntelligenceLayout onNavigate={setActiveModule} />,
       analytics: <AnalyticsLayout />,
       reports:   <ReportsLayout role={role} />,
