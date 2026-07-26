@@ -7,32 +7,67 @@ import {
 } from 'lucide-react';
 import { useToast } from '../../components/ui/Toast';
 
-// ─── Initial State Constants ───────────────────────────────────────────────────
-const INITIAL_PROFILE = {
-  fullName: 'Rakesh Kumar',
-  badgeNumber: 'KSP-2019-4821',
-  rank: 'Inspector',
-  department: 'Crime Branch',
-  email: 'rakesh.kumar@ksp.gov.in',
-  phone: '9876543210',
-  district: 'Bengaluru Urban',
-  policeStation: 'Bengaluru Central Police Station',
-  avatarUrl: null, // null uses default SVG / Initials avatar
+// ─── Initial State Helpers ───────────────────────────────────────────────────
+const getRoleDefaultProfile = (role) => {
+  if (role === 'admin') {
+    return {
+      fullName: 'Super Admin S. Kumar',
+      badgeNumber: 'KSP-2019-4821',
+      rank: 'System Administrator',
+      department: 'Intelligence Wing',
+      email: 's.kumar@ksp.gov.in',
+      phone: '9876543210',
+      district: 'Bengaluru Urban',
+      policeStation: 'State Tech HQ',
+      avatarUrl: null,
+    };
+  }
+  if (role === 'analyst') {
+    return {
+      fullName: 'Analyst S. Rao',
+      badgeNumber: 'KSP-2021-9012',
+      rank: 'DSP',
+      department: 'Intelligence Wing',
+      email: 's.rao@ksp.gov.in',
+      phone: '9876543211',
+      district: 'Bengaluru Urban',
+      policeStation: 'State Command HQ',
+      avatarUrl: null,
+    };
+  }
+  return {
+    fullName: 'Rakesh Kumar',
+    badgeNumber: 'KSP-2022-3341',
+    rank: 'Inspector',
+    department: 'Law & Order',
+    email: 'rakesh.kumar@ksp.gov.in',
+    phone: '9876543210',
+    district: 'Mysuru',
+    policeStation: 'Mysuru Rural Police',
+    avatarUrl: null,
+  };
 };
 
-const RANKS = ['Constable', 'Sub-Inspector', 'Inspector', 'DSP', 'SP', 'DCP', 'ADGP', 'DG&IGP'];
+const RANKS = ['Constable', 'Sub-Inspector', 'Inspector', 'DSP', 'SP', 'DCP', 'ADGP', 'DG&IGP', 'System Administrator'];
 const DEPARTMENTS = ['Crime Branch', 'Intelligence Wing', 'Cyber Crime', 'Law & Order', 'Traffic Police', 'Special Task Force'];
 const DISTRICTS = ['Bengaluru Urban', 'Mysuru', 'Hubballi-Dharwad', 'Mangaluru', 'Belagavi', 'Kalaburagi', 'Udupi', 'Shimoga', 'Tumakuru', 'Ballari'];
 
-export default function SettingsLayout() {
+export default function SettingsLayout({ role = 'admin' }) {
   const { addToast } = useToast();
 
-  // Active Navigation Section
-  const [activeSection, setActiveSection] = useState('profile');
+  const roleDefault = useMemo(() => getRoleDefaultProfile(role), [role]);
 
-  // Profile Form State
-  const [profile, setProfile] = useState(INITIAL_PROFILE);
-  const [initialProfileSnapshot, setInitialProfileSnapshot] = useState(INITIAL_PROFILE);
+  // Profile Form State initialized from localStorage or role defaults
+  const [profile, setProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_profile');
+      if (saved) {
+        return { ...roleDefault, ...JSON.parse(saved) };
+      }
+    } catch {}
+    return roleDefault;
+  });
+  const [initialProfileSnapshot, setInitialProfileSnapshot] = useState(profile);
   const [avatarPreview, setAvatarPreview] = useState(null);
 
   // Form Validation State
@@ -260,6 +295,9 @@ export default function SettingsLayout() {
     }
 
     setInitialProfileSnapshot(profile);
+    localStorage.setItem('ksp_user_profile', JSON.stringify(profile));
+    window.dispatchEvent(new Event('ksp_profile_updated'));
+    window.dispatchEvent(new Event('ksp_avatar_updated'));
     addToast({
       title: 'Profile Saved',
       message: 'Personal identity and department records updated successfully.',
@@ -418,7 +456,7 @@ export default function SettingsLayout() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
 
         {/* ── LEFT SIDEBAR (Permanent Settings Nav Card) ────────────────────── */}
-        <div className="lg:col-span-1 bg-white border border-[#E7ECF3] rounded-[24px] p-3 shadow-sm space-y-1.5 sticky top-24">
+        <div className="lg:col-span-1 bg-white border border-[#E7ECF3] rounded-[24px] p-3 shadow-sm space-y-1.5">
           <div className="px-3 py-2 border-b border-[#E7ECF3] mb-1">
             <h2 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Settings Navigation</h2>
           </div>

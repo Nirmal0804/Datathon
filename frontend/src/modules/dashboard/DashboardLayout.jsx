@@ -147,7 +147,7 @@ export default function DashboardLayout({ onLogout, role }) {
         alerts:         <FieldOfficerAlerts />,
         map:            <CrimeMapLayout role={role} />,
         hotspots:       <HotspotDetectionLayout onNavigate={setActiveModule} />,
-        settings:       <SettingsLayout />,
+        settings:       <SettingsLayout role={role} />,
       };
       
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
@@ -169,7 +169,7 @@ export default function DashboardLayout({ onLogout, role }) {
         system_health: <AdminSystemHealth />,
         config:        <AdminConfiguration />,
         map:           <CrimeMapLayout role={role} />,
-        settings:      <SettingsLayout />,
+        settings:      <SettingsLayout role={role} />,
       };
       
       const content = adminModuleMap[activeModule] || adminModuleMap.overview;
@@ -235,7 +235,7 @@ export default function DashboardLayout({ onLogout, role }) {
       reports:   <ReportsLayout role={role} />,
       correlation: <SocioEconomicCorrelation role={role} />,
       hotspots:  <AnalystHotspotLayout onNavigate={setActiveModule} />,
-      settings:  <SettingsLayout />,
+      settings:  <SettingsLayout role={role} />,
     };
 
     const content = moduleMap[activeModule] || moduleMap.overview;

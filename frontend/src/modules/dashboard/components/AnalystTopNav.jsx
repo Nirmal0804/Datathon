@@ -33,6 +33,33 @@ const ADMIN_NAV_ITEMS = [
 ];
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
+  const [customProfile, setCustomProfile] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [avatarUrl, setAvatarUrl] = React.useState(localStorage.getItem('ksp_user_avatar'));
+
+  React.useEffect(() => {
+    const handleSync = () => {
+      try {
+        const saved = localStorage.getItem('ksp_user_profile');
+        if (saved) setCustomProfile(JSON.parse(saved));
+      } catch {}
+      setAvatarUrl(localStorage.getItem('ksp_user_avatar'));
+    };
+
+    window.addEventListener('ksp_profile_updated', handleSync);
+    window.addEventListener('ksp_avatar_updated', handleSync);
+    return () => {
+      window.removeEventListener('ksp_profile_updated', handleSync);
+      window.removeEventListener('ksp_avatar_updated', handleSync);
+    };
+  }, []);
+
   const navItems = role === 'officer' 
     ? OFFICER_NAV_ITEMS 
     : role === 'admin' 
@@ -45,11 +72,18 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     ? 'SYSTEM ADMINISTRATION PLATFORM' 
     : 'INTELLIGENCE PLATFORM';
 
-  const profile = role === 'officer' 
-    ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer', station: 'Mysuru Rural Police' }
+  const defaultProfile = role === 'officer' 
+    ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }
     : role === 'admin' 
     ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
-    : { initials: 'JD', name: 'Inspector Patil', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+    : { initials: 'AR', name: 'Analyst S. Rao', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+
+  const profileName = customProfile?.fullName || defaultProfile.name;
+  const profileRank = customProfile?.rank || defaultProfile.roleText;
+  const profileStation = customProfile?.policeStation || defaultProfile.station;
+  const profileInitials = profileName
+    ? profileName.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()
+    : defaultProfile.initials;
 
   return (
     <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-6 shrink-0 shadow-sm border border-white/10 w-full mb-3">
@@ -89,18 +123,22 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
         })}
       </div>
 
-      {/* Right Section: Relocated Officer Profile Card (Replacing Search Bar) */}
+      {/* Right Section: Relocated Officer Profile Card */}
       <div className="flex items-center gap-3 pl-6 border-l border-white/10 shrink-0 ml-auto h-[40px]">
         <div className="hidden sm:flex items-center gap-2.5 bg-white/10 border border-white/15 px-3 py-1.5 rounded-full shadow-xs text-white">
           <div className="relative">
-            <div className="w-7 h-7 rounded-full bg-[#C79A2B] text-[#0B1F4D] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs">
-              {profile.initials}
+            <div className="w-7 h-7 rounded-full bg-[#C79A2B] text-[#0B1F4D] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
+              ) : (
+                profileInitials
+              )}
             </div>
             <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#0B1F4D]" />
           </div>
           <div className="text-left min-w-0 pr-1">
-            <p className="text-xs font-bold leading-tight text-white truncate">{profile.name}</p>
-            <p className="text-[10px] text-[#C79A2B] font-semibold truncate">{profile.roleText} • {profile.station}</p>
+            <p className="text-xs font-bold leading-tight text-white truncate">{profileName}</p>
+            <p className="text-[10px] text-[#C79A2B] font-semibold truncate">{profileRank} • {profileStation}</p>
           </div>
         </div>
 
