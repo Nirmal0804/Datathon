@@ -25,7 +25,7 @@ function SkeletonDashboard() {
   );
 }
 
-export default function HotspotDetectionLayout({ onNavigate }) {
+export default function HotspotDetectionLayout({ onNavigate, role }) {
   const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +57,23 @@ export default function HotspotDetectionLayout({ onNavigate }) {
       endDate: ''
     });
     setSearchQuery('');
+  };
+
+  const handleExportData = () => {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const headers = 'Hotspot ID,Police Station,District,Dominant Crime,Risk Level,Patrol Priority,Incident Count,Last Incident Date\n';
+    const csvContent = filteredHotspots.map(h =>
+      `"${h.hotspotId}","${h.policeStation}","${h.district}","${h.dominantCrime}","${h.riskLevel}","${h.patrolPriority}","${h.crimeCount}","${h.lastIncidentDate}"`
+    ).join('\n');
+
+    const blob = new Blob([headers + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Hotspot_Detection_Report_${todayStr}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Perform local filtering on MOCK_HOTSPOTS
@@ -206,6 +223,8 @@ export default function HotspotDetectionLayout({ onNavigate }) {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onReset={handleResetFilters}
+            onExport={handleExportData}
+            role={role}
           />
 
           {/* 4 & 5. 70/30 Split Grid (Registry Table & Right Inspector Panel) */}
@@ -237,6 +256,7 @@ export default function HotspotDetectionLayout({ onNavigate }) {
                 hotspot={selectedHotspot}
                 onClose={() => setSelectedHotspot(null)}
                 onNavigate={onNavigate}
+                role={role}
               />
               
               {selectedHotspot && (

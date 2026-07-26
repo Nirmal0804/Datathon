@@ -145,7 +145,7 @@ export default function DashboardLayout({ onLogout, role }) {
         assigned_cases: <FieldOfficerAssignedCases />,
         fir_management: <FieldOfficerFIRManagement />,
         alerts: <FieldOfficerAlerts />,
-        hotspots: <HotspotDetectionLayout role={role} />,
+        hotspots: <HotspotDetectionLayout role={role} onNavigate={setActiveModule} />,
         map: <CrimeMapLayout role={role} />,
         settings: <SettingsLayout role={role} />
       };

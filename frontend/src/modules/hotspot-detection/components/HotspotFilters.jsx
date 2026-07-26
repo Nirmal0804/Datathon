@@ -8,6 +8,7 @@ export default function HotspotFilters({
   searchQuery, 
   setSearchQuery, 
   onReset,
+  onExport,
   role
 }) {
   const isAnalyst = role === 'analyst';
@@ -131,9 +132,10 @@ export default function HotspotFilters({
         Reset
       </button>
       
-      {/* Export Button (Optional, added for consistency) */}
+      {/* Export Button */}
       <button
         type="button"
+        onClick={onExport}
         title="Export Data"
         className="h-8 px-3 rounded-lg bg-[#0B1F4D] text-white hover:bg-[#0B1F4D]/90 flex items-center justify-center transition-colors cursor-pointer shrink-0 font-bold text-[10px] uppercase tracking-wider"
       >
