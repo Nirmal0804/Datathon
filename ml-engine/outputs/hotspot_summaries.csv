@@ -1,0 +1,50 @@
+Cluster_ID,Centroid_Latitude,Centroid_Longitude,Total_Crimes,Total_Severity_Score,Avg_Severity_Per_Crime,Primary_Crime_Head,Primary_District
+10,11.858652,77.054035,110,260.5,2.37,Dacoity,Chamarajanagar
+4,17.898477,77.381603,65,188.0,2.89,Assault,Bidar
+16,12.004194,76.834477,70,172.5,2.46,Cyber Crime,Chamarajanagar
+0,13.103613,77.471765,35,98.5,2.81,Cyber Crime,Bengaluru Urban
+7,15.057883,77.071304,34,93.0,2.74,Assault,Ballari
+9,16.042157,75.69456,23,61.5,2.67,Theft,Bagalkote
+5,13.129009,77.543989,26,60.5,2.33,Cyber Crime,Bengaluru Rural
+8,15.845896,74.345454,22,56.0,2.55,Assault,Belagavi
+1,13.15213,77.628816,21,55.0,2.62,Cyber Crime,Bengaluru Urban
+14,13.160188,77.54023,19,45.0,2.37,Fraud,Bengaluru Rural
+25,14.992634,77.091302,17,42.5,2.5,Assault,Ballari
+2,13.178092,77.588034,18,42.0,2.33,Fraud,Bengaluru Rural
+12,17.762822,77.57674,20,42.0,2.1,Fraud,Bidar
+19,13.342182,77.614126,15,40.5,2.7,Assault,Bengaluru Rural
+20,18.043616,77.443851,14,38.0,2.71,Theft,Bidar
+11,15.076784,77.063384,13,37.5,2.88,Assault,Ballari
+39,15.974137,74.542947,10,37.0,3.7,NDPS,Belagavi
+13,13.181236,77.56468,17,36.5,2.15,Theft,Bengaluru Rural
+29,13.128477,77.484663,15,35.0,2.33,Cyber Crime,Bengaluru Rural
+45,17.95477,77.707426,11,34.0,3.09,Murder,Bidar
+22,15.823624,74.347869,13,34.0,2.62,Burglary,Belagavi
+3,12.872107,77.404878,13,33.0,2.54,Fraud,Bengaluru Urban
+23,15.708651,74.324087,14,33.0,2.36,Dacoity,Belagavi
+24,17.987672,77.708092,11,30.5,2.77,Assault,Bidar
+15,11.9361,76.777008,13,30.0,2.31,Fraud,Chamarajanagar
+18,13.077079,77.488284,13,30.0,2.31,Cyber Crime,Bengaluru Urban
+38,14.989128,76.893714,10,29.0,2.9,Assault,Ballari
+43,11.870272,76.810402,14,28.0,2.0,Theft,Chamarajanagar
+35,12.043324,77.080022,10,28.0,2.8,Cyber Crime,Chamarajanagar
+36,15.706661,74.397887,10,27.5,2.75,Burglary,Belagavi
+44,12.870201,77.387632,12,27.5,2.29,Cyber Crime,Bengaluru Urban
+40,17.919995,77.604747,10,26.0,2.6,Assault,Bidar
+32,13.094494,77.586296,11,26.0,2.36,Cyber Crime,Bengaluru Rural
+41,13.358859,77.613566,8,25.5,3.19,Assault,Bengaluru Rural
+33,15.744584,74.492998,10,24.5,2.45,Assault,Belagavi
+42,13.092802,77.414339,10,24.5,2.45,Dacoity,Bengaluru Rural
+17,15.091593,77.041817,10,24.0,2.4,Assault,Ballari
+26,13.356718,77.596184,10,23.5,2.35,Fraud,Bengaluru Rural
+34,17.930916,77.703267,11,23.0,2.09,Robbery,Bidar
+37,17.98839,77.485958,10,22.5,2.25,Cyber Crime,Bidar
+21,11.770272,76.894547,10,21.5,2.15,Fraud,Chamarajanagar
+47,17.978333,77.340877,10,20.5,2.05,Assault,Bidar
+46,16.316706,75.849253,10,20.0,2.0,Fraud,Bagalkote
+27,15.858808,74.327598,7,20.0,2.86,NDPS,Belagavi
+30,13.130736,77.782368,10,19.5,1.95,Cyber Crime,Bengaluru Urban
+6,12.784448,77.419036,10,18.5,1.85,Fraud,Bengaluru Urban
+48,12.813398,77.569133,11,18.5,1.68,Cyber Crime,Bengaluru Urban
+31,13.107943,77.496728,9,18.0,2.0,Fraud,Bengaluru Rural
+28,12.791479,77.542922,10,15.5,1.55,Cyber Crime,Bengaluru Urban
