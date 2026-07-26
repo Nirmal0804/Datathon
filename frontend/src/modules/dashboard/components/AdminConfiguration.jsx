@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import {
   Settings, Save, Lock, Database, Server,
-  ShieldCheck, UserCheck, CheckCircle, Clock, X,
-  ChevronDown, Minus, Plus
+  UserCheck, CheckCircle, Clock, X,
+  ChevronDown, Minus, Plus, Edit3
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
 /** Pill toggle: green when on, grey when off */
-function Toggle({ checked, onChange, id }) {
+function Toggle({ checked, onChange, id, disabled }) {
   return (
     <button
       type="button"
       id={id}
+      disabled={disabled}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
         checked ? 'bg-emerald-500' : 'bg-[#CBD5E1]'
-      }`}
+      } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
     >
       <span
         className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ${
@@ -42,14 +43,17 @@ function SettingRow({ label, description, children, divider = true }) {
 }
 
 /** Styled select dropdown */
-function ConfigSelect({ value, onChange, options, id }) {
+function ConfigSelect({ value, onChange, options, id, disabled }) {
   return (
     <div className="relative">
       <select
         id={id}
+        disabled={disabled}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none h-8 pl-3 pr-8 rounded-[10px] border border-[#E7ECF3] bg-[#F8F9FB] text-[11px] font-bold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D]/20 cursor-pointer"
+        className={`appearance-none h-8 pl-3 pr-8 rounded-[10px] border border-[#E7ECF3] bg-[#F8F9FB] text-[11px] font-bold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D]/20 cursor-pointer ${
+          disabled ? 'opacity-60 cursor-not-allowed' : ''
+        }`}
       >
         {options.map(({ value: v, label }) => (
           <option key={v} value={v}>{label}</option>
@@ -61,16 +65,16 @@ function ConfigSelect({ value, onChange, options, id }) {
 }
 
 /** Numeric stepper */
-function Stepper({ value, onChange, min = 1, max = 999 }) {
+function Stepper({ value, onChange, min = 1, max = 999, disabled }) {
   return (
-    <div className="flex items-center gap-1 border border-[#E7ECF3] rounded-[10px] bg-[#F8F9FB] overflow-hidden h-8">
-      <button type="button" onClick={() => onChange(Math.max(min, value - 1))}
-        className="w-8 h-full flex items-center justify-center hover:bg-[#E7ECF3] transition-colors cursor-pointer">
+    <div className={`flex items-center gap-1 border border-[#E7ECF3] rounded-[10px] bg-[#F8F9FB] overflow-hidden h-8 ${disabled ? 'opacity-60' : ''}`}>
+      <button type="button" disabled={disabled} onClick={() => onChange(Math.max(min, value - 1))}
+        className="w-8 h-full flex items-center justify-center hover:bg-[#E7ECF3] transition-colors cursor-pointer disabled:cursor-not-allowed">
         <Minus className="w-3 h-3 text-[#64748B]" />
       </button>
       <span className="w-8 text-center text-[11px] font-extrabold text-[#0F172A]">{value}</span>
-      <button type="button" onClick={() => onChange(Math.min(max, value + 1))}
-        className="w-8 h-full flex items-center justify-center hover:bg-[#E7ECF3] transition-colors cursor-pointer">
+      <button type="button" disabled={disabled} onClick={() => onChange(Math.min(max, value + 1))}
+        className="w-8 h-full flex items-center justify-center hover:bg-[#E7ECF3] transition-colors cursor-pointer disabled:cursor-not-allowed">
         <Plus className="w-3 h-3 text-[#64748B]" />
       </button>
     </div>
@@ -78,17 +82,18 @@ function Stepper({ value, onChange, min = 1, max = 999 }) {
 }
 
 /** Range slider with value display */
-function RangeSlider({ value, onChange, min = 10, max = 120, unit = 'min' }) {
+function RangeSlider({ value, onChange, min = 10, max = 120, unit = 'min', disabled }) {
   const pct = ((value - min) / (max - min)) * 100;
   return (
-    <div className="flex items-center gap-3 w-48">
+    <div className={`flex items-center gap-3 w-48 ${disabled ? 'opacity-60' : ''}`}>
       <input
         type="range"
+        disabled={disabled}
         min={min}
         max={max}
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value))}
-        className="flex-1 h-1.5 appearance-none rounded-full bg-[#E7ECF3] cursor-pointer accent-[#0B1F4D]"
+        className="flex-1 h-1.5 appearance-none rounded-full bg-[#E7ECF3] cursor-pointer accent-[#0B1F4D] disabled:cursor-not-allowed"
         style={{ background: `linear-gradient(to right, #0B1F4D ${pct}%, #E7ECF3 ${pct}%)` }}
       />
       <span className="text-[11px] font-extrabold text-[#0B1F4D] w-14 text-right">{value} {unit}</span>
@@ -97,15 +102,16 @@ function RangeSlider({ value, onChange, min = 10, max = 120, unit = 'min' }) {
 }
 
 /** Numeric input */
-function NumInput({ value, onChange, id, suffix }) {
+function NumInput({ value, onChange, id, suffix, disabled }) {
   return (
-    <div className="flex items-center gap-1.5 border border-[#E7ECF3] rounded-[10px] bg-[#F8F9FB] px-2.5 h-8 w-36">
+    <div className={`flex items-center gap-1.5 border border-[#E7ECF3] rounded-[10px] bg-[#F8F9FB] px-2.5 h-8 w-36 ${disabled ? 'opacity-60' : ''}`}>
       <input
         id={id}
+        disabled={disabled}
         type="number"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value) || 0)}
-        className="flex-1 min-w-0 bg-transparent text-[11px] font-extrabold text-[#0F172A] focus:outline-none"
+        className="flex-1 min-w-0 bg-transparent text-[11px] font-extrabold text-[#0F172A] focus:outline-none disabled:cursor-not-allowed"
       />
       {suffix && <span className="text-[10px] text-[#64748B] font-semibold shrink-0">{suffix}</span>}
     </div>
@@ -131,6 +137,9 @@ function ConfigCard({ icon: Icon, title, iconBg = 'bg-[#0B1F4D]', children }) {
 export default function AdminConfiguration() {
   const { addToast } = useToast();
 
+  /* ── Edit Mode state ── */
+  const [isEditing, setIsEditing] = useState(false);
+
   /* ── Existing state preserved ── */
   const [config, setConfig] = useState({
     timeout: 30,
@@ -140,7 +149,7 @@ export default function AdminConfiguration() {
     backupCron: '0 0 * * *',
   });
 
-  /* ── Extended UI state (no backend integration) ── */
+  /* ── Extended UI state ── */
   const [sec, setSec] = useState({
     mfa: true,
     passwordPolicy: 'strong',
@@ -183,10 +192,13 @@ export default function AdminConfiguration() {
 
   const [saved, setSaved] = useState(true);
 
-  const markDirty = () => setSaved(false);
+  const markDirty = () => {
+    setSaved(false);
+    setIsEditing(true);
+  };
 
   const handleSave = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     // Sync extended state back to original config for backend compatibility
     setConfig(prev => ({
       ...prev,
@@ -197,6 +209,7 @@ export default function AdminConfiguration() {
       backupCron: db.backupCron,
     }));
     setSaved(true);
+    setIsEditing(false); // Disappear bottom action bar after saving
     addToast({
       title: 'Configuration Saved',
       message: 'System parameters have been committed and synced across precinct hubs.',
@@ -211,12 +224,18 @@ export default function AdminConfiguration() {
     setDb({ autoBackup: true, backupCron: '0 0 * * *', backupFreq: 'daily', retention: '30', disasterRecovery: false });
     setOps({ maintenanceMode: false, readOnly: false, scheduledMaint: true, maintWindow: '2026-07-27T02:00', notifications: true });
     setSaved(true);
+    setIsEditing(false); // Disappear bottom action bar after discarding
+    addToast({
+      title: 'Changes Discarded',
+      message: 'Reverted configuration parameters to previous saved state.',
+      type: 'info',
+    });
   };
 
   const s = (fn) => (...args) => { fn(...args); markDirty(); };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto pb-28">
+    <div className={`w-full max-w-[1600px] mx-auto ${isEditing ? 'pb-28' : 'pb-12'}`}>
 
       {/* ── Page Header ──────────────────────────────────────────────────── */}
       <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 min-h-[88px]">
@@ -231,6 +250,7 @@ export default function AdminConfiguration() {
             </p>
           </div>
         </div>
+
         <div className="flex items-center gap-3">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border ${
             saved
@@ -242,6 +262,22 @@ export default function AdminConfiguration() {
               : <><Clock className="w-3.5 h-3.5" /> Unsaved Changes</>
             }
           </span>
+
+          {!isEditing ? (
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              className="h-10 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors duration-150 flex items-center gap-2 cursor-pointer shadow-sm"
+            >
+              <Edit3 className="w-4 h-4 text-[#C79A2B]" />
+              Edit Configuration
+            </button>
+          ) : (
+            <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#0B1F4D] animate-pulse" />
+              Editing Mode Active
+            </span>
+          )}
         </div>
       </div>
 
@@ -526,40 +562,42 @@ export default function AdminConfiguration() {
           </div>
         </div>
 
-        {/* ── Sticky Action Bar ─────────────────────────────────────────── */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-[#E7ECF3] shadow-lg">
-          <div className="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between gap-4">
-            {/* Left — status */}
-            <div>
-              <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Configuration Status</p>
-              <p className="text-xs font-extrabold text-[#0F172A] mt-0.5 flex items-center gap-1.5">
-                {saved
-                  ? <><CheckCircle className="w-3.5 h-3.5 text-emerald-500" /> All Changes Synced · Last saved: Today 11:42 AM</>
-                  : <><Clock className="w-3.5 h-3.5 text-amber-500" /> Unsaved Changes Pending</>
-                }
-              </p>
-            </div>
+        {/* ── Sticky Action Bar — Only appears when isEditing is true ── */}
+        {isEditing && (
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E7ECF3] shadow-lg animate-in slide-in-from-bottom-3 duration-200">
+            <div className="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between gap-4">
+              {/* Left — status */}
+              <div>
+                <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Configuration Status</p>
+                <p className="text-xs font-extrabold text-[#0F172A] mt-0.5 flex items-center gap-1.5">
+                  {saved
+                    ? <><CheckCircle className="w-3.5 h-3.5 text-emerald-500" /> All Changes Synced · Ready to edit</>
+                    : <><Clock className="w-3.5 h-3.5 text-amber-500" /> Unsaved Changes Pending</>
+                  }
+                </p>
+              </div>
 
-            {/* Right — actions */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleDiscard}
-                className="h-9 px-5 rounded-full border border-[#E7ECF3] bg-white text-xs font-extrabold text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
-              >
-                <X className="w-3.5 h-3.5" />
-                Discard Changes
-              </button>
-              <button
-                type="submit"
-                className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white text-xs font-extrabold hover:bg-[#0F2A6B] transition-colors duration-150 cursor-pointer flex items-center gap-1.5 shadow-md"
-              >
-                <Save className="w-3.5 h-3.5" />
-                Save Configuration
-              </button>
+              {/* Right — actions */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleDiscard}
+                  className="h-9 px-5 rounded-full border border-[#E7ECF3] bg-white text-xs font-extrabold text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  Discard Changes
+                </button>
+                <button
+                  type="submit"
+                  className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white text-xs font-extrabold hover:bg-[#0F2A6B] transition-colors duration-150 cursor-pointer flex items-center gap-1.5 shadow-md"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  Save Configuration
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </form>
     </div>
   );
