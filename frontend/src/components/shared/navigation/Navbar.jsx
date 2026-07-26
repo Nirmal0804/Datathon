@@ -14,7 +14,7 @@ export default function Navbar({ onLoginClick }) {
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 bg-[#0B2341] ${scrolled ? 'py-3 shadow-md border-b border-[#0B2341]/40' : 'py-4'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
             <img 
