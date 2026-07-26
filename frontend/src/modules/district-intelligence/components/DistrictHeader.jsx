@@ -40,21 +40,28 @@ export default function DistrictHeader() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-6">
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <MapPin className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold text-white">District Intelligence</h1>
+    <div className="bg-white border border-[#E7ECF3] rounded-[22px] p-5 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+        <div className="w-12 h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm">
+          <MapPin className="w-6 h-6 text-[#C79A2B]" />
         </div>
-        <p className="text-sm text-slate-400">In-depth analytics and AI risk profiling at the district level.</p>
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">District Intelligence</h1>
+            <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3] flex items-center gap-1.5">
+              <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+            </div>
+          </div>
+          <p className="text-xs font-semibold text-[#64748B]">Command center for district-level crime intelligence.</p>
+        </div>
       </div>
       
-      <div className="flex items-center gap-3 w-full sm:w-auto">
-        <div className="relative flex-1 sm:w-64">
+      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+        <div className="relative w-full sm:w-48">
           <select 
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="w-full appearance-none bg-slate-800 border border-slate-700 rounded-md py-2 pl-4 pr-10 text-sm text-white focus:outline-none focus:border-primary transition-colors cursor-pointer font-medium"
+            className="w-full appearance-none bg-[#F8F9FB] border border-[#E7ECF3] hover:border-[#1A2F63]/30 rounded-[12px] py-2 pl-4 pr-10 text-xs font-bold text-[#0B1F4D] focus:outline-none transition-all cursor-pointer shadow-sm"
           >
             <option>Bengaluru City</option>
             <option>Mysuru</option>
@@ -62,15 +69,15 @@ export default function DistrictHeader() {
             <option>Mangaluru</option>
             <option>Belagavi</option>
           </select>
-          <ChevronDown className="absolute right-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-2 w-4 h-4 text-[#64748B] pointer-events-none" />
         </div>
         
         <button 
           onClick={handleExportReport}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-sm text-white transition-colors shrink-0 cursor-pointer"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-[12px] transition-colors shrink-0 cursor-pointer shadow-sm group"
         >
-          <Download className="w-4 h-4" />
-          <span className="hidden sm:inline">Export Report</span>
+          <Download className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">Export Report</span>
         </button>
       </div>
     </div>

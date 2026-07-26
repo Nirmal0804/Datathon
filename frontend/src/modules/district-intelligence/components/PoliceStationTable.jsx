@@ -10,53 +10,65 @@ const stations = [
 
 export default function PoliceStationTable() {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-sm overflow-hidden mt-6">
-      <div className="p-5 border-b border-slate-800">
-        <h3 className="text-lg font-semibold text-white">Police Station Performance Metrics</h3>
+    <div className="bg-white border border-[#E7ECF3] rounded-[22px] shadow-sm overflow-hidden flex flex-col h-full hover:border-[#1A2F63]/30 transition-all duration-300">
+      <div className="px-6 py-5 border-b border-[#F1F5F9] shrink-0">
+        <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Police Station Performance Metrics</h3>
+        <p className="text-xs font-semibold text-[#64748B]">Operational capacity and clearance rates</p>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-400">
-          <thead className="text-xs text-slate-500 uppercase bg-slate-800/50 border-b border-slate-800">
-            <tr>
-              <th className="px-6 py-3 font-semibold">Station ID</th>
-              <th className="px-6 py-3 font-semibold">Name</th>
-              <th className="px-6 py-3 font-semibold">Inspector-In-Charge</th>
-              <th className="px-6 py-3 font-semibold">Active Cases</th>
-              <th className="px-6 py-3 font-semibold">Clearance Rate</th>
-              <th className="px-6 py-3 font-semibold">Workload Status</th>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-[#F8F9FB] border-b border-[#E7ECF3]">
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Station ID</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Name</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Inspector-In-Charge</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Active Cases</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Clearance Rate</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Workload Status</th>
             </tr>
           </thead>
           <tbody>
             {stations.map((row, idx) => (
               <motion.tr 
                 key={idx} 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.35, delay: idx * 0.08 }}
-                className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className="border-b border-[#F1F5F9] hover:bg-[#F8F9FB]/60 transition-colors group cursor-default"
               >
-                <td className="px-6 py-4 font-mono font-medium text-slate-200">{row.id}</td>
-                <td className="px-6 py-4 font-semibold text-white">{row.name}</td>
-                <td className="px-6 py-4">{row.inspector}</td>
-                <td className="px-6 py-4">{row.activeCases}</td>
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-16 bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                  <span className="font-mono text-xs font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{row.id}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="text-sm font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{row.name}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="text-xs font-semibold text-[#334155]">{row.inspector}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="text-sm font-black text-[#0B1F4D]">{row.activeCases}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 bg-[#E2E8F0] rounded-full h-1.5 overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: row.efficiency }}
                         transition={{ duration: 1.0, ease: 'easeOut', delay: idx * 0.1 }}
-                        className={`h-1.5 rounded-full ${parseInt(row.efficiency) > 80 ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                        className={`h-full rounded-full ${
+                          parseInt(row.efficiency) > 80 ? 'bg-emerald-500' : 
+                          parseInt(row.efficiency) > 65 ? 'bg-amber-500' : 'bg-rose-500'
+                        }`}
                       />
                     </div>
-                    <span>{row.efficiency}</span>
+                    <span className="text-xs font-bold text-[#0F172A]">{row.efficiency}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${
-                    row.status === 'Critical' ? 'bg-red-500/10 text-red-500 border border-red-500/20' :
-                    row.status === 'Overloaded' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
-                    'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                  <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border ${
+                    row.status === 'Critical' ? 'bg-rose-50 text-rose-700 border-rose-100' :
+                    row.status === 'Overloaded' ? 'bg-amber-50 text-amber-700 border-amber-100' :
+                    'bg-emerald-50 text-emerald-700 border-emerald-100'
                   }`}>
                     {row.status}
                   </span>

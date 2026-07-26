@@ -1,48 +1,54 @@
 import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ALERTS_DATA } from '../../../mock/analyticsData';
-import { AlertOctagon, Clock, UserCheck, ShieldAlert } from 'lucide-react';
+import { AlertOctagon, Clock, UserCheck, ShieldAlert, Zap } from 'lucide-react';
 
 export default function AnomalyDetection({ timeFilter }) {
   // Filter alerts simulated by timeFilter
   const activeAlerts = useMemo(() => {
-    // Return subsets to make it update dynamically
     if (timeFilter === 'Today') {
       return ALERTS_DATA.slice(0, 1);
     }
     if (timeFilter === 'This Week') {
       return ALERTS_DATA.slice(0, 2);
     }
-    return ALERTS_DATA; // Return all for Month, Year, Custom
+    return ALERTS_DATA;
   }, [timeFilter]);
 
   const severityStyles = {
-    Critical: 'bg-red-500/10 text-red-400 border border-red-500/25 shadow-[0_0_8px_rgba(239,68,68,0.1)] animate-pulse-soft',
-    High: 'bg-orange-500/10 text-orange-405 border border-orange-500/20',
-    Medium: 'bg-amber-500/10 text-amber-450 border border-amber-500/20'
+    Critical: 'bg-rose-50 text-rose-600 border border-rose-200',
+    High: 'bg-orange-50 text-orange-600 border border-orange-200',
+    Medium: 'bg-emerald-50 text-emerald-600 border border-emerald-200'
   };
 
   const severityIcons = {
     Critical: '🔴',
     High: '🟠',
-    Medium: '🟡'
+    Medium: '🟢'
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-4 flex flex-col h-full justify-between">
+    <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm space-y-4 flex flex-col h-full justify-between">
       
       <div className="space-y-4">
         {/* Title */}
-        <div className="flex items-center gap-2 pb-2 border-b border-slate-800/60">
-          <ShieldAlert className="w-5 h-5 text-indigo-400 animate-pulse" />
-          <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Automatic Intelligence Alerts</h3>
-            <p className="text-4xs text-slate-400 mt-0.5 font-sans">AI outlier models detecting precinct threat increases in real-time.</p>
+        <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
+              <ShieldAlert className="w-4 h-4 text-[#C79A2B] animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Automatic Intelligence Alerts</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">AI outlier models detecting precinct threat increases in real-time.</p>
+            </div>
           </div>
+          <span className="px-2.5 py-1 bg-red-50 border border-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wider rounded-lg flex items-center gap-1">
+            <Zap className="w-3 h-3" /> Live Feed
+          </span>
         </div>
 
         {/* Alerts list */}
-        <div className="space-y-3.5 max-h-[300px] overflow-y-auto pr-1 no-scrollbar min-h-[260px]">
+        <div className="space-y-3 max-h-[340px] overflow-y-auto pr-2 min-h-[300px]">
           <AnimatePresence mode="popLayout">
             {activeAlerts.map((alert, idx) => (
               <motion.div
@@ -52,35 +58,40 @@ export default function AnomalyDetection({ timeFilter }) {
                 exit={{ opacity: 0, x: 15 }}
                 transition={{ duration: 0.35, delay: idx * 0.05 }}
                 whileHover={{ scale: 1.01 }}
-                className="p-3 bg-slate-950/40 border border-slate-850 rounded-xl space-y-2.5 flex flex-col hover:border-slate-800 transition-colors cursor-default"
+                className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex flex-col sm:flex-row gap-4 items-start hover:border-[#CBD5E1] transition-colors cursor-default shadow-sm"
               >
-                {/* Header info */}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
-                      severityStyles[alert.severity] || severityStyles.Medium
-                    }`}>
-                      <span>{severityIcons[alert.severity] || '🟡'}</span>
-                      <span>{alert.severity}</span>
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-semibold">{alert.crimeType}</span>
-                  </div>
-                  <span className="text-[9px] text-slate-500 font-mono flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-slate-600" />
-                    {alert.timestamp}
+                {/* Left: Severity & Category */}
+                <div className="w-full sm:w-32 shrink-0 flex flex-col gap-1.5 border-b sm:border-b-0 sm:border-r border-[#E2E8F0] pb-3 sm:pb-0 sm:pr-3">
+                  <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider w-fit ${
+                    severityStyles[alert.severity] || severityStyles.Medium
+                  }`}>
+                    <span className="text-[8px]">{severityIcons[alert.severity] || '🟢'}</span>
+                    <span>{alert.severity}</span>
                   </span>
+                  <span className="text-[11px] text-[#0B1F4D] font-bold mt-1 block leading-tight">{alert.crimeType}</span>
                 </div>
 
-                {/* Description text */}
-                <p className="text-xs text-slate-200 leading-relaxed font-sans">{alert.text}</p>
-
-                {/* AI recommendations */}
-                <div className="p-2.5 bg-slate-950/60 border border-slate-850 rounded-lg text-3xs text-indigo-300 leading-relaxed flex items-start gap-2">
-                  <AlertOctagon className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-400 uppercase tracking-widest text-[8px] block mb-0.5">AI Recommendation</span>
-                    {alert.recommendation}
+                {/* Center: Description & Recommendation */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <p className="text-xs text-[#0B1F4D] font-medium leading-relaxed mb-2">{alert.text}</p>
+                  
+                  {/* AI recommendations */}
+                  <div className="p-2.5 bg-white border border-[#E7ECF3] rounded-xl text-[10px] font-medium text-[#64748B] leading-relaxed flex items-start gap-2 shadow-sm">
+                    <AlertOctagon className="w-4 h-4 text-[#C79A2B] shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-[#0B1F4D] uppercase tracking-wider text-[9px] block mb-0.5">AI Recommendation</span>
+                      {alert.recommendation}
+                    </div>
                   </div>
+                </div>
+
+                {/* Right: Timestamp & Status */}
+                <div className="w-full sm:w-24 shrink-0 flex flex-row sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 border-[#E2E8F0] pt-3 sm:pt-0">
+                  <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider bg-[#F1F5F9] px-2 py-1 rounded-md">New</span>
+                  <span className="text-[10px] text-[#64748B] font-mono flex items-center gap-1 bg-white px-2 py-1 rounded-md border border-[#E7ECF3] shadow-sm">
+                    <Clock className="w-3 h-3 text-[#C79A2B]" />
+                    {alert.timestamp}
+                  </span>
                 </div>
               </motion.div>
             ))}

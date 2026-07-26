@@ -1,12 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertCircle } from 'lucide-react';
+import { FileText, ArrowRight } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 
 const cases = [
   { id: 'FIR-2023-0892', category: 'Cybercrime', time: '2 hours ago', risk: 'High' },
   { id: 'FIR-2023-0891', category: 'Property', time: '5 hours ago', risk: 'Medium' },
   { id: 'FIR-2023-0890', category: 'Violent', time: '1 day ago', risk: 'Critical' },
+  { id: 'FIR-2023-0889', category: 'Narcotics', time: '1 day ago', risk: 'Medium' },
 ];
 
 export default function RecentCases() {
@@ -17,35 +18,51 @@ export default function RecentCases() {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-      <h3 className="text-lg font-semibold text-white mb-4">Recent Case Intake</h3>
-      <div className="space-y-3">
+    <div className="bg-white border border-[#E7ECF3] rounded-[22px] p-6 shadow-sm h-full flex flex-col justify-between">
+      <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-4 mb-5 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/5 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#0B1F4D]" />
+          </div>
+          <div>
+            <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Recent Case Intake</h3>
+            <p className="text-xs font-semibold text-[#64748B]">Live Activity Feed</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col gap-2">
         {cases.map((c, idx) => (
           <motion.div 
             key={c.id} 
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 15 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: idx * 0.05 }}
-            whileHover={{ scale: 1.02 }}
-            className="flex justify-between items-center p-3 bg-slate-800/30 border border-slate-800 rounded-lg transition-all duration-200"
+            transition={{ duration: 0.3, delay: idx * 0.1 }}
+            className="group flex justify-between items-center p-3 hover:bg-[#F8F9FB] rounded-xl transition-all duration-200 border border-transparent hover:border-[#E7ECF3] cursor-default"
           >
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-sm text-slate-200">{c.id}</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  c.risk === 'Critical' ? 'bg-red-500/20 text-red-400' :
-                  c.risk === 'High' ? 'bg-amber-500/20 text-amber-400' : 'bg-blue-500/20 text-blue-400'
-                }`}>
-                  {c.risk}
-                </span>
+            <div className="flex items-center gap-4">
+              <div className={`w-2 h-2 rounded-full shadow-sm shrink-0 ${
+                c.risk === 'Critical' ? 'bg-rose-500' :
+                c.risk === 'High' ? 'bg-amber-500' : 'bg-blue-500'
+              }`} />
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="font-mono text-sm font-bold text-[#0F172A]">{c.id}</span>
+                  <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-widest border ${
+                    c.risk === 'Critical' ? 'bg-rose-50 text-rose-700 border-rose-100' :
+                    c.risk === 'High' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-blue-50 text-blue-700 border-blue-100'
+                  }`}>
+                    {c.risk}
+                  </span>
+                </div>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">{c.category} • {c.time}</p>
               </div>
-              <p className="text-xs text-slate-400">{c.category} • {c.time}</p>
             </div>
             <button 
               onClick={() => handleInspect(c.id)}
-              className="text-primary hover:text-primary-hover text-sm cursor-pointer transition-all hover:underline"
+              className="w-8 h-8 rounded-full bg-white border border-[#E7ECF3] flex items-center justify-center text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"
             >
-              View
+              <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
         ))}

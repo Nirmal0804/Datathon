@@ -47,13 +47,13 @@ export default function AnalyticsLayout() {
   const kpis = SUMMARY_CARDS_DATA[timeFilter] || SUMMARY_CARDS_DATA['This Month'];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-16">
+    <div className="w-full mx-auto space-y-6 pb-16 px-6 sm:px-8">
       
       {/* 1. Header & Filter controls */}
-      <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-5 shadow-sm">
+      <div className="bg-white border border-[#E7ECF3] p-6 rounded-[20px] flex flex-col md:flex-row justify-between items-start md:items-center gap-5 shadow-sm">
         <div className="space-y-1">
-          <h1 className="text-xl font-bold text-white uppercase tracking-wider">Crime Trend Analysis & Alerts</h1>
-          <p className="text-2xs text-slate-400 font-sans">
+          <h1 className="text-[22px] font-black text-[#0B1F4D] uppercase tracking-wider">Crime Trend Analysis & Alerts</h1>
+          <p className="text-xs text-[#64748B] font-medium">
             Monitor historical crime patterns, detect emerging threats, and receive AI-powered intelligence alerts.
           </p>
         </div>
@@ -64,10 +64,10 @@ export default function AnalyticsLayout() {
             <button
               key={f}
               onClick={() => setTimeFilter(f)}
-              className={`px-3 py-1.5 rounded-lg text-3xs font-bold uppercase tracking-wider cursor-pointer border transition-all ${
+              className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider cursor-pointer border transition-all ${
                 timeFilter === f
-                  ? 'bg-primary/10 text-primary border-primary/20'
-                  : 'bg-slate-950/40 text-slate-400 border-slate-800 hover:text-white hover:bg-slate-850/40'
+                  ? 'bg-[#0B1F4D] text-white border-[#0B1F4D] shadow-sm'
+                  : 'bg-[#F8F9FB] text-[#64748B] border-[#E7ECF3] hover:text-[#0B1F4D] hover:bg-[#F1F5F9]'
               }`}
             >
               {f}
@@ -78,97 +78,122 @@ export default function AnalyticsLayout() {
 
       {/* Conditional custom date input boxes */}
       {timeFilter === 'Custom Range' && (
-        <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl max-w-xl flex flex-col sm:flex-row gap-4 items-end animate-fade-in">
+        <div className="bg-white border border-[#E7ECF3] p-4 rounded-[20px] max-w-xl flex flex-col sm:flex-row gap-4 items-end animate-fade-in shadow-sm">
           <div className="flex-1">
-            <label className="block text-4xs font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-primary" /> Start Date
+            <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-widest mb-1.5 flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> Start Date
             </label>
             <input 
               type="date"
               value={customRange.start}
               onChange={(e) => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
-              className="input text-xs h-9 bg-slate-950/40 border-slate-700 py-1"
+              className="w-full text-xs h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl text-[#0B1F4D] font-medium outline-none focus:border-[#0B1F4D]/30"
             />
           </div>
           <div className="flex-1">
-            <label className="block text-4xs font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-primary" /> End Date
+            <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-widest mb-1.5 flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> End Date
             </label>
             <input 
               type="date"
               value={customRange.end}
               onChange={(e) => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
-              className="input text-xs h-9 bg-slate-950/40 border-slate-700 py-1"
+              className="w-full text-xs h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl text-[#0B1F4D] font-medium outline-none focus:border-[#0B1F4D]/30"
             />
           </div>
         </div>
       )}
 
       {/* 2. Redesigned KPI cards with sparklines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
             title: 'Overall Crime Growth', 
             val: kpis.growth.val, 
-            color: kpis.growth.trend === 'up' ? 'text-red-500' : 'text-emerald-500',
-            sparkColor: kpis.growth.trend === 'up' ? '#ef4444' : '#10b981',
+            color: kpis.growth.trend === 'up' ? 'text-rose-600' : 'text-emerald-600',
+            sparkColor: kpis.growth.trend === 'up' ? '#e11d48' : '#059669',
             icon: kpis.growth.trend === 'up' ? TrendingUp : TrendingDown,
             pts: kpis.growth.spark 
           },
           { 
             title: 'Highest Crime Increase', 
             val: kpis.increase.val, 
-            color: 'text-rose-500', 
-            sparkColor: '#f43f5e',
+            color: 'text-rose-600', 
+            sparkColor: '#e11d48',
             icon: TrendingUp,
             pts: kpis.increase.spark 
           },
           { 
             title: 'Highest Crime Decrease', 
             val: kpis.decrease.val, 
-            color: 'text-emerald-450', 
-            sparkColor: '#10b981',
+            color: 'text-emerald-600', 
+            sparkColor: '#059669',
             icon: TrendingDown,
             pts: kpis.decrease.spark 
           },
           { 
             title: 'Active Intelligence Alerts', 
             val: kpis.alerts.val, 
-            color: 'text-indigo-400', 
-            sparkColor: '#6366f1',
+            color: 'text-[#C79A2B]', 
+            sparkColor: '#C79A2B',
             icon: ShieldAlert,
             pts: kpis.alerts.spark 
           }
-        ].map((card, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ y: -3, scale: 1.01, boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
-            className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between h-28 cursor-default transition-all duration-200"
-          >
-            <div className="flex justify-between items-start">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{card.title}</span>
-              <card.icon className={`w-4 h-4 ${card.color}`} />
-            </div>
+        ].map((card, i) => {
+          // Extract text and optional parenthesis to style differently
+          const match = card.val.match(/^(.*?)\s*(\(.*?\))?$/);
+          const mainText = match ? match[1] : card.val;
+          const subText = match && match[2] ? match[2] : '';
 
-            <div className="flex items-end justify-between mt-2.5">
-              <span className={`text-base font-bold font-mono ${card.color}`}>{card.val}</span>
-              <Sparkline points={card.pts} strokeColor={card.sparkColor} />
-            </div>
-          </motion.div>
-        ))}
+          return (
+            <motion.div
+              key={i}
+              whileHover={{ y: -3, scale: 1.01, boxShadow: '0 8px 24px rgba(11,31,77,0.06)' }}
+              className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 flex flex-col justify-between h-[120px] cursor-default transition-all duration-200 shadow-sm"
+            >
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider leading-tight w-2/3">{card.title}</span>
+                <div className="w-7 h-7 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center shrink-0">
+                  <card.icon className={`w-3.5 h-3.5 ${card.color}`} />
+                </div>
+              </div>
+
+              <div className="flex items-end justify-between mt-2 flex-1">
+                <div className={`flex flex-col justify-end ${card.color}`}>
+                  <span className="text-base sm:text-lg font-bold font-mono leading-none break-words line-clamp-2">{mainText}</span>
+                  {subText && <span className="text-xs sm:text-sm font-bold font-mono mt-1 opacity-90">{subText}</span>}
+                </div>
+                <div className="w-16 h-8 shrink-0 ml-2">
+                  <Sparkline points={card.pts} strokeColor={card.sparkColor} />
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* 3. Primary Trend Chart Module (CrimeTrendAnalysis) */}
-      <CrimeTrendAnalysis timeFilter={timeFilter} />
+      {/* 3. Main Dashboard Layout - 12 Column Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Row 1 */}
+        <div className="lg:col-span-12">
+          <CrimeTrendAnalysis timeFilter={timeFilter} />
+        </div>
 
-      {/* 4. Alerts (AnomalyDetection) & Hotspots (HotspotAnalytics) side-by-side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-        <AnomalyDetection timeFilter={timeFilter} />
-        <HotspotAnalytics timeFilter={timeFilter} />
+        {/* Row 2 */}
+        <div className="lg:col-span-6 flex flex-col">
+          <AnomalyDetection timeFilter={timeFilter} />
+        </div>
+        <div className="lg:col-span-6 flex flex-col">
+          <HotspotAnalytics timeFilter={timeFilter} />
+        </div>
+
+        {/* Row 3 */}
+        <div className="lg:col-span-12">
+          <PredictiveRisk timeFilter={timeFilter} />
+        </div>
+
       </div>
-
-      {/* 5. Predictive Risk Module (PredictiveRisk) */}
-      <PredictiveRisk timeFilter={timeFilter} />
 
     </div>
   );

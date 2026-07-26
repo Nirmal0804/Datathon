@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { HOTSPOTS_DATA } from '../../../mock/analyticsData';
-import { Flame, Compass, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { Flame, Compass, ArrowUpRight, TrendingUp, Map } from 'lucide-react';
 
 export default function HotspotAnalytics({ timeFilter }) {
   const [timeTab, setTimeTab] = useState('Monthly'); // 'Daily' | 'Monthly' | 'Yearly'
@@ -11,29 +11,31 @@ export default function HotspotAnalytics({ timeFilter }) {
   }, [timeTab]);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-4 flex flex-col h-full justify-between">
+    <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm space-y-4 flex flex-col h-full justify-between">
       
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2 border-b border-slate-800/60">
-          <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-red-500 animate-pulse-soft" />
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3 border-b border-[#F1F5F9]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
+              <Flame className="w-4 h-4 text-[#C79A2B] animate-pulse-soft" />
+            </div>
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Emerging Crime Hotspots</h3>
-              <p className="text-4xs text-slate-400 mt-0.5 font-sans">Spatial clusters reporting the highest surge in weekly cases.</p>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Emerging Crime Hotspots</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">Spatial clusters reporting the highest surge in weekly cases.</p>
             </div>
           </div>
 
           {/* Time tab toggle */}
-          <div className="flex bg-slate-950/45 p-0.5 rounded-md border border-slate-850 shrink-0">
+          <div className="flex bg-[#F8F9FB] p-1 rounded-xl border border-[#E7ECF3] shrink-0">
             {['Daily', 'Monthly', 'Yearly'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setTimeTab(tab)}
-                className={`px-2.5 py-0.5 text-4xs font-bold uppercase tracking-wider rounded cursor-pointer transition-all ${
+                className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
                   timeTab === tab
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0B1F4D] text-white shadow-sm'
+                    : 'text-[#64748B] hover:text-[#0B1F4D]'
                 }`}
               >
                 {tab}
@@ -42,8 +44,8 @@ export default function HotspotAnalytics({ timeFilter }) {
           </div>
         </div>
 
-        {/* Hotspots list with hover details */}
-        <div className="space-y-3 min-h-[260px]">
+        {/* Hotspots Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[300px]">
           {activeHotspots.map((hs, idx) => (
             <motion.div
               key={idx}
@@ -51,38 +53,42 @@ export default function HotspotAnalytics({ timeFilter }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: idx * 0.05 }}
               whileHover={{ scale: 1.01 }}
-              className="p-3 bg-slate-950/40 border border-slate-850 rounded-xl flex items-center justify-between hover:border-slate-800 transition-colors group relative cursor-help"
+              className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex flex-col justify-between hover:border-[#CBD5E1] transition-colors shadow-sm"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
-                  <Flame className="w-4 h-4 text-red-500" />
+              <div className="flex justify-between items-start mb-3 border-b border-[#E2E8F0] pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
+                    <Flame className="w-4 h-4 text-rose-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#0B1F4D] text-[11px] leading-tight">{hs.area}</h4>
+                    <p className="text-[9px] text-[#64748B] font-bold uppercase mt-0.5">{hs.station}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-slate-200 text-xs">{hs.area}</h4>
-                  <p className="text-4xs text-slate-500 font-mono mt-0.5">{hs.station}</p>
-                </div>
-              </div>
-
-              {/* Surge Percentage */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-red-400 flex items-center gap-0.5 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded">
-                  <TrendingUp className="w-3 h-3 text-red-500" />
-                  +{hs.rate}%
+                {/* Risk Badge */}
+                <span className="px-2 py-1 bg-red-50 text-red-600 border border-red-100 rounded font-bold uppercase tracking-wider text-[9px]">
+                  High Risk
                 </span>
               </div>
 
-              {/* Hover Tooltip Overlay (Detailed statistics) */}
-              <div className="absolute top-1/2 left-44 -translate-y-1/2 bg-slate-900 border border-slate-750 p-3 rounded-lg shadow-elevation-3 z-30 w-52 pointer-events-none opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200">
-                <div className="flex items-center gap-1.5 pb-1.5 border-b border-slate-800 mb-1.5 text-3xs font-bold text-slate-400 uppercase tracking-widest">
-                  <Compass className="w-3.5 h-3.5 text-indigo-400" /> Hotspot telemetry
+              {/* Stats */}
+              <div className="flex justify-between items-center mb-4">
+                <div className="space-y-1 text-[10px]">
+                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">Incidents</span>
+                  <span className="text-[#0B1F4D] font-bold">{hs.count} cases</span>
                 </div>
-                <div className="space-y-1 text-4xs font-mono">
-                  <div className="flex justify-between"><span>Precinct Station</span> <span className="text-slate-200 font-bold">{hs.station}</span></div>
-                  <div className="flex justify-between"><span>Incident Index</span> <span className="text-slate-250 font-bold">{hs.count} cases</span></div>
-                  <div className="flex justify-between"><span>Weekly shift</span> <span className="text-red-400 font-bold">+{hs.rate}% surge</span></div>
+                <div className="space-y-1 text-[10px] text-right">
+                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">Trend</span>
+                  <span className="font-bold text-rose-600 flex items-center gap-1 justify-end">
+                    <TrendingUp className="w-3 h-3 text-rose-600" /> +{hs.rate}%
+                  </span>
                 </div>
               </div>
 
+              {/* Action */}
+              <button className="w-full flex items-center justify-center gap-2 py-2 bg-white border border-[#E7ECF3] rounded-lg hover:bg-[#F1F5F9] transition-colors text-[10px] font-bold text-[#0B1F4D] uppercase tracking-wider">
+                <Map className="w-3 h-3 text-[#C79A2B]" /> View Map
+              </button>
             </motion.div>
           ))}
         </div>

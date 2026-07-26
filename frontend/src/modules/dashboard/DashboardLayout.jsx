@@ -230,7 +230,7 @@ export default function DashboardLayout({ onLogout, role }) {
         </div>
       ),
       map:       <CrimeMapLayout role={role} />,
-      district:  <DistrictIntelligenceLayout />,
+      district:  <DistrictIntelligenceLayout onNavigate={setActiveModule} />,
       analytics: <AnalyticsLayout />,
       reports:   <ReportsLayout role={role} />,
       correlation: <SocioEconomicCorrelation role={role} />,

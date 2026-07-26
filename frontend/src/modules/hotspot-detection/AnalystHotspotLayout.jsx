@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { jsPDF } from 'jspdf';
 import HotspotFilters from './components/HotspotFilters';
 import HotspotRankingTable from './components/HotspotRankingTable';
 import RiskBadge from './components/RiskBadge';
 import TrendBadge from './components/TrendBadge';
 import { ANALYST_HOTSPOTS } from '../../mock/hotspotAnalytics';
 import { 
-  Layers, ShieldAlert, Radio, FileText, BarChart2, 
-  Columns, TrendingUp, Info, Eye, CheckCircle2, ChevronDown, ChevronRight, ClipboardList
+  Layers, ShieldAlert, Info, Eye, ClipboardList, Download
 } from 'lucide-react';
 
 // Configurable thresholds for Module 9 Anomaly Detection
@@ -25,16 +25,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
   const [sortKey, setSortKey] = useState('rank');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Tabs within details panel: 'overview' | 'analytics' | 'history' | 'recommendations' | 'comparison'
-  const [activeTab, setActiveTab] = useState('overview');
 
-  // Accordion within Analytics tab: 'category' | 'risk' | 'district' | 'trends'
-  const [expandedAccordion, setExpandedAccordion] = useState('category');
-
-  // Comparison target hotspot ID (defaults to Rank 2 hotspot if Rank 1 is selected)
-  const [comparisonTargetId, setComparisonTargetId] = useState(
-    ANALYST_HOTSPOTS.find(h => h.hotspotId !== selectedHotspot?.hotspotId)?.hotspotId || ''
-  );
 
   // Filters State
   const [filters, setFilters] = useState({
@@ -121,15 +112,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
     }
   }, [filteredHotspots, selectedHotspot]);
 
-  // Update comparison target default value when selectedHotspot changes
-  useEffect(() => {
-    if (selectedHotspot) {
-      const nextTarget = ANALYST_HOTSPOTS.find(h => h.hotspotId !== selectedHotspot.hotspotId);
-      if (nextTarget) {
-        setComparisonTargetId(nextTarget.hotspotId);
-      }
-    }
-  }, [selectedHotspot]);
+
 
   // Compute Top KPI Cards dynamically from filtered list
   const kpis = useMemo(() => {
@@ -205,10 +188,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
     };
   }, [filteredHotspots]);
 
-  // Resolve comparison target details
-  const comparisonTarget = useMemo(() => {
-    return ANALYST_HOTSPOTS.find(h => h.hotspotId === comparisonTargetId);
-  }, [comparisonTargetId]);
+
 
   // Compute dynamic anomalies data for the selected hotspot
   const anomalyInfo = useMemo(() => {
@@ -315,38 +295,82 @@ export default function AnalystHotspotLayout({ onNavigate }) {
     onNavigate('map');
   };
 
+  const handleExportData = () => {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const doc = new jsPDF();
+    doc.setFont('Courier');
+    doc.setFontSize(14);
+    doc.text('CONFIDENTIAL - INTERNAL USE ONLY', 10, 15);
+    doc.text('===================================================', 10, 22);
+    doc.text('REPORT TYPE: CRIME HOTSPOT INTELLIGENCE', 10, 29);
+    doc.setFontSize(10);
+    doc.text(`REPORT ID:             HSP-INT-${todayStr}`, 10, 38);
+    doc.text(`GENERATION DATE:       ${todayStr}`, 10, 45);
+    doc.text(`TOTAL HOTSPOTS:        ${filteredHotspots.length}`, 10, 52);
+    doc.text(`CRITICAL ZONES:        ${kpis.critical}`, 10, 59);
+    doc.text(`EMERGING HOTSPOTS:     ${kpis.emerging}`, 10, 66);
+    doc.text(`AVG DENSITY INDEX:     ${kpis.avgDensity} /10`, 10, 73);
+    doc.text(`HIGHEST RISK DISTRICT: ${kpis.highestRiskDistrict}`, 10, 80);
+    doc.text('---------------------------------------------------', 10, 87);
+    doc.setFontSize(12);
+    doc.text('HOTSPOT RANKINGS (Top 10)', 10, 96);
+    doc.setFontSize(9);
+    filteredHotspots.slice(0, 10).forEach((h, i) => {
+      const y = 104 + i * 12;
+      doc.text(`#${h.hotspotRank} ${h.policeStation} (${h.district}) | ${h.dominantCrime} | Risk: ${h.riskLevel} | Growth: +${h.growthPercentage}%`, 10, y);
+    });
+    doc.setFontSize(8);
+    doc.text('CONFIDENTIAL - KARNATAKA POLICE INTELLIGENCE PLATFORM', 10, 285);
+    doc.save(`Hotspot_Intelligence_Report_${todayStr}.pdf`);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <div className="w-full mx-auto space-y-6 pb-16 px-6 sm:px-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
-            <Layers className="w-5 h-5 text-primary animate-pulse-soft" />
+      <div className="bg-white border border-[#E7ECF3] rounded-[22px] p-5 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+          <div className="w-12 h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm">
+            <Layers className="w-6 h-6 text-[#C79A2B]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white uppercase tracking-wider">Crime Hotspot Intelligence Workspace</h1>
-            <p className="text-2xs text-slate-400 mt-0.5 font-sans">Tactical command suite for district-level risk rankings and predictive hotspots telemetry.</p>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">Crime Hotspot Intelligence</h1>
+              <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3] flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+              </div>
+            </div>
+            <p className="text-xs font-semibold text-[#64748B]">Tactical command suite for district-level risk rankings and predictive hotspot telemetry.</p>
           </div>
+        </div>
+
+        <div className="flex items-center gap-3 w-full lg:w-auto">
+          <button
+            onClick={handleExportData}
+            className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-[12px] transition-colors shrink-0 cursor-pointer shadow-sm group"
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
+            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">Export Report</span>
+          </button>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-5">
         {[
-          { label: 'Total Hotspots', val: kpis.total, color: 'text-white' },
-          { label: 'Emerging Hotspots', val: kpis.emerging, color: 'text-rose-500' },
-          { label: 'Persistent Hotspots', val: kpis.persistent, color: 'text-amber-500' },
-          { label: 'Critical Risk Zones', val: kpis.critical, color: 'text-red-500' },
-          { label: 'Avg Density Index', val: `${kpis.avgDensity} /10`, color: 'text-indigo-400' },
-          { label: 'Highest Risk District', val: kpis.highestRiskDistrict, color: 'text-indigo-300', textOnly: true }
+          { label: 'Total Hotspots', val: kpis.total, color: 'text-[#0B1F4D]' },
+          { label: 'Emerging', val: kpis.emerging, color: 'text-[#B91C1C]' },
+          { label: 'Persistent', val: kpis.persistent, color: 'text-[#B45309]' },
+          { label: 'Critical Risk Zones', val: kpis.critical, color: 'text-[#B91C1C]' },
+          { label: 'Avg Density Index', val: `${kpis.avgDensity} /10`, color: 'text-[#0B1F4D]' },
+          { label: 'Highest Risk District', val: kpis.highestRiskDistrict, color: 'text-[#0B1F4D]', textOnly: true }
         ].map((card, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{card.label}</span>
+          <div key={i} className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 flex flex-col justify-between shadow-sm">
+            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">{card.label}</span>
             {card.textOnly ? (
-              <span className="text-2xs font-bold text-indigo-300 truncate mt-2.5 uppercase">{card.val}</span>
+              <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-wide truncate mt-3">{card.val}</span>
             ) : (
-              <span className={`text-xl font-bold font-mono mt-1 ${card.color}`}>{card.val}</span>
+              <span className={`text-2xl font-black font-mono mt-2 ${card.color}`}>{card.val}</span>
             )}
           </div>
         ))}
@@ -362,48 +386,63 @@ export default function AnalystHotspotLayout({ onNavigate }) {
         role="analyst"
       />
 
-      {/* Main Split Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 items-start">
+      {/* Main Split Grid - 12 Columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
-        {/* Left Column: Hotspot Ranking Table (70% width) */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Left Column (8 cols = 66.6% width) */}
+        <div className="lg:col-span-8 space-y-5">
           
           {/* Active Crime Anomalies Alert Banner */}
           <AnimatePresence>
             {activeAlerts.length > 0 && (
               <motion.div 
-                initial={{ opacity: 0, y: -12 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 space-y-2.5 shadow-lg"
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm space-y-3"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
-                    <span>🚨</span>
+                <div className="flex items-center justify-between pb-2 border-b border-[#F1F5F9]">
+                  <div className="flex items-center gap-2 text-[#B91C1C] font-black text-xs uppercase tracking-wider">
+                    <ShieldAlert className="w-4 h-4" />
                     <span>{activeAlerts.length} Active Crime Anomalies Detected</span>
                   </div>
-                  <span className="text-[8px] bg-red-500/20 text-red-450 border border-red-500/30 px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider animate-pulse-soft">Early Warning Alerts</span>
+                  <span className="text-[10px] bg-[#B91C1C]/10 text-[#B91C1C] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse-soft">Early Warning Alerts</span>
                 </div>
-                <ul className="space-y-1.5 text-slate-300 font-mono text-[10px] pl-1">
-                  {activeAlerts.map((alert, idx) => (
-                    <li key={idx} className="flex items-start gap-2 leading-relaxed">
-                      <span className="shrink-0">{alert.priority === 'Critical' ? '🔴' : alert.priority === 'High' ? '🟠' : '⚠️'}</span>
-                      <span>{alert.title}</span>
-                    </li>
-                  ))}
-                </ul>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {activeAlerts.slice(0, 4).map((alert, idx) => {
+                    const isCritical = alert.priority === 'Critical';
+                    const isHigh = alert.priority === 'High';
+                    const stripColor = isCritical ? 'border-l-[#B91C1C]' : isHigh ? 'border-l-[#B45309]' : 'border-l-[#C79A2B]';
+                    const bgBadge = isCritical ? 'bg-[#B91C1C]/10 text-[#B91C1C]' : isHigh ? 'bg-[#B45309]/10 text-[#B45309]' : 'bg-[#C79A2B]/10 text-[#C79A2B]';
+                    
+                    return (
+                      <div key={idx} className={`flex items-start gap-2.5 p-2.5 bg-[#F8F9FB] rounded-lg border border-[#E7ECF3] border-l-4 ${stripColor}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start mb-0.5">
+                            <span className={`text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${bgBadge}`}>{alert.priority}</span>
+                            <span className="text-xs font-bold text-[#94A3B8] uppercase">Just Now</span>
+                          </div>
+                          <p className="text-xs font-bold text-[#0F172A] leading-tight truncate" title={alert.title}>
+                            {alert.title.replace(/^[🚨🔥⚠️]\s*/, '')}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {isLoading ? (
-            <div className="bg-slate-900/60 border border-slate-850 rounded-xl p-5 h-96 animate-pulse" />
+            <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 h-96 animate-pulse" />
           ) : filteredHotspots.length === 0 ? (
-            <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-xl max-w-md mx-auto">
-              <ShieldAlert className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <h4 className="text-sm font-bold text-white">No hotspots matches filters</h4>
-              <p className="text-4xs text-slate-400 mt-1 mb-4">Try adjusting your query or resetting all filter tags.</p>
-              <button onClick={handleResetFilters} className="btn-secondary btn-sm w-full">
+            <div className="p-10 text-center bg-white border border-[#E7ECF3] rounded-[20px] max-w-md mx-auto shadow-sm">
+              <ShieldAlert className="w-12 h-12 text-[#94A3B8] mx-auto mb-4" />
+              <h4 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">No hotspots matches filters</h4>
+              <p className="text-[10px] font-bold text-[#64748B] mt-2 mb-5 uppercase tracking-wider">Try adjusting your query or resetting all filter tags.</p>
+              <button onClick={handleResetFilters} className="h-9 px-4 rounded-lg bg-[#0B1F4D] text-white font-bold text-[10px] uppercase tracking-wider hover:bg-[#0B1F4D]/90 transition-colors w-full">
                 Clear Filters
               </button>
             </div>
@@ -418,453 +457,203 @@ export default function AnalystHotspotLayout({ onNavigate }) {
           )}
         </div>
 
-        {/* Right Column: Progressive Disclosure Tabbed details panel (30% width, sticky) */}
-        <div className="lg:col-span-3 sticky top-6 space-y-4">
+        {/* Right Column (4 cols = 33.3% width) - Sticky Telemetry */}
+        <div className="lg:col-span-4 space-y-4">
+          <div className="sticky top-6">
           
-          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-elevation-2 flex flex-col">
+          <div className="bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col overflow-hidden">
             
-            {/* Details Panel Header */}
-            <div className="p-4 bg-slate-950/40 border-b border-slate-800 flex justify-between items-center">
+            {/* Header */}
+            <div className="p-4 bg-[#F8F9FB] border-b border-[#E7ECF3] flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Hotspot Telemetry</h3>
+                <Info className="w-4 h-4 text-[#0B1F4D]" />
+                <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Hotspot Telemetry</h3>
               </div>
               {selectedHotspot && (
-                <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">
+                <span className="text-xs font-mono bg-white border border-[#E7ECF3] text-[#64748B] px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider">
                   {selectedHotspot.hotspotId}
                 </span>
               )}
             </div>
 
-            {/* Scrollable Horizontal Tabs selectors */}
-            <div className="flex border-b border-slate-850 overflow-x-auto no-scrollbar scroll-smooth bg-slate-950/20 shrink-0">
-              {[
-                { id: 'overview', label: 'Overview' },
-                { id: 'analytics', label: 'Analytics' },
-                { id: 'history', label: 'Incident History' },
-                { id: 'recommendations', label: 'Recommendations' },
-                { id: 'comparison', label: 'Comparison' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-3 text-3xs font-bold uppercase tracking-wider whitespace-nowrap border-b-2 transition-all cursor-pointer ${
-                    activeTab === tab.id 
-                      ? 'border-b-primary text-primary bg-slate-900/40' 
-                      : 'border-b-transparent text-slate-400 hover:text-white hover:bg-slate-850/20'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Tab content viewport */}
-            <div className="p-5 min-h-[350px]">
+            <div className="p-4 bg-white min-h-[400px] overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
               {!selectedHotspot ? (
-                <div className="flex flex-col items-center justify-center text-center text-slate-500 h-64 space-y-3">
-                  <ClipboardList className="w-10 h-10 text-slate-700 animate-pulse-soft" />
-                  <h4 className="text-xs font-bold text-white">No Hotspot Selected</h4>
-                  <p className="text-4xs text-slate-400">Identify a precinct hotspot from the rankings table to load statistics.</p>
+                <div className="flex flex-col items-center justify-center text-center text-[#64748B] h-64 space-y-3">
+                  <ClipboardList className="w-10 h-10 text-[#94A3B8] animate-pulse-soft" />
+                  <h4 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">No Hotspot Selected</h4>
+                  <p className="text-[10px] font-bold uppercase tracking-wider">Identify a precinct hotspot from the rankings table to load statistics.</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-4 animate-fade-in">
 
-                  {/* ────────────────── OVERVIEW TAB ────────────────── */}
-                  {activeTab === 'overview' && anomalyInfo && (
-                    <div className="space-y-4 text-xs animate-fade-in">
-                      
-                      {/* Risk and Trend badges */}
-                      <div className="grid grid-cols-2 gap-3.5">
-                        <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-                          <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Threat Risk</span>
-                          <RiskBadge risk={selectedHotspot.riskLevel} />
-                        </div>
-                        <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-                          <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Trend Status</span>
-                          <TrendBadge trend={anomalyInfo.enhancedTrend} />
-                        </div>
-                      </div>
-
-                      {/* Detail attributes list */}
-                      <div className="space-y-2.5 p-3.5 bg-slate-950/30 rounded-lg border border-slate-850">
-                        {[
-                          { label: 'Crime Count', val: `${selectedHotspot.crimeCount} cases`, mono: true },
-                          { label: 'Dominant Category', val: selectedHotspot.dominantCrime },
-                          { label: 'Density Index', val: `${selectedHotspot.densityIndex} /10`, mono: true },
-                          { label: 'Anomaly Score', val: `${anomalyInfo.rawScore} /100 (${anomalyInfo.anomalySeverity})`, mono: true, color: anomalyInfo.anomalySeverity === 'Critical' || anomalyInfo.anomalySeverity === 'High' ? 'text-red-400 font-bold animate-pulse-soft' : anomalyInfo.anomalySeverity === 'Medium' ? 'text-orange-400 font-bold' : 'text-emerald-450 font-bold' },
-                          { label: 'Growth YoY', val: `${selectedHotspot.growthPercentage >= 0 ? '+' : ''}${selectedHotspot.growthPercentage}%`, mono: true, color: selectedHotspot.growthPercentage >= 0 ? 'text-rose-450' : 'text-emerald-450' },
-                          { label: 'Historical Avg', val: selectedHotspot.historicalAverage, mono: true },
-                          { label: 'Last Incident', val: selectedHotspot.lastIncidentDate, mono: true },
-                          { label: 'District', val: selectedHotspot.district },
-                          { label: 'Police Station', val: selectedHotspot.policeStation }
-                        ].map((row, idx) => (
-                          <div key={idx} className="flex justify-between items-center py-1 border-b border-slate-850/40 last:border-b-0">
-                            <span className="text-slate-400 text-3xs">{row.label}</span>
-                            <span className={`font-semibold text-slate-200 ${row.mono ? 'font-mono' : ''} ${row.color || ''}`}>
-                              {row.val}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Spike Detection sub-card */}
-                      <div className="p-3 bg-slate-950/45 border border-slate-850 rounded-lg space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Spike Detection Analysis</span>
-                          {anomalyInfo.isGrowthAnomaly && (
-                            <span className="px-1.5 py-0.2 bg-red-500/15 text-red-400 border border-red-500/20 rounded text-[7px] font-bold uppercase animate-pulse-soft">Growth Anomaly</span>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-3 text-center text-4xs font-mono text-slate-400">
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Expected</span>
-                            <span className="text-slate-350">{anomalyInfo.expectedGrowth}%</span>
-                          </div>
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Actual</span>
-                            <span className={anomalyInfo.isGrowthAnomaly ? 'text-red-400 font-bold' : 'text-white'}>{selectedHotspot.growthPercentage}%</span>
-                          </div>
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Deviation</span>
-                            <span className={anomalyInfo.isGrowthAnomaly ? 'text-red-400 font-bold' : 'text-emerald-450'}>{anomalyInfo.growthDeviation >= 0 ? '+' : ''}{anomalyInfo.growthDeviation.toFixed(1)}%</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Category Shift sub-card */}
-                      <div className="p-3 bg-slate-950/45 border border-slate-850 rounded-lg space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Category Shift Analysis</span>
-                          {anomalyInfo.isCategoryShift && (
-                            <span className="px-1.5 py-0.2 bg-indigo-500/15 text-indigo-400 border border-indigo-500/20 rounded text-[7px] font-bold uppercase">Category Shift</span>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-2 text-center text-4xs font-mono text-slate-400">
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Current Dominant</span>
-                            <span className="text-white truncate block max-w-28 mx-auto font-bold" title={selectedHotspot.dominantCrime}>{selectedHotspot.dominantCrime}</span>
-                          </div>
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Historical Category</span>
-                            <span className="text-slate-350 truncate block max-w-28 mx-auto" title={anomalyInfo.historicalCategory}>{anomalyInfo.historicalCategory}</span>
-                          </div>
-                        </div>
-                        {anomalyInfo.isCategoryShift && (
-                          <div className="text-[8px] font-mono text-indigo-400 pt-1 flex justify-between border-t border-slate-850/50">
-                            <span>Deviation Shift Increase:</span>
-                            <span>+{anomalyInfo.shiftPercent}%</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Weekly Crime Frequency sub-card */}
-                      <div className="p-3 bg-slate-950/45 border border-slate-850 rounded-lg space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Weekly Crime Frequency</span>
-                          <span className={`px-1.5 py-0.2 rounded text-[7px] font-bold uppercase ${
-                            anomalyInfo.isFrequencyAnomaly 
-                              ? 'bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse-soft' 
-                              : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                          }`}>{anomalyInfo.isFrequencyAnomaly ? 'Abnormal' : 'Normal'}</span>
-                        </div>
-                        <div className="grid grid-cols-3 text-center text-4xs font-mono text-slate-400">
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Historical Avg</span>
-                            <span className="text-slate-350">{anomalyInfo.expectedWeekly.toFixed(1)}</span>
-                          </div>
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Current Count</span>
-                            <span className={anomalyInfo.isFrequencyAnomaly ? 'text-red-400 font-bold' : 'text-white'}>{anomalyInfo.currentWeekly.toFixed(1)}</span>
-                          </div>
-                          <div>
-                            <span className="block text-slate-500 font-bold uppercase">Deviation</span>
-                            <span className={anomalyInfo.isFrequencyAnomaly ? 'text-red-400 font-bold' : 'text-emerald-450'}>+{anomalyInfo.frequencyDeviation.toFixed(0)}%</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Nav Button */}
-                      <button
-                        onClick={handleViewOnMap}
-                        className="w-full btn-primary btn-sm h-10 gap-2 cursor-pointer mt-2"
-                      >
-                        <Eye className="w-4 h-4" />
-                        <span>View on Crime Map</span>
-                      </button>
+                  {/* AI Summary Card */}
+                  <div className="p-3 bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 rounded-xl">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <div className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse" />
+                      <span className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">AI Intelligence Summary</span>
                     </div>
-                  )}
+                    <p className="text-xs font-bold text-[#64748B] leading-relaxed">
+                      {anomalyInfo?.isGrowthAnomaly ? 'Critical anomaly detected.' : 'Monitoring parameters.'} The hotspot in {selectedHotspot.policeStation} shows {selectedHotspot.growthPercentage >= 0 ? 'a' : 'a reduction in'} growth of {Math.abs(selectedHotspot.growthPercentage)}%. 
+                      {anomalyInfo?.isCategoryShift ? ` Shift detected to ${selectedHotspot.dominantCrime}.` : ` Dominant category remains ${selectedHotspot.dominantCrime}.`} 
+                      {anomalyInfo?.isFrequencyAnomaly ? ' Immediate intervention recommended.' : ' Standard patrols advised.'}
+                    </p>
+                  </div>
 
-                  {/* ────────────────── ANALYTICS TAB (Accordions) ────────────────── */}
-                  {activeTab === 'analytics' && anomalyInfo && (
-                    <div className="space-y-3.5 animate-fade-in">
-                      
-                      {/* Accordion 1: Category Distribution */}
-                      <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950/20">
-                        <button
-                          onClick={() => setExpandedAccordion(expandedAccordion === 'category' ? '' : 'category')}
-                          className="w-full px-4 py-3 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex justify-between items-center text-3xs font-bold uppercase tracking-wider text-slate-300 cursor-pointer border-b border-slate-850/30"
-                        >
-                          <div className="flex items-center gap-2">
-                            <BarChart2 className="w-3.5 h-3.5 text-indigo-400" />
-                            <span>Dominant Crime Categories</span>
-                          </div>
-                          {expandedAccordion === 'category' ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                        </button>
-                        {expandedAccordion === 'category' && (
-                          <div className="p-4 space-y-3.5 bg-slate-900/20">
-                            {chartData.categoriesSorted.map(([cat, count]) => {
-                              const pct = kpis.total > 0 ? (count / kpis.total) * 100 : 0;
-                              return (
-                                <div key={cat} className="space-y-1">
-                                  <div className="flex justify-between text-3xs text-slate-300">
-                                    <span>{cat}</span>
-                                    <span className="font-mono font-bold text-slate-400">{count} ({pct.toFixed(0)}%)</span>
-                                  </div>
-                                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full bg-primary rounded-full" 
-                                      style={{ width: `${pct}%` }} 
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Accordion 2: Anomaly & Spike Timeline */}
-                      <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950/20">
-                        <button
-                          onClick={() => setExpandedAccordion(expandedAccordion === 'timeline' ? '' : 'timeline')}
-                          className="w-full px-4 py-3 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex justify-between items-center text-3xs font-bold uppercase tracking-wider text-slate-300 cursor-pointer border-b border-slate-850/30"
-                        >
-                          <div className="flex items-center gap-2">
-                            <TrendingUp className="w-3.5 h-3.5 text-rose-400 animate-pulse-soft" />
-                            <span>Spike Timeline & Trend Chart</span>
-                          </div>
-                          {expandedAccordion === 'timeline' ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                        </button>
-                        {expandedAccordion === 'timeline' && (
-                          <div className="p-4 space-y-3 bg-slate-900/20 text-3xs font-mono">
-                            <span className="block text-[8px] font-bold uppercase text-slate-500">Anomaly Trend Sparkline</span>
-                            <div className="py-2 flex items-center justify-center bg-slate-950/40 border border-slate-850 rounded-lg p-2">
-                              <svg viewBox="0 0 100 30" className="w-full h-12 stroke-indigo-400 stroke-2 fill-none">
-                                <path d="M0,25 L15,22 L30,12 L45,18 L60,8 L75,19 L90,3 L100,5" />
-                                <circle cx="90" cy="3" r="2" className="fill-rose-500 stroke-none animate-pulse-soft" />
-                              </svg>
-                            </div>
-                            <span className="block text-[8px] font-bold uppercase text-slate-500 mt-2">Spike Timeline Logs</span>
-                            <div className="space-y-2.5 border-l border-slate-800 pl-3">
-                              <div className="relative">
-                                <div className="absolute -left-[16px] top-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                <span className="text-[7px] text-slate-500 font-bold block uppercase">Today</span>
-                                <p className="font-semibold text-slate-200 leading-tight">Critical growth spike detected inside district coordinates.</p>
-                              </div>
-                              <div className="relative">
-                                <div className="absolute -left-[16px] top-1 w-1.5 h-1.5 rounded-full bg-yellow-500" />
-                                <span className="text-[7px] text-slate-500 font-bold block uppercase">2 Days Ago</span>
-                                <p className="font-semibold text-slate-355 leading-tight">Dominant crime category shift triggered from historical baseline.</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Accordion 3: Historical vs Current (Category Shift) */}
-                      <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950/20">
-                        <button
-                          onClick={() => setExpandedAccordion(expandedAccordion === 'history_vs_current' ? '' : 'history_vs_current')}
-                          className="w-full px-4 py-3 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex justify-between items-center text-3xs font-bold uppercase tracking-wider text-slate-300 cursor-pointer border-b border-slate-850/30"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Columns className="w-3.5 h-3.5 text-indigo-400" />
-                            <span>Historical vs Current comparison</span>
-                          </div>
-                          {expandedAccordion === 'history_vs_current' ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                        </button>
-                        {expandedAccordion === 'history_vs_current' && (
-                          <div className="p-4 space-y-3 bg-slate-900/20 text-3xs font-mono">
-                            <div className="p-2 bg-slate-950/40 rounded border border-slate-850 space-y-2">
-                              <span className="block text-[8px] text-slate-500 font-bold uppercase">Dominant Category Shift Log</span>
-                              <div className="flex justify-between text-slate-300">
-                                <span>Current category:</span>
-                                <span className="text-white font-bold">{selectedHotspot.dominantCrime}</span>
-                              </div>
-                              <div className="flex justify-between text-slate-300 border-b border-slate-850 pb-1.5">
-                                <span>Historical Category:</span>
-                                <span className="text-slate-450">{anomalyInfo.historicalCategory}</span>
-                              </div>
-                              <div className="flex justify-between text-indigo-400 font-bold">
-                                <span>Future Risk Forecast:</span>
-                                <span>{selectedHotspot.riskLevel === 'Critical' ? 'Immediate Action' : 'Elevated Surveillance'}</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Accordion 4: District Anomaly Distribution */}
-                      <div className="border border-slate-850 rounded-lg overflow-hidden bg-slate-950/20">
-                        <button
-                          onClick={() => setExpandedAccordion(expandedAccordion === 'district_anomaly' ? '' : 'district_anomaly')}
-                          className="w-full px-4 py-3 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex justify-between items-center text-3xs font-bold uppercase tracking-wider text-slate-300 cursor-pointer"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                            <span>District Anomaly & Future Risk</span>
-                          </div>
-                          {expandedAccordion === 'district_anomaly' ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                        </button>
-                        {expandedAccordion === 'district_anomaly' && (
-                          <div className="p-4 space-y-3 bg-slate-900/20 text-3xs font-mono">
-                            <span className="block text-[8px] font-bold uppercase text-slate-500">Anomaly Density Index by District</span>
-                            {chartData.districtsSorted.map(([dist, count]) => {
-                              const maxCount = chartData.districtsSorted[0]?.[1] || 1;
-                              const barWidth = (count / maxCount) * 100;
-                              return (
-                                <div key={dist} className="space-y-1">
-                                  <div className="flex justify-between text-slate-300">
-                                    <span className="truncate w-24">{dist}</span>
-                                    <span>{(count * 15).toFixed(0)} Threat Rating</span>
-                                  </div>
-                                  <div className="h-1.5 bg-slate-850 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full bg-gradient-to-r from-red-500 to-orange-400"
-                                      style={{ width: `${barWidth}%` }}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
-                  )}
-
-                  {/* ────────────────── INCIDENT HISTORY TAB ────────────────── */}
-                  {activeTab === 'history' && (
-                    <div className="space-y-3.5 animate-fade-in text-xs">
-                      <div className="flex items-center gap-2 text-indigo-400 font-bold text-3xs uppercase tracking-widest pb-1 border-b border-slate-800">
-                        <FileText className="w-3.5 h-3.5" />
-                        <span>Active Incident log</span>
-                      </div>
-                      <div className="p-3.5 bg-slate-950/40 border border-slate-850 rounded-xl leading-relaxed text-slate-350">
-                        <p className="font-semibold text-slate-200 mb-1.5 font-mono text-3xs uppercase text-slate-500">Telemetry Feed Summary</p>
-                        {selectedHotspot.activitySummary}
-                      </div>
-                      <div className="p-3 bg-slate-950/20 border border-slate-850/60 rounded-lg text-slate-400 text-3xs font-mono flex flex-col gap-1">
-                        <span>Last logged: {selectedHotspot.lastIncidentDate}</span>
-                        <span>Latitude: {selectedHotspot.latitude}</span>
-                        <span>Longitude: {selectedHotspot.longitude}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* ────────────────── RECOMMENDATIONS TAB ────────────────── */}
-                  {activeTab === 'recommendations' && (
-                    <div className="space-y-4 animate-fade-in text-xs">
-                      <div className="flex items-center gap-2 text-indigo-400 font-bold text-3xs uppercase tracking-widest pb-1 border-b border-slate-800">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>Tactical Action Guidelines</span>
-                      </div>
-                      
-                      <div className="p-3.5 bg-slate-950/40 border border-slate-850 rounded-xl space-y-1.5">
-                        <span className="text-[9px] font-bold uppercase text-slate-500">Strategy Protocol</span>
-                        <h4 className="font-bold text-white">{selectedHotspot.riskLevel === 'Critical' ? 'Immediate Interception Required' : 'Strategic Area Sweeps'}</h4>
-                        <p className="text-slate-400 text-3xs leading-relaxed">{selectedHotspot.recommendation}</p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <span className="block font-mono font-bold text-slate-500 text-4xs uppercase tracking-wider">Operational Beat plan</span>
-                        {[
-                          'Reinforce patrolling between 22:00 and 04:00',
-                          'Audit CCTV link uptime to State Command center',
-                          'Coordinate checkposts with border precincts'
-                        ].map((step, idx) => (
-                          <div key={idx} className="p-2.5 bg-slate-950/20 border border-slate-850 rounded-lg flex gap-3 text-slate-300">
-                            <span className="font-mono font-bold text-indigo-400 text-[10px] mt-0.5">{idx + 1}.</span>
-                            <span className="text-3xs">{step}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* ────────────────── COMPARISON TAB ────────────────── */}
-                  {activeTab === 'comparison' && (
-                    <div className="space-y-4 animate-fade-in text-xs">
-                      <div className="flex items-center gap-2 text-indigo-400 font-bold text-3xs uppercase tracking-widest pb-1 border-b border-slate-800">
-                        <Columns className="w-3.5 h-3.5" />
-                        <span>Compare Against Hotspot</span>
-                      </div>
-
-                      {/* Dropdown to pick target */}
+                  {/* Card 1: Overview */}
+                  <div className="p-3 bg-white border border-[#E7ECF3] rounded-xl space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-4xs font-bold text-slate-500 uppercase tracking-widest mb-1" htmlFor="compare-dropdown">Select Target</label>
-                        <select
-                          id="compare-dropdown"
-                          value={comparisonTargetId}
-                          onChange={(e) => setComparisonTargetId(e.target.value)}
-                          className="select text-3xs h-8.5 bg-slate-950 border-slate-850"
-                        >
-                          {ANALYST_HOTSPOTS.filter(h => h.hotspotId !== selectedHotspot.hotspotId).map(h => (
-                            <option key={h.hotspotId} value={h.hotspotId}>
-                              {h.hotspotId} ({h.policeStation})
-                            </option>
-                          ))}
-                        </select>
+                        <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1">Threat Risk</span>
+                        <RiskBadge risk={selectedHotspot.riskLevel} />
                       </div>
+                      <div>
+                        <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1">Trend Status</span>
+                        <TrendBadge trend={anomalyInfo?.enhancedTrend || 'Stable'} />
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-[#F1F5F9]">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">District</span>
+                        <span className="text-xs font-bold text-[#0B1F4D] uppercase">{selectedHotspot.district}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Station</span>
+                        <span className="text-xs font-bold text-[#0B1F4D] uppercase">{selectedHotspot.policeStation}</span>
+                      </div>
+                    </div>
+                  </div>
 
-                      {comparisonTarget ? (
-                        <div className="p-3 bg-slate-950/40 rounded-xl border border-slate-850 space-y-3 text-3xs font-mono">
-                          <div className="grid grid-cols-3 text-center border-b border-slate-850/40 pb-1.5 uppercase font-bold text-slate-500">
-                            <span className="text-left">{selectedHotspot.hotspotId}</span>
-                            <span>Metric</span>
-                            <span className="text-right">{comparisonTarget.hotspotId}</span>
-                          </div>
-                          
-                          <div className="grid grid-cols-3 text-center">
-                            <span className="text-left text-slate-200">{selectedHotspot.crimeCount} cases</span>
-                            <span className="text-slate-500">Crime Count</span>
-                            <span className="text-right text-slate-200">{comparisonTarget.crimeCount} cases</span>
-                          </div>
-
-                          <div className="grid grid-cols-3 text-center">
-                            <span className="text-left text-slate-200">{selectedHotspot.densityIndex} /10</span>
-                            <span className="text-slate-500">Density</span>
-                            <span className="text-right text-slate-200">{comparisonTarget.densityIndex} /10</span>
-                          </div>
-
-                          <div className="grid grid-cols-3 text-center">
-                            <span className={`text-left ${selectedHotspot.growthPercentage >= 0 ? 'text-rose-450' : 'text-emerald-450'}`}>
-                              {selectedHotspot.growthPercentage}%
-                            </span>
-                            <span className="text-slate-500">Growth %</span>
-                            <span className={`text-right ${comparisonTarget.growthPercentage >= 0 ? 'text-rose-450' : 'text-emerald-450'}`}>
-                              {comparisonTarget.growthPercentage}%
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-3 text-center">
-                            <span className="text-left text-slate-200 truncate">{selectedHotspot.riskLevel}</span>
-                            <span className="text-slate-500">Threat Risk</span>
-                            <span className="text-right text-slate-200 truncate">{comparisonTarget.riskLevel}</span>
-                          </div>
+                  {/* Card 2: Risk Metrics */}
+                  <div className="p-3 bg-white border border-[#E7ECF3] rounded-xl space-y-2">
+                    <span className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider block mb-2">Key Risk Metrics</span>
+                    {[
+                      { label: 'Crime Count', val: `${selectedHotspot.crimeCount} cases` },
+                      { label: 'Density Index', val: `${selectedHotspot.densityIndex} /10` },
+                      { label: 'Historical Avg', val: selectedHotspot.historicalAverage },
+                    ].map((row, idx) => (
+                      <div key={idx} className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">{row.label}</span>
+                        <span className="text-xs font-black font-mono text-[#0B1F4D]">{row.val}</span>
+                      </div>
+                    ))}
+                    
+                    <div className="flex justify-between items-center pt-2 mt-2 border-t border-[#F1F5F9]">
+                      <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Growth YoY</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-12 h-3">
+                          <svg viewBox="0 0 40 10" className="w-full h-full overflow-visible">
+                            <path d="M0,8 L10,6 L20,7 L30,4 L40,2" fill="none" stroke={selectedHotspot.growthPercentage >= 0 ? '#B91C1C' : '#15803D'} strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
                         </div>
-                      ) : null}
+                        <span className={`text-xs font-black font-mono ${selectedHotspot.growthPercentage >= 0 ? 'text-[#B91C1C]' : 'text-[#15803D]'}`}>
+                          {selectedHotspot.growthPercentage >= 0 ? '+' : ''}{selectedHotspot.growthPercentage}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Spike Detection */}
+                  {anomalyInfo && (
+                    <div className="p-3 bg-white border border-[#E7ECF3] rounded-xl">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Spike Detection</span>
+                        {anomalyInfo.isGrowthAnomaly && (
+                          <span className="px-1.5 py-0.5 bg-[#B91C1C]/10 text-[#B91C1C] rounded-full text-xs font-bold uppercase tracking-wider animate-pulse-soft">Growth Anomaly</span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-3 text-center gap-2">
+                        <div className="bg-[#F8F9FB] p-2 rounded-lg">
+                           <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1">Expected</span>
+                           <span className="text-xs font-black font-mono text-[#0B1F4D]">{anomalyInfo.expectedGrowth}%</span>
+                        </div>
+                        <div className="bg-[#F8F9FB] p-2 rounded-lg">
+                           <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1">Actual</span>
+                           <span className={`text-xs font-black font-mono ${anomalyInfo.isGrowthAnomaly ? 'text-[#B91C1C]' : 'text-[#0B1F4D]'}`}>{selectedHotspot.growthPercentage}%</span>
+                        </div>
+                        <div className="bg-[#F8F9FB] p-2 rounded-lg">
+                           <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1">Deviation</span>
+                           <span className={`text-xs font-black font-mono ${anomalyInfo.isGrowthAnomaly ? 'text-[#B91C1C]' : 'text-[#15803D]'}`}>
+                            {anomalyInfo.growthDeviation >= 0 ? '+' : ''}{anomalyInfo.growthDeviation.toFixed(1)}%
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )}
+
+                  {/* Card 4: Category Shift */}
+                  {anomalyInfo && (
+                    <div className="p-3 bg-white border border-[#E7ECF3] rounded-xl">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Category Shift</span>
+                        {anomalyInfo.isCategoryShift && (
+                          <span className="px-1.5 py-0.5 bg-[#B45309]/10 text-[#B45309] rounded-full text-[10px] font-bold uppercase tracking-wider">Shift Detected</span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Current</span>
+                          <span className="text-xs font-bold text-[#0B1F4D] uppercase truncate max-w-[120px]">{selectedHotspot.dominantCrime}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Historical</span>
+                          <span className="text-xs font-bold text-[#64748B] uppercase truncate max-w-[120px]">{anomalyInfo.historicalCategory}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Card 5: Weekly Frequency */}
+                  {anomalyInfo && (
+                    <div className="p-3 bg-white border border-[#E7ECF3] rounded-xl">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Weekly Frequency</span>
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          anomalyInfo.isFrequencyAnomaly ? 'bg-[#B91C1C]/10 text-[#B91C1C] animate-pulse-soft' : 'bg-[#15803D]/10 text-[#15803D]'
+                        }`}>{anomalyInfo.isFrequencyAnomaly ? 'Abnormal' : 'Normal'}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-16 h-6">
+                          <svg viewBox="0 0 60 20" className="w-full h-full overflow-visible">
+                             <path d="M0,15 L10,12 L20,18 L30,8 L40,14 L50,5 L60,10" fill="none" stroke={anomalyInfo.isFrequencyAnomaly ? '#B91C1C' : '#C79A2B'} strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Deviation</span>
+                          <span className={`text-xs font-black font-mono ${anomalyInfo.isFrequencyAnomaly ? 'text-[#B91C1C]' : 'text-[#15803D]'}`}>
+                            +{anomalyInfo.frequencyDeviation.toFixed(0)}%
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 border-t border-[#F1F5F9] pt-2">
+                        <div>
+                          <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-0.5">Historical Avg</span>
+                          <span className="text-xs font-black font-mono text-[#64748B]">{anomalyInfo.expectedWeekly.toFixed(1)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-0.5">Current Count</span>
+                          <span className={`text-xs font-black font-mono ${anomalyInfo.isFrequencyAnomaly ? 'text-[#B91C1C]' : 'text-[#0B1F4D]'}`}>{anomalyInfo.currentWeekly.toFixed(1)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Nav Button */}
+                  <button
+                    onClick={handleViewOnMap}
+                    className="w-full h-9 rounded-lg bg-[#0B1F4D] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#0B1F4D]/90 transition-colors mt-2"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span>View on Crime Map</span>
+                  </button>
 
                 </div>
               )}
             </div>
 
           </div>
-          
+          </div>
         </div>
 
       </div>

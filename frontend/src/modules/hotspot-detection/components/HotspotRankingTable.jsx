@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import RiskBadge from './RiskBadge';
 import TrendBadge from './TrendBadge';
-import { ArrowUpRight, ArrowUpDown } from 'lucide-react';
+import { ArrowUpRight, ArrowUpDown, ShieldAlert } from 'lucide-react';
 
 export default function HotspotRankingTable({ 
   hotspots, 
@@ -41,71 +41,64 @@ export default function HotspotRankingTable({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-md">
-      <div className="px-5 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/20">
+    <div className="bg-white border border-[#E7ECF3] rounded-[20px] overflow-hidden shadow-sm flex flex-col h-full">
+      <div className="px-6 py-5 border-b border-[#E7ECF3] flex justify-between items-center bg-white sticky top-0 z-10">
         <div>
-          <h3 className="text-sm font-bold text-white">Karnataka Crime Hotspot Rankings</h3>
-          <p className="text-4xs text-slate-400 mt-0.5">Ranked by composite threat indexes, growth spikes, and precinct density rates.</p>
+          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">Karnataka Crime Hotspot Rankings</h3>
+          <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider mt-1">Ranked by composite threat indexes, growth spikes, and precinct density rates.</p>
         </div>
-        <span className="text-4xs font-mono font-bold bg-slate-950 border border-slate-850 text-slate-400 px-2 py-0.5 rounded uppercase">
+        <span className="text-xs font-bold font-mono bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] px-2.5 py-1 rounded-lg uppercase tracking-wider">
           {sortedList.length} hotspots tracked
         </span>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left" aria-label="Analyst hotspots ranking table">
-          <thead>
-            <tr className="border-b border-slate-800/80 text-3xs font-semibold text-slate-500 uppercase select-none">
-              <th className="py-2.5 px-2 w-12 text-center">Rank</th>
-              <th className="py-2.5 px-2">Hotspot ID</th>
-              <th className="py-2.5 px-2">District</th>
-              
+      <div className="overflow-x-auto flex-1">
+        <table className="w-full text-left border-collapse" aria-label="Analyst hotspots ranking table">
+          <thead className="bg-[#F8F9FB] sticky top-0 z-10 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+            <tr className="border-b border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider select-none">
+              <th className="py-3 px-4 text-center w-12">Rank</th>
+              <th className="py-3 px-3">Hotspot ID & Station</th>
               <th 
-                className="py-2.5 px-2 cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('crimeCount')}
               >
                 <div className="flex items-center gap-1">
                   <span>Crime Count</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-
-              <th className="py-2.5 px-2">Dominant Category</th>
-
+              <th className="py-3 px-3">Category</th>
               <th 
-                className="py-2.5 px-2 cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('density')}
               >
                 <div className="flex items-center gap-1">
                   <span>Density</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-
               <th 
-                className="py-2.5 px-2 cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('growth')}
               >
                 <div className="flex items-center gap-1">
                   <span>Growth %</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-
-              <th className="py-2.5 px-2">Trend</th>
-
+              <th className="py-3 px-3">Trend History</th>
+              <th className="py-3 px-3">Status</th>
               <th 
-                className="py-2.5 px-2 cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('risk')}
               >
                 <div className="flex items-center gap-1">
                   <span>Risk Level</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-
-              <th className="py-2.5 px-2">Last Incident</th>
-              <th className="py-2.5 px-2 text-right">Inspect</th>
+              <th className="py-3 px-3">Last Incident</th>
+              <th className="py-3 px-4 text-right">Inspect</th>
             </tr>
           </thead>
           <tbody>
@@ -134,77 +127,97 @@ export default function HotspotRankingTable({
                 h.dominantCrime === 'Property Theft' ? 'Seasonal' :
                 h.growthPercentage > 5 ? 'Increasing' : 'Stable';
 
+              // Dummy sparkline points based on growth/trend
+              const sparkPts = h.growthPercentage > 0 
+                ? [2, 5, 8, 12, 18, 25, 30] 
+                : h.growthPercentage < 0 
+                  ? [30, 28, 22, 18, 15, 10, 5] 
+                  : [10, 12, 9, 11, 10, 13, 12];
+              
+              const sparkMax = Math.max(...sparkPts);
+              const sparkMin = Math.min(...sparkPts);
+              const pathD = sparkPts.map((p, i) => {
+                const x = (i / (sparkPts.length - 1)) * 40;
+                const y = 16 - ((p - sparkMin) / (sparkMax - sparkMin || 1)) * 16;
+                return `${i===0?'M':'L'} ${x} ${y}`;
+              }).join(' ');
+
               return (
                 <tr 
                   key={h.hotspotId}
                   onClick={() => onSelect(h)}
-                  className={`border-b border-slate-850 text-xs hover:bg-slate-800/40 transition-colors cursor-pointer ${
-                    isSelected ? 'bg-primary/5 border-l-2 border-l-primary' : ''
-                  } ${isAnomaly ? 'shadow-[inset_0_0_8px_rgba(239,68,68,0.15)] bg-red-950/5' : ''}`}
+                  className={`border-b border-[#F1F5F9] text-[11px] font-medium hover:bg-[#F8F9FB] transition-colors cursor-pointer ${
+                    isSelected ? 'bg-[#F1F5F9] border-l-4 border-l-[#0B1F4D]' : 'border-l-4 border-l-transparent'
+                  } ${isAnomaly ? 'bg-red-50/30' : ''}`}
                 >
-                  <td className="py-2.5 px-2 text-center font-mono font-bold text-indigo-400 bg-slate-950/10">
+                  <td className="py-3 px-4 text-center font-mono font-bold text-[#64748B]">
                     #{h.hotspotRank}
                   </td>
-                  <td className="py-2.5 px-2 font-mono font-bold text-slate-350">
-                    <div className="flex items-center gap-1">
-                      <span>{h.hotspotId}</span>
-                      {isAnomaly && <span title="Active Anomaly Warning" className="text-red-400">🚨</span>}
-                    </div>
-                  </td>
-                  <td className="py-2.5 px-2">
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="font-semibold text-slate-200">{h.policeStation}</p>
-                        {hotspotStatus === 'NEW HOTSPOT' ? (
-                          <span className="px-1.5 py-0.2 bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[8px] font-bold uppercase rounded animate-pulse-soft">NEW</span>
-                        ) : hotspotStatus === 'Resolved' ? (
-                          <span className="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-450 border border-emerald-500/20 text-[8px] font-bold uppercase rounded">Resolved</span>
-                        ) : (
-                          <span className="px-1.5 py-0.2 bg-slate-800 text-slate-400 border border-slate-700/50 text-[8px] font-bold uppercase rounded">Persistent</span>
-                        )}
+                  <td className="py-3 px-3">
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-bold text-[#0B1F4D] uppercase tracking-wide">{h.policeStation}</p>
+                          {isAnomaly && <ShieldAlert className="w-3 h-3 text-[#B91C1C]" />}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="font-mono text-[#64748B] uppercase text-xs">{h.hotspotId}</span>
+                          <span className="text-[#94A3B8]">•</span>
+                          <span className="text-[#64748B] uppercase text-xs tracking-wide font-bold">{h.district}</span>
+                        </div>
                       </div>
-                      <p className="text-4xs text-slate-500">{h.district}</p>
                     </div>
                   </td>
                   
-                  <td className="py-2.5 px-2 font-mono font-bold text-slate-200">
+                  <td className="py-3 px-3 font-mono font-black text-[#0B1F4D] text-xs">
                     {h.crimeCount}
                   </td>
                   
-                  <td className="py-2.5 px-2 text-slate-300">{h.dominantCrime}</td>
+                  <td className="py-3 px-3 text-[#0F172A] font-semibold">{h.dominantCrime}</td>
                   
-                  <td className="py-2.5 px-2 font-mono font-semibold text-slate-250">
-                    {h.densityIndex} /10
+                  <td className="py-3 px-3 font-mono font-bold text-[#64748B]">
+                    {h.densityIndex} <span className="text-xs opacity-70">/10</span>
                   </td>
                   
-                  <td className={`py-2.5 px-2 font-mono font-bold ${
-                    h.growthPercentage >= 0 ? 'text-rose-450' : 'text-emerald-450'
+                  <td className={`py-3 px-3 font-mono font-black ${
+                    h.growthPercentage >= 0 ? 'text-[#B91C1C]' : 'text-[#15803D]'
                   }`}>
                     {h.growthPercentage >= 0 ? '+' : ''}{h.growthPercentage}%
                   </td>
                   
-                  <td className="py-2.5 px-2">
+                  <td className="py-3 px-3">
+                    <div className="w-10 h-4">
+                      <svg viewBox="0 0 40 16" className="w-full h-full overflow-visible">
+                        <path 
+                          d={pathD} 
+                          fill="none" 
+                          stroke={h.growthPercentage > 0 ? '#B91C1C' : h.growthPercentage < 0 ? '#15803D' : '#64748B'} 
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </td>
+
+                  <td className="py-3 px-3">
                     <TrendBadge trend={trendStatus} />
                   </td>
                   
-                  <td className="py-2.5 px-2">
+                  <td className="py-3 px-3">
                     <RiskBadge risk={h.riskLevel} />
                   </td>
                   
-                  <td className="py-2.5 px-2 font-mono text-slate-450 text-3xs">
+                  <td className="py-3 px-3 font-mono text-[#64748B] text-xs font-semibold">
                     {h.lastIncidentDate}
                   </td>
                   
-                  <td className="py-2.5 px-2 text-right">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelect(h);
-                      }}
-                      className="p-1.5 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
-                    >
+                  <td className="py-3 px-4 text-right">
+                    <div className={`p-1.5 rounded-lg inline-flex items-center justify-center transition-colors cursor-pointer ${
+                      isSelected ? 'bg-[#0B1F4D] text-white' : 'bg-[#F8F9FB] text-[#64748B] hover:bg-[#0B1F4D] hover:text-white border border-[#E7ECF3]'
+                    }`}>
                       <ArrowUpRight className="w-3.5 h-3.5" />
-                    </button>
+                    </div>
                   </td>
                 </tr>
               );

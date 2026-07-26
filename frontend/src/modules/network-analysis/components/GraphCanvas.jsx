@@ -20,12 +20,15 @@ export default function GraphCanvas({
 
   // Handle wheel events for zooming
   const handleWheel = (e) => {
-    e.preventDefault();
-    const zoomFactor = 1.05;
-    if (e.deltaY < 0) {
-      setZoom(z => Math.min(z * zoomFactor, 3.0));
-    } else {
-      setZoom(z => Math.max(z / zoomFactor, 0.5));
+    // Only zoom if Ctrl/Cmd is pressed, otherwise allow normal page scrolling
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const zoomFactor = 1.05;
+      if (e.deltaY < 0) {
+        setZoom(z => Math.min(z * zoomFactor, 3.0));
+      } else {
+        setZoom(z => Math.max(z / zoomFactor, 0.5));
+      }
     }
   };
 

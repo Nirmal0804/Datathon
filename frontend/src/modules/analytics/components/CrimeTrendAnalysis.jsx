@@ -77,47 +77,49 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
   }, [activeTab]);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
-      {/* Module Title & Tab selectors */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800/60">
-        <div className="flex items-center gap-2">
-          <LineChart className="w-5 h-5 text-indigo-400 animate-pulse-soft" />
-          <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Crime Volume Trend Charts</h3>
-            <p className="text-4xs text-slate-400 mt-0.5">Interactive volume projections based on select time metrics.</p>
+      {/* Chart Section (Left) */}
+      <div className="lg:col-span-8 bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm flex flex-col space-y-4">
+        {/* Module Title & Tab selectors */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
+              <LineChart className="w-4 h-4 text-[#C79A2B] animate-pulse-soft" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Crime Volume Trend Charts</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5">Interactive volume projections based on select time metrics.</p>
+            </div>
+          </div>
+
+          {/* Chart tabs selectors */}
+          <div className="flex bg-[#F8F9FB] p-1 rounded-xl border border-[#E7ECF3] shrink-0">
+            {tabs.map(t => (
+              <button
+                key={t}
+                onClick={() => setActiveTab(t)}
+                className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
+                  activeTab === t
+                    ? 'bg-[#0B1F4D] text-white shadow-sm'
+                    : 'text-[#64748B] hover:text-[#0B1F4D]'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Chart tabs selectors */}
-        <div className="flex bg-slate-950/45 p-1 rounded-lg border border-slate-850 shrink-0">
-          {tabs.map(t => (
-            <button
-              key={t}
-              onClick={() => setActiveTab(t)}
-              className={`px-3 py-1 text-3xs font-bold uppercase tracking-wider rounded cursor-pointer transition-all ${
-                activeTab === t
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Primary SVGLines Chart */}
-      <div className="space-y-2">
-        <div className="h-56 w-full bg-slate-950/20 border border-slate-850/50 rounded-xl p-4 flex flex-col justify-between relative overflow-hidden">
-          
+        {/* Primary SVGLines Chart */}
+        <div className="h-64 w-full bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] p-4 flex flex-col justify-between relative overflow-hidden flex-1">
           {/* SVG Draw area */}
           <div className="flex-1 w-full relative">
             <svg viewBox="0 0 500 150" className="w-full h-full overflow-visible">
               <defs>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#C79A2B" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#C79A2B" stopOpacity="0" />
                 </linearGradient>
               </defs>
 
@@ -129,8 +131,8 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
                   y1={yVal} 
                   x2="485" 
                   y2={yVal} 
-                  stroke="#1e293b" 
-                  strokeWidth="0.8" 
+                  stroke="#E7ECF3" 
+                  strokeWidth="1" 
                   strokeDasharray="4 4" 
                 />
               ))}
@@ -146,21 +148,21 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
                 transition={{ duration: 0.8, ease: 'easeOut' }}
                 d={linePath} 
                 fill="none" 
-                stroke="#6366f1" 
+                stroke="#C79A2B" 
                 strokeWidth="2.5" 
               />
 
               {/* Dots */}
               {points.map((p, idx) => (
                 <g key={idx} className="group/dot cursor-pointer">
-                  <circle cx={p.x} cy={p.y} r="3" fill="#6366f1" />
+                  <circle cx={p.x} cy={p.y} r="3" fill="#C79A2B" />
                   <circle 
                     cx={p.x} 
                     cy={p.y} 
                     r="6" 
-                    fill="transparent" 
-                    stroke="#818cf8" 
-                    strokeWidth="1"
+                    fill="white" 
+                    stroke="#0B1F4D" 
+                    strokeWidth="1.5"
                     className="opacity-0 group-hover/dot:opacity-100 transition-opacity"
                   />
                 </g>
@@ -169,7 +171,7 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
           </div>
 
           {/* X Axis labels */}
-          <div className="flex justify-between px-3 text-[10px] text-slate-500 font-mono select-none">
+          <div className="flex justify-between px-3 text-[10px] text-[#64748B] font-mono select-none mt-2">
             {chartData.labels.map(l => (
               <span key={l}>{l}</span>
             ))}
@@ -177,29 +179,31 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
         </div>
       </div>
 
-      {/* Category Growth Rankings */}
-      <div className="space-y-3.5 pt-4 border-t border-slate-800/40">
-        <h4 className="text-slate-400 font-bold uppercase text-3xs tracking-wider flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5 text-indigo-400" />
-          <span>Category Growth Analytics</span>
+      {/* Category Growth Rankings (Right) */}
+      <div className="lg:col-span-4 bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm flex flex-col space-y-4">
+        <h4 className="text-[#0B1F4D] font-bold uppercase text-[11px] tracking-wider flex items-center gap-2 pb-3 border-b border-[#F1F5F9]">
+          <div className="w-6 h-6 rounded bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
+            <Calendar className="w-3 h-3 text-[#C79A2B]" />
+          </div>
+          Category Growth
         </h4>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3 flex-1 justify-between">
           {growthCategories.map((c, idx) => {
             const isUp = c.change >= 0;
             const barWidth = Math.abs(c.change) * 2; // scale for visualization
             return (
-              <div key={idx} className="p-3 bg-slate-950/40 border border-slate-850 rounded-xl space-y-2 flex flex-col justify-between hover:border-slate-800 transition-colors">
+              <div key={idx} className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] space-y-3 flex flex-col justify-between hover:border-[#CBD5E1] transition-colors shadow-sm">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-semibold text-slate-200">{c.name}</span>
-                  <span className={`font-mono font-bold flex items-center gap-1 ${isUp ? 'text-red-400' : 'text-emerald-450'}`}>
-                    {isUp ? <TrendingUp className="w-3 h-3 text-red-500" /> : <TrendingDown className="w-3 h-3 text-emerald-500" />}
+                  <span className="font-bold text-[#0B1F4D]">{c.name}</span>
+                  <span className={`font-mono font-bold flex items-center gap-1 ${isUp ? 'text-rose-600' : 'text-emerald-600'}`}>
+                    {isUp ? <TrendingUp className="w-3 h-3 text-rose-600" /> : <TrendingDown className="w-3 h-3 text-emerald-600" />}
                     {isUp ? '+' : ''}{c.change}%
                   </span>
                 </div>
                 
                 {/* Visual growth indicator */}
-                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
                   <motion.div
                     key={activeTab} // re-animate on tab change
                     initial={{ width: 0 }}
