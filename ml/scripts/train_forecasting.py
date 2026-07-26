@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import time
 import joblib
 import numpy as np
@@ -16,14 +17,29 @@ try:
 except ImportError:
     HAS_XGBOOST = False
 
+ML_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_INPUT_PATH = ML_DIR / "datasets" / "firs.csv"
+DEFAULT_OUTPUT_FORECAST_PATH = ML_DIR / "outputs" / "crime_forecasts.csv"
+DEFAULT_MODEL_OUTPUT_PATH = ML_DIR / "models" / "crime_forecasting_model.joblib"
+DEFAULT_PLOT_ACTUAL_PATH = ML_DIR / "outputs" / "forecast_actual_vs_predicted.png"
+DEFAULT_PLOT_IMPORTANCE_PATH = ML_DIR / "outputs" / "forecast_feature_importance.png"
+DEFAULT_PLOT_PROJECTION_PATH = ML_DIR / "outputs" / "forecast_30day_projection.png"
+
 def train_and_benchmark_forecasting(
-    input_path="datasets/firs.csv",
-    output_forecast_path="outputs/crime_forecasts.csv",
-    model_output_path="models/crime_forecasting_model.joblib",
-    plot_actual_path="outputs/forecast_actual_vs_predicted.png",
-    plot_importance_path="outputs/forecast_feature_importance.png",
-    plot_projection_path="outputs/forecast_30day_projection.png"
+    input_path=DEFAULT_INPUT_PATH,
+    output_forecast_path=DEFAULT_OUTPUT_FORECAST_PATH,
+    model_output_path=DEFAULT_MODEL_OUTPUT_PATH,
+    plot_actual_path=DEFAULT_PLOT_ACTUAL_PATH,
+    plot_importance_path=DEFAULT_PLOT_IMPORTANCE_PATH,
+    plot_projection_path=DEFAULT_PLOT_PROJECTION_PATH
 ):
+    input_path = Path(input_path)
+    output_forecast_path = Path(output_forecast_path)
+    model_output_path = Path(model_output_path)
+    plot_actual_path = Path(plot_actual_path)
+    plot_importance_path = Path(plot_importance_path)
+    plot_projection_path = Path(plot_projection_path)
+
     print("=" * 65)
     print("STARTING MODULE 3: TIME-SERIES FORECASTING BENCHMARKING PIPELINE")
     print("=" * 65)
@@ -207,8 +223,8 @@ def train_and_benchmark_forecasting(
 
     # 7. Plotting & Persistence
     print("[6/6] Generating visualization plots and saving artifacts...")
-    os.makedirs(os.path.dirname(output_forecast_path), exist_ok=True)
-    os.makedirs(os.path.dirname(model_output_path), exist_ok=True)
+    output_forecast_path.parent.mkdir(parents=True, exist_ok=True)
+    model_output_path.parent.mkdir(parents=True, exist_ok=True)
 
     forecast_df.to_csv(output_forecast_path, index=False)
 

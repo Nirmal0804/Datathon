@@ -17,17 +17,22 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any, Tuple, Optional
 
-# File Paths Configuration
-MODEL_DIR = "models"
-OUTPUT_DIR = "outputs"
-DBSCAN_MODEL_PATH = os.path.join(MODEL_DIR, "dbscan_hotspots.joblib")
-RISK_MODEL_PATH = os.path.join(MODEL_DIR, "crime_risk_model.joblib")
-FORECAST_MODEL_PATH = os.path.join(MODEL_DIR, "crime_forecasting_model.joblib")
+from pathlib import Path
+from typing import Dict, Any, Tuple, Optional
 
-HOTSPOTS_CSV_PATH = os.path.join(OUTPUT_DIR, "hotspots.csv")
-HOTSPOT_SUMMARIES_CSV_PATH = os.path.join(OUTPUT_DIR, "hotspot_summaries.csv")
-STATION_RISK_CSV_PATH = os.path.join(OUTPUT_DIR, "station_risk_scores.csv")
-FORECAST_CSV_PATH = os.path.join(OUTPUT_DIR, "crime_forecasts.csv")
+# File Paths Configuration
+ML_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = ML_DIR / "models"
+OUTPUT_DIR = ML_DIR / "outputs"
+
+DBSCAN_MODEL_PATH = MODEL_DIR / "dbscan_hotspots.joblib"
+RISK_MODEL_PATH = MODEL_DIR / "crime_risk_model.joblib"
+FORECAST_MODEL_PATH = MODEL_DIR / "crime_forecasting_model.joblib"
+
+HOTSPOTS_CSV_PATH = OUTPUT_DIR / "hotspots.csv"
+HOTSPOT_SUMMARIES_CSV_PATH = OUTPUT_DIR / "hotspot_summaries.csv"
+STATION_RISK_CSV_PATH = OUTPUT_DIR / "station_risk_scores.csv"
+FORECAST_CSV_PATH = OUTPUT_DIR / "crime_forecasts.csv"
 
 EARTH_RADIUS_KM = 6371.0088
 
@@ -51,7 +56,7 @@ class CrimeAnalyticsInferenceEngine:
             (RISK_MODEL_PATH, "Crime Risk Model"),
             (FORECAST_MODEL_PATH, "Crime Forecasting Model")
         ]:
-            if not os.path.exists(path):
+            if not path.exists():
                 missing_models.append(f"{name} ({path})")
 
         if missing_models:
@@ -74,7 +79,7 @@ class CrimeAnalyticsInferenceEngine:
             station_id (str): Police Station Identifier (e.g., PS0069)
         """
         station_id_clean = station_id.strip().upper()
-        if not os.path.exists(STATION_RISK_CSV_PATH):
+        if not STATION_RISK_CSV_PATH.exists():
             print(f"[ERROR] Risk scores dataset not found at {STATION_RISK_CSV_PATH}")
             return
 
@@ -165,7 +170,7 @@ class CrimeAnalyticsInferenceEngine:
             print(f"Distance to Centroid  : {min_dist:.3f} km (Cluster Radius: {eps_km:.1f} km)")
             
             # Fetch cluster metadata from summary CSV if available
-            if os.path.exists(HOTSPOT_SUMMARIES_CSV_PATH):
+            if HOTSPOT_SUMMARIES_CSV_PATH.exists():
                 summary_df = pd.read_csv(HOTSPOT_SUMMARIES_CSV_PATH)
                 c_row = summary_df[summary_df['Cluster_ID'] == nearest_cluster]
                 if not c_row.empty:
@@ -189,7 +194,7 @@ class CrimeAnalyticsInferenceEngine:
             print("[ERROR] --forecast_days must be an integer between 1 and 30.")
             return
 
-        if not os.path.exists(FORECAST_CSV_PATH):
+        if not FORECAST_CSV_PATH.exists():
             print(f"[ERROR] Forecast output file not found at {FORECAST_CSV_PATH}")
             return
 
@@ -228,7 +233,7 @@ class CrimeAnalyticsInferenceEngine:
         print(f"    - Total Hotspot Clusters  : {n_clusters} active clusters")
 
         # 2. Risk Scores
-        if os.path.exists(STATION_RISK_CSV_PATH):
+        if STATION_RISK_CSV_PATH.exists():
             risk_df = pd.read_csv(STATION_RISK_CSV_PATH)
             n_stations = len(risk_df)
             n_critical = len(risk_df[risk_df['Risk_Tier'] == 'Critical'])
@@ -252,7 +257,7 @@ class CrimeAnalyticsInferenceEngine:
         print(f"    - Selected Model Algorithm: {f_name}")
         print(f"    - Model Performance Metrics: MAE = {f_eval.get('MAE', 'N/A')} | RMSE = {f_eval.get('RMSE', 'N/A')} | R^2 = {f_eval.get('R2_Score', 'N/A')}")
         
-        if os.path.exists(FORECAST_CSV_PATH):
+        if FORECAST_CSV_PATH.exists():
             fc_df = pd.read_csv(FORECAST_CSV_PATH)
             tot_30 = fc_df['Forecasted_Crime_Count'].sum()
             avg_30 = fc_df['Forecasted_Crime_Count'].mean()

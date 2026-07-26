@@ -1,7 +1,16 @@
 import os
+from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+
+ML_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_STATIONS_PATH = ML_DIR / "datasets" / "stations.csv"
+DEFAULT_DISTRICTS_PATH = ML_DIR / "datasets" / "districts.csv"
+DEFAULT_FIRS_PATH = ML_DIR / "datasets" / "firs.csv"
+DEFAULT_HOTSPOTS_PATH = ML_DIR / "outputs" / "hotspots.csv"
+DEFAULT_OUTPUT_SCORES_PATH = ML_DIR / "outputs" / "station_risk_scores.csv"
+DEFAULT_MODEL_OUTPUT_PATH = ML_DIR / "models" / "crime_risk_model.joblib"
 
 # Crime Severity Weights mapping (Harm-Weighted Policing standard)
 SEVERITY_WEIGHTS = {
@@ -26,13 +35,20 @@ AHP_WEIGHTS = {
 }
 
 def train_composite_risk_model(
-    stations_path="datasets/stations.csv",
-    districts_path="datasets/districts.csv",
-    firs_path="datasets/firs.csv",
-    hotspots_path="outputs/hotspots.csv",
-    output_scores_path="outputs/station_risk_scores.csv",
-    model_output_path="models/crime_risk_model.joblib"
+    stations_path=DEFAULT_STATIONS_PATH,
+    districts_path=DEFAULT_DISTRICTS_PATH,
+    firs_path=DEFAULT_FIRS_PATH,
+    hotspots_path=DEFAULT_HOTSPOTS_PATH,
+    output_scores_path=DEFAULT_OUTPUT_SCORES_PATH,
+    model_output_path=DEFAULT_MODEL_OUTPUT_PATH
 ):
+    stations_path = Path(stations_path)
+    districts_path = Path(districts_path)
+    firs_path = Path(firs_path)
+    hotspots_path = Path(hotspots_path)
+    output_scores_path = Path(output_scores_path)
+    model_output_path = Path(model_output_path)
+
     print("=" * 60)
     print("STARTING MODULE 2: COMPOSITE CRIME RISK SCORING (CCRI)")
     print("=" * 60)
@@ -42,7 +58,7 @@ def train_composite_risk_model(
     stations = pd.read_csv(stations_path)
     districts = pd.read_csv(districts_path)
     
-    if os.path.exists(hotspots_path):
+    if hotspots_path.exists():
         firs = pd.read_csv(hotspots_path)
         print("      Loaded spatial hotspots dataset.")
     else:
@@ -151,7 +167,7 @@ def train_composite_risk_model(
 
     # 5. Save Outputs & Model Serialization
     print(f"[5/5] Saving station risk scores to {output_scores_path}...")
-    os.makedirs(os.path.dirname(output_scores_path), exist_ok=True)
+    output_scores_path.parent.mkdir(parents=True, exist_ok=True)
     
     output_cols = [
         'Risk_Rank', 'Station_ID', 'Station_Name', 'District', 'Zone', 'Station_Type',
@@ -161,7 +177,7 @@ def train_composite_risk_model(
     station_df[output_cols].to_csv(output_scores_path, index=False)
 
     print(f"      Serializing risk model artifact to {model_output_path}...")
-    os.makedirs(os.path.dirname(model_output_path), exist_ok=True)
+    model_output_path.parent.mkdir(parents=True, exist_ok=True)
     
     model_artifact = {
         'model_type': 'AHP-Weighted Composite Crime Risk Index (CCRI)',

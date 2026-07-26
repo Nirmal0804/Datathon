@@ -5,83 +5,78 @@ Reads generated CSVs from outputs/ and exports structured JSON datasets into:
 frontend/Datathon/CrimeAnalyticsPlatform/frontend/public/data/
 """
 
-import os
 import json
+from pathlib import Path
 import pandas as pd
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
-TARGET_DATA_DIR = os.path.join(
-    BASE_DIR,
-    "frontend",
-    "public",
-    "data"
-)
+ML_DIR = Path(__file__).resolve().parent.parent
+OUTPUTS_DIR = ML_DIR / "outputs"
+TARGET_DATA_DIR = ML_DIR.parent / "frontend" / "public" / "data"
 
-os.makedirs(TARGET_DATA_DIR, exist_ok=True)
+TARGET_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 def export_hotspot_summaries():
-    summaries_csv = os.path.join(OUTPUTS_DIR, "hotspot_summaries.csv")
-    if os.path.exists(summaries_csv):
+    summaries_csv = OUTPUTS_DIR / "hotspot_summaries.csv"
+    if summaries_csv.exists():
         df = pd.read_csv(summaries_csv)
         data = df.to_dict(orient="records")
-        out_path = os.path.join(TARGET_DATA_DIR, "hotspot_summaries.json")
+        out_path = TARGET_DATA_DIR / "hotspot_summaries.json"
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         print(f"[SUCCESS] Exported {len(data)} hotspot clusters to {out_path}")
 
 def export_hotspots_firs():
-    hotspots_csv = os.path.join(OUTPUTS_DIR, "hotspots.csv")
-    if os.path.exists(hotspots_csv):
+    hotspots_csv = OUTPUTS_DIR / "hotspots.csv"
+    if hotspots_csv.exists():
         df = pd.read_csv(hotspots_csv)
         # Take the top 100 FIRs (or all if small, but top 100/200 keeps frontend fast)
         sample_df = df.head(200)
         data = sample_df.to_dict(orient="records")
-        out_path = os.path.join(TARGET_DATA_DIR, "hotspots.json")
+        out_path = TARGET_DATA_DIR / "hotspots.json"
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         print(f"[SUCCESS] Exported {len(data)} FIR hotspot records to {out_path}")
 
 def export_station_risks():
-    risk_csv = os.path.join(OUTPUTS_DIR, "station_risk_scores.csv")
-    if os.path.exists(risk_csv):
+    risk_csv = OUTPUTS_DIR / "station_risk_scores.csv"
+    if risk_csv.exists():
         df = pd.read_csv(risk_csv)
         data = df.to_dict(orient="records")
-        out_path = os.path.join(TARGET_DATA_DIR, "station_risk_scores.json")
+        out_path = TARGET_DATA_DIR / "station_risk_scores.json"
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         print(f"[SUCCESS] Exported {len(data)} police station risk scores to {out_path}")
 
 def export_forecasts():
-    forecast_csv = os.path.join(OUTPUTS_DIR, "crime_forecasts.csv")
-    if os.path.exists(forecast_csv):
+    forecast_csv = OUTPUTS_DIR / "crime_forecasts.csv"
+    if forecast_csv.exists():
         df = pd.read_csv(forecast_csv)
         data = df.to_dict(orient="records")
-        out_path = os.path.join(TARGET_DATA_DIR, "crime_forecasts.json")
+        out_path = TARGET_DATA_DIR / "crime_forecasts.json"
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         print(f"[SUCCESS] Exported {len(data)} daily forecasts to {out_path}")
 
 def export_kpi_summary():
-    risk_csv = os.path.join(OUTPUTS_DIR, "station_risk_scores.csv")
-    summaries_csv = os.path.join(OUTPUTS_DIR, "hotspot_summaries.csv")
-    forecast_csv = os.path.join(OUTPUTS_DIR, "crime_forecasts.csv")
+    risk_csv = OUTPUTS_DIR / "station_risk_scores.csv"
+    summaries_csv = OUTPUTS_DIR / "hotspot_summaries.csv"
+    forecast_csv = OUTPUTS_DIR / "crime_forecasts.csv"
 
     tot_firs = 0
     tot_hotspots = 0
     tot_stations = 0
     tot_30day_forecast = 0.0
 
-    if os.path.exists(risk_csv):
+    if risk_csv.exists():
         risk_df = pd.read_csv(risk_csv)
         tot_stations = len(risk_df)
         tot_firs = int(risk_df["FIR_Count"].sum())
 
-    if os.path.exists(summaries_csv):
+    if summaries_csv.exists():
         sum_df = pd.read_csv(summaries_csv)
         tot_hotspots = len(sum_df)
 
-    if os.path.exists(forecast_csv):
+    if forecast_csv.exists():
         fc_df = pd.read_csv(forecast_csv)
         tot_30day_forecast = float(fc_df["Forecasted_Crime_Count"].sum())
 
@@ -92,7 +87,7 @@ def export_kpi_summary():
         "forecast_30day_total": round(tot_30day_forecast, 1)
     }
 
-    out_path = os.path.join(TARGET_DATA_DIR, "dashboard_kpis.json")
+    out_path = TARGET_DATA_DIR / "dashboard_kpis.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(kpi_data, f, indent=2)
     print(f"[SUCCESS] Exported KPI dashboard metrics to {out_path}")

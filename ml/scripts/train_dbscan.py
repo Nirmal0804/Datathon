@@ -1,8 +1,15 @@
 import os
+from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
+
+ML_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_INPUT_PATH = ML_DIR / "datasets" / "firs.csv"
+DEFAULT_OUTPUT_HOTSPOTS_PATH = ML_DIR / "outputs" / "hotspots.csv"
+DEFAULT_OUTPUT_SUMMARY_PATH = ML_DIR / "outputs" / "hotspot_summaries.csv"
+DEFAULT_MODEL_OUTPUT_PATH = ML_DIR / "models" / "dbscan_hotspots.joblib"
 
 # Earth radius in kilometers
 EARTH_RADIUS_KM = 6371.0088
@@ -20,13 +27,18 @@ SEVERITY_WEIGHTS = {
 }
 
 def train_geospatial_dbscan(
-    input_path="datasets/firs.csv",
-    output_hotspots_path="outputs/hotspots.csv",
-    output_summary_path="outputs/hotspot_summaries.csv",
-    model_output_path="models/dbscan_hotspots.joblib",
+    input_path=DEFAULT_INPUT_PATH,
+    output_hotspots_path=DEFAULT_OUTPUT_HOTSPOTS_PATH,
+    output_summary_path=DEFAULT_OUTPUT_SUMMARY_PATH,
+    model_output_path=DEFAULT_MODEL_OUTPUT_PATH,
     eps_km=1.0,
     min_samples=10
 ):
+    input_path = Path(input_path)
+    output_hotspots_path = Path(output_hotspots_path)
+    output_summary_path = Path(output_summary_path)
+    model_output_path = Path(model_output_path)
+
     print("=" * 60)
     print("STARTING GEOSPATIAL DBSCAN HOTSPOT DETECTION MODULE")
     print("=" * 60)
@@ -113,14 +125,15 @@ def train_geospatial_dbscan(
 
     # 5. Save outputs and serialize model
     print(f"[4/5] Saving enriched dataset to {output_hotspots_path}...")
-    os.makedirs(os.path.dirname(output_hotspots_path), exist_ok=True)
+    output_hotspots_path.parent.mkdir(parents=True, exist_ok=True)
     firs.to_csv(output_hotspots_path, index=False)
 
     print(f"      Saving cluster summaries to {output_summary_path}...")
+    output_summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_df.to_csv(output_summary_path, index=False)
 
     print(f"[5/5] Serializing model artifact to {model_output_path}...")
-    os.makedirs(os.path.dirname(model_output_path), exist_ok=True)
+    model_output_path.parent.mkdir(parents=True, exist_ok=True)
     
     model_metadata = {
         'model': dbscan,
