@@ -3,11 +3,21 @@ import { Search, Bell, Menu, Plus, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function TopNavbar({ toggleMobileMenu }) {
-  const [avatarUrl, setAvatarUrl] = React.useState(localStorage.getItem('ksp_user_avatar'));
+  const [avatarUrl, setAvatarUrl] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_avatar');
+      return saved && saved !== 'undefined' && saved !== 'null' ? saved : null;
+    } catch {
+      return null;
+    }
+  });
 
   React.useEffect(() => {
     const handleAvatarUpdate = () => {
-      setAvatarUrl(localStorage.getItem('ksp_user_avatar'));
+      try {
+        const saved = localStorage.getItem('ksp_user_avatar');
+        setAvatarUrl(saved && saved !== 'undefined' && saved !== 'null' ? saved : null);
+      } catch {}
     };
     window.addEventListener('ksp_avatar_updated', handleAvatarUpdate);
     return () => window.removeEventListener('ksp_avatar_updated', handleAvatarUpdate);

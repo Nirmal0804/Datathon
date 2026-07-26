@@ -6,6 +6,7 @@ import {
   Clock, Check, Sparkles, AlertCircle, FileText, ChevronRight, Sliders, MapPin, Key
 } from 'lucide-react';
 import { useToast } from '../../components/ui/Toast';
+import AuditLogs from './components/AuditLogs';
 
 // ─── Initial State Helpers ───────────────────────────────────────────────────
 const getRoleDefaultProfile = (role) => {
@@ -1143,7 +1144,14 @@ export default function SettingsLayout({ role = 'admin' }) {
           )}
 
           {/* ══════════════════════════════════════════════════════════════════
-              SECTION 5 & 6: ACCOUNT READ-ONLY INFORMATION & RECENT ACTIVITY
+              SECTION 5: AUDIT LOGS
+             ══════════════════════════════════════════════════════════════════ */}
+          {(activeSection === 'audit' || activeSection === 'all') && (
+            <AuditLogs />
+          )}
+
+          {/* ══════════════════════════════════════════════════════════════════
+              SECTION 6 & 7: ACCOUNT READ-ONLY INFORMATION & RECENT ACTIVITY
              ══════════════════════════════════════════════════════════════════ */}
           {(activeSection === 'profile' || activeSection === 'all') && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
