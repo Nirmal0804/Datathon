@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Shield, Users, UserCheck, ShieldAlert, Plus, Copy, Download,
   Search, ChevronDown, ChevronRight, CheckCircle, AlertTriangle, Clock,
-  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X, Code, Check, Lock
+  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X, Code, Check, Lock, FileSpreadsheet
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 
@@ -268,6 +268,9 @@ export default function AdminRoles() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewTab, setPreviewTab] = useState('effective'); // 'effective' | 'ui' | 'jwt'
 
+  // Export Matrix Modal State
+  const [showExportModal, setShowExportModal] = useState(false);
+
   // Timeline list
   const [timeline, setTimeline] = useState(INITIAL_TIMELINE);
 
@@ -456,11 +459,93 @@ export default function AdminRoles() {
   };
 
   const handleExport = () => {
+    setShowExportModal(true);
+  };
+
+  // Generate CSV data for matrix download
+  const generateCSVMatrix = () => {
+    const roleNames = roles.map((r) => r.name);
+    const header = ['"Module Group"', '"Permission Name"', '"High Risk"', ...roleNames.map((n) => `"${n}"`)].join(',');
+
+    const rows = [];
+    const samplePerms = permissions[roles[0]?.id] || {};
+
+    Object.entries(samplePerms).forEach(([groupName, items]) => {
+      items.forEach((item) => {
+        const row = [
+          `"${groupName}"`,
+          `"${item.label}"`,
+          item.highRisk ? '"YES"' : '"NO"',
+        ];
+
+        roles.forEach((r) => {
+          const rolePermGroup = permissions[r.id]?.[groupName] || [];
+          const match = rolePermGroup.find((p) => p.id === item.id);
+          row.push(match?.granted ? '"GRANTED"' : '"RESTRICTED"');
+        });
+
+        rows.push(row.join(','));
+      });
+    });
+
+    return [header, ...rows].join('\n');
+  };
+
+  // Download CSV File
+  const handleDownloadCSV = () => {
+    const csvData = generateCSVMatrix();
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `KSP_RBAC_Permission_Matrix_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
     addToast({
-      title: 'Permission Matrix Exported',
-      message: `RBAC configuration exported as JSON & CSV matrix.`,
+      title: 'CSV Matrix Downloaded',
+      message: 'File saved as KSP_RBAC_Permission_Matrix.csv',
       type: 'success',
     });
+    setShowExportModal(false);
+  };
+
+  // Download JSON File
+  const handleDownloadJSON = () => {
+    const exportPayload = {
+      generatedAt: new Date().toISOString(),
+      platform: 'Karnataka Police Intelligence Platform',
+      version: '2.4.0',
+      totalRoles: roles.length,
+      roles: roles.map((r) => ({
+        id: r.id,
+        name: r.name,
+        level: r.level,
+        riskLevel: r.riskLevel,
+        userCount: r.userCount,
+        permissions: permissions[r.id] || {},
+      })),
+    };
+
+    const jsonStr = JSON.stringify(exportPayload, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `KSP_RBAC_Permission_Matrix_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      title: 'JSON Specification Downloaded',
+      message: 'File saved as KSP_RBAC_Permission_Matrix.json',
+      type: 'success',
+    });
+    setShowExportModal(false);
   };
 
   const handleCloneRole = () => {
@@ -571,7 +656,7 @@ export default function AdminRoles() {
             onClick={handleExport}
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-4 h-4 text-[#0B1F4D]" />
             Export Matrix
           </button>
         </div>
@@ -1302,6 +1387,94 @@ export default function AdminRoles() {
                   Close Preview
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 8. EXPORT MATRIX MODAL ────────────────────────────────────────── */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#E7ECF3] rounded-[26px] max-w-lg w-full shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 space-y-4 p-6">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0">
+                  <Download className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#0F172A]">Export Permission Matrix</h3>
+                  <p className="text-xs font-medium text-[#64748B]">Select export file format to generate RBAC documentation.</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="w-8 h-8 rounded-full bg-[#F8F9FB] hover:bg-[#E7ECF3] text-[#64748B] flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Export Summary Info */}
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-xs space-y-1.5">
+              <div className="flex justify-between font-bold text-[#0F172A]">
+                <span>Configured System Roles:</span>
+                <span className="text-[#0B1F4D] font-extrabold">{roles.length} Roles</span>
+              </div>
+              <div className="flex justify-between font-bold text-[#0F172A]">
+                <span>Permission Categories:</span>
+                <span className="text-[#0B1F4D] font-extrabold">{Object.keys(currentRolePerms).length} Groups</span>
+              </div>
+              <div className="flex justify-between font-semibold text-[#64748B]">
+                <span>Generated Timestamp:</span>
+                <span>{new Date().toLocaleTimeString()}</span>
+              </div>
+            </div>
+
+            {/* Export Options */}
+            <div className="space-y-3 pt-1">
+              <button
+                onClick={handleDownloadCSV}
+                className="w-full p-4 rounded-[18px] border border-[#E7ECF3] hover:border-[#0B1F4D] hover:bg-[#F4F7FF] transition-all flex items-center justify-between text-left group cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-[12px] bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0">
+                    <FileSpreadsheet className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-[#0F172A] group-hover:text-[#0B1F4D]">CSV Spreadsheet (.csv)</h4>
+                    <p className="text-[10px] text-[#64748B] mt-0.5">Compatible with Excel, Google Sheets &amp; security audit compliance tools.</p>
+                  </div>
+                </div>
+                <Download className="w-4 h-4 text-[#64748B] group-hover:text-[#0B1F4D] shrink-0" />
+              </button>
+
+              <button
+                onClick={handleDownloadJSON}
+                className="w-full p-4 rounded-[18px] border border-[#E7ECF3] hover:border-[#0B1F4D] hover:bg-[#F4F7FF] transition-all flex items-center justify-between text-left group cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-[12px] bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center shrink-0">
+                    <Code className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-[#0F172A] group-hover:text-[#0B1F4D]">JSON Specification (.json)</h4>
+                    <p className="text-[10px] text-[#64748B] mt-0.5">Structured schema for automated deployment, CI/CD &amp; system backups.</p>
+                  </div>
+                </div>
+                <Download className="w-4 h-4 text-[#64748B] group-hover:text-[#0B1F4D] shrink-0" />
+              </button>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="h-9 px-5 rounded-full border border-[#E7ECF3] text-xs font-extrabold text-[#64748B] hover:bg-[#F8F9FB] cursor-pointer"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
