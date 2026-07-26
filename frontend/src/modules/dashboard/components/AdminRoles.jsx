@@ -552,14 +552,6 @@ export default function AdminRoles() {
           )}
 
           <button
-            onClick={() => setShowPreviewModal(true)}
-            className="h-10 px-5 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] font-extrabold text-xs hover:bg-[#0B1F4D]/10 transition-colors duration-150 flex items-center gap-2 cursor-pointer"
-          >
-            <Eye className="w-4 h-4 text-[#0B1F4D]" />
-            Preview Access
-          </button>
-
-          <button
             onClick={handleCreateRole}
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
@@ -667,19 +659,6 @@ export default function AdminRoles() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedRoleId(r.id);
-                        setShowPreviewModal(true);
-                      }}
-                      title="Preview Access"
-                      className="w-9 h-9 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center justify-center cursor-pointer shrink-0"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
                         setPendingDeleteRole(r);
                       }}
                       title="Delete Role"
@@ -723,15 +702,6 @@ export default function AdminRoles() {
               }`}>
                 {selectedRole.riskLevel === 'high' ? '🔴 High Risk Role' : selectedRole.riskLevel === 'medium' ? '🟡 Medium Risk Role' : '🟢 Low Risk Role'}
               </span>
-
-              <button
-                type="button"
-                onClick={() => setShowPreviewModal(true)}
-                className="h-8 px-3 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] text-xs font-extrabold hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                Preview Access
-              </button>
 
               <button
                 type="button"
