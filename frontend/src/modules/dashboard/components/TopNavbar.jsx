@@ -3,6 +3,16 @@ import { Search, Bell, Menu, Plus, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function TopNavbar({ toggleMobileMenu }) {
+  const [avatarUrl, setAvatarUrl] = React.useState(localStorage.getItem('ksp_user_avatar'));
+
+  React.useEffect(() => {
+    const handleAvatarUpdate = () => {
+      setAvatarUrl(localStorage.getItem('ksp_user_avatar'));
+    };
+    window.addEventListener('ksp_avatar_updated', handleAvatarUpdate);
+    return () => window.removeEventListener('ksp_avatar_updated', handleAvatarUpdate);
+  }, []);
+
   return (
     <header className="h-[72px] bg-transparent flex items-center justify-between px-6 lg:px-8 sticky top-0 z-30 shrink-0">
       <div className="flex items-center gap-4 w-full md:w-auto">
@@ -15,11 +25,15 @@ export default function TopNavbar({ toggleMobileMenu }) {
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Relocated Officer Profile Card (Replacing Search Bar) */}
+        {/* Relocated Officer Profile Card */}
         <div className="hidden sm:flex items-center gap-3 bg-white border border-[#E7ECF3] px-4 py-2 rounded-full shadow-xs text-[#0F172A]">
           <div className="relative">
-            <div className="w-8 h-8 rounded-full bg-[#0B1F4D] text-[#C79A2B] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              RK
+            <div className="w-8 h-8 rounded-full bg-[#0B1F4D] text-[#C79A2B] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Officer Avatar" className="w-full h-full object-cover" />
+              ) : (
+                'RK'
+              )}
             </div>
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
