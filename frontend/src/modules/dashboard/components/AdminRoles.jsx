@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Shield, Users, UserCheck, ShieldAlert, Plus, Copy, Download,
   Search, ChevronDown, ChevronRight, CheckCircle, AlertTriangle, Clock,
-  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X
+  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X, Code, Check, Lock
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 
@@ -264,6 +264,10 @@ export default function AdminRoles() {
   // Delete role confirmation modal state
   const [pendingDeleteRole, setPendingDeleteRole] = useState(null);
 
+  // Preview Access Modal State
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewTab, setPreviewTab] = useState('effective'); // 'effective' | 'ui' | 'jwt'
+
   // Timeline list
   const [timeline, setTimeline] = useState(INITIAL_TIMELINE);
 
@@ -340,18 +344,15 @@ export default function AdminRoles() {
     const roleIdToDelete = pendingDeleteRole.id;
     const roleNameToDelete = pendingDeleteRole.name;
 
-    // Filter out deleted role
     const updatedRoles = roles.filter((r) => r.id !== roleIdToDelete);
     setRoles(updatedRoles);
 
-    // Remove from permissions object
     setPermissions((prev) => {
       const next = { ...prev };
       delete next[roleIdToDelete];
       return next;
     });
 
-    // If deleted role was selected, switch to remaining role
     if (selectedRoleId === roleIdToDelete) {
       setSelectedRoleId(updatedRoles[0].id);
     }
@@ -388,6 +389,17 @@ export default function AdminRoles() {
       assignedUsers: selectedRole ? selectedRole.userCount : 0,
     };
   }, [currentRolePerms, selectedRole]);
+
+  // Simulated Scope List for JWT Tab
+  const grantedScopeList = useMemo(() => {
+    const scopes = [];
+    Object.values(currentRolePerms).forEach((items) => {
+      items.forEach((item) => {
+        if (item.granted) scopes.push(item.id);
+      });
+    });
+    return scopes;
+  }, [currentRolePerms]);
 
   // Filtered permission groups based on search query
   const filteredGroups = useMemo(() => {
@@ -540,6 +552,14 @@ export default function AdminRoles() {
           )}
 
           <button
+            onClick={() => setShowPreviewModal(true)}
+            className="h-10 px-5 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] font-extrabold text-xs hover:bg-[#0B1F4D]/10 transition-colors duration-150 flex items-center gap-2 cursor-pointer"
+          >
+            <Eye className="w-4 h-4 text-[#0B1F4D]" />
+            Preview Access
+          </button>
+
+          <button
             onClick={handleCreateRole}
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
@@ -647,6 +667,19 @@ export default function AdminRoles() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
+                        setSelectedRoleId(r.id);
+                        setShowPreviewModal(true);
+                      }}
+                      title="Preview Access"
+                      className="w-9 h-9 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center justify-center cursor-pointer shrink-0"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setPendingDeleteRole(r);
                       }}
                       title="Delete Role"
@@ -690,6 +723,15 @@ export default function AdminRoles() {
               }`}>
                 {selectedRole.riskLevel === 'high' ? '🔴 High Risk Role' : selectedRole.riskLevel === 'medium' ? '🟡 Medium Risk Role' : '🟢 Low Risk Role'}
               </span>
+
+              <button
+                type="button"
+                onClick={() => setShowPreviewModal(true)}
+                className="h-8 px-3 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] text-xs font-extrabold hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                Preview Access
+              </button>
 
               <button
                 type="button"
@@ -957,13 +999,7 @@ export default function AdminRoles() {
 
               <button
                 type="button"
-                onClick={() => {
-                  addToast({
-                    title: 'Role Access Preview',
-                    message: `Simulating access control token for ${selectedRole?.name || 'Role'}.`,
-                    type: 'info',
-                  });
-                }}
+                onClick={() => setShowPreviewModal(true)}
                 className="h-9 px-4 rounded-full border border-[#0B1F4D]/20 bg-white text-xs font-extrabold text-[#0B1F4D] hover:bg-[#0B1F4D]/5 transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -1050,6 +1086,252 @@ export default function AdminRoles() {
               >
                 Delete Role
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 7. PREVIEW ACCESS MODAL ───────────────────────────────────────── */}
+      {showPreviewModal && selectedRole && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#E7ECF3] rounded-[26px] max-w-4xl w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="px-6 py-5 bg-[#0B1F4D] text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-[14px] bg-[#C79A2B]/20 border border-[#C79A2B]/40 text-[#C79A2B] flex items-center justify-center text-xl shrink-0">
+                  {selectedRole.badge || '🛡️'}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-black tracking-tight text-white">
+                      Role Access Preview — {selectedRole.name}
+                    </h3>
+                    <span className="bg-[#C79A2B] text-[#0B1F4D] px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase">
+                      {selectedRole.level}
+                    </span>
+                  </div>
+                  <p className="text-xs font-medium text-slate-300 mt-0.5">
+                    Real-time simulation of operational permissions, UI scope &amp; authorization token for {selectedRole.userCount} assigned personnel.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Navigation Tabs */}
+            <div className="flex items-center gap-2 px-6 py-3 bg-[#F8F9FB] border-b border-[#E7ECF3]">
+              {[
+                { id: 'effective', label: 'Effective Access Matrix', icon: Eye },
+                { id: 'ui', label: 'UI Capability Scope', icon: Layers },
+                { id: 'jwt', label: 'Simulated Bearer Token (JWT)', icon: Code },
+              ].map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setPreviewTab(id)}
+                  className={`h-8 px-4 rounded-full text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+                    previewTab === id
+                      ? 'bg-[#0B1F4D] text-white shadow-xs'
+                      : 'bg-white border border-[#E7ECF3] text-[#64748B] hover:text-[#0F172A] hover:bg-[#E7ECF3]/50'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto flex-1 space-y-5">
+              {/* TAB 1: EFFECTIVE ACCESS MATRIX */}
+              {previewTab === 'effective' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between bg-[#F8F9FB] border border-[#E7ECF3] p-4 rounded-[16px]">
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs font-bold text-[#0F172A]">
+                        Total Capabilities: <span className="font-extrabold text-[#0B1F4D]">{kpiStats.granted + kpiStats.restricted}</span>
+                      </span>
+                      <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                        <CheckCircle className="w-3.5 h-3.5" /> Allowed: {kpiStats.granted}
+                      </span>
+                      <span className="text-xs font-bold text-rose-600 flex items-center gap-1">
+                        <X className="w-3.5 h-3.5" /> Denied: {kpiStats.restricted}
+                      </span>
+                    </div>
+
+                    <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+                      Simulation Mode: Active Policy
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(currentRolePerms).map(([groupName, items]) => (
+                      <div key={groupName} className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 space-y-2.5">
+                        <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-2">
+                          <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{groupName}</h4>
+                          <span className="text-[10px] font-extrabold text-[#64748B]">
+                            {items.filter(i => i.granted).length}/{items.length} Active
+                          </span>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          {items.map((item) => (
+                            <div key={item.id} className="flex items-center justify-between text-xs py-1 px-2 rounded-[8px] bg-white border border-[#E7ECF3]/60">
+                              <span className="font-bold text-[#0F172A] flex items-center gap-1.5">
+                                {item.label}
+                                {item.highRisk && (
+                                  <span className="text-[9px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                                    High Risk
+                                  </span>
+                                )}
+                              </span>
+
+                              <span className={`inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                                item.granted
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  : 'bg-rose-50 text-rose-700 border-rose-200'
+                              }`}>
+                                {item.granted ? <Check className="w-3 h-3 text-emerald-600" /> : <X className="w-3 h-3 text-rose-600" />}
+                                {item.granted ? 'ALLOWED' : 'DENIED'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: UI CAPABILITY SCOPE */}
+              {previewTab === 'ui' && (
+                <div className="space-y-5">
+                  <div className="bg-[#F8F9FB] border border-[#E7ECF3] p-4 rounded-[18px] space-y-3">
+                    <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Dashboard Module Visibility Simulation</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {[
+                        { module: 'Overview Dashboard', visible: true },
+                        { module: 'FIR Management', visible: currentRolePerms['FIR Management']?.some(i => i.id === 'fir_view' && i.granted) },
+                        { module: 'Hotspot Detection', visible: currentRolePerms['GIS & Mapping']?.some(i => i.id === 'gis_read' && i.granted) },
+                        { module: 'Users Control', visible: currentRolePerms['User Administration']?.some(i => i.id === 'user_view' && i.granted) },
+                        { module: 'System Health', visible: currentRolePerms['System Configuration']?.some(i => i.id === 'sys_read' && i.granted) },
+                        { module: 'System Audit Logs', visible: currentRolePerms['Audit Logs']?.some(i => i.id === 'audit_view' && i.granted) },
+                        { module: 'Platform Configuration', visible: currentRolePerms['System Configuration']?.some(i => i.id === 'sys_modify' && i.granted) },
+                        { module: 'Roles & Privileges', visible: currentRolePerms['User Administration']?.some(i => i.id === 'user_create' && i.granted) },
+                      ].map(({ module, visible }) => (
+                        <div key={module} className={`p-3 rounded-[12px] border text-center ${
+                          visible ? 'bg-white border-emerald-200 text-emerald-800' : 'bg-slate-100 border-slate-200 text-slate-400 opacity-60'
+                        }`}>
+                          <p className="text-xs font-extrabold">{module}</p>
+                          <span className={`inline-block text-[10px] font-black mt-1 px-2 py-0.5 rounded-full ${
+                            visible ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
+                          }`}>
+                            {visible ? 'Visible' : 'Hidden'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#F8F9FB] border border-[#E7ECF3] p-4 rounded-[18px] space-y-3">
+                    <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Critical Data Actions Overview</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {[
+                        { action: 'Export Intelligence PDF/CSV', permitted: currentRolePerms['Intelligence Reports']?.some(i => i.id === 'intel_export' && i.granted) },
+                        { action: 'Purge Database Archives', permitted: currentRolePerms['Database Management']?.some(i => i.id === 'db_purge' && i.granted) },
+                        { action: 'Delete FIR Records', permitted: currentRolePerms['FIR Management']?.some(i => i.id === 'fir_delete' && i.granted) },
+                        { action: 'Create Police User Accounts', permitted: currentRolePerms['User Administration']?.some(i => i.id === 'user_create' && i.granted) },
+                        { action: 'Suspend Officers', permitted: currentRolePerms['User Administration']?.some(i => i.id === 'user_suspend' && i.granted) },
+                        { action: 'Restore DB Snapshots', permitted: currentRolePerms['Database Management']?.some(i => i.id === 'db_restore' && i.granted) },
+                      ].map(({ action, permitted }) => (
+                        <div key={action} className="p-3 bg-white border border-[#E7ECF3] rounded-[12px] flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#0F172A]">{action}</span>
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                            permitted ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'
+                          }`}>
+                            {permitted ? 'Permitted' : 'Blocked'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: SIMULATED BEARER TOKEN (JWT) */}
+              {previewTab === 'jwt' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-[#64748B]">
+                      Simulated OAuth2 / OpenID Connect Bearer Claims for authentication headers:
+                    </p>
+
+                    <button
+                      onClick={() => {
+                        const jwtStr = JSON.stringify({
+                          iss: "ksp-iam-auth-gateway",
+                          sub: `pol_role_${selectedRole.id}`,
+                          role: selectedRole.name,
+                          accessLevel: selectedRole.level,
+                          activePermissions: kpiStats.granted,
+                          scopes: grantedScopeList,
+                          issuedAt: new Date().toISOString(),
+                        }, null, 2);
+                        navigator.clipboard.writeText(jwtStr);
+                        addToast({
+                          title: 'JWT Payload Copied',
+                          message: 'Token scopes copied to clipboard.',
+                          type: 'success',
+                        });
+                      }}
+                      className="h-8 px-3 rounded-full border border-[#0B1F4D]/20 bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#0B1F4D]/5 transition-colors cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      Copy Token JSON
+                    </button>
+                  </div>
+
+                  <div className="bg-[#0F172A] text-emerald-400 p-5 rounded-[18px] font-mono text-xs overflow-x-auto leading-relaxed shadow-inner border border-slate-800">
+                    <pre>
+                      {JSON.stringify(
+                        {
+                          iss: "ksp-iam-auth-gateway",
+                          sub: `pol_role_${selectedRole.id}`,
+                          role: selectedRole.name,
+                          accessLevel: selectedRole.level,
+                          riskProfile: selectedRole.riskLevel,
+                          activePermissions: kpiStats.granted,
+                          scopes: grantedScopeList,
+                          issuedAt: new Date().toISOString(),
+                        },
+                        null,
+                        2
+                      )}
+                    </pre>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-[#F8F9FB] border-t border-[#E7ECF3] flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#64748B]">
+                Karnataka Police RBAC Simulation Tool
+              </span>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowPreviewModal(false)}
+                  className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors cursor-pointer shadow-sm"
+                >
+                  Close Preview
+                </button>
+              </div>
             </div>
           </div>
         </div>
