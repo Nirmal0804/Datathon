@@ -376,13 +376,14 @@ export default function AnalystHotspotLayout({ onNavigate }) {
         ))}
       </div>
 
-      {/* Filters */}
+      {/* Toolbar Filters */}
       <HotspotFilters 
         filters={filters}
         setFilters={setFilters}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onReset={handleResetFilters}
+        onExport={handleExportData}
         role="analyst"
       />
 

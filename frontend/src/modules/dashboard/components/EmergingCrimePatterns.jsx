@@ -23,11 +23,25 @@ export default function EmergingCrimePatterns() {
       riskScore: 78,
       confidence: 'Medium',
       desc: 'ML trajectory forecasting models predicted new transport syndicate path node.'
+    },
+    {
+      title: 'Commercial Burglary Trend',
+      location: 'Belagavi Central Market',
+      riskScore: 88,
+      confidence: 'High',
+      desc: 'Automated cluster alert: multi-store forced entries logged post-midnight.'
+    },
+    {
+      title: 'Inter-district Vehicle Theft',
+      location: 'Ballari Highway Sector 4',
+      riskScore: 73,
+      confidence: 'Medium',
+      desc: 'High correlation with regional organized vehicle stripping operations.'
     }
   ];
 
   return (
-    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between transition-all duration-200">
+    <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 sm:p-7 shadow-sm flex flex-col h-[560px] min-h-[560px] justify-between transition-all duration-200">
       
       {/* Header */}
       <div className="flex items-start justify-between border-b border-[#E7EAF0] pb-3 mb-3 shrink-0">
