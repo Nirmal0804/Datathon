@@ -87,10 +87,16 @@ export class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-[400px] flex items-center justify-center">
+        <div className="min-h-[400px] flex items-center justify-center p-6">
           <ErrorState
             type="500"
-            onAction={() => this.setState({ hasError: false, error: null })}
+            onAction={() => {
+              try {
+                localStorage.removeItem('ksp_user_profile');
+              } catch {}
+              this.setState({ hasError: false, error: null });
+              window.location.reload();
+            }}
           />
         </div>
       );

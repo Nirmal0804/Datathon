@@ -514,10 +514,10 @@ export default function SettingsLayout({ role = 'admin' }) {
                 {/* Circular Avatar */}
                 <div className="relative group shrink-0">
                   <div className="w-24 h-24 rounded-full bg-[#0B1F4D] text-[#C79A2B] font-black text-2xl border-4 border-[#E7ECF3] flex items-center justify-center overflow-hidden shadow-md">
-                    {profile.avatarUrl ? (
-                      <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
+                    {profile?.avatarUrl ? (
+                      <img src={profile.avatarUrl} alt={profile?.fullName || 'User Avatar'} className="w-full h-full object-cover" />
                     ) : (
-                      <span>{profile.fullName.split(' ').map((n) => n[0]).join('')}</span>
+                      <span>{(profile?.fullName || 'User Name').split(' ').filter(Boolean).map((n) => n[0]).join('').substring(0, 2).toUpperCase()}</span>
                     )}
                   </div>
 

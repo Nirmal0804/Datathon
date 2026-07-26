@@ -78,11 +78,18 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
     : { initials: 'AR', name: 'Analyst S. Rao', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
 
-  const profileName = customProfile?.fullName || defaultProfile.name;
-  const profileRank = customProfile?.rank || defaultProfile.roleText;
-  const profileStation = customProfile?.policeStation || defaultProfile.station;
+  const profileName = (customProfile && typeof customProfile.fullName === 'string' && customProfile.fullName.trim())
+    ? customProfile.fullName.trim()
+    : defaultProfile.name;
+  const profileRank = (customProfile && typeof customProfile.rank === 'string' && customProfile.rank.trim())
+    ? customProfile.rank.trim()
+    : defaultProfile.roleText;
+  const profileStation = (customProfile && typeof customProfile.policeStation === 'string' && customProfile.policeStation.trim())
+    ? customProfile.policeStation.trim()
+    : defaultProfile.station;
+
   const profileInitials = profileName
-    ? profileName.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()
+    ? profileName.split(' ').filter(Boolean).map((n) => n[0]).join('').substring(0, 2).toUpperCase() || defaultProfile.initials
     : defaultProfile.initials;
 
   return (

@@ -1225,17 +1225,19 @@ export default function AdminRoles() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {Object.entries(currentRolePerms).map(([groupName, items]) => (
-                      <div key={groupName} className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 space-y-2.5">
-                        <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-2">
-                          <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{groupName}</h4>
-                          <span className="text-[10px] font-extrabold text-[#64748B]">
-                            {items.filter(i => i.granted).length}/{items.length} Active
-                          </span>
-                        </div>
+                    {Object.entries(currentRolePerms).map(([groupName, items]) => {
+                      const safeItems = Array.isArray(items) ? items : [];
+                      return (
+                        <div key={groupName} className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 space-y-2.5">
+                          <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-2">
+                            <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{groupName}</h4>
+                            <span className="text-[10px] font-extrabold text-[#64748B]">
+                              {safeItems.filter(i => i?.granted).length}/{safeItems.length} Active
+                            </span>
+                          </div>
 
-                        <div className="space-y-1.5">
-                          {items.map((item) => (
+                          <div className="space-y-1.5">
+                            {safeItems.map((item) => (
                             <div key={item.id} className="flex items-center justify-between text-xs py-1 px-2 rounded-[8px] bg-white border border-[#E7ECF3]/60">
                               <span className="font-bold text-[#0F172A] flex items-center gap-1.5">
                                 {item.label}
@@ -1258,7 +1260,8 @@ export default function AdminRoles() {
                           ))}
                         </div>
                       </div>
-                    ))}
+                    );
+                  })}
                   </div>
                 </div>
               )}
