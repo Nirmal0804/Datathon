@@ -136,33 +136,42 @@ export default function AdminSystemHealth() {
   const { addToast } = useToast();
 
   const handleExportDiagnostics = () => {
-    const csvHeaders = ['Component / Service', 'Metric / Property', 'Value / Status'];
-    const csvRows = [
-      ['"Overall System Status"', '"Status"', '"Healthy (99.98% Uptime)"'],
-      ['"CPU Utilization"', '"Percentage"', '"42%"'],
-      ['"Memory Utilization"', '"Percentage"', '"61%"'],
-      ['"Storage Utilization"', '"Percentage"', '"38%"'],
-      ['"Network Traffic"', '"Percentage"', '"12%"'],
-      ...PLATFORM_SERVICES.flatMap(s => s.metrics.map(m => [`"${s.name}"`, `"${m.label}"`, `"${m.val}"`])),
-      ...DIAGNOSTIC_ALERTS.map(a => [`"Alert Notice"`, `"${a.title}"`, `"${a.severity}"`]),
-    ];
+    try {
+      const csvHeaders = ['Component / Service', 'Metric / Property', 'Value / Status'];
+      const csvRows = [
+        ['"Overall System Status"', '"Status"', '"Healthy (99.98% Uptime)"'],
+        ['"CPU Utilization"', '"Percentage"', '"42%"'],
+        ['"Memory Utilization"', '"Percentage"', '"61%"'],
+        ['"Storage Utilization"', '"Percentage"', '"38%"'],
+        ['"Network Traffic"', '"Percentage"', '"12%"'],
+        ...PLATFORM_SERVICES.flatMap(s => s.metrics.map(m => [`"${s.name}"`, `"${m.label}"`, `"${m.val}"`])),
+        ...ALERTS.map(a => [`"Alert Notice"`, `"${a.msg}"`, `"${a.level.toUpperCase()}"`]),
+      ];
 
-    const csvContent = [csvHeaders.join(','), ...csvRows.map(r => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `KSP_System_Health_Diagnostics_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      const csvContent = [csvHeaders.join(','), ...csvRows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `KSP_System_Health_Diagnostics_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-    addToast({
-      title: 'Diagnostics Exported',
-      message: 'System health diagnostic report saved as CSV.',
-      type: 'success',
-    });
+      addToast({
+        title: 'Diagnostics Exported',
+        message: 'System health diagnostic report saved as CSV.',
+        type: 'success',
+      });
+    } catch (err) {
+      console.error('Failed to export diagnostics:', err);
+      addToast({
+        title: 'Export Failed',
+        message: 'Unable to export diagnostics file.',
+        type: 'danger',
+      });
+    }
   };
 
   const handleExportLogs = () => {
