@@ -160,6 +160,30 @@ export default function AdminAuditLogs() {
     });
   };
 
+  const handleComplianceReport = () => {
+    addToast({
+      title: 'Compliance Report Generated',
+      message: 'Monthly security compliance report compiled successfully.',
+      type: 'success',
+    });
+  };
+
+  const handleArchiveLogs = () => {
+    addToast({
+      title: 'Logs Archived',
+      message: 'Successfully archived logs older than 90 days to cold storage.',
+      type: 'info',
+    });
+  };
+
+  const handleConfigPolicies = () => {
+    addToast({
+      title: 'Policies Panel Accessed',
+      message: 'Opening audit policy configuration matrix...',
+      type: 'warning',
+    });
+  };
+
   const filteredLogs = useMemo(() => {
     setCurrentPage(1);
     let list = [...AUDIT_LOGS];
@@ -519,13 +543,14 @@ export default function AdminAuditLogs() {
           <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider mb-5">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: 'Export Logs',                icon: Download,     color: 'text-[#0B1F4D] bg-[#0B1F4D]/5 border-[#0B1F4D]/10' },
-              { label: 'Compliance Report',          icon: ClipboardList,color: 'text-violet-700 bg-violet-50 border-violet-200' },
-              { label: 'Archive Old Logs',           icon: Archive,      color: 'text-amber-700 bg-amber-50 border-amber-200' },
-              { label: 'Configure Audit Policies',   icon: Settings,     color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
-            ].map(({ label, icon: Icon, color }) => (
+              { label: 'Export Logs',                icon: Download,     color: 'text-[#0B1F4D] bg-[#0B1F4D]/5 border-[#0B1F4D]/10', action: handleExportCSV },
+              { label: 'Compliance Report',          icon: ClipboardList,color: 'text-violet-700 bg-violet-50 border-violet-200', action: handleComplianceReport },
+              { label: 'Archive Old Logs',           icon: Archive,      color: 'text-amber-700 bg-amber-50 border-amber-200', action: handleArchiveLogs },
+              { label: 'Configure Audit Policies',   icon: Settings,     color: 'text-emerald-700 bg-emerald-50 border-emerald-200', action: handleConfigPolicies },
+            ].map(({ label, icon: Icon, color, action }) => (
               <button
                 key={label}
+                onClick={action}
                 className={`flex flex-col items-center gap-2 p-4 rounded-[16px] border font-bold text-xs text-center hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 cursor-pointer ${color}`}
               >
                 <Icon className="w-5 h-5" />

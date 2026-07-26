@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MoreHorizontal, Download, ArrowUpDown, Search, X, Calendar, Shield, User, FileText, Clock } from 'lucide-react';
+import { MoreHorizontal, Download, ArrowUpDown, Search, X, Calendar, Shield, User, FileText, Clock, FolderOpen, Search as SearchIcon, CheckCircle2, ChevronDown } from 'lucide-react';
 
 const riskBadge = (risk) => {
   switch (risk) {
@@ -23,11 +23,37 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
 
   // Table states
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortField, setSortField] = useState('rawDate'); // default sort by date
-  const [sortDirection, setSortDirection] = useState('desc'); // default latest first
+  const [sortField, setSortField] = useState('rawDate');
+  const [sortDirection, setSortDirection] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCase, setSelectedCase] = useState(null); // for Case Detail Modal
+  const [selectedCase, setSelectedCase] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null); // which row's dropdown is open
+  const [caseStatuses, setCaseStatuses] = useState({}); // override statuses per case id
+  const [actionFeedback, setActionFeedback] = useState(null); // { id, label } for the last action taken
+  const menuRef = useRef(null);
   const itemsPerPage = customItemsPerPage || 6;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Action handler: update status locally
+  const handleCaseAction = (e, rowId, action) => {
+    e.stopPropagation();
+    setOpenMenuId(null);
+    const statusMap = { open: 'Active', investigate: 'Investigating', close: 'Closed' };
+    const labelMap  = { open: 'Case Opened', investigate: 'Investigating', close: 'Case Closed' };
+    setCaseStatuses(prev => ({ ...prev, [rowId]: statusMap[action] }));
+    setActionFeedback({ id: rowId, label: labelMap[action] });
+    setTimeout(() => setActionFeedback(null), 3000);
+  };
 
   // 1. Filtering based on search query
   const filteredCases = useMemo(() => {
@@ -196,18 +222,69 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   </td>
                   <td className="px-6 py-3.5 align-middle">
                     <span className="inline-flex items-center gap-2 text-xs text-[#0F172A] font-bold">
-                      <span className={`w-2 h-2 rounded-full ${statusDot(row.status)}`} />
-                      {row.status}
+                      <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[row.id] || row.status)}`} />
+                      {caseStatuses[row.id] || row.status}
                     </span>
                   </td>
                   <td className="px-6 py-3.5 align-middle text-right" onClick={(e) => e.stopPropagation()}>
-                    <button 
-                      onClick={() => setSelectedCase(row)} 
-                      className="w-8 h-8 rounded-[10px] flex items-center justify-center text-slate-400 hover:text-[#0B1F4D] hover:bg-slate-100 transition-colors cursor-pointer ml-auto"
-                      aria-label={`View details of ${row.id}`}
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
+                    <div className="relative inline-block" ref={openMenuId === row.id ? menuRef : null}>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === row.id ? null : row.id); }}
+                        className="w-8 h-8 rounded-[10px] flex items-center justify-center text-slate-400 hover:text-[#0B1F4D] hover:bg-slate-100 transition-colors cursor-pointer ml-auto"
+                        aria-label={`Actions for ${row.id}`}
+                      >
+                        <MoreHorizontal className="w-4 h-4" />
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      <AnimatePresence>
+                        {openMenuId === row.id && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                            transition={{ duration: 0.12 }}
+                            className="absolute right-0 top-10 z-50 w-48 bg-white border border-[#E7ECF3] rounded-[14px] shadow-xl overflow-hidden"
+                          >
+                            {/* Open Case */}
+                            <button
+                              onClick={(e) => handleCaseAction(e, row.id, 'open')}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left"
+                            >
+                              <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center">
+                                <FolderOpen className="w-3.5 h-3.5 text-blue-600" />
+                              </div>
+                              Open Case
+                            </button>
+
+                            {/* Investigate */}
+                            <button
+                              onClick={(e) => handleCaseAction(e, row.id, 'investigate')}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left"
+                            >
+                              <div className="w-6 h-6 rounded-lg bg-amber-50 flex items-center justify-center">
+                                <SearchIcon className="w-3.5 h-3.5 text-amber-600" />
+                              </div>
+                              Investigate
+                            </button>
+
+                            {/* Divider */}
+                            <div className="mx-3 border-t border-[#F1F5F9]" />
+
+                            {/* Close Case */}
+                            <button
+                              onClick={(e) => handleCaseAction(e, row.id, 'close')}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left"
+                            >
+                              <div className="w-6 h-6 rounded-lg bg-red-50 flex items-center justify-center">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-red-500" />
+                              </div>
+                              Close Case
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </td>
                 </motion.tr>
               ))
@@ -293,8 +370,8 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className={`badge ${riskBadge(selectedCase.risk)} py-0 px-2`}>{selectedCase.risk}</span>
                       <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A]">
-                        <span className={`w-2 h-2 rounded-full ${statusDot(selectedCase.status)} shadow-sm`} />
-                        {selectedCase.status}
+                        <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[selectedCase.id] || selectedCase.status)} shadow-sm`} />
+                        {caseStatuses[selectedCase.id] || selectedCase.status}
                       </span>
                     </div>
                   </div>
@@ -350,14 +427,54 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                 </div>
               </div>
 
-              {/* Close Button Footer */}
-              <div className="px-8 py-5 bg-[#F7F8FA] border-t border-[#E7EAF0] flex justify-end">
-                <button
-                  onClick={() => setSelectedCase(null)}
-                  className="btn-primary"
-                >
-                  Dismiss Briefing
-                </button>
+              {/* Footer with action buttons */}
+              <div className="px-8 py-5 bg-[#F7F8FA] border-t border-[#E7EAF0] flex items-center justify-between gap-3">
+                {/* Action feedback badge */}
+                <AnimatePresence>
+                  {actionFeedback?.id === selectedCase?.id && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      {actionFeedback.label}
+                    </motion.span>
+                  )}
+                  {!actionFeedback && <span />}
+                </AnimatePresence>
+
+                <div className="flex items-center gap-2">
+                  {/* Open Case */}
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'open')}
+                    className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs hover:bg-blue-100 transition-colors cursor-pointer"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5" /> Open
+                  </button>
+                  {/* Investigate */}
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'investigate')}
+                    className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-amber-50 border border-amber-200 text-amber-700 font-bold text-xs hover:bg-amber-100 transition-colors cursor-pointer"
+                  >
+                    <SearchIcon className="w-3.5 h-3.5" /> Investigate
+                  </button>
+                  {/* Close Case */}
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'close')}
+                    className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Close Case
+                  </button>
+                  {/* Dismiss */}
+                  <button
+                    onClick={() => setSelectedCase(null)}
+                    className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-bold text-xs hover:bg-[#0B1F4D]/90 transition-colors cursor-pointer"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
