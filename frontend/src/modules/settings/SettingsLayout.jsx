@@ -62,10 +62,22 @@ export default function SettingsLayout({ role = 'admin' }) {
   const [profile, setProfile] = useState(() => {
     try {
       const saved = localStorage.getItem('ksp_user_profile');
-      if (saved) {
-        return { ...roleDefault, ...JSON.parse(saved) };
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          // Remove null/undefined keys from parsed object
+          const cleanParsed = {};
+          Object.keys(parsed).forEach((k) => {
+            if (parsed[k] !== null && parsed[k] !== undefined && parsed[k] !== '') {
+              cleanParsed[k] = parsed[k];
+            }
+          });
+          return { ...roleDefault, ...cleanParsed };
+        }
       }
-    } catch {}
+    } catch (err) {
+      console.warn('Failed to parse ksp_user_profile:', err);
+    }
     return roleDefault;
   });
   const [initialProfileSnapshot, setInitialProfileSnapshot] = useState(profile);

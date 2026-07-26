@@ -36,20 +36,38 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
   const [customProfile, setCustomProfile] = React.useState(() => {
     try {
       const saved = localStorage.getItem('ksp_user_profile');
-      return saved ? JSON.parse(saved) : null;
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  });
+
+  const [avatarUrl, setAvatarUrl] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_avatar');
+      return saved && saved !== 'undefined' && saved !== 'null' ? saved : null;
     } catch {
       return null;
     }
   });
-  const [avatarUrl, setAvatarUrl] = React.useState(localStorage.getItem('ksp_user_avatar'));
 
   React.useEffect(() => {
     const handleSync = () => {
       try {
         const saved = localStorage.getItem('ksp_user_profile');
-        if (saved) setCustomProfile(JSON.parse(saved));
+        if (saved && saved !== 'undefined' && saved !== 'null') {
+          const parsed = JSON.parse(saved);
+          setCustomProfile(parsed && typeof parsed === 'object' ? parsed : null);
+        }
       } catch {}
-      setAvatarUrl(localStorage.getItem('ksp_user_avatar'));
+      try {
+        const savedAvatar = localStorage.getItem('ksp_user_avatar');
+        setAvatarUrl(savedAvatar && savedAvatar !== 'undefined' && savedAvatar !== 'null' ? savedAvatar : null);
+      } catch {}
     };
 
     window.addEventListener('ksp_profile_updated', handleSync);

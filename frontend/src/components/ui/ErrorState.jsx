@@ -87,17 +87,22 @@ export class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-6">
+        <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center space-y-4">
           <ErrorState
             type="500"
             onAction={() => {
               try {
-                localStorage.removeItem('ksp_user_profile');
+                localStorage.clear();
               } catch {}
               this.setState({ hasError: false, error: null });
-              window.location.reload();
             }}
           />
+          {this.state.error && (
+            <div className="max-w-xl mx-auto p-4 bg-slate-900 border border-slate-800 rounded-xl text-left font-mono text-xs text-rose-400 overflow-x-auto shadow-md">
+              <p className="font-bold text-slate-200 border-b border-slate-800 pb-1 mb-2 uppercase tracking-wider text-[11px]">System Exception Details:</p>
+              <p className="whitespace-pre-wrap">{this.state.error.toString()}</p>
+            </div>
+          )}
         </div>
       );
     }
