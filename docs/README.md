@@ -8,6 +8,8 @@
 
 CrimeIntel unifies crime records, geospatial intelligence, analytical dashboards, hotspot detection, district intelligence, criminal-network analysis, and AI/ML-assisted insights in a secure decision-support platform for law-enforcement workflows.
 
+DEPLOYMENT LINK:https://crime-intel-tosumotv.onslate.in
+
 [![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61dafb)](#5-technology-stack)
 [![Backend](https://img.shields.io/badge/Backend-FastAPI%20(Python)-009688)](#5-technology-stack)
 [![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ecf8e)](#5-technology-stack)
