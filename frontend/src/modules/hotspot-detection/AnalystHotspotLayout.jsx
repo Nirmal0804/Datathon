@@ -457,11 +457,9 @@ export default function AnalystHotspotLayout({ onNavigate }) {
           )}
         </div>
 
-        {/* Right Column (4 cols = 33.3% width) - Sticky Telemetry */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="sticky top-6">
-          
-          <div className="bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col overflow-hidden">
+        {/* Right Column (4 cols = 33.3% width) - Telemetry */}
+        <div className="lg:col-span-4">
+          <div className="sticky top-6 bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col">
             
             {/* Header */}
             <div className="p-4 bg-[#F8F9FB] border-b border-[#E7ECF3] flex justify-between items-center">
@@ -476,7 +474,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
               )}
             </div>
 
-            <div className="p-4 bg-white min-h-[400px] overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
+            <div className="p-4 bg-white">
               {!selectedHotspot ? (
                 <div className="flex flex-col items-center justify-center text-center text-[#64748B] h-64 space-y-3">
                   <ClipboardList className="w-10 h-10 text-[#94A3B8] animate-pulse-soft" />
@@ -652,7 +650,6 @@ export default function AnalystHotspotLayout({ onNavigate }) {
               )}
             </div>
 
-          </div>
           </div>
         </div>
 

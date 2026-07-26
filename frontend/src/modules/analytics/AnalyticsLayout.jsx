@@ -5,7 +5,7 @@ import AnomalyDetection from './components/AnomalyDetection';
 import PredictiveRisk from './components/PredictiveRisk';
 import HotspotAnalytics from './components/HotspotAnalytics';
 import { SUMMARY_CARDS_DATA } from '../../mock/analyticsData';
-import { TrendingUp, TrendingDown, ArrowRight, ShieldAlert, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowRight, ShieldAlert, Calendar, BarChart2 } from 'lucide-react';
 
 // Pure SVG Sparkline Component for KPI Sparklines
 function Sparkline({ points, strokeColor }) {
@@ -51,11 +51,16 @@ export default function AnalyticsLayout() {
       
       {/* 1. Header & Filter controls */}
       <div className="bg-white border border-[#E7ECF3] p-6 rounded-[20px] flex flex-col md:flex-row justify-between items-start md:items-center gap-5 shadow-sm">
-        <div className="space-y-1">
-          <h1 className="text-[22px] font-black text-[#0B1F4D] uppercase tracking-wider">Crime Trend Analysis & Alerts</h1>
-          <p className="text-xs text-[#64748B] font-medium">
-            Monitor historical crime patterns, detect emerging threats, and receive AI-powered intelligence alerts.
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm">
+            <BarChart2 className="w-6 h-6 text-[#C79A2B]" />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-[22px] font-black text-[#0B1F4D] uppercase tracking-wider">Crime Trend Analysis &amp; Alerts</h1>
+            <p className="text-xs text-[#64748B] font-medium">
+              Monitor historical crime patterns, detect emerging threats, and receive AI-powered intelligence alerts.
+            </p>
+          </div>
         </div>
 
         {/* Filters buttons list */}

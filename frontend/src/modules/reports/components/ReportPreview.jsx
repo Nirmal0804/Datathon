@@ -1,165 +1,172 @@
-import React from 'react';
-import { FileText, Download, Printer, Share2, X, Shield, BarChart2, Map, AlertTriangle } from 'lucide-react';
-import { downloadReportFile } from './ReportList';
+import React from "react";
+import { FileText, Download, Printer, Share2, X, Shield, BarChart2, AlertTriangle, TrendingUp, Target, Brain } from "lucide-react";
+import { downloadReportFile } from "./ReportList";
 
-export default function ReportPreview({ report, onClose, role = 'analyst' }) {
+export default function ReportPreview({ report, onClose, role = "analyst" }) {
+  const officerInfo = {
+    analyst: { name: "Inspector Patil", role: "Intelligence Analyst" },
+    officer: { name: "Insp. R. Kumar", role: "Field Officer" },
+    admin:   { name: "Super Admin S. Kumar", role: "System Administrator" },
+  }[role] || { name: "Officer in Charge", role: "Departmental Admin" };
+
+  const handlePrint    = () => window.print();
+  const handleShare    = () => { const url = `${window.location.origin}/reports/secure-view/${report?.id}`; navigator.clipboard.writeText(url).then(() => alert(`Secure link copied: ${url}`)); };
+  const handleExportCSV   = () => downloadReportFile(report, "csv", officerInfo);
+  const handleExportExcel = () => downloadReportFile(report, "excel", officerInfo);
+  const handleExportPDF   = () => downloadReportFile(report, "pdf", officerInfo);
+
   if (!report) {
     return (
-      <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-600 h-full">
-        <FileText className="w-16 h-16 mb-4 opacity-30" />
-        <p className="text-base font-medium">No Report Selected</p>
-        <p className="text-sm mt-1 opacity-70">Select a report from the list to preview</p>
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col items-center justify-center text-[#94A3B8] min-h-[500px]">
+        <div className="w-16 h-16 rounded-[20px] bg-[#F8F9FB] flex items-center justify-center mb-4">
+          <FileText className="w-8 h-8 text-[#CBD5E1]" />
+        </div>
+        <p className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">No Report Selected</p>
+        <p className="text-xs text-[#64748B] mt-1 font-semibold">Select a report from the library to preview it here.</p>
       </div>
     );
   }
 
-  // Resolve dynamic officer identity from current authenticated session
-  const officerInfo = {
-    analyst: { name: 'Inspector Patil', role: 'Intelligence Analyst' },
-    officer: { name: 'Insp. R. Kumar', role: 'Field Officer' },
-    admin: { name: 'Super Admin S. Kumar', role: 'System Administrator' },
-  }[role] || { name: 'Officer in Charge', role: 'Departmental Admin' };
+  const recommendations = [
+    { title: "Increase Patrol Presence", desc: "Property crimes increased 18% in Tech Corridor; increased patrol presence recommended.", priority: "High" },
+    { title: "Transit Node Monitoring", desc: "Narcotics-related arrests show strong correlation with international-transit nodes.", priority: "Medium" },
+    { title: "Festival Season Preparedness", desc: "AI model predicts 12% increase in incidents in the upcoming festival period.", priority: "High" },
+  ];
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleShare = () => {
-    const secureUrl = `${window.location.origin}/reports/secure-view/${report.id}`;
-    navigator.clipboard.writeText(secureUrl).then(() => {
-      alert(`CONFIDENTIAL secure link copied to clipboard: ${secureUrl}`);
-    }).catch(err => {
-      console.error('Failed to copy text: ', err);
-    });
-  };
-
-  const handleExportCSV = () => {
-    downloadReportFile(report, 'csv', officerInfo);
-  };
-
-  const handleExportExcel = () => {
-    downloadReportFile(report, 'excel', officerInfo);
-  };
-
-  const handleExportPDF = () => {
-    downloadReportFile(report, 'pdf', officerInfo);
-  };
+  const priorityStyle = { High: "bg-red-50 text-red-700 border-red-200", Medium: "bg-[#C79A2B]/10 text-[#B45309] border-[#C79A2B]/30", Low: "bg-emerald-50 text-emerald-700 border-emerald-200" };
 
   return (
-    <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl flex flex-col h-full overflow-hidden">
+    <div className="bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col overflow-hidden">
+
       {/* Preview Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900 shrink-0">
-        <div className="flex items-center gap-2">
-          <FileText className="w-5 h-5 text-primary" />
-          <span className="text-sm font-medium text-white truncate max-w-xs">{report.title}</span>
+      <div className="p-4 bg-[#F8F9FB] border-b border-[#E7ECF3] flex items-center justify-between flex-wrap gap-3 shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-[#0B1F4D] flex items-center justify-center shrink-0">
+            <FileText className="w-4 h-4 text-[#C79A2B]" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider truncate">{report.title}</p>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 uppercase tracking-wider">CONFIDENTIAL</span>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button onClick={handlePrint} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
-            <Printer className="w-3.5 h-3.5" /> Print
+        <div className="flex items-center gap-2 flex-wrap">
+          {[
+            { label: "Print",   icon: Printer, handler: handlePrint },
+            { label: "Share",   icon: Share2,  handler: handleShare },
+            { label: "CSV",     icon: Download, handler: handleExportCSV },
+            { label: "Excel",   icon: Download, handler: handleExportExcel },
+          ].map(({ label, icon: Icon, handler }) => (
+            <button key={label} onClick={handler} className="flex items-center gap-1.5 h-7 px-2.5 bg-white hover:bg-[#F1F5F9] border border-[#E7ECF3] text-[#64748B] hover:text-[#0B1F4D] rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer">
+              <Icon className="w-3 h-3" />{label}
+            </button>
+          ))}
+          <button onClick={handleExportPDF} className="flex items-center gap-1.5 h-7 px-2.5 bg-[#0B1F4D] hover:bg-[#0B1F4D]/90 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer">
+            <Download className="w-3 h-3 text-[#C79A2B]" /> Export PDF
           </button>
-          <button onClick={handleShare} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
-            <Share2 className="w-3.5 h-3.5" /> Share
-          </button>
-          <button onClick={handleExportCSV} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
-            <Download className="w-3.5 h-3.5" /> CSV
-          </button>
-          <button onClick={handleExportExcel} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">
-            <Download className="w-3.5 h-3.5" /> Excel
-          </button>
-          <button onClick={handleExportPDF} className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-primary hover:bg-indigo-500 text-white rounded-md transition-colors font-medium cursor-pointer">
-            <Download className="w-3.5 h-3.5" /> Export PDF
-          </button>
-          <button onClick={onClose} className="p-1.5 text-slate-500 hover:text-white hover:bg-slate-700 rounded-md transition-colors cursor-pointer">
-            <X className="w-4 h-4" />
-          </button>
+          {onClose && (
+            <button onClick={onClose} className="p-1.5 text-[#94A3B8] hover:text-[#0B1F4D] hover:bg-[#E7ECF3] rounded-lg transition-colors cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
       {/* Report Document */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {/* Cover Page / Enhanced Report Header Metadata */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#F8F9FB]">
+
+        {/* Metadata Card */}
+        <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-5 shadow-sm">
+          <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-3 mb-4">
             <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-primary" />
+              <Shield className="w-5 h-5 text-[#0B1F4D]" />
               <div>
-                <p className="text-white font-bold text-[10px] uppercase tracking-widest leading-none">Karnataka Police Department</p>
-                <p className="text-slate-550 text-[7px] uppercase tracking-widest">Confidential Security Document</p>
+                <p className="text-xs font-black text-[#0B1F4D] uppercase tracking-widest">Karnataka Police Department</p>
+                <p className="text-[10px] text-[#94A3B8] uppercase tracking-widest">Intelligence Platform</p>
               </div>
             </div>
-            <span className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-[8px] font-bold text-red-400 uppercase tracking-wider rounded">
-              INTERNAL USE ONLY
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[10px] font-mono text-slate-400">
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Report ID</span><span className="text-slate-200 font-bold">{report.id}</span></div>
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">District Jurisdiction</span><span className="text-slate-200 font-bold">{report.district}</span></div>
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Date & Time Generated</span><span className="text-slate-200 font-bold">{report.generated} 09:30 AM</span></div>
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Reporting Officer</span><span className="text-slate-200 font-bold">{officerInfo.name}</span></div>
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Officer Role</span><span className="text-slate-200 font-bold">{officerInfo.role}</span></div>
-            <div><span className="block text-slate-500 font-bold uppercase text-[8px]">Classification</span><span className="text-red-400 font-bold">CONFIDENTIAL</span></div>
-          </div>
-
-          <div className="border-t border-slate-800 pt-3 mt-1">
-            <h1 className="text-sm font-bold text-white leading-tight uppercase tracking-wider">{report.title}</h1>
-          </div>
-        </div>
-
-        {/* Section 1 */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <BarChart2 className="w-5 h-5 text-primary" /> 1. Executive Summary
-          </h3>
-          <p className="text-sm text-slate-400 leading-relaxed mb-4">
-            This report presents a comprehensive analysis of crime data for <strong className="text-white">{report.district}</strong> for the reporting period. 
-            The analysis integrates AI-driven risk scoring, historical trend modeling, and geospatial hotspot detection to provide actionable intelligence.
-          </p>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-slate-800/50 rounded-lg p-4 text-center border border-slate-700">
-              <p className="text-2xl font-bold text-white">1,248</p>
-              <p className="text-xs text-slate-400 mt-1">Total Incidents</p>
-            </div>
-            <div className="bg-slate-800/50 rounded-lg p-4 text-center border border-slate-700">
-              <p className="text-2xl font-bold text-emerald-400">+12%</p>
-              <p className="text-xs text-slate-400 mt-1">Clearance Rate</p>
-            </div>
-            <div className="bg-red-500/5 rounded-lg p-4 text-center border border-red-500/20">
-              <p className="text-2xl font-bold text-red-400">84</p>
-              <p className="text-xs text-slate-400 mt-1">AI Risk Score</p>
+            <div className="text-right">
+              <p className="text-xs font-black text-[#0B1F4D]">{report.id}</p>
+              <p className="text-[10px] text-[#94A3B8] font-mono">{report.generated}</p>
             </div>
           </div>
-        </div>
 
-        {/* Section 2 – Chart Placeholder */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <Map className="w-5 h-5 text-primary" /> 2. Spatial Distribution
-          </h3>
-          <div className="h-48 border-2 border-dashed border-slate-700 rounded-lg flex flex-col items-center justify-center text-slate-500">
-            <Map className="w-10 h-10 mb-2 opacity-50" />
-            <p className="text-sm">Choropleth Map — Crime Density by Area</p>
-          </div>
-        </div>
+          <h1 className="text-base font-black text-[#0B1F4D] uppercase tracking-wide leading-snug mb-4">{report.title}</h1>
 
-        {/* Section 3 – Findings */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-amber-500" /> 3. Key Findings & Recommendations
-          </h3>
-          <ul className="space-y-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
-              'Property crimes increased 18% in Tech Corridor; increased patrol presence recommended.',
-              'Narcotics-related arrests show strong correlation with international-transit nodes.',
-              'AI model predicts 12% increase in incidents in the upcoming festival period.',
-            ].map((finding, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-                {finding}
-              </li>
+              { label: "District",    val: report.district },
+              { label: "Officer",     val: officerInfo.name },
+              { label: "Role",        val: officerInfo.role },
+              { label: "Generated",   val: `${report.generated} 09:30` },
+              { label: "Classification", val: "CONFIDENTIAL", highlight: true },
+              { label: "Version",     val: "v1.0" },
+            ].map(({ label, val, highlight }) => (
+              <div key={label}>
+                <span className="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-0.5">{label}</span>
+                <span className={`text-xs font-black ${highlight ? "text-red-600" : "text-[#0B1F4D]"} font-mono`}>{val}</span>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
+
+        {/* Executive Summary */}
+        <div className="bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 rounded-[16px] p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse" />
+            <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Executive Summary</h3>
+          </div>
+          <p className="text-sm text-[#334155] leading-relaxed">
+            This report presents a comprehensive analysis of crime data for <strong className="text-[#0B1F4D]">{report.district}</strong> for the reporting period.
+            The analysis integrates AI-driven risk scoring, historical trend modeling, and geospatial hotspot detection to provide actionable intelligence
+            for law enforcement decision-making.
+          </p>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-5 shadow-sm">
+          <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
+            <BarChart2 className="w-4 h-4 text-[#C79A2B]" /> Key Metrics
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { icon: AlertTriangle, label: "Total Incidents", val: "1,248",  valColor: "text-[#0B1F4D]",   bg: "bg-[#F8F9FB]" },
+              { icon: TrendingUp,    label: "Clearance Rate",  val: "+12%",   valColor: "text-emerald-600",  bg: "bg-emerald-50/50" },
+              { icon: Brain,         label: "AI Risk Score",   val: "84",     valColor: "text-red-600",      bg: "bg-red-50/50" },
+              { icon: Target,        label: "AI Confidence",   val: "91%",    valColor: "text-blue-600",     bg: "bg-blue-50/50" },
+            ].map(({ icon: Icon, label, val, valColor, bg }) => (
+              <div key={label} className={`${bg} border border-[#E7ECF3] rounded-xl p-3 text-center`}>
+                <Icon className="w-4 h-4 text-[#64748B] mx-auto mb-1.5" />
+                <p className={`text-2xl font-black font-mono ${valColor}`}>{val}</p>
+                <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mt-1">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+        {/* Recommendations */}
+        <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-5 shadow-sm">
+          <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-[#C79A2B]" /> Key Findings & Recommendations
+          </h3>
+          <div className="space-y-3">
+            {recommendations.map((rec, i) => (
+              <div key={i} className="flex gap-3 p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl">
+                <div className="w-7 h-7 rounded-xl bg-[#0B1F4D] flex items-center justify-center shrink-0">
+                  <span className="text-xs font-black text-[#C79A2B]">{i + 1}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-xs font-black text-[#0B1F4D]">{rec.title}</p>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border uppercase tracking-wider ${priorityStyle[rec.priority]}`}>{rec.priority}</span>
+                  </div>
+                  <p className="text-xs text-[#64748B] leading-relaxed">{rec.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
