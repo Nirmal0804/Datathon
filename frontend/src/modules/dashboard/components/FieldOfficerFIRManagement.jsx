@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Plus, Search, X, ChevronRight, ShieldCheck } from 'lucide-react';
+import { FileText, Plus, Search, X, ChevronRight, ShieldCheck, Shield, User, Clock, FolderOpen, CheckCircle2 } from 'lucide-react';
 import { MOCK_CASES } from './mockData';
 import { useToast } from '../../../components/ui/Toast';
 
@@ -36,8 +36,32 @@ export default function FieldOfficerFIRManagement() {
   const [localCases, setLocalCases] = useState(MOCK_CASES);
   const [searchQuery, setSearchQuery] = useState('');
   const [registerModal, setRegisterModal] = useState(false);
+  const [selectedCase, setSelectedCase] = useState(null);
+  const [caseStatuses, setCaseStatuses] = useState({});
+  const [actionFeedback, setActionFeedback] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+
+  const handleCaseAction = (e, rowId, action) => {
+    if (e) e.stopPropagation();
+    const statusMap = { open: 'Active', investigate: 'Investigating', close: 'Closed' };
+    const labelMap  = { open: 'Case Active', investigate: 'Investigating', close: 'Case Closed' };
+    const newStatus = statusMap[action];
+
+    setCaseStatuses(prev => ({ ...prev, [rowId]: newStatus }));
+    setLocalCases(prev => prev.map(c => c.id === rowId ? { ...c, status: newStatus } : c));
+    setActionFeedback({ id: rowId, label: labelMap[action] });
+    
+    if (selectedCase && selectedCase.id === rowId) {
+      setSelectedCase(prev => ({ ...prev, status: newStatus }));
+    }
+
+    addToast({
+      title: 'Status Updated',
+      message: `FIR ${rowId} status updated to ${newStatus}`,
+      type: action === 'close' ? 'warning' : 'success'
+    });
+  };
 
   // Form State
   const [firForm, setFirForm] = useState({
@@ -185,39 +209,43 @@ export default function FieldOfficerFIRManagement() {
               No FIR records match your filter criteria.
             </div>
           ) : (
-            paginatedCases.map(c => (
-              <div 
-                key={c.id} 
-                className="bg-white rounded-[24px] border border-[#E7ECF3] p-5 sm:p-6 shadow-xs hover:-translate-y-0.5 hover:shadow-md hover:border-l-4 hover:border-l-[#C79A2B] transition-all duration-250 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-              >
-                {/* Left: FIR Metadata */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <span className="font-mono font-extrabold text-[#0B1F4D] text-sm tracking-tight bg-[#0B1F4D]/5 px-3 py-1.5 rounded-[12px] border border-[#0B1F4D]/10 shrink-0 w-fit">
-                    {c.id}
-                  </span>
-                  <div>
-                    <h4 className="font-extrabold text-[#0F172A] text-sm tracking-tight">{c.category}</h4>
-                    <div className="flex items-center gap-3 text-xs text-[#64748B] font-semibold mt-0.5">
-                      <span>{c.policeStation}</span>
-                      <span>•</span>
-                      <span>{c.date}</span>
+            paginatedCases.map(c => {
+              const currentStatus = caseStatuses[c.id] || c.status;
+              return (
+                <div 
+                  key={c.id} 
+                  onClick={() => setSelectedCase(c)}
+                  className="bg-white rounded-[24px] border border-[#E7ECF3] p-5 sm:p-6 shadow-xs hover:-translate-y-0.5 hover:shadow-md hover:border-l-4 hover:border-l-[#C79A2B] transition-all duration-250 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                >
+                  {/* Left: FIR Metadata */}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <span className="font-mono font-extrabold text-[#0B1F4D] text-sm tracking-tight bg-[#0B1F4D]/5 px-3 py-1.5 rounded-[12px] border border-[#0B1F4D]/10 shrink-0 w-fit">
+                      {c.id}
+                    </span>
+                    <div>
+                      <h4 className="font-extrabold text-[#0F172A] text-sm tracking-tight group-hover:text-[#0B1F4D] transition-colors">{c.category}</h4>
+                      <div className="flex items-center gap-3 text-xs text-[#64748B] font-semibold mt-0.5">
+                        <span>{c.policeStation}</span>
+                        <span>•</span>
+                        <span>{c.date}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Right: Risk Badge, Status Badge & Chevron */}
-                <div className="flex items-center gap-3 self-end sm:self-auto">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-xs ${riskBadgeClass(c.risk)}`}>
-                    {c.risk}
-                  </span>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs ${statusBadgeClass(c.status)}`}>
-                    <span className={`w-2 h-2 rounded-full ${statusDotClass(c.status)}`} />
-                    {c.status}
-                  </span>
-                  <ChevronRight className="w-5 h-5 text-slate-400 ml-1" />
+                  {/* Right: Risk Badge, Status Badge & Chevron */}
+                  <div className="flex items-center gap-3 self-end sm:self-auto">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-xs ${riskBadgeClass(c.risk)}`}>
+                      {c.risk}
+                    </span>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs ${statusBadgeClass(currentStatus)}`}>
+                      <span className={`w-2 h-2 rounded-full ${statusDotClass(currentStatus)}`} />
+                      {currentStatus}
+                    </span>
+                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 group-hover:text-[#0B1F4D] transition-all ml-1" />
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
@@ -362,6 +390,149 @@ export default function FieldOfficerFIRManagement() {
                 </button>
               </div>
             </motion.form>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 12. FIR Case Detail Modal Overlay */}
+      <AnimatePresence>
+        {selectedCase && (
+          <div className="fixed inset-0 bg-[#0F172A]/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white border border-[#E7ECF3] rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl relative"
+            >
+              {/* Top Banner */}
+              <div className="flex items-center justify-between px-6 py-5 bg-[#0B1F4D] text-white border-b border-[#0B1F4D]">
+                <div className="flex items-center gap-4">
+                  <div className="p-2.5 rounded-xl bg-white/10 text-[#C79A2B]">
+                    <Shield className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-extrabold font-mono tracking-tight text-white">{selectedCase.id}</h4>
+                    <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">FIR Case Details & Brief</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedCase(null)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 space-y-6 max-h-[65vh] overflow-y-auto">
+                {/* Meta details grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
+                  <div>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Classification</span>
+                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.category}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Jurisdiction</span>
+                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.policeStation}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Logged Date</span>
+                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.date}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status / Risk</span>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-extrabold text-[10px] ${riskBadgeClass(selectedCase.risk)}`}>{selectedCase.risk}</span>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-extrabold text-[10px] ${statusBadgeClass(caseStatuses[selectedCase.id] || selectedCase.status)}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${statusDotClass(caseStatuses[selectedCase.id] || selectedCase.status)}`} />
+                        {caseStatuses[selectedCase.id] || selectedCase.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Investigator & Penal Code */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border border-[#E7ECF3] rounded-2xl flex items-center gap-3.5 bg-white shadow-xs">
+                    <div className="p-2.5 bg-[#0B1F4D]/10 text-[#0B1F4D] rounded-xl">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Investigating Officer</span>
+                      <span className="text-xs font-extrabold text-[#0F172A] mt-0.5 block">{selectedCase.details?.officer || 'Inspector Patil'}</span>
+                    </div>
+                  </div>
+                  <div className="p-4 border border-[#E7ECF3] rounded-2xl flex items-center gap-3.5 bg-white shadow-xs">
+                    <div className="p-2.5 bg-[#C79A2B]/10 text-[#C79A2B] rounded-xl">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Penal Section Code</span>
+                      <span className="text-xs font-extrabold text-[#0F172A] font-mono mt-0.5 block">{selectedCase.details?.section || 'Section 379 IPC'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Narrative Summary */}
+                <div className="space-y-2">
+                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Case Narrative & Summary</h5>
+                  <p className="text-xs text-slate-700 font-medium leading-relaxed bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
+                    {selectedCase.details?.summary || 'Complaint logged and registered under precinct jurisdiction.'}
+                  </p>
+                </div>
+
+                {/* Timeline */}
+                {selectedCase.details?.timeline && (
+                  <div className="space-y-3">
+                    <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Historical Case Logs</h5>
+                    <div className="relative border-l-2 border-[#E7ECF3] ml-3 space-y-4">
+                      {selectedCase.details.timeline.map((item, idx) => (
+                        <div key={idx} className="relative pl-5">
+                          <div className="absolute left-[-7px] top-1.5 w-3 h-3 rounded-full bg-[#0B1F4D] border-2 border-white shadow-xs" />
+                          <div className="text-xs">
+                            <span className="font-extrabold text-[#0F172A] font-mono flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" /> {item.date}
+                            </span>
+                            <p className="text-slate-600 font-medium mt-0.5">{item.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer Actions: Start, Investigate, Close Case */}
+              <div className="px-6 py-4 bg-[#F8F9FB] border-t border-[#E7ECF3] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'open')}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs hover:bg-emerald-100 transition-colors cursor-pointer"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5" /> Start / Reopen
+                  </button>
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'investigate')}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold text-xs hover:bg-amber-100 transition-colors cursor-pointer"
+                  >
+                    <Search className="w-3.5 h-3.5" /> Investigate
+                  </button>
+                  <button
+                    onClick={(e) => handleCaseAction(e, selectedCase.id, 'close')}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-rose-50 border border-rose-200 text-rose-700 font-bold text-xs hover:bg-rose-100 transition-colors cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Close Case
+                  </button>
+                </div>
+                <button
+                  onClick={() => setSelectedCase(null)}
+                  className="w-full sm:w-auto h-9 px-5 rounded-full bg-[#0B1F4D] text-white font-bold text-xs hover:bg-[#143275] transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>
