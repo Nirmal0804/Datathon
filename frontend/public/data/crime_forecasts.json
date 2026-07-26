@@ -1,0 +1,182 @@
+[
+  {
+    "Date": "2026-01-01",
+    "Forecasted_Crime_Count": 13.94,
+    "Forecast_Day": 1,
+    "Day_of_Week": "Thursday"
+  },
+  {
+    "Date": "2026-01-02",
+    "Forecasted_Crime_Count": 13.95,
+    "Forecast_Day": 2,
+    "Day_of_Week": "Friday"
+  },
+  {
+    "Date": "2026-01-03",
+    "Forecasted_Crime_Count": 12.16,
+    "Forecast_Day": 3,
+    "Day_of_Week": "Saturday"
+  },
+  {
+    "Date": "2026-01-04",
+    "Forecasted_Crime_Count": 13.45,
+    "Forecast_Day": 4,
+    "Day_of_Week": "Sunday"
+  },
+  {
+    "Date": "2026-01-05",
+    "Forecasted_Crime_Count": 12.23,
+    "Forecast_Day": 5,
+    "Day_of_Week": "Monday"
+  },
+  {
+    "Date": "2026-01-06",
+    "Forecasted_Crime_Count": 11.89,
+    "Forecast_Day": 6,
+    "Day_of_Week": "Tuesday"
+  },
+  {
+    "Date": "2026-01-07",
+    "Forecasted_Crime_Count": 12.58,
+    "Forecast_Day": 7,
+    "Day_of_Week": "Wednesday"
+  },
+  {
+    "Date": "2026-01-08",
+    "Forecasted_Crime_Count": 12.23,
+    "Forecast_Day": 8,
+    "Day_of_Week": "Thursday"
+  },
+  {
+    "Date": "2026-01-09",
+    "Forecasted_Crime_Count": 12.08,
+    "Forecast_Day": 9,
+    "Day_of_Week": "Friday"
+  },
+  {
+    "Date": "2026-01-10",
+    "Forecasted_Crime_Count": 11.56,
+    "Forecast_Day": 10,
+    "Day_of_Week": "Saturday"
+  },
+  {
+    "Date": "2026-01-11",
+    "Forecasted_Crime_Count": 11.29,
+    "Forecast_Day": 11,
+    "Day_of_Week": "Sunday"
+  },
+  {
+    "Date": "2026-01-12",
+    "Forecasted_Crime_Count": 11.12,
+    "Forecast_Day": 12,
+    "Day_of_Week": "Monday"
+  },
+  {
+    "Date": "2026-01-13",
+    "Forecasted_Crime_Count": 11.19,
+    "Forecast_Day": 13,
+    "Day_of_Week": "Tuesday"
+  },
+  {
+    "Date": "2026-01-14",
+    "Forecasted_Crime_Count": 11.22,
+    "Forecast_Day": 14,
+    "Day_of_Week": "Wednesday"
+  },
+  {
+    "Date": "2026-01-15",
+    "Forecasted_Crime_Count": 11.31,
+    "Forecast_Day": 15,
+    "Day_of_Week": "Thursday"
+  },
+  {
+    "Date": "2026-01-16",
+    "Forecasted_Crime_Count": 11.41,
+    "Forecast_Day": 16,
+    "Day_of_Week": "Friday"
+  },
+  {
+    "Date": "2026-01-17",
+    "Forecasted_Crime_Count": 10.84,
+    "Forecast_Day": 17,
+    "Day_of_Week": "Saturday"
+  },
+  {
+    "Date": "2026-01-18",
+    "Forecasted_Crime_Count": 10.77,
+    "Forecast_Day": 18,
+    "Day_of_Week": "Sunday"
+  },
+  {
+    "Date": "2026-01-19",
+    "Forecasted_Crime_Count": 10.66,
+    "Forecast_Day": 19,
+    "Day_of_Week": "Monday"
+  },
+  {
+    "Date": "2026-01-20",
+    "Forecasted_Crime_Count": 10.73,
+    "Forecast_Day": 20,
+    "Day_of_Week": "Tuesday"
+  },
+  {
+    "Date": "2026-01-21",
+    "Forecasted_Crime_Count": 10.84,
+    "Forecast_Day": 21,
+    "Day_of_Week": "Wednesday"
+  },
+  {
+    "Date": "2026-01-22",
+    "Forecasted_Crime_Count": 10.99,
+    "Forecast_Day": 22,
+    "Day_of_Week": "Thursday"
+  },
+  {
+    "Date": "2026-01-23",
+    "Forecasted_Crime_Count": 11.12,
+    "Forecast_Day": 23,
+    "Day_of_Week": "Friday"
+  },
+  {
+    "Date": "2026-01-24",
+    "Forecasted_Crime_Count": 10.61,
+    "Forecast_Day": 24,
+    "Day_of_Week": "Saturday"
+  },
+  {
+    "Date": "2026-01-25",
+    "Forecasted_Crime_Count": 10.56,
+    "Forecast_Day": 25,
+    "Day_of_Week": "Sunday"
+  },
+  {
+    "Date": "2026-01-26",
+    "Forecasted_Crime_Count": 10.48,
+    "Forecast_Day": 26,
+    "Day_of_Week": "Monday"
+  },
+  {
+    "Date": "2026-01-27",
+    "Forecasted_Crime_Count": 10.59,
+    "Forecast_Day": 27,
+    "Day_of_Week": "Tuesday"
+  },
+  {
+    "Date": "2026-01-28",
+    "Forecasted_Crime_Count": 10.73,
+    "Forecast_Day": 28,
+    "Day_of_Week": "Wednesday"
+  },
+  {
+    "Date": "2026-01-29",
+    "Forecasted_Crime_Count": 10.89,
+    "Forecast_Day": 29,
+    "Day_of_Week": "Thursday"
+  },
+  {
+    "Date": "2026-01-30",
+    "Forecasted_Crime_Count": 11.05,
+    "Forecast_Day": 30,
+    "Day_of_Week": "Friday"
+  }
+]

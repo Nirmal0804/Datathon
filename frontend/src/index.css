@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-slate-200 font-sans antialiased;
+    background-color: #020617;
+  }
+
+  ::selection {
+    background-color: rgba(79,70,229,0.35);
+    color: #fff;
+  }
+
+  /* Slim scrollbars */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-600; }
+}
+
+/* ============================================================
+   COMPONENT LAYER — Design System Primitives
+   ============================================================ */
+@layer components {
+
+  /* ── Hide scrollbars ── */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-slate-900 border border-slate-800 rounded-xl shadow-card;
+  }
+  .card-hover {
+    @apply card transition-all duration-200 hover:border-slate-700 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+  .card-active {
+    @apply bg-primary/5 border-primary/40 ring-1 ring-primary/20;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
+           transition-all duration-150 select-none
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-hover active:scale-[0.97] shadow-sm;
+  }
+  .btn-secondary {
+    @apply btn bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 active:scale-[0.97];
+  }
+  .btn-ghost {
+    @apply btn text-slate-400 hover:text-slate-100 hover:bg-slate-800 active:scale-[0.97];
+  }
+  .btn-danger {
+    @apply btn bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white active:scale-[0.97];
+  }
+  .btn-sm  { @apply px-3 py-1.5 text-xs; }
+  .btn-icon { @apply p-2; }
+
+  /* ── Inputs ── */
+  .input {
+    @apply w-full bg-slate-800 border border-slate-700 rounded-lg py-2 px-3.5 text-sm text-slate-100 placeholder:text-slate-500
+           focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors duration-150;
+  }
+  .select { @apply input appearance-none cursor-pointer; }
+
+  /* ── Labels ── */
+  .label { @apply block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5; }
+
+  /* ── Badges ── */
+  .badge { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold border; }
+  .badge-critical { @apply badge bg-red-500/10   text-red-400   border-red-500/20;   }
+  .badge-high     { @apply badge bg-amber-500/10 text-amber-400 border-amber-500/20; }
+  .badge-medium   { @apply badge bg-blue-500/10  text-blue-400  border-blue-500/20;  }
+  .badge-low      { @apply badge bg-emerald-500/10 text-emerald-400 border-emerald-500/20; }
+  .badge-neutral  { @apply badge bg-slate-800 text-slate-400 border-slate-700; }
+
+  /* ── Status dots ── */
+  .status-dot { @apply w-2 h-2 rounded-full; }
+  .status-dot-live { @apply status-dot bg-emerald-500 animate-pulse-soft; }
+
+  /* ── Section headers ── */
+  .section-title   { @apply text-lg font-semibold text-slate-100; }
+  .section-subtitle { @apply text-sm text-slate-400 mt-0.5; }
+
+  /* ── Tables ── */
+  .table-header { @apply text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-800/50 border-b border-slate-800 px-5 py-3; }
+  .table-cell   { @apply px-5 py-3.5 text-sm text-slate-400; }
+  .table-row    { @apply border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors duration-100; }
+
+  /* ── Dividers ── */
+  .divider { @apply border-t border-slate-800; }
+
+  /* ── Glassmorphism ── */
+  .glass-card  { @apply bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl; }
+  .glass-panel { @apply bg-slate-900/80 backdrop-blur-lg border-b border-slate-800; }
+
+  /* ── Skeleton Shimmer ── */
+  .skeleton {
+    @apply rounded-md bg-slate-800 overflow-hidden relative;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* ── Nav items ── */
+  .nav-item {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-sm font-medium cursor-pointer;
+  }
+  .nav-item-active {
+    @apply nav-item bg-primary/10 text-primary border border-primary/20;
+  }
+  .nav-item-inactive {
+    @apply nav-item text-slate-400 hover:text-slate-100 hover:bg-slate-800 border border-transparent;
+  }
+
+  /* ── KPI ── */
+  .kpi-value { @apply text-2xl font-bold text-slate-100 leading-none; }
+  .kpi-label { @apply text-xs font-medium text-slate-500 mt-1; }
+}
+
+/* ============================================================
+   UTILITY LAYER — animations, helpers
+   ============================================================ */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .elevation-1 { box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+  .elevation-2 { box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  .elevation-3 { box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+
+  .transition-base { @apply transition-all duration-200; }
+
+  /* Glow effects */
+  .glow-success { animation: glowSuccess 2s ease-in-out infinite; }
+  .glow-danger  { animation: glowDanger  2s ease-in-out infinite; }
+}
+
+/* ── Keyframes (outside @layer so they're always available) ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes glowSuccess {
+  0%, 100% { box-shadow: 0 0 4px rgba(16,185,129,0.4);  }
+  50%       { box-shadow: 0 0 12px rgba(16,185,129,0.8); }
+}
+@keyframes glowDanger {
+  0%, 100% { box-shadow: 0 0 4px rgba(239,68,68,0.4);  }
+  50%       { box-shadow: 0 0 12px rgba(239,68,68,0.8); }
+}

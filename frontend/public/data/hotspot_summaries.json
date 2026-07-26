@@ -1,0 +1,492 @@
+[
+  {
+    "Cluster_ID": 10,
+    "Centroid_Latitude": 11.858652,
+    "Centroid_Longitude": 77.054035,
+    "Total_Crimes": 110,
+    "Total_Severity_Score": 260.5,
+    "Avg_Severity_Per_Crime": 2.37,
+    "Primary_Crime_Head": "Dacoity",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 4,
+    "Centroid_Latitude": 17.898477,
+    "Centroid_Longitude": 77.381603,
+    "Total_Crimes": 65,
+    "Total_Severity_Score": 188.0,
+    "Avg_Severity_Per_Crime": 2.89,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 16,
+    "Centroid_Latitude": 12.004194,
+    "Centroid_Longitude": 76.834477,
+    "Total_Crimes": 70,
+    "Total_Severity_Score": 172.5,
+    "Avg_Severity_Per_Crime": 2.46,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 0,
+    "Centroid_Latitude": 13.103613,
+    "Centroid_Longitude": 77.471765,
+    "Total_Crimes": 35,
+    "Total_Severity_Score": 98.5,
+    "Avg_Severity_Per_Crime": 2.81,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 7,
+    "Centroid_Latitude": 15.057883,
+    "Centroid_Longitude": 77.071304,
+    "Total_Crimes": 34,
+    "Total_Severity_Score": 93.0,
+    "Avg_Severity_Per_Crime": 2.74,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Ballari"
+  },
+  {
+    "Cluster_ID": 9,
+    "Centroid_Latitude": 16.042157,
+    "Centroid_Longitude": 75.69456,
+    "Total_Crimes": 23,
+    "Total_Severity_Score": 61.5,
+    "Avg_Severity_Per_Crime": 2.67,
+    "Primary_Crime_Head": "Theft",
+    "Primary_District": "Bagalkote"
+  },
+  {
+    "Cluster_ID": 5,
+    "Centroid_Latitude": 13.129009,
+    "Centroid_Longitude": 77.543989,
+    "Total_Crimes": 26,
+    "Total_Severity_Score": 60.5,
+    "Avg_Severity_Per_Crime": 2.33,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 8,
+    "Centroid_Latitude": 15.845896,
+    "Centroid_Longitude": 74.345454,
+    "Total_Crimes": 22,
+    "Total_Severity_Score": 56.0,
+    "Avg_Severity_Per_Crime": 2.55,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 1,
+    "Centroid_Latitude": 13.15213,
+    "Centroid_Longitude": 77.628816,
+    "Total_Crimes": 21,
+    "Total_Severity_Score": 55.0,
+    "Avg_Severity_Per_Crime": 2.62,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 14,
+    "Centroid_Latitude": 13.160188,
+    "Centroid_Longitude": 77.54023,
+    "Total_Crimes": 19,
+    "Total_Severity_Score": 45.0,
+    "Avg_Severity_Per_Crime": 2.37,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 25,
+    "Centroid_Latitude": 14.992634,
+    "Centroid_Longitude": 77.091302,
+    "Total_Crimes": 17,
+    "Total_Severity_Score": 42.5,
+    "Avg_Severity_Per_Crime": 2.5,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Ballari"
+  },
+  {
+    "Cluster_ID": 2,
+    "Centroid_Latitude": 13.178092,
+    "Centroid_Longitude": 77.588034,
+    "Total_Crimes": 18,
+    "Total_Severity_Score": 42.0,
+    "Avg_Severity_Per_Crime": 2.33,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 12,
+    "Centroid_Latitude": 17.762822,
+    "Centroid_Longitude": 77.57674,
+    "Total_Crimes": 20,
+    "Total_Severity_Score": 42.0,
+    "Avg_Severity_Per_Crime": 2.1,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 19,
+    "Centroid_Latitude": 13.342182,
+    "Centroid_Longitude": 77.614126,
+    "Total_Crimes": 15,
+    "Total_Severity_Score": 40.5,
+    "Avg_Severity_Per_Crime": 2.7,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 20,
+    "Centroid_Latitude": 18.043616,
+    "Centroid_Longitude": 77.443851,
+    "Total_Crimes": 14,
+    "Total_Severity_Score": 38.0,
+    "Avg_Severity_Per_Crime": 2.71,
+    "Primary_Crime_Head": "Theft",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 11,
+    "Centroid_Latitude": 15.076784,
+    "Centroid_Longitude": 77.063384,
+    "Total_Crimes": 13,
+    "Total_Severity_Score": 37.5,
+    "Avg_Severity_Per_Crime": 2.88,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Ballari"
+  },
+  {
+    "Cluster_ID": 39,
+    "Centroid_Latitude": 15.974137,
+    "Centroid_Longitude": 74.542947,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 37.0,
+    "Avg_Severity_Per_Crime": 3.7,
+    "Primary_Crime_Head": "NDPS",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 13,
+    "Centroid_Latitude": 13.181236,
+    "Centroid_Longitude": 77.56468,
+    "Total_Crimes": 17,
+    "Total_Severity_Score": 36.5,
+    "Avg_Severity_Per_Crime": 2.15,
+    "Primary_Crime_Head": "Theft",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 29,
+    "Centroid_Latitude": 13.128477,
+    "Centroid_Longitude": 77.484663,
+    "Total_Crimes": 15,
+    "Total_Severity_Score": 35.0,
+    "Avg_Severity_Per_Crime": 2.33,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 45,
+    "Centroid_Latitude": 17.95477,
+    "Centroid_Longitude": 77.707426,
+    "Total_Crimes": 11,
+    "Total_Severity_Score": 34.0,
+    "Avg_Severity_Per_Crime": 3.09,
+    "Primary_Crime_Head": "Murder",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 22,
+    "Centroid_Latitude": 15.823624,
+    "Centroid_Longitude": 74.347869,
+    "Total_Crimes": 13,
+    "Total_Severity_Score": 34.0,
+    "Avg_Severity_Per_Crime": 2.62,
+    "Primary_Crime_Head": "Burglary",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 3,
+    "Centroid_Latitude": 12.872107,
+    "Centroid_Longitude": 77.404878,
+    "Total_Crimes": 13,
+    "Total_Severity_Score": 33.0,
+    "Avg_Severity_Per_Crime": 2.54,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 23,
+    "Centroid_Latitude": 15.708651,
+    "Centroid_Longitude": 74.324087,
+    "Total_Crimes": 14,
+    "Total_Severity_Score": 33.0,
+    "Avg_Severity_Per_Crime": 2.36,
+    "Primary_Crime_Head": "Dacoity",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 24,
+    "Centroid_Latitude": 17.987672,
+    "Centroid_Longitude": 77.708092,
+    "Total_Crimes": 11,
+    "Total_Severity_Score": 30.5,
+    "Avg_Severity_Per_Crime": 2.77,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 15,
+    "Centroid_Latitude": 11.9361,
+    "Centroid_Longitude": 76.777008,
+    "Total_Crimes": 13,
+    "Total_Severity_Score": 30.0,
+    "Avg_Severity_Per_Crime": 2.31,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 18,
+    "Centroid_Latitude": 13.077079,
+    "Centroid_Longitude": 77.488284,
+    "Total_Crimes": 13,
+    "Total_Severity_Score": 30.0,
+    "Avg_Severity_Per_Crime": 2.31,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 38,
+    "Centroid_Latitude": 14.989128,
+    "Centroid_Longitude": 76.893714,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 29.0,
+    "Avg_Severity_Per_Crime": 2.9,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Ballari"
+  },
+  {
+    "Cluster_ID": 43,
+    "Centroid_Latitude": 11.870272,
+    "Centroid_Longitude": 76.810402,
+    "Total_Crimes": 14,
+    "Total_Severity_Score": 28.0,
+    "Avg_Severity_Per_Crime": 2.0,
+    "Primary_Crime_Head": "Theft",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 35,
+    "Centroid_Latitude": 12.043324,
+    "Centroid_Longitude": 77.080022,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 28.0,
+    "Avg_Severity_Per_Crime": 2.8,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 36,
+    "Centroid_Latitude": 15.706661,
+    "Centroid_Longitude": 74.397887,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 27.5,
+    "Avg_Severity_Per_Crime": 2.75,
+    "Primary_Crime_Head": "Burglary",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 44,
+    "Centroid_Latitude": 12.870201,
+    "Centroid_Longitude": 77.387632,
+    "Total_Crimes": 12,
+    "Total_Severity_Score": 27.5,
+    "Avg_Severity_Per_Crime": 2.29,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 40,
+    "Centroid_Latitude": 17.919995,
+    "Centroid_Longitude": 77.604747,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 26.0,
+    "Avg_Severity_Per_Crime": 2.6,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 32,
+    "Centroid_Latitude": 13.094494,
+    "Centroid_Longitude": 77.586296,
+    "Total_Crimes": 11,
+    "Total_Severity_Score": 26.0,
+    "Avg_Severity_Per_Crime": 2.36,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 41,
+    "Centroid_Latitude": 13.358859,
+    "Centroid_Longitude": 77.613566,
+    "Total_Crimes": 8,
+    "Total_Severity_Score": 25.5,
+    "Avg_Severity_Per_Crime": 3.19,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 33,
+    "Centroid_Latitude": 15.744584,
+    "Centroid_Longitude": 74.492998,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 24.5,
+    "Avg_Severity_Per_Crime": 2.45,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 42,
+    "Centroid_Latitude": 13.092802,
+    "Centroid_Longitude": 77.414339,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 24.5,
+    "Avg_Severity_Per_Crime": 2.45,
+    "Primary_Crime_Head": "Dacoity",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 17,
+    "Centroid_Latitude": 15.091593,
+    "Centroid_Longitude": 77.041817,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 24.0,
+    "Avg_Severity_Per_Crime": 2.4,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Ballari"
+  },
+  {
+    "Cluster_ID": 26,
+    "Centroid_Latitude": 13.356718,
+    "Centroid_Longitude": 77.596184,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 23.5,
+    "Avg_Severity_Per_Crime": 2.35,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 34,
+    "Centroid_Latitude": 17.930916,
+    "Centroid_Longitude": 77.703267,
+    "Total_Crimes": 11,
+    "Total_Severity_Score": 23.0,
+    "Avg_Severity_Per_Crime": 2.09,
+    "Primary_Crime_Head": "Robbery",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 37,
+    "Centroid_Latitude": 17.98839,
+    "Centroid_Longitude": 77.485958,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 22.5,
+    "Avg_Severity_Per_Crime": 2.25,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 21,
+    "Centroid_Latitude": 11.770272,
+    "Centroid_Longitude": 76.894547,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 21.5,
+    "Avg_Severity_Per_Crime": 2.15,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Chamarajanagar"
+  },
+  {
+    "Cluster_ID": 47,
+    "Centroid_Latitude": 17.978333,
+    "Centroid_Longitude": 77.340877,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 20.5,
+    "Avg_Severity_Per_Crime": 2.05,
+    "Primary_Crime_Head": "Assault",
+    "Primary_District": "Bidar"
+  },
+  {
+    "Cluster_ID": 46,
+    "Centroid_Latitude": 16.316706,
+    "Centroid_Longitude": 75.849253,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 20.0,
+    "Avg_Severity_Per_Crime": 2.0,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bagalkote"
+  },
+  {
+    "Cluster_ID": 27,
+    "Centroid_Latitude": 15.858808,
+    "Centroid_Longitude": 74.327598,
+    "Total_Crimes": 7,
+    "Total_Severity_Score": 20.0,
+    "Avg_Severity_Per_Crime": 2.86,
+    "Primary_Crime_Head": "NDPS",
+    "Primary_District": "Belagavi"
+  },
+  {
+    "Cluster_ID": 30,
+    "Centroid_Latitude": 13.130736,
+    "Centroid_Longitude": 77.782368,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 19.5,
+    "Avg_Severity_Per_Crime": 1.95,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 6,
+    "Centroid_Latitude": 12.784448,
+    "Centroid_Longitude": 77.419036,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 18.5,
+    "Avg_Severity_Per_Crime": 1.85,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 48,
+    "Centroid_Latitude": 12.813398,
+    "Centroid_Longitude": 77.569133,
+    "Total_Crimes": 11,
+    "Total_Severity_Score": 18.5,
+    "Avg_Severity_Per_Crime": 1.68,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  },
+  {
+    "Cluster_ID": 31,
+    "Centroid_Latitude": 13.107943,
+    "Centroid_Longitude": 77.496728,
+    "Total_Crimes": 9,
+    "Total_Severity_Score": 18.0,
+    "Avg_Severity_Per_Crime": 2.0,
+    "Primary_Crime_Head": "Fraud",
+    "Primary_District": "Bengaluru Rural"
+  },
+  {
+    "Cluster_ID": 28,
+    "Centroid_Latitude": 12.791479,
+    "Centroid_Longitude": 77.542922,
+    "Total_Crimes": 10,
+    "Total_Severity_Score": 15.5,
+    "Avg_Severity_Per_Crime": 1.55,
+    "Primary_Crime_Head": "Cyber Crime",
+    "Primary_District": "Bengaluru Urban"
+  }
+]
