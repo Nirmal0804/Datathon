@@ -56,6 +56,9 @@ const DISTRICTS = ['Bengaluru Urban', 'Mysuru', 'Hubballi-Dharwad', 'Mangaluru',
 export default function SettingsLayout({ role = 'admin' }) {
   const { addToast } = useToast();
 
+  // Active Navigation Section
+  const [activeSection, setActiveSection] = useState('profile');
+
   const roleDefault = useMemo(() => getRoleDefaultProfile(role), [role]);
 
   // Profile Form State initialized from localStorage or role defaults
