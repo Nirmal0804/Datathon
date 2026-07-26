@@ -1,8 +1,10 @@
 import React from 'react';
 import { Search, Bell, Menu, Plus, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNotification } from '../../../context/NotificationContext';
 
 export default function TopNavbar({ toggleMobileMenu }) {
+  const { unreadCount, togglePanel } = useNotification();
   const [avatarUrl, setAvatarUrl] = React.useState(() => {
     try {
       const saved = localStorage.getItem('ksp_user_avatar');
@@ -67,13 +69,29 @@ export default function TopNavbar({ toggleMobileMenu }) {
 
         {/* Notifications */}
         <motion.button
+          onClick={togglePanel}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative w-[44px] h-[44px] flex items-center justify-center rounded-full bg-white text-slate-500 hover:bg-gray-50 shadow-sm transition-all duration-200 ease-in-out"
-          aria-label="Notifications (3 unread)"
+          aria-label={`Notifications (${unreadCount} unread)`}
         >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-3 right-3 w-2 h-2 bg-[#C79A2B] border-2 border-white rounded-full" />
+          <motion.div
+            key={unreadCount}
+            initial={{ rotate: 0 }}
+            animate={unreadCount > 0 ? { rotate: [0, -15, 15, -15, 15, 0] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Bell className="w-5 h-5" />
+          </motion.div>
+          {unreadCount > 0 && (
+            <motion.span 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute top-2 right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#C79A2B] border-2 border-white rounded-full text-[9px] font-black text-[#0B1F4D]"
+            >
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </motion.span>
+          )}
         </motion.button>
 
         {/* User menu */}

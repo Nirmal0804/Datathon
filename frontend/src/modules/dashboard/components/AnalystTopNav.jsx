@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNotification } from '../../../context/NotificationContext';
 import kspLogo from '../../../assets/ksp-logo-official.png';
 
 const ANALYST_NAV_ITEMS = [
@@ -33,6 +34,7 @@ const ADMIN_NAV_ITEMS = [
 ];
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
+  const { unreadCount, togglePanel } = useNotification();
   const [customProfile, setCustomProfile] = React.useState(() => {
     try {
       const saved = localStorage.getItem('ksp_user_profile');
@@ -169,12 +171,29 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
 
         {/* Notifications */}
         <motion.button
+          onClick={togglePanel}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10 cursor-pointer"
+          aria-label={`Notifications (${unreadCount} unread)`}
         >
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#C79A2B] rounded-full" />
+          <motion.div
+            key={unreadCount}
+            initial={{ rotate: 0 }}
+            animate={unreadCount > 0 ? { rotate: [0, -15, 15, -15, 15, 0] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Bell className="w-4 h-4" />
+          </motion.div>
+          {unreadCount > 0 && (
+            <motion.span 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#C79A2B] border-2 border-[#0B1F4D] rounded-full text-[9px] font-black text-[#0B1F4D]"
+            >
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </motion.span>
+          )}
         </motion.button>
       </div>
     </nav>
