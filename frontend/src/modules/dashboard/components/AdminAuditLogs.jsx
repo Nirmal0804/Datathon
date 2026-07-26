@@ -8,6 +8,8 @@ import {
   FileDown, Settings, Archive, ClipboardList
 } from 'lucide-react';
 
+import { useToast } from '../../../components/ui/Toast';
+
 // ─── Audit Data ────────────────────────────────────────────────────────────────
 const AUDIT_LOGS = [
   { id: 'AUD-8822', user: 'Inspector Patil',  role: 'Field Officer',        action: 'Update Case Status',          module: 'FIR Management',   target: 'FIR-2026-1011',        time: '14:32:12', rel: '3m ago',   ip: '10.14.82.11', status: 'Success',  severity: 'Low'      },
@@ -115,12 +117,47 @@ export default function AdminAuditLogs() {
   const [currentPage,    setCurrentPage]    = useState(1);
   const [selectedLog,    setSelectedLog]    = useState(null);
 
+  const { addToast } = useToast();
+
   const handleReset = () => {
     setSearchQuery('');
     setRoleFilter('All');
     setStatusFilter('All');
     setSeverityFilter('All');
     setCurrentPage(1);
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['Audit ID', 'Operator', 'Role', 'Action', 'Module', 'Target Resource', 'Timestamp', 'Severity', 'Status', 'IP Address'];
+    const rows = filteredLogs.map((log) => [
+      `"${log.id}"`,
+      `"${log.user}"`,
+      `"${log.role}"`,
+      `"${log.action}"`,
+      `"${log.module}"`,
+      `"${log.target || ''}"`,
+      `"${log.time}"`,
+      `"${log.severity || ''}"`,
+      `"${log.status}"`,
+      `"${log.ip || ''}"`,
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `KSP_System_Audit_Logs_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      title: 'Audit Logs Exported',
+      message: `Exported ${filteredLogs.length} audit log records as CSV file.`,
+      type: 'success',
+    });
   };
 
   const filteredLogs = useMemo(() => {
@@ -237,7 +274,7 @@ export default function AdminAuditLogs() {
           <RotateCcw className="w-3.5 h-3.5" />
         </button>
 
-        <button className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-extrabold text-xs flex items-center gap-1.5 hover:bg-[#143275] transition-colors cursor-pointer shrink-0">
+        <button onClick={handleExportCSV} className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-extrabold text-xs flex items-center gap-1.5 hover:bg-[#143275] transition-colors cursor-pointer shrink-0">
           <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
           Export CSV
         </button>

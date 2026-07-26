@@ -6,6 +6,7 @@ import {
   Zap, Globe, Layers, TrendingUp,
   Trash2, FileText, Terminal, Calendar, X
 } from 'lucide-react';
+import { useToast } from '../../../components/ui/Toast';
 
 // ─── Static Data ───────────────────────────────────────────────────────────────
 const PLATFORM_SERVICES = [
@@ -132,6 +133,38 @@ function CircleProgress({ pct, color }) {
 export default function AdminSystemHealth() {
   const [expandedAlert, setExpandedAlert] = useState(null);
 
+  const { addToast } = useToast();
+
+  const handleExportDiagnostics = () => {
+    const csvHeaders = ['Component / Service', 'Metric / Property', 'Value / Status'];
+    const csvRows = [
+      ['"Overall System Status"', '"Status"', '"Healthy (99.98% Uptime)"'],
+      ['"CPU Utilization"', '"Percentage"', '"42%"'],
+      ['"Memory Utilization"', '"Percentage"', '"61%"'],
+      ['"Storage Utilization"', '"Percentage"', '"38%"'],
+      ['"Network Traffic"', '"Percentage"', '"12%"'],
+      ...PLATFORM_SERVICES.flatMap(s => s.metrics.map(m => [`"${s.name}"`, `"${m.label}"`, `"${m.val}"`])),
+      ...DIAGNOSTIC_ALERTS.map(a => [`"Alert Notice"`, `"${a.title}"`, `"${a.severity}"`]),
+    ];
+
+    const csvContent = [csvHeaders.join(','), ...csvRows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `KSP_System_Health_Diagnostics_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      title: 'Diagnostics Exported',
+      message: 'System health diagnostic report saved as CSV.',
+      type: 'success',
+    });
+  };
+
   const KPI_CARDS = [
     { label: 'CPU Usage', pct: 42, sub: 'Normal',      sparkKey: 'cpu',     sparkColor: '#3B82F6', circColor: '#3B82F6', statusCls: 'text-sky-600 bg-sky-50 border-sky-200' },
     { label: 'Memory',    pct: 61, sub: 'Stable',      sparkKey: 'memory',  sparkColor: '#10B981', circColor: '#10B981', statusCls: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
@@ -180,6 +213,13 @@ export default function AdminSystemHealth() {
             <TrendingUp className="w-3.5 h-3.5" />
             Uptime: 99.98%
           </div>
+          <button
+            onClick={handleExportDiagnostics}
+            className="h-9 px-4 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#143275] transition-colors duration-150 flex items-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
+            Export Diagnostics
+          </button>
         </div>
       </div>
 

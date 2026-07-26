@@ -120,6 +120,36 @@ export default function AdminUsers() {
     }));
   };
 
+  const handleExportUsersCSV = () => {
+    const headers = ['Name', 'Badge ID', 'Username', 'Role', 'Station / Precinct', 'Status', 'Last Login'];
+    const rows = filteredUsers.map((u) => [
+      `"${u.name}"`,
+      `"${u.badge}"`,
+      `"${u.username}"`,
+      `"${u.role}"`,
+      `"${u.station}"`,
+      u.active ? '"ACTIVE"' : '"SUSPENDED"',
+      `"${u.lastLogin}"`,
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `KSP_System_Users_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      title: 'Users Roster Exported',
+      message: `Exported ${filteredUsers.length} user accounts to CSV file.`,
+      type: 'success',
+    });
+  };
+
   const selectBase = "h-9 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[12px] pl-3 pr-7 focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all cursor-pointer appearance-none";
 
   return (
@@ -198,6 +228,16 @@ export default function AdminUsers() {
           className="h-9 w-9 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#0B1F4D] hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+
+        {/* Export Users */}
+        <button
+          onClick={handleExportUsersCSV}
+          title="Export user accounts as CSV"
+          className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-extrabold text-xs flex items-center gap-1.5 hover:bg-[#143275] transition-colors cursor-pointer shrink-0"
+        >
+          <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
+          <span>Export Users</span>
         </button>
       </div>
 
