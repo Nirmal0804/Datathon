@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Shield, Users, UserCheck, ShieldAlert, Plus, Copy, Download,
   Search, ChevronDown, ChevronRight, CheckCircle, AlertTriangle, Clock,
-  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe
+  RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 
@@ -231,13 +231,16 @@ function ModernToggle({ checked, onChange, disabled }) {
 export default function AdminRoles() {
   const { addToast } = useToast();
 
+  // Edit Mode State
+  const [isEditing, setIsEditing] = useState(false);
+
   // Selected role
   const [selectedRoleId, setSelectedRoleId] = useState('admin');
 
   // Working state for permissions
   const [permissions, setPermissions] = useState(INITIAL_PERMISSIONS);
 
-  // Unsaved changes tracker (tracks initial vs current per role)
+  // Unsaved changes tracker
   const [unsavedCount, setUnsavedCount] = useState(0);
 
   // Search query
@@ -257,6 +260,9 @@ export default function AdminRoles() {
 
   // Risk confirmation modal state
   const [pendingHighRiskAction, setPendingHighRiskAction] = useState(null);
+
+  // Delete role confirmation modal state
+  const [pendingDeleteRole, setPendingDeleteRole] = useState(null);
 
   // Timeline list
   const [timeline, setTimeline] = useState(INITIAL_TIMELINE);
@@ -280,7 +286,6 @@ export default function AdminRoles() {
 
   // Toggle an individual permission
   const handleTogglePermission = (groupName, item, newValue) => {
-    // If enabling or disabling a high-risk privilege, require extra caution/toast alert
     if (item.highRisk && newValue === true) {
       setPendingHighRiskAction({ groupName, item, newValue });
       return;
@@ -291,7 +296,7 @@ export default function AdminRoles() {
   const applyPermissionChange = (groupName, itemId, newValue) => {
     setPermissions((prev) => {
       const rolePerms = { ...prev[selectedRoleId] };
-      const groupItems = rolePerms[groupName].map((perm) =>
+      const groupItems = (rolePerms[groupName] || []).map((perm) =>
         perm.id === itemId ? { ...perm, granted: newValue } : perm
       );
       return {
@@ -302,6 +307,7 @@ export default function AdminRoles() {
         },
       };
     });
+    setIsEditing(true); // Show bottom bar when editing
     setUnsavedCount((c) => c + 1);
   };
 
@@ -316,6 +322,46 @@ export default function AdminRoles() {
       });
       setPendingHighRiskAction(null);
     }
+  };
+
+  // Delete Role Handler
+  const confirmDeleteRole = () => {
+    if (!pendingDeleteRole) return;
+    if (roles.length <= 1) {
+      addToast({
+        title: 'Cannot Delete Role',
+        message: 'At least one system role must remain in the RBAC matrix.',
+        type: 'danger',
+      });
+      setPendingDeleteRole(null);
+      return;
+    }
+
+    const roleIdToDelete = pendingDeleteRole.id;
+    const roleNameToDelete = pendingDeleteRole.name;
+
+    // Filter out deleted role
+    const updatedRoles = roles.filter((r) => r.id !== roleIdToDelete);
+    setRoles(updatedRoles);
+
+    // Remove from permissions object
+    setPermissions((prev) => {
+      const next = { ...prev };
+      delete next[roleIdToDelete];
+      return next;
+    });
+
+    // If deleted role was selected, switch to remaining role
+    if (selectedRoleId === roleIdToDelete) {
+      setSelectedRoleId(updatedRoles[0].id);
+    }
+
+    setPendingDeleteRole(null);
+    addToast({
+      title: 'Role Deleted',
+      message: `Role "${roleNameToDelete}" has been removed from the RBAC engine.`,
+      type: 'info',
+    });
   };
 
   // KPI Statistics for the selected role
@@ -339,7 +385,7 @@ export default function AdminRoles() {
       granted,
       restricted,
       highRiskGranted,
-      assignedUsers: selectedRole.userCount,
+      assignedUsers: selectedRole ? selectedRole.userCount : 0,
     };
   }, [currentRolePerms, selectedRole]);
 
@@ -366,18 +412,19 @@ export default function AdminRoles() {
   const handleSave = (e) => {
     if (e) e.preventDefault();
     setUnsavedCount(0);
+    setIsEditing(false); // Hide bottom action bar after saving
     setTimeline((prev) => [
       {
         time: 'Just now',
         user: 'Administrator',
-        action: `Published updated permissions for ${selectedRole.name}`,
+        action: `Published updated permissions for ${selectedRole?.name || 'Selected Role'}`,
         type: 'grant',
       },
       ...prev,
     ]);
     addToast({
       title: 'Permissions Published',
-      message: `Role-based access control matrix updated for "${selectedRole.name}".`,
+      message: `Role-based access control matrix updated for "${selectedRole?.name || 'Selected Role'}".`,
       type: 'success',
     });
   };
@@ -388,9 +435,10 @@ export default function AdminRoles() {
       [selectedRoleId]: INITIAL_PERMISSIONS[selectedRoleId] || prev[selectedRoleId],
     }));
     setUnsavedCount(0);
+    setIsEditing(false); // Hide bottom action bar after resetting
     addToast({
       title: 'Changes Reset',
-      message: `Reverted unsaved modifications for ${selectedRole.name}.`,
+      message: `Reverted unsaved modifications for ${selectedRole?.name || 'Selected Role'}.`,
       type: 'info',
     });
   };
@@ -454,7 +502,7 @@ export default function AdminRoles() {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-28">
+    <div className={`w-full max-w-[1600px] mx-auto space-y-6 ${isEditing ? 'pb-28' : 'pb-12'}`}>
       {/* ── 1. Hero Header ─────────────────────────────────────────────────── */}
       <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px]">
         <div className="flex items-center gap-4">
@@ -476,9 +524,24 @@ export default function AdminRoles() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-3 shrink-0">
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="h-10 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors duration-150 flex items-center gap-2 cursor-pointer shadow-sm"
+            >
+              <Edit3 className="w-4 h-4 text-[#C79A2B]" />
+              Edit Privileges
+            </button>
+          ) : (
+            <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-3.5 py-2 rounded-full text-xs font-extrabold flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#0B1F4D] animate-pulse" />
+              Editing Mode Active
+            </span>
+          )}
+
           <button
             onClick={handleCreateRole}
-            className="h-10 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors duration-150 flex items-center gap-2 cursor-pointer shadow-sm"
+            className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Create New Role
@@ -489,7 +552,7 @@ export default function AdminRoles() {
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
             <Copy className="w-4 h-4" />
-            Clone Existing Role
+            Clone Role
           </button>
 
           <button
@@ -564,20 +627,34 @@ export default function AdminRoles() {
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedRoleId(r.id);
-                    }}
-                    className={`w-full h-9 rounded-full font-extrabold text-xs transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#0B1F4D] text-white shadow-sm'
-                        : 'bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white'
-                    }`}
-                  >
-                    {isSelected ? 'Currently Selected' : 'Manage Permissions'}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedRoleId(r.id);
+                      }}
+                      className={`flex-1 h-9 rounded-full font-extrabold text-xs transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#0B1F4D] text-white shadow-sm'
+                          : 'bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white'
+                      }`}
+                    >
+                      {isSelected ? 'Currently Selected' : 'Manage Permissions'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPendingDeleteRole(r);
+                      }}
+                      title="Delete Role"
+                      className="w-9 h-9 rounded-full border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-colors duration-150 flex items-center justify-center cursor-pointer shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -586,313 +663,325 @@ export default function AdminRoles() {
       </div>
 
       {/* ── 3. SECTION 2 — Selected Role Configuration ────────────────────── */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
+      {selectedRole && (
+        <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
 
-        {/* Section Title & Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7ECF3] pb-5">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{selectedRole.badge}</span>
-              <h2 className="text-lg font-black text-[#0F172A] tracking-tight">
-                {selectedRole.name} — Permission Configuration
-              </h2>
-            </div>
-            <p className="text-xs font-semibold text-[#64748B] mt-1">
-              Modify fine-grained operational access control lists (ACL) for this security group.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className={`px-3 py-1 rounded-full text-xs font-extrabold border ${
-              selectedRole.riskLevel === 'high'
-                ? 'bg-rose-50 text-rose-700 border-rose-200'
-                : selectedRole.riskLevel === 'medium'
-                ? 'bg-amber-50 text-amber-700 border-amber-200'
-                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-            }`}>
-              {selectedRole.riskLevel === 'high' ? '🔴 High Risk Role' : selectedRole.riskLevel === 'medium' ? '🟡 Medium Risk Role' : '🟢 Low Risk Role'}
-            </span>
-          </div>
-        </div>
-
-        {/* ── 3A. Summary KPI Cards ────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-            <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Granted Permissions</p>
-            <p className="text-2xl font-black text-emerald-600 mt-1">{kpiStats.granted}</p>
-          </div>
-
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-            <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Restricted Permissions</p>
-            <p className="text-2xl font-black text-rose-600 mt-1">{kpiStats.restricted}</p>
-          </div>
-
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-            <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">High-Risk Privileges</p>
-            <p className="text-2xl font-black text-amber-600 mt-1">{kpiStats.highRiskGranted}</p>
-          </div>
-
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-            <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Assigned Personnel</p>
-            <p className="text-2xl font-black text-[#0B1F4D] mt-1">{kpiStats.assignedUsers}</p>
-          </div>
-        </div>
-
-        {/* ── 3B. Risk Indicator & Inheritance Grid ────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Risk Panel */}
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
+          {/* Section Title & Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7ECF3] pb-5">
             <div>
-              <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Security Risk Assessment</h4>
-              <p className="text-xs font-bold text-[#0F172A] mt-1">
-                {selectedRole.riskLevel === 'high' ? 'High Privilege Exposure' : 'Operational Scope Assessment'}
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{selectedRole.badge}</span>
+                <h2 className="text-lg font-black text-[#0F172A] tracking-tight">
+                  {selectedRole.name} — Permission Configuration
+                </h2>
+              </div>
+              <p className="text-xs font-semibold text-[#64748B] mt-1">
+                Modify fine-grained operational access control lists (ACL) for this security group.
               </p>
-              <p className="text-xs font-medium text-[#64748B] mt-1 leading-relaxed">
-                {selectedRole.riskReason}
-              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className={`px-3 py-1 rounded-full text-xs font-extrabold border ${
+                selectedRole.riskLevel === 'high'
+                  ? 'bg-rose-50 text-rose-700 border-rose-200'
+                  : selectedRole.riskLevel === 'medium'
+                  ? 'bg-amber-50 text-amber-700 border-amber-200'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              }`}>
+                {selectedRole.riskLevel === 'high' ? '🔴 High Risk Role' : selectedRole.riskLevel === 'medium' ? '🟡 Medium Risk Role' : '🟢 Low Risk Role'}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setPendingDeleteRole(selectedRole)}
+                className="h-8 px-3 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-xs font-extrabold hover:bg-rose-600 hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete Role
+              </button>
             </div>
           </div>
 
-          {/* Inheritance Panel */}
-          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5">
-            <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-3">Permission Hierarchy &amp; Inheritance</h4>
-            <div className="flex flex-wrap items-center gap-2">
-              {selectedRole.inheritance.map((roleName, idx) => (
-                <React.Fragment key={roleName}>
-                  <span className="bg-white border border-[#E7ECF3] px-3 py-1 rounded-full text-xs font-extrabold text-[#0B1F4D] shadow-2xs">
-                    {roleName}
+          {/* ── 3A. Summary KPI Cards ────────────────────────────────────────── */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Granted Permissions</p>
+              <p className="text-2xl font-black text-emerald-600 mt-1">{kpiStats.granted}</p>
+            </div>
+
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Restricted Permissions</p>
+              <p className="text-2xl font-black text-rose-600 mt-1">{kpiStats.restricted}</p>
+            </div>
+
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">High-Risk Privileges</p>
+              <p className="text-2xl font-black text-amber-600 mt-1">{kpiStats.highRiskGranted}</p>
+            </div>
+
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Assigned Personnel</p>
+              <p className="text-2xl font-black text-[#0B1F4D] mt-1">{kpiStats.assignedUsers}</p>
+            </div>
+          </div>
+
+          {/* ── 3B. Risk Indicator & Inheritance Grid ────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Risk Panel */}
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5 flex items-start gap-4">
+              <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Security Risk Assessment</h4>
+                <p className="text-xs font-bold text-[#0F172A] mt-1">
+                  {selectedRole.riskLevel === 'high' ? 'High Privilege Exposure' : 'Operational Scope Assessment'}
+                </p>
+                <p className="text-xs font-medium text-[#64748B] mt-1 leading-relaxed">
+                  {selectedRole.riskReason}
+                </p>
+              </div>
+            </div>
+
+            {/* Inheritance Panel */}
+            <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5">
+              <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-3">Permission Hierarchy &amp; Inheritance</h4>
+              <div className="flex flex-wrap items-center gap-2">
+                {(selectedRole.inheritance || []).map((roleName, idx) => (
+                  <React.Fragment key={roleName}>
+                    <span className="bg-white border border-[#E7ECF3] px-3 py-1 rounded-full text-xs font-extrabold text-[#0B1F4D] shadow-2xs">
+                      {roleName}
+                    </span>
+                    {idx < (selectedRole.inheritance || []).length - 1 && (
+                      <ChevronRight className="w-4 h-4 text-[#64748B]" />
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── 3C. Quick Permission Search Bar ───────────────────────────────── */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="relative w-full sm:w-96">
+              <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search permissions (e.g. backup, delete, FIR)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 pl-10 pr-4 rounded-full border border-[#E7ECF3] bg-[#F8F9FB] text-xs font-bold text-[#0F172A] placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D]/20 transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#64748B] hover:text-[#0F172A]"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  const next = {};
+                  Object.keys(currentRolePerms).forEach((k) => (next[k] = true));
+                  setExpandedGroups(next);
+                }}
+                className="text-xs font-extrabold text-[#0B1F4D] hover:underline cursor-pointer"
+              >
+                Expand All
+              </button>
+              <span className="text-[#E7ECF3]">|</span>
+              <button
+                onClick={() => {
+                  const next = {};
+                  Object.keys(currentRolePerms).forEach((k) => (next[k] = false));
+                  setExpandedGroups(next);
+                }}
+                className="text-xs font-extrabold text-[#64748B] hover:underline cursor-pointer"
+              >
+                Collapse All
+              </button>
+            </div>
+          </div>
+
+          {/* ── 3D. Collapsible Permission Groups ─────────────────────────────── */}
+          <div className="space-y-4 pt-2">
+            {Object.keys(filteredGroups).length === 0 ? (
+              <div className="text-center py-10 bg-[#F8F9FB] rounded-[20px] border border-dashed border-[#E7ECF3]">
+                <Search className="w-8 h-8 text-[#64748B] mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-extrabold text-[#0F172A]">No permissions match "{searchQuery}"</p>
+                <p className="text-xs text-[#64748B] mt-1">Try searching for generic actions like "export", "read", or "delete".</p>
+              </div>
+            ) : (
+              Object.entries(filteredGroups).map(([groupName, items]) => {
+                const isExpanded = expandedGroups[groupName] !== false;
+                const activeCount = items.filter((i) => i.granted).length;
+
+                return (
+                  <div
+                    key={groupName}
+                    className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] overflow-hidden transition-all duration-150"
+                  >
+                    {/* Group Header */}
+                    <div
+                      onClick={() => toggleGroupExpand(groupName)}
+                      className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-[#E7ECF3]/40 transition-colors select-none"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-[10px] bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 flex items-center justify-center text-[#0B1F4D] font-bold text-xs">
+                          {groupName.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{groupName}</h3>
+                          <p className="text-[10px] font-semibold text-[#64748B]">
+                            {activeCount} of {items.length} privileges enabled
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                          activeCount === items.length
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : activeCount > 0
+                            ? 'bg-sky-50 text-sky-700 border-sky-200'
+                            : 'bg-slate-100 text-slate-600 border-slate-200'
+                        }`}>
+                          {activeCount === items.length ? 'Full Access' : activeCount > 0 ? 'Partial' : 'Disabled'}
+                        </span>
+
+                        <div className="w-7 h-7 rounded-full bg-white border border-[#E7ECF3] flex items-center justify-center text-[#0B1F4D]">
+                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Group Rows */}
+                    {isExpanded && (
+                      <div className="divide-y divide-[#E7ECF3] bg-white border-t border-[#E7ECF3]">
+                        {items.map((item) => (
+                          <div
+                            key={item.id}
+                            className="px-6 py-3.5 flex items-center justify-between hover:bg-[#F8F9FB] transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-xs font-bold text-[#0F172A]">{item.label}</span>
+                              {item.highRisk && (
+                                <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase">
+                                  High Risk
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                              <span className={`text-[11px] font-extrabold ${item.granted ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                {item.granted ? 'Granted' : 'Restricted'}
+                              </span>
+                              <ModernToggle
+                                checked={item.granted}
+                                onChange={(newVal) => handleTogglePermission(groupName, item, newVal)}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* ── 3E. Recent Permission Changes Activity Timeline ────────────────── */}
+          <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5 pt-4">
+            <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-4">Recent Audit Activity &amp; Privilege History</h4>
+            <div className="space-y-3">
+              {timeline.map((entry, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-white border border-[#E7ECF3] rounded-[14px]">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 ${
+                      entry.type === 'grant' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                    }`}>
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-[#0F172A]">{entry.action}</p>
+                      <p className="text-[10px] font-semibold text-[#64748B] mt-0.5">Executed by {entry.user}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-[#64748B] bg-[#F8F9FB] px-2.5 py-1 rounded-full border border-[#E7ECF3]">
+                    {entry.time}
                   </span>
-                  {idx < selectedRole.inheritance.length - 1 && (
-                    <ChevronRight className="w-4 h-4 text-[#64748B]" />
-                  )}
-                </React.Fragment>
+                </div>
               ))}
             </div>
           </div>
         </div>
+      )}
 
-        {/* ── 3C. Quick Permission Search Bar ───────────────────────────────── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <div className="relative w-full sm:w-96">
-            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search permissions (e.g. backup, delete, FIR)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 rounded-full border border-[#E7ECF3] bg-[#F8F9FB] text-xs font-bold text-[#0F172A] placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D]/20 transition-all"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#64748B] hover:text-[#0F172A]"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => {
-                const next = {};
-                Object.keys(currentRolePerms).forEach((k) => (next[k] = true));
-                setExpandedGroups(next);
-              }}
-              className="text-xs font-extrabold text-[#0B1F4D] hover:underline"
-            >
-              Expand All
-            </button>
-            <span className="text-[#E7ECF3]">|</span>
-            <button
-              onClick={() => {
-                const next = {};
-                Object.keys(currentRolePerms).forEach((k) => (next[k] = false));
-                setExpandedGroups(next);
-              }}
-              className="text-xs font-extrabold text-[#64748B] hover:underline"
-            >
-              Collapse All
-            </button>
-          </div>
-        </div>
-
-        {/* ── 3D. Collapsible Permission Groups ─────────────────────────────── */}
-        <div className="space-y-4 pt-2">
-          {Object.keys(filteredGroups).length === 0 ? (
-            <div className="text-center py-10 bg-[#F8F9FB] rounded-[20px] border border-dashed border-[#E7ECF3]">
-              <Search className="w-8 h-8 text-[#64748B] mx-auto mb-2 opacity-50" />
-              <p className="text-xs font-extrabold text-[#0F172A]">No permissions match "{searchQuery}"</p>
-              <p className="text-xs text-[#64748B] mt-1">Try searching for generic actions like "export", "read", or "delete".</p>
-            </div>
-          ) : (
-            Object.entries(filteredGroups).map(([groupName, items]) => {
-              const isExpanded = expandedGroups[groupName] !== false;
-              const activeCount = items.filter((i) => i.granted).length;
-
-              return (
-                <div
-                  key={groupName}
-                  className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] overflow-hidden transition-all duration-150"
-                >
-                  {/* Group Header */}
-                  <div
-                    onClick={() => toggleGroupExpand(groupName)}
-                    className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-[#E7ECF3]/40 transition-colors select-none"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-[10px] bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 flex items-center justify-center text-[#0B1F4D] font-bold text-xs">
-                        {groupName.substring(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{groupName}</h3>
-                        <p className="text-[10px] font-semibold text-[#64748B]">
-                          {activeCount} of {items.length} privileges enabled
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
-                        activeCount === items.length
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          : activeCount > 0
-                          ? 'bg-sky-50 text-sky-700 border-sky-200'
-                          : 'bg-slate-100 text-slate-600 border-slate-200'
-                      }`}>
-                        {activeCount === items.length ? 'Full Access' : activeCount > 0 ? 'Partial' : 'Disabled'}
-                      </span>
-
-                      <div className="w-7 h-7 rounded-full bg-white border border-[#E7ECF3] flex items-center justify-center text-[#0B1F4D]">
-                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Group Rows */}
-                  {isExpanded && (
-                    <div className="divide-y divide-[#E7ECF3] bg-white border-t border-[#E7ECF3]">
-                      {items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="px-6 py-3.5 flex items-center justify-between hover:bg-[#F8F9FB] transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-[#0F172A]">{item.label}</span>
-                            {item.highRisk && (
-                              <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase">
-                                High Risk
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <span className={`text-[11px] font-extrabold ${item.granted ? 'text-emerald-600' : 'text-slate-400'}`}>
-                              {item.granted ? 'Granted' : 'Restricted'}
-                            </span>
-                            <ModernToggle
-                              checked={item.granted}
-                              onChange={(newVal) => handleTogglePermission(groupName, item, newVal)}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+      {/* ── 4. STICKY BOTTOM ACTION BAR — Only appears when isEditing is true ── */}
+      {isEditing && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E7ECF3] shadow-lg animate-in slide-in-from-bottom-3 duration-200">
+          <div className="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between gap-4">
+            {/* Left status indicator */}
+            <div className="flex items-center gap-3">
+              <div className={`w-3 h-3 rounded-full ${unsavedCount > 0 ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
+              <div>
+                <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">RBAC Sync Status</p>
+                <p className="text-xs font-extrabold text-[#0F172A] mt-0.5 flex items-center gap-1.5">
+                  {unsavedCount > 0 ? (
+                    <span className="text-amber-600">{unsavedCount} Unsaved Privilege Change{unsavedCount > 1 ? 's' : ''}</span>
+                  ) : (
+                    <span className="text-emerald-700 flex items-center gap-1">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                      All Privilege Matrix Changes Synced
+                    </span>
                   )}
-                </div>
-              );
-            })
-          )}
-        </div>
-
-        {/* ── 3E. Recent Permission Changes Activity Timeline ────────────────── */}
-        <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5 pt-4">
-          <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-4">Recent Audit Activity &amp; Privilege History</h4>
-          <div className="space-y-3">
-            {timeline.map((entry, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white border border-[#E7ECF3] rounded-[14px]">
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 ${
-                    entry.type === 'grant' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                  }`}>
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-[#0F172A]">{entry.action}</p>
-                    <p className="text-[10px] font-semibold text-[#64748B] mt-0.5">Executed by {entry.user}</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-extrabold text-[#64748B] bg-[#F8F9FB] px-2.5 py-1 rounded-full border border-[#E7ECF3]">
-                  {entry.time}
-                </span>
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
+            </div>
 
-      {/* ── 4. STICKY BOTTOM ACTION BAR ─────────────────────────────────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-[#E7ECF3] shadow-lg">
-        <div className="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between gap-4">
-          {/* Left status indicator */}
-          <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${unsavedCount > 0 ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
-            <div>
-              <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">RBAC Sync Status</p>
-              <p className="text-xs font-extrabold text-[#0F172A] mt-0.5 flex items-center gap-1.5">
-                {unsavedCount > 0 ? (
-                  <span className="text-amber-600">{unsavedCount} Unsaved Privilege Change{unsavedCount > 1 ? 's' : ''}</span>
-                ) : (
-                  <span className="text-emerald-700 flex items-center gap-1">
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-                    All Privilege Matrix Changes Synced
-                  </span>
-                )}
-              </p>
+            {/* Right Action buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="h-9 px-4 rounded-full border border-[#E7ECF3] bg-white text-xs font-extrabold text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Reset
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  addToast({
+                    title: 'Role Access Preview',
+                    message: `Simulating access control token for ${selectedRole?.name || 'Role'}.`,
+                    type: 'info',
+                  });
+                }}
+                className="h-9 px-4 rounded-full border border-[#0B1F4D]/20 bg-white text-xs font-extrabold text-[#0B1F4D] hover:bg-[#0B1F4D]/5 transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                Preview Access
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSave}
+                className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white text-xs font-extrabold hover:bg-[#0F2A6B] transition-colors duration-150 cursor-pointer flex items-center gap-1.5 shadow-md"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Publish Permissions
+              </button>
             </div>
           </div>
-
-          {/* Right Action buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleReset}
-              disabled={unsavedCount === 0}
-              className="h-9 px-4 rounded-full border border-[#E7ECF3] bg-white text-xs font-extrabold text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Reset
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                addToast({
-                  title: 'Role Access Preview',
-                  message: `Simulating access control token for ${selectedRole.name}.`,
-                  type: 'info',
-                });
-              }}
-              className="h-9 px-4 rounded-full border border-[#0B1F4D]/20 bg-white text-xs font-extrabold text-[#0B1F4D] hover:bg-[#0B1F4D]/5 transition-colors duration-150 cursor-pointer flex items-center gap-1.5"
-            >
-              <Eye className="w-3.5 h-3.5" />
-              Preview Access
-            </button>
-
-            <button
-              type="button"
-              onClick={handleSave}
-              className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white text-xs font-extrabold hover:bg-[#0F2A6B] transition-colors duration-150 cursor-pointer flex items-center gap-1.5 shadow-md"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Publish Permissions
-            </button>
-          </div>
         </div>
-      </div>
+      )}
 
       {/* ── 5. High Risk Modal Confirmation ───────────────────────────────── */}
       {pendingHighRiskAction && (
@@ -909,7 +998,7 @@ export default function AdminRoles() {
             </div>
 
             <p className="text-xs font-medium text-[#64748B] leading-relaxed">
-              You are enabling <strong className="text-[#0F172A]">"{pendingHighRiskAction.item.label}"</strong> for the role <strong className="text-[#0F172A]">{selectedRole.name}</strong>. This allows sensitive operations that impact data integrity.
+              You are enabling <strong className="text-[#0F172A]">"{pendingHighRiskAction.item.label}"</strong> for the role <strong className="text-[#0F172A]">{selectedRole?.name}</strong>. This allows sensitive operations that impact data integrity.
             </p>
 
             <div className="flex justify-end gap-3 pt-2">
@@ -924,6 +1013,42 @@ export default function AdminRoles() {
                 className="h-9 px-5 rounded-full bg-amber-500 text-white text-xs font-extrabold hover:bg-amber-600 shadow-sm"
               >
                 Confirm Privilege
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 6. Delete Role Confirmation Modal ──────────────────────────────── */}
+      {pendingDeleteRole && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 max-w-md w-full shadow-xl space-y-4">
+            <div className="flex items-center gap-3 text-rose-600">
+              <div className="w-10 h-10 rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-[#0F172A]">Confirm Role Deletion</h3>
+                <p className="text-xs text-[#64748B]">RBAC Governance Action</p>
+              </div>
+            </div>
+
+            <p className="text-xs font-medium text-[#64748B] leading-relaxed">
+              Are you sure you want to delete the role <strong className="text-[#0F172A]">"{pendingDeleteRole.name}"</strong>? All associated permission mappings will be removed permanently from the system.
+            </p>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setPendingDeleteRole(null)}
+                className="h-9 px-4 rounded-full border border-[#E7ECF3] text-xs font-bold text-[#64748B] hover:bg-[#F8F9FB] cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteRole}
+                className="h-9 px-5 rounded-full bg-rose-600 text-white text-xs font-extrabold hover:bg-rose-700 shadow-sm cursor-pointer"
+              >
+                Delete Role
               </button>
             </div>
           </div>
