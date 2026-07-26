@@ -7,12 +7,12 @@ import kspLogo from '../../../assets/ksp-logo-official.png';
 const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
   { id: 'map', name: 'Crime Map' },
-  { id: 'district', name: 'District Intelligence' },
+  { id: 'district', name: 'District Intel' },
   { id: 'network', name: 'Network Analysis' },
-  { id: 'analytics', name: 'Analytics Suite' },
+  { id: 'analytics', name: 'Analytics' },
   { id: 'reports', name: 'Reports' },
-  { id: 'hotspots', name: 'Crime Hotspot Detection' },
-  { id: 'correlation', name: 'Socio-economic Correlation' },
+  { id: 'hotspots', name: 'Crime Hotspots' },
+  { id: 'correlation', name: 'Socio-economic' },
 ];
 
 const OFFICER_NAV_ITEMS = [
@@ -20,7 +20,7 @@ const OFFICER_NAV_ITEMS = [
   { id: 'assigned_cases', name: 'Assigned Cases' },
   { id: 'fir_management', name: 'FIR Management' },
   { id: 'map', name: 'Crime Map' },
-  { id: 'hotspots', name: 'Crime Hotspot Detection' },
+  { id: 'hotspots', name: 'Crime Hotspots' },
   { id: 'alerts', name: 'Alerts Feed' },
 ];
 
@@ -113,25 +113,25 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     : defaultProfile.initials;
 
   return (
-    <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-6 shrink-0 shadow-sm border border-white/10 w-full mb-3">
+    <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-sm border border-white/10 w-full mb-3">
       {/* Left Section: Branding */}
-      <div className="flex items-center gap-3 pr-6 border-r border-white/10 shrink-0 h-[40px]">
-        <img src={kspLogo} alt="Karnataka Police Logo" className="h-10 w-auto object-contain drop-shadow-sm" />
-        <div className="hidden lg:block">
-          <h2 className="text-white font-bold tracking-wide text-[14px] uppercase leading-tight">KARNATAKA POLICE</h2>
-          <p className="text-[11px] text-[#C79A2B] uppercase tracking-widest font-medium mt-0.5">{platformSubtitle}</p>
+      <div className="flex items-center gap-3 pr-4 border-r border-white/10 shrink-0 h-[40px]">
+        <img src={kspLogo} alt="Karnataka Police Logo" className="h-9 w-auto object-contain drop-shadow-sm" />
+        <div className="hidden xl:block">
+          <h2 className="text-white font-bold tracking-wide text-[13px] uppercase leading-tight">KARNATAKA POLICE</h2>
+          <p className="text-[10px] text-[#C79A2B] uppercase tracking-widest font-medium mt-0.5">{platformSubtitle}</p>
         </div>
       </div>
 
       {/* Center Section: Navigation Links */}
-      <div className="flex-1 overflow-x-auto no-scrollbar flex items-center justify-evenly px-6 gap-4 h-full">
+      <div className="flex-1 overflow-x-auto no-scrollbar flex items-center justify-start lg:justify-center px-2 sm:px-3 gap-1 sm:gap-1.5 h-full">
         {navItems.map((item) => {
           const isActive = activeModule === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveModule(item.id)}
-              className={`relative h-full flex items-center justify-center text-[13px] font-semibold transition-colors duration-200 whitespace-nowrap cursor-pointer px-3 ${
+              className={`relative h-full flex items-center justify-center text-[12px] xl:text-[13px] font-semibold transition-colors duration-200 whitespace-nowrap cursor-pointer px-2 xl:px-2.5 ${
                 isActive ? 'text-[#C79A2B]' : 'text-white/80 hover:text-white'
               }`}
             >
