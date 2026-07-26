@@ -3,6 +3,8 @@ import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './components/ui/Toast';
 import { ErrorBoundary } from './components/ui/ErrorState';
 import { PageTransition } from './components/ui/PageTransition';
+import { NotificationProvider } from './context/NotificationContext';
+import GlobalNotificationCenter from './components/shared/notifications/GlobalNotificationCenter';
 
 import Navbar from './components/shared/navigation/Navbar';
 import Hero from './modules/dashboard/Hero';
@@ -76,9 +78,12 @@ function AppContent() {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {renderView()}
-    </AnimatePresence>
+    <NotificationProvider role={selectedRole}>
+      <GlobalNotificationCenter />
+      <AnimatePresence mode="wait">
+        {renderView()}
+      </AnimatePresence>
+    </NotificationProvider>
   );
 }
 

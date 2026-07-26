@@ -8,8 +8,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import Sidebar from './components/Sidebar';
 import TopNavbar from './components/TopNavbar';
 import AnalystTopNav from './components/AnalystTopNav';
-import { NotificationProvider } from '../../context/NotificationContext';
-import GlobalNotificationCenter from '../../components/shared/notifications/GlobalNotificationCenter';
+// GlobalNotificationCenter is rendered at the App level
 import AnalystProfileWidget from './components/AnalystProfileWidget';
 import DashboardHeader from './components/DashboardHeader';
 import FilterBar from './components/FilterBar';
@@ -257,10 +256,7 @@ export default function DashboardLayout({ onLogout, role }) {
   const isNetwork = activeModule === 'network';
 
   return (
-    <NotificationProvider role={role}>
-      <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
-        <GlobalNotificationCenter />
-        
+    <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
         {/* Analyst Profile Widget */}
       {isCompact && (
         <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
@@ -326,6 +322,6 @@ export default function DashboardLayout({ onLogout, role }) {
           </ErrorBoundary>
         </div>
       </div>
-    </NotificationProvider>
+    </div>
   );
 }
