@@ -11,8 +11,10 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.rbac_deps import require_permission
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.dashboard import DashboardSummaryResponse
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.dashboard_service import DashboardService
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -43,6 +45,7 @@ async def dashboard_summary(
     start_date: Optional[date] = Query(None, description="Inclusive start date (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(None, description="Inclusive end date (YYYY-MM-DD)"),
     service: DashboardService = Depends(_get_dashboard_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("dashboard.read")),
 ) -> DashboardSummaryResponse:
     result = service.get_summary(
         district=district,

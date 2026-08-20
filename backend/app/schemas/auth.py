@@ -1,8 +1,9 @@
 """Authentication API schemas.
 
 Models representing authenticated user identity and API responses.
-No authorization/role data is included — that remains BLOCKED_RBAC
-until the police role/permission matrix is approved.
+The user-facing ``MeResponse`` intentionally exposes no authorization
+data — the frontend selects its operational role itself during login
+(mock login) and never influences backend authorization.
 """
 
 from __future__ import annotations
@@ -14,7 +15,10 @@ class AuthenticatedIdentity(BaseModel):
     """Internal representation of an authenticated user.
 
     Built from verified JWT claims. Only verified claims are included.
-    Arbitrary user_metadata or app_metadata is NOT trusted.
+    Arbitrary user_metadata or app_metadata is NOT trusted — the
+    application role is resolved server-side via ``RBAC_DEFAULT_ROLE``
+    or allowlisted role claims and is present here for authorization
+    dependencies.
     """
 
     user_id: str = Field(
@@ -40,6 +44,14 @@ class AuthenticatedIdentity(BaseModel):
     issued_at: int | None = Field(
         default=None,
         description="Token issued-at as Unix timestamp",
+    )
+    role: str | None = Field(
+        default=None,
+        description="Application role resolved server-side for authorization",
+    )
+    permissions: frozenset[str] = Field(
+        default_factory=frozenset,
+        description="Permissions granted by the resolved role",
     )
 
 

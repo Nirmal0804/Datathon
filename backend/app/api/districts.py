@@ -11,11 +11,13 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.rbac_deps import require_permission
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.district import (
     DistrictIntelligenceProfile,
     DistrictListResponse,
 )
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.district_service import DistrictService
 
 router = APIRouter(prefix="/districts", tags=["districts"])
@@ -48,6 +50,7 @@ def _get_district_service(
 )
 async def list_districts(
     service: DistrictService = Depends(_get_district_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("districts.read")),
 ) -> DistrictListResponse:
     result = service.list_all_districts()
     return DistrictListResponse(**result)
@@ -80,6 +83,7 @@ async def get_district_intelligence(
         None, description="Filter by case status"
     ),
     service: DistrictService = Depends(_get_district_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("districts.read")),
 ) -> DistrictIntelligenceProfile:
     result = service.get_district_intelligence(
         district_id=district_id,

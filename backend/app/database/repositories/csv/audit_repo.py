@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import logging
 
+from app.core.exceptions import DependencyUnavailableError
+
 logger = logging.getLogger(__name__)
 
 _WARNED = False
@@ -47,4 +49,18 @@ class NoOpAuditRepository:
             event.get("resource_id", "-"),
             event.get("outcome", "-"),
             event.get("status_code", 0),
+        )
+
+    def query(self, filters: dict, limit: int, offset: int) -> tuple[list[dict], int]:
+        """Reading audit events is unavailable in CSV/dev deployments.
+
+        Returns ``DependencyUnavailableError`` (HTTP 503) rather than a
+        fabricated empty page — a 503 honestly signals that audit events
+        are not persisted here. Production (Postgres) deployments can
+        serve reads through ``PostgresAuditRepository.query``.
+        """
+        raise DependencyUnavailableError(
+            "Audit event storage is not available in this deployment "
+            "(DATA_BACKEND=csv). Audit events are only persisted when "
+            "running the PostgreSQL backend."
         )

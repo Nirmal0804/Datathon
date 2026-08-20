@@ -1,12 +1,17 @@
 """FastAPI application entry point.
 
 Middleware order (outermost first):
-  1. CORSMiddleware          – CORS headers
-  2. SecurityHeadersMiddleware – cache/security headers
-  3. AuditMiddleware         – security audit trail (classified routes only)
-  4. AuthenticationMiddleware – JWT verification for protected routes
-  5. StructuredLoggingMiddleware – request line after completion
-  6. RequestIDMiddleware     – correlation ID on every request
+  1. CORSMiddleware          – CORS headers + preflight handling
+  2. SecurityHeadersMiddleware – cache/security headers (all responses)
+  3. RequestIDMiddleware     – correlation ID on every request
+  4. StructuredLoggingMiddleware – request line after completion
+  5. RateLimitMiddleware     – per-route fixed-window limits (429 never audited)
+  6. AuditMiddleware         – security audit trail (incl. DENIED auth)
+  7. AuthenticationMiddleware – JWT verification for protected routes
+
+CORS and security headers are outermost so that preflight requests and
+error responses (401/429/403) still carry the headers browsers need, and
+authentication is innermost so the audit records both successes and denials.
 
 Centralized exception handlers convert domain and framework errors into
 a consistent ``{"error": {"code", "message", "request_id"}}`` JSON body.
@@ -42,8 +47,10 @@ from app.api.intelligence_map import router as intelligence_map_router
 from app.api.stations import router as stations_router
 from app.api.auth import router as auth_router
 from app.api.network import router as network_router
+from app.api.admin import router as admin_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 from app.core.audit import AuditMiddleware
+from app.core.rate_limit import RateLimitMiddleware
 
 # ---------------------------------------------------------------------------
 # Logging setup
@@ -218,10 +225,14 @@ class AuthenticationMiddleware:
 
         # Auth disabled (development mode)
         if not settings.REQUIRE_AUTH:
+            from app.core.rbac import ADMIN, PERMISSIONS
+
             state = scope.setdefault("state", {})
             state["authenticated_identity"] = {
                 "user_id": "dev-user-000",
                 "issuer": "development",
+                "role": ADMIN,
+                "permissions": list(PERMISSIONS),
             }
             await self.app(scope, receive, send)
             return
@@ -272,7 +283,11 @@ class AuthenticationMiddleware:
             )
             return
 
-        # Store verified identity on request state
+        # Store verified identity on request state. Role is resolved
+        # server-side (RBAC) — never trusted from the client.
+        from app.core.rbac import permissions_for_role, resolve_role
+
+        role = resolve_role(claims)
         state = scope.setdefault("state", {})
         state["authenticated_identity"] = {
             "user_id": claims.get("sub", ""),
@@ -281,6 +296,8 @@ class AuthenticationMiddleware:
             "audience": claims.get("aud"),
             "expires_at": claims.get("exp"),
             "issued_at": claims.get("iat"),
+            "role": role,
+            "permissions": list(permissions_for_role(role)),
         }
 
         await self.app(scope, receive, send)
@@ -348,7 +365,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Middleware – added outermost-first: CORS → Security → Audit → Auth → Logging → RequestID
+# Middleware – Starlette add_middleware prepends, so the LAST registration is
+# the OUTERMOST. Register innermost-first so execution order becomes:
+#   CORS → Security → RequestID → Logging → RateLimit → Audit → Auth → App
+app.add_middleware(AuthenticationMiddleware)
+app.add_middleware(AuditMiddleware)
+app.add_middleware(RateLimitMiddleware)
+app.add_middleware(StructuredLoggingMiddleware)
+app.add_middleware(RequestIDMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -357,11 +382,6 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
     expose_headers=["X-Request-ID"],
 )
-app.add_middleware(SecurityHeadersMiddleware)
-app.add_middleware(AuditMiddleware)
-app.add_middleware(AuthenticationMiddleware)
-app.add_middleware(StructuredLoggingMiddleware)
-app.add_middleware(RequestIDMiddleware)
 
 # ---------------------------------------------------------------------------
 # Exception handlers
@@ -395,6 +415,20 @@ async def handle_validation_error(request: Request, exc: RequestValidationError)
 
 @app.exception_handler(StarletteHTTPException)
 async def handle_http_exception(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    # 403 (forbidden) carries a pre-structured detail body from
+    # authorization dependencies — preserve code/message/request_id.
+    if exc.status_code == 403:
+        detail = exc.detail if isinstance(exc.detail, dict) else {
+            "error": {
+                "code": "FORBIDDEN",
+                "message": str(exc.detail),
+                "request_id": get_request_id(request),
+            }
+        }
+        if isinstance(detail, dict):
+            error_body = detail.get("error", detail)
+            error_body.setdefault("request_id", get_request_id(request))
+            return JSONResponse(status_code=403, content={"error": error_body})
     code = "NOT_FOUND" if exc.status_code == 404 else "METHOD_NOT_ALLOWED"
     return JSONResponse(
         status_code=exc.status_code,
@@ -503,3 +537,4 @@ app.include_router(districts_router, prefix=settings.API_PREFIX)
 app.include_router(field_map_router, prefix=settings.API_PREFIX)
 app.include_router(intelligence_map_router, prefix=settings.API_PREFIX)
 app.include_router(stations_router, prefix=settings.API_PREFIX)
+app.include_router(admin_router, prefix=settings.API_PREFIX)

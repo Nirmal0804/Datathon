@@ -12,6 +12,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import PlainTextResponse
 
+from app.api.rbac_deps import require_permission
 from app.core.config import settings
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.intelligence_map import (
@@ -22,6 +23,7 @@ from app.schemas.intelligence_map import (
     IntelligenceAnalyticsResponse,
     TimelineResponse,
 )
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.intelligence_map_service import IntelligenceMapService
 
 router = APIRouter(prefix="/map/intelligence", tags=["intelligence-map"])
@@ -63,6 +65,7 @@ async def get_intelligence_analytics(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> IntelligenceAnalyticsResponse:
     result = service.get_analytics(
         district=district,
@@ -99,6 +102,7 @@ async def get_intelligence_heatmap(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> HeatmapResponse:
     result = service.get_heatmap(
         district=district,
@@ -136,6 +140,7 @@ async def get_intelligence_clusters(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> ClusterResponse:
     result = service.get_clusters(
         district=district,
@@ -172,6 +177,7 @@ async def get_intelligence_hotspots(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> HotspotResponse:
     result = service.get_hotspots(
         district=district,
@@ -209,6 +215,7 @@ async def get_intelligence_district_comparison(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> DistrictComparisonResponse:
     result = service.get_district_comparison(
         district=district,
@@ -249,6 +256,7 @@ async def get_intelligence_timeline(
         description="Time granularity: 'daily' or 'monthly' (default: monthly)",
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> TimelineResponse:
     result = service.get_timeline(
         district=district,
@@ -287,6 +295,7 @@ async def get_intelligence_export(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("cases.export")),
 ) -> PlainTextResponse:
     csv_content = service.get_export(
         district=district,

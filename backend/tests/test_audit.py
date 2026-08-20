@@ -65,6 +65,23 @@ class InMemoryAuditRepository:
             raise RuntimeError("Simulated audit write failure")
         self.events.append(event)
 
+    def query(self, filters: dict, limit: int, offset: int) -> tuple[list[dict], int]:
+        """In-memory read with the same filter semantics as the Postgres repo."""
+        matches = self.events
+        for key, value in filters.items():
+            if value is None or value == "":
+                continue
+            if key in ("start_time",):
+                op = lambda v: v.get("event_timestamp") is not None and str(v.get("event_timestamp")) >= value
+                matches = [e for e in matches if op(e)]
+            elif key in ("end_time",):
+                op = lambda v: v.get("event_timestamp") is not None and str(v.get("event_timestamp")) <= value
+                matches = [e for e in matches if op(e)]
+            else:
+                matches = [e for e in matches if e.get(key) == value]
+        ordered = sorted(matches, key=lambda e: str(e.get("event_timestamp", "")), reverse=True)
+        return ordered[offset: offset + limit], len(matches)
+
 
 # ---------------------------------------------------------------------------
 # 1. Event construction
@@ -410,7 +427,7 @@ class TestAuditServicePersistence:
         write_audit_event(event)
         stored = self.repo.events[0]
         expected_keys = {
-            "event_id", "event_timestamp", "request_id", "user_id",
+            "event_id", "event_timestamp", "request_id", "user_id", "role",
             "http_method", "route", "action", "resource_type", "resource_id",
             "outcome", "status_code", "schema_version",
         }
@@ -626,6 +643,7 @@ class TestClassificationCompleteness:
             "/api/v1/network/entities/{entity_type}/{entity_id}",
             "/api/v1/network/search",
             "/api/v1/auth/me",
+            "/api/v1/admin/audit/events",
         }
         assert expected_routes == set(_ROUTE_CLASSIFICATIONS.keys())
 

@@ -13,26 +13,30 @@
 ```text
 HTTP Request
     ↓
-RequestIDMiddleware       → assigns correlation ID
+CORSMiddleware             → CORS preflight + response headers
+    ↓
+SecurityHeadersMiddleware  → security/cache headers (all responses)
+    ↓
+RequestIDMiddleware        → assigns correlation ID
     ↓
 StructuredLoggingMiddleware → operational request logging
     ↓
-AuthenticationMiddleware   → JWT verification, sets identity
+RateLimitMiddleware        → fixed-window limits (429 never audited)
     ↓
 AuditMiddleware            → classifies route, captures outcome
     ↓
-SecurityHeadersMiddleware  → security headers
-    ↓
-CORSMiddleware             → CORS headers
+AuthenticationMiddleware   → JWT verification, sets identity
     ↓
 FastAPI Routes             → application logic
     ↓
 AuditMiddleware            → writes audit event (after response)
 ```
 
-The audit middleware is placed inside AuthenticationMiddleware so that
-the verified identity is available, and wraps the remaining inner
-middleware/app so that the response status code is visible.
+The audit middleware wraps AuthenticationMiddleware so that both granted
+requests and denied (401/403) attempts are recorded. Identity is read from
+`scope["state"]["authenticated_identity"]` after the inner middleware chain
+completes — never trusted from the request itself. Rate-limited (429) requests
+are rejected upstream by RateLimitMiddleware and never enter the audit trail.
 
 ### Layer diagram
 
@@ -53,7 +57,8 @@ No-op adapter (database/repositories/csv/audit_repo.py)      [development]
 
 ## 2. Database Schema
 
-**Migration:** `supabase/migrations/002_audit_events.sql`
+**Migrations:** `supabase/migrations/002_audit_events.sql`,
+`supabase/migrations/004_audit_role.sql` (adds `role`)
 
 ```sql
 CREATE TABLE audit_events (
@@ -61,6 +66,7 @@ CREATE TABLE audit_events (
     event_timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     request_id      TEXT NOT NULL,
     user_id         TEXT,
+    role            TEXT,              -- resolved RBAC role (004_audit_role.sql)
     http_method     TEXT NOT NULL,
     route           TEXT NOT NULL,
     action          TEXT NOT NULL,
@@ -79,6 +85,7 @@ CREATE TABLE audit_events (
 |-------|---------|---------|
 | `idx_audit_events_timestamp` | `event_timestamp` | Time-range queries |
 | `idx_audit_events_user_id` | `user_id` | Per-user audit lookups |
+| `idx_audit_events_role` | `role` | Role-filtered audit queries (004) |
 | `idx_audit_events_request_id` | `request_id` | Correlation/tracing |
 | `idx_audit_events_action_resource` | `action, resource_type` | Action/resource filtering |
 | `idx_audit_events_outcome` | `outcome` | Failure/denial analysis |
@@ -99,6 +106,7 @@ The backend's PostgreSQL service-role connection bypasses RLS for writes.
 | `event_timestamp` | TIMESTAMPTZ | yes | UTC timestamp when request/response completed |
 | `request_id` | TEXT | yes | Correlation ID from X-Request-ID header |
 | `user_id` | TEXT | no | Verified authenticated subject (JWT `sub`). NULL for anonymous. |
+| `role` | TEXT | no | Resolved RBAC role (e.g. `FIELD_OFFICER`, `ADMIN`). See `docs/RBAC_AUTHORIZATION.md`. |
 | `http_method` | TEXT | yes | HTTP method (GET, POST, etc.) |
 | `route` | TEXT | yes | Actual request path (normalized for dynamic segments) |
 | `action` | TEXT | yes | Deterministic action classification |
@@ -144,7 +152,7 @@ The backend's PostgreSQL service-role connection bypasses RLS for writes.
 | Outcome | HTTP Status | Meaning |
 |---------|-------------|---------|
 | `SUCCESS` | 2xx–4xx | Request completed (including 404, 422, etc.) |
-| `DENIED` | 401 | Authentication/authorization rejection |
+| `DENIED` | 401, 403 | Authentication/authorization rejection (403 = insufficient RBAC permission) |
 | `FAILURE` | 5xx | Server error |
 
 ---
@@ -262,9 +270,11 @@ For entity detail, the safe entity identifier is stored in `resource_id`.
 ## 11. Append-Only / Tamper Resistance
 
 Application-level protections:
-- The `AuditRepository` protocol defines only `append()` — no update/delete.
-- The PostgreSQL implementation has only INSERT.
-- No public audit mutation API exists (`GET /audit`, `DELETE /audit/*` are not implemented).
+- The `AuditRepository` protocol defines `append()` (write) and `query()`
+  (read-only pagination). No update/delete operations exist.
+- The PostgreSQL implementation has only INSERT + SELECT (no UPDATE/DELETE).
+- The only public audit API is `GET /api/v1/admin/audit/events`
+  (requires `audit.read`, ADMIN-scoped). No `DELETE /audit/*` exists.
 - Audit events are `frozen` dataclass instances.
 
 **Not implemented (future concerns):**
@@ -307,13 +317,15 @@ Government retention duration requirements have not been supplied.
 
 ## 14. Audit Read API
 
-**Status: BLOCKED_RBAC**
+**Status: IMPLEMENTED** — `GET /api/v1/admin/audit/events`
 
-No audit log read/query endpoint is exposed. Viewing audit history
-is authorization-sensitive and requires authoritative RBAC policies.
+- Requires `audit.read` permission (ADMIN role by default); unauthenticated → 401, insufficient permission → 403 `FORBIDDEN`.
+- Query params (exact-match allowlist): `user_id`, `role`, `action`, `resource_type`, `outcome`, plus `start_time`/`end_time` (ISO 8601) and `limit`/`offset` (max page size 200).
+- Response: `{"items": [...], "pagination": {...}}` via `app/schemas/audit.py` — no sensitive fields.
+- CSV/dev deployments (NoOp repository) return `503 DEPENDENCY_UNAVAILABLE` — never a fabricated empty success.
+- Rate limited as the `audit_events` class (default 120/60s).
 
-The backend may WRITE audit records now. Viewing is blocked until
-the police role/permission matrix is approved.
+No DELETE/mutation path exists — the log remains append-only.
 
 ---
 
@@ -332,8 +344,8 @@ When `DATA_BACKEND=csv`:
 | Invariant | Enforced |
 |-----------|----------|
 | `DATA_BACKEND=postgres` required for durable audit | Documented; startup validation in config |
-| Audit events append-only | Protocol + implementation |
-| No audit read API without RBAC | Not implemented |
+| Audit events append-only | Protocol + implementation (no UPDATE/DELETE paths) |
+| Audit read API requires RBAC | `audit.read` dep on admin router |
 | No RLS bypass from browser | RLS enabled, no permissive policies |
 | Health probes excluded | `should_audit()` check |
 | No secrets in audit records | Field allowlisting in service |
@@ -372,12 +384,16 @@ action, outcome) without including sensitive payloads.
 
 | File | Purpose |
 |------|---------|
-| `app/core/audit.py` | AuditEvent model, classification taxonomy, AuditMiddleware |
-| `app/services/audit_service.py` | AuditService with field allowlisting and persistence |
-| `app/database/repositories/protocols.py` | AuditRepository protocol (append-only) |
-| `app/database/postgres/audit_repo.py` | PostgreSQL audit repository |
-| `app/database/repositories/csv/audit_repo.py` | No-op dev/test adapter |
+| `app/core/audit.py` | AuditEvent model (+ `role`), classification taxonomy, AuditMiddleware, 403 → DENIED |
+| `app/services/audit_service.py` | AuditService with field allowlisting, persistence, and `query_audit_events` |
+| `app/database/repositories/protocols.py` | AuditRepository protocol (append + read-only query) |
+| `app/database/postgres/audit_repo.py` | PostgreSQL audit repository (INSERT + parameterized query) |
+| `app/database/repositories/csv/audit_repo.py` | No-op dev/test adapter (query → 503 DependencyUnavailableError) |
+| `app/api/admin.py` | `GET /api/v1/admin/audit/events` router (requires `audit.read`) |
+| `app/schemas/audit.py` | AuditEventItem / AuditEventPage response schemas |
 | `app/main.py` | Middleware registration + audit repo initialization |
 | `supabase/migrations/002_audit_events.sql` | Database schema |
-| `tests/test_audit.py` | 71 comprehensive tests |
+| `supabase/migrations/004_audit_role.sql` | Adds `role` column + `idx_audit_events_role` |
+| `tests/test_audit.py` | 71 comprehensive tests (write path) |
+| `tests/test_audit_api.py` | Audit read API tests (incl. 503 CSV-mode) |
 | `docs/AUDIT_LOGGING.md` | This document |

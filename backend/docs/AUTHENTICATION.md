@@ -109,12 +109,20 @@ Authorization: Bearer <supabase-jwt>
 
 ## Identity Model
 
-The `AuthenticatedIdentity` contains only verified JWT claims:
+The `AuthenticatedIdentity` contains only verified JWT claims plus a
+server-resolved role:
 
 | Field | Source | Description |
 |-------|--------|-------------|
 | `user_id` | `sub` | Supabase Auth user UUID |
 | `email` | `email` | User email (if present in JWT) |
+| `role` | `resolve_role(claims)` | Least-privilege role from claim paths (default `FIELD_OFFICER`) |
+| `permissions` | `roles[role]` | Permission set used by route authorization deps |
+| `district_ids` | claim path | Optional district-scoping data (not exposed in responses) |
+
+Role resolution reads configured claim paths (`app_metadata.role`,
+`user_metadata.role`, `role`) and falls back to `RBAC_DEFAULT_ROLE` —
+see `docs/RBAC_AUTHORIZATION.md`.
 
 **Never returned:** raw JWT token, refresh token, role claims, district assignments.
 
@@ -130,14 +138,17 @@ All API responses include:
 | `Cache-Control` | `max-age=10` (for `/health/*`) |
 | `X-Request-ID` | UUID per request |
 
-CORS is configured with explicit `Authorization` header support.
+CORS is configured with explicit `Authorization` header support. A fixed-window
+rate limiter runs inside the ASGI stack (see `docs/RBAC_AUTHORIZATION.md` →
+Rate limiting): configurable per-route-class limits, `429` + `Retry-After` on
+exceed, health/docs exempt.
 
 ## Development Mode
 
 When `REQUIRE_AUTH=false`, the middleware:
 
 1. Passes all requests through without verification
-2. Attaches a dev identity: `user_id: "dev-user-000"`
+2. Attaches a dev identity: `user_id: "dev-user-000"`, role `ADMIN` (all permissions)
 3. Logs a warning at startup
 
 **Never enable `REQUIRE_AUTH=false` in production.**
@@ -149,14 +160,21 @@ When `REQUIRE_AUTH=false`, the middleware:
 | JWT verification engine | Backend (`app/core/jwt_auth.py`) |
 | Identity model | Backend (`app/schemas/auth.py`) |
 | Auth middleware | Backend (`app/main.py`) |
+| Role/permission resolution | Backend (`app/core/rbac.py`, `app/api/auth_deps.py`) |
+| Route authorization | Backend (`app/api/rbac_deps.py` — `ask permission deps`) |
+| Audit logging of auth events | Backend (`app/core/audit.py`) |
 | Session/token issuance | **Supabase Auth** (frontend responsibility) |
 | Login/logout flows | **Frontend** (Supabase Auth UI SDK) |
 | User/role management | **Supabase Dashboard** |
-| Row Level Security policies | **BLOCKED** — pending role/permission matrix |
-| Police role assignment | **BLOCKED** — no role model supplied |
+| Row Level Security policies | Supabase (`supabase/migrations/005_rls.sql`) |
 
-## Blocked Items
+## Rate Limiting
 
-- **RLS/RBAC:** Police role/permission model definitions not yet supplied
-- **Rate limiting:** Deployment-dependent; not safe as in-memory limiter
-- **Login/logout endpoints:** Not required — Supabase Auth handles directly from frontend
+- In-process fixed-window (`app/core/rate_limit.py`, module-level
+  `_default_limiter`), keyed by route template + client IP
+  (`X-Forwarded-For` first hop when present).
+- Route classes and defaults: generals 300/60s, `crime_data` export
+  10/3600s, `search` 60/60s, `audit_events` 120/60s.
+- **Single-instance scope**: add a shared store or API-gateway limit
+  before running multiple replicas.
+- In production `RATE_LIMIT_ENABLED=true` is enforced by config.

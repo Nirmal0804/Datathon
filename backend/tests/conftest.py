@@ -28,6 +28,10 @@ from fastapi.testclient import TestClient
 from app.core.config import settings as _settings
 
 _settings.REQUIRE_AUTH = False
+_settings.RATE_LIMIT_ENABLED = False
+# Backend development .env may point at the live PostgreSQL instance;
+# the deterministic test suite stays CSV-backed (see get_csv_repositories).
+_settings.DATA_BACKEND = "csv"
 
 
 # ---------------------------------------------------------------------------

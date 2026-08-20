@@ -10,8 +10,10 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.rbac_deps import require_permission
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.station import StationDetailResponse, StationListResponse
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.station_service import StationService
 
 router = APIRouter(prefix="/stations", tags=["stations"])
@@ -49,6 +51,7 @@ async def list_stations(
         50, ge=1, le=200, description="Items per page (max 200)"
     ),
     service: StationService = Depends(_get_station_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("stations.read")),
 ) -> StationListResponse:
     result = service.list_stations(
         district_id=district_id,
@@ -73,6 +76,7 @@ async def list_stations(
 async def get_station_detail(
     station_id: str,
     service: StationService = Depends(_get_station_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("stations.read")),
 ) -> StationDetailResponse:
     result = service.get_station_detail(station_id)
     return StationDetailResponse(**result)

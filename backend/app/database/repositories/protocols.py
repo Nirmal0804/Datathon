@@ -107,3 +107,18 @@ class AuditRepository(Protocol):
     def append(self, event: dict) -> None:
         """Persist a single audit event. Must be append-only."""
         ...
+
+    def query(
+        self,
+        filters: dict,
+        limit: int,
+        offset: int,
+    ) -> tuple[list[dict], int]:
+        """Read audit events (no mutation).
+
+        Returns a tuple of ``(rows, total_matching_without_pagination)``.
+        Implementations that cannot serve reads (e.g. the development
+        no-op adapter) MUST raise ``DependencyUnavailableError`` so the
+        API can return 503 instead of fabricating empty results.
+        """
+        ...

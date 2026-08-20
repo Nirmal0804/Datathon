@@ -65,6 +65,7 @@ class AuditEvent:
     event_timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     request_id: str = ""
     user_id: str | None = None
+    role: str | None = None
     http_method: str = ""
     route: str = ""
     action: str = ""
@@ -103,6 +104,7 @@ _ROUTE_CLASSIFICATIONS: dict[str, tuple[str, str]] = {
     "/api/v1/network/entities/{entity_type}/{entity_id}": ("READ", "network_entity"),
     "/api/v1/network/search": ("SEARCH", "network"),
     "/api/v1/auth/me": ("READ", "authenticated_identity"),
+    "/api/v1/admin/audit/events": ("LIST", "audit_events"),
 }
 
 # Patterns for dynamic path segments (used for normalization + resource ID extraction)
@@ -198,16 +200,18 @@ class AuditMiddleware:
     """ASGI middleware that records security audit events for classified routes.
 
     Middleware ordering (outermost first):
-        RequestID → StructuredLogging → Authentication → **Audit** → SecurityHeaders → CORS → App
+        CORS → SecurityHeaders → RequestID → StructuredLogging → RateLimit →
+        **Audit** → Authentication → App
 
-    The audit middleware is placed inside AuthenticationMiddleware so that
-    the verified identity is available on scope["state"]["authenticated_identity"],
-    and wraps the remaining inner middleware/app so that the response status
-    code is visible.
+    The audit middleware wraps AuthenticationMiddleware so that both rejected
+    (401/403 → DENIED) and granted requests are recorded. Because the verified
+    identity is set by the inner AuthenticationMiddleware, identity is read
+    from ``scope["state"]["authenticated_identity"]`` after the inner chain
+    completes (at response time), never trusted from the request.
 
-    Health probes and unclassified paths are silently skipped.
-    Audit persistence failures are logged at CRITICAL level but never
-    block the original request (fail-open policy).
+    Health probes, unclassified paths, and rate-limited (429) requests are
+    silently skipped. Audit persistence failures are logged at CRITICAL level
+    but never block the original request (fail-open policy).
     """
 
     def __init__(self, app: ASGIApp) -> None:
@@ -232,13 +236,6 @@ class AuditMiddleware:
         if isinstance(state, dict):
             request_id = state.get("request_id", "")
 
-        # Extract authenticated identity (set by AuthenticationMiddleware)
-        user_id = None
-        if isinstance(state, dict):
-            identity = state.get("authenticated_identity")
-            if isinstance(identity, dict):
-                user_id = identity.get("user_id")
-
         # Classify route
         action, resource_type, resource_id = classify_route(path)
 
@@ -261,17 +258,29 @@ class AuditMiddleware:
             raise
         finally:
             # Determine outcome
-            if status_code == 401:
+            if status_code in (401, 403):
                 outcome = AuditOutcome.DENIED.value
             elif status_code >= 500:
                 outcome = AuditOutcome.FAILURE.value
             else:
                 outcome = AuditOutcome.SUCCESS.value
 
+            # Extract authenticated identity at response time: AuthenticationMiddleware
+            # (inner) ran and populated scope state during self.app().
+            user_id = None
+            role = None
+            state = scope.get("state")
+            if isinstance(state, dict):
+                identity = state.get("authenticated_identity")
+                if isinstance(identity, dict):
+                    user_id = identity.get("user_id")
+                    role = identity.get("role")
+
             # Construct audit event
             event = AuditEvent(
                 request_id=request_id,
                 user_id=user_id,
+                role=role,
                 http_method=method,
                 route=path,
                 action=action,

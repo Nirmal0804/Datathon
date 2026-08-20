@@ -222,11 +222,13 @@ FastAPI Authentication Middleware
 Protected CrimeIntel APIs
 ```
 
-Security controls include deny-by-default authentication, JWT signature and claim validation, HS256/JWKS verification support, explicit algorithm allowlists, algorithm-confusion protection, expiration checks, production authentication guards, security headers, controlled CORS, request IDs, structured logging, audit logging, centralized errors, and production API-documentation hardening.
+Security controls include deny-by-default authentication, JWT signature and claim validation, HS256/JWKS verification support, explicit algorithm allowlists, algorithm-confusion protection, expiration checks, production authentication guards, security headers, controlled CORS, request IDs, structured logging, audit logging with an admin read API, centralized errors, production API-documentation hardening, and route-level RBAC enforced server-side from verified JWT claims (see `backend/docs/RBAC_AUTHORIZATION.md`).
+
+Server-side RBAC resolves each authenticated identity to a least-privilege role (default `FIELD_OFFICER`); every protected endpoint maps to an explicit permission (`dashboard.read`, `map.intelligence.read`, `audit.read`, etc.). A fixed-window rate limiter (single-instance scope) protects route classes such as export and search. Full details: `backend/docs/RBAC_AUTHORIZATION.md`.
 
 Frontend-safe configuration includes the Supabase project URL and publishable/anon key. Database passwords, database URLs, JWT signing secrets, and privileged Supabase service credentials remain server-side.
 
-Fine-grained RBAC and database Row Level Security should be aligned with the authoritative police role and permission model before privileged person-level access is enabled.
+Database Row Level Security is enabled on all tables (`supabase/migrations/005_rls.sql`): `districts` and `police_stations` are readable by `authenticated`; all PII-bearing and operational tables are deny-by-default. The backend connects as a privileged role and bypasses RLS — its access is governed by the RBAC permissions above.
 
 ---
 
@@ -422,15 +424,21 @@ Use the repository `.env.example` files as the authoritative configuration refer
 | GET | `/api/v1/network/entities/{entity_type}/{entity_id}` | Entity detail |
 | GET | `/api/v1/network/search` | Cross-entity search |
 
+### Admin
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/v1/admin/audit/events` | Audit trail query (requires `audit.read`; 503 in CSV/dev) |
+
 For exact query parameters and response contracts, refer to the API contract under `docs/`.
 
 ---
 
 ## 12. ✅ Testing & Reliability
 
-The automated backend test suite covers authentication and JWT security, dashboard services, crime-map APIs, intelligence analytics, district intelligence, stations, network analysis, health probes, error handling, repositories, ingestion, audit logging, and privacy/PII behavior.
+The automated backend test suite (734 tests) covers authentication and JWT security, RBAC authorization, audit write + read API, rate limiting, dashboard services, crime-map APIs, intelligence analytics, district intelligence, stations, network analysis, health probes, error handling, repositories, ingestion, audit logging, and privacy/PII behavior.
 
-Reliability measures include PostgreSQL connection pooling and timeouts, bounded exports, bounded graph construction, centralized error responses, deterministic repository-backed tests, and health/liveness/readiness probes.
+Reliability measures include PostgreSQL connection pooling and timeouts, bounded exports, bounded graph construction, centralized error responses, deterministic repository-backed tests, and health/liveness/readiness probes. Continuous integration runs the full suite on every branch via `.github/workflows/backend-ci.yml`.
 
 ---
 
@@ -463,7 +471,17 @@ Production deployment must configure the final frontend origin in CORS and suppl
 
 ## 14. 🔮 Production Extensions
 
-The architecture supports further validated capabilities as departmental requirements and authoritative artifacts become available, including fine-grained RBAC, Supabase RLS policies, predictive crime-risk models, anomaly detection, forecasting, authoritative GIS boundaries, approved socio-economic datasets, administrative APIs, rate limiting, expanded reporting, monitoring, and CI/CD.
+Implemented this iteration:
+
+- **RBAC authorization** — roles/permissions model, server-side claim resolution, route-level permission deps (`backend/docs/RBAC_AUTHORIZATION.md`).
+- **Row Level Security** — deny-by-default on PII tables, selective `authenticated` reads (`supabase/migrations/005_rls.sql`).
+- **Audit read API** — `GET /api/v1/admin/audit/events` behind `audit.read` (503 in CSV/dev).
+- **Rate limiting** — fixed-window in-process limiter per route class.
+- **CI** — `.github/workflows/backend-ci.yml` runs the full suite + production-settings guard.
+- **ML integration contract** — audited `ml-engine`; artifacts documented with integration recommendations, no fabricated endpoints (`backend/docs/ML_INTEGRATION.md`).
+- **Zoho Catalyst packaging** — `Procfile` + deployment/env-var guide (`backend/docs/PRODUCTION_DATABASE.md`).
+
+Remaining as departmental requirements/authoritative artifacts become available: predictive crime-risk models served from the API, anomaly detection, authoritative GIS boundaries, approved socio-economic datasets, administrative APIs, distributed rate limiting, monitoring, and expanded reporting.
 
 ---
 

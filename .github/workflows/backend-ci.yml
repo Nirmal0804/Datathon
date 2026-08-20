@@ -1,0 +1,58 @@
+# CI for the crime-analytics backend.
+#
+# Runs: install, import/collection sanity, full test suite, and a
+# production-settings guard. The Postgres-backed test path is skipped
+# in CI (it needs live credentials); the CSV backend fully exercises
+# the service/API/audit/RBAC/rate-limit stack.
+
+name: backend-ci
+
+on:
+  push:
+    branches: [main, develop, "feature/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify imports and app wiring
+        run: |
+          python -c "from app.main import app; print('app OK:', app.title)"
+          python -c "from app.core.rbac import PERMISSIONS, ROLE_PERMISSIONS; print('rbac OK:', len(PERMISSIONS))"
+
+      - name: Run test suite
+        run: python -m pytest tests -q
+
+      - name: Production settings guard
+        run: >
+          python -c "
+          import os;
+          from app.core.config import Settings;
+          s = Settings(ENVIRONMENT='production', REQUIRE_AUTH=True, DATA_BACKEND='csv', DATABASE_URL='', SUPABASE_JWT_SECRET='x', SUPABASE_JWT_ISSUER='https://x.supabase.co/auth/v1');
+          assert s.REQUIRE_AUTH, 'production requires auth';
+          try:
+              Settings(ENVIRONMENT='production', REQUIRE_AUTH=False, DATA_BACKEND='csv');
+              raise SystemExit('FAIL: REQUIRE_AUTH=False allowed in production')
+          except ValueError:
+              print('production guard OK')
+          "

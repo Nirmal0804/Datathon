@@ -11,6 +11,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 
+from app.api.rbac_deps import require_permission
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.field_map import (
     FieldMapCaseDetail,
@@ -18,6 +19,7 @@ from app.schemas.field_map import (
     FieldMapFiltersResponse,
     FieldMapHotspotResponse,
 )
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.field_map_service import FieldMapService
 
 router = APIRouter(prefix="/map/field", tags=["field-map"])
@@ -68,6 +70,7 @@ async def list_field_cases(
     page: int = Query(1, ge=1, description="Page number (1-indexed)"),
     page_size: int = Query(50, ge=1, le=200, description="Items per page (max 200)"),
     service: FieldMapService = Depends(_get_field_map_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("cases.read")),
 ) -> FieldMapCaseListResponse:
     result = service.get_cases(
         district=district,
@@ -100,6 +103,7 @@ async def list_field_cases(
 async def get_field_case_detail(
     fir_identifier: str,
     service: FieldMapService = Depends(_get_field_map_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("cases.read")),
 ) -> FieldMapCaseDetail:
     result = service.get_case_detail(fir_identifier)
     return FieldMapCaseDetail(**result)
@@ -119,6 +123,7 @@ async def get_field_case_detail(
 )
 async def get_field_filters(
     service: FieldMapService = Depends(_get_field_map_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.field.read")),
 ) -> FieldMapFiltersResponse:
     result = service.get_filters()
     return FieldMapFiltersResponse(**result)
@@ -149,6 +154,7 @@ async def get_field_hotspots(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: FieldMapService = Depends(_get_field_map_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("map.field.read")),
 ) -> FieldMapHotspotResponse:
     result = service.get_hotspots(
         district=district,

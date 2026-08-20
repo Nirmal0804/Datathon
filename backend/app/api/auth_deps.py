@@ -87,9 +87,13 @@ async def get_current_identity(
 
     # If auth is disabled (development mode), return a default identity
     if not settings.REQUIRE_AUTH:
+        from app.core.rbac import ADMIN, PERMISSIONS
+
         return AuthenticatedIdentity(
             user_id="dev-user-000",
             issuer="development",
+            role=ADMIN,
+            permissions=PERMISSIONS,
         )
 
     # Check auth is configured
@@ -145,7 +149,12 @@ async def get_current_identity(
             ),
         )
 
-    # Build safe identity from verified claims only
+    # Build safe identity from verified claims only.
+    # The application role is resolved server-side (RBAC), never from
+    # the client.
+    from app.core.rbac import permissions_for_role, resolve_role
+
+    role = resolve_role(claims)
     return AuthenticatedIdentity(
         user_id=claims.get("sub", ""),
         issuer=claims.get("iss", ""),
@@ -153,6 +162,8 @@ async def get_current_identity(
         audience=claims.get("aud"),
         expires_at=claims.get("exp"),
         issued_at=claims.get("iat"),
+        role=role,
+        permissions=permissions_for_role(role),
     )
 
 

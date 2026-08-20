@@ -63,7 +63,8 @@ class PostgresFIRRepository:
         self, start_date: str, end_date: str
     ) -> list[FIRRecord]:
         rows = self._build_select(
-            "WHERE f.incident_date::date >= %s AND f.incident_date::date <= %s",
+            "WHERE (f.incident_date AT TIME ZONE 'UTC')::date >= %s "
+            "AND (f.incident_date AT TIME ZONE 'UTC')::date <= %s",
             (start_date, end_date),
             order="f.incident_date",
         )
@@ -101,10 +102,10 @@ class PostgresFIRRepository:
             conditions.append("f.status = %s")
             params.append(status)
         if start_date is not None:
-            conditions.append("f.incident_date::date >= %s")
+            conditions.append("(f.incident_date AT TIME ZONE 'UTC')::date >= %s")
             params.append(start_date)
         if end_date is not None:
-            conditions.append("f.incident_date::date <= %s")
+            conditions.append("(f.incident_date AT TIME ZONE 'UTC')::date <= %s")
             params.append(end_date)
         where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
         rows = self._build_select(where, tuple(params))

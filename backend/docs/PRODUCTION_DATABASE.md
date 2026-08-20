@@ -188,7 +188,8 @@ The application validates configuration on startup via Pydantic `model_validator
 
 ## Testing
 
-449 tests passing across the full test suite, including:
+734 tests passing across the full test suite (CSV-mode, no live DB),
+including:
 - Migration SQL schema correctness (18 tests)
 - Repository protocol compliance (12 tests — CSV and Postgres)
 - Cardinality preservation (6 tests)
@@ -199,6 +200,9 @@ The application validates configuration on startup via Pydantic `model_validator
 - Connection management (3 tests)
 - App integration and file structure (8 tests)
 - Dashboard, field map, intelligence map, district, and health API tests
+- RBAC authorization model (36 tests — `tests/test_rbac.py`)
+- Audit read API (11 tests — `tests/test_audit_api.py`)
+- Rate limiting (9 tests — `tests/test_rate_limit.py`)
 
 ## Production Activation Status
 
@@ -232,18 +236,75 @@ The ingestion uses `psycopg2.extras.execute_values` for batch UPSERTs (500 rows/
 
 ## Security Considerations
 
-- **PII**: The `people` table contains personally identifiable information. Minimize in API responses.
+- **PII**: The `people` table contains personally identifiable information. API services expose only operational/non-identifying fields (see the Phase 7 PII audit).
 - **Credentials**: `DATABASE_URL` must never be hardcoded or exposed to the frontend.
-- **RLS**: Enabled on all tables with no policies = effective deny-by-default. Backend connects as `postgres` role, bypasses RLS.
-- **Audit**: All ingestion batches are recorded with timestamps and counts.
+- **RLS**: Enabled on all tables. See `supabase/migrations/005_rls.sql`: `districts`+`police_stations` are readable by `authenticated`; all PII-bearing and operational tables are deny-by-default. Backend connects as a privileged role and bypasses RLS — its access is governed by RBAC permissions (see `docs/RBAC_AUTHORIZATION.md`) plus audit logging.
+- **Audit**: `audit_events` is append-only and deny-by-default. Admin read API at `GET /api/v1/admin/audit/events` (requires `audit.read`); CSV/dev deployments return 503 for it.
+- **RBAC**: Role resolution is server-side from verified JWT claims; default least-privilege is `FIELD_OFFICER`.
+- **Rate limiting**: In-process fixed-window limiter per client + route class; 429 with `Retry-After`. Single-instance scope — use an API gateway or distributed store when scaling to multiple replicas.
+
+## Deployment (Zoho Catalyst)
+
+The backend is packaged for Catalyst as a standard Procfile app (`web`
+process). Catalyst injects `$PORT`; the web command changes into
+`backend/` and boots uvicorn.
+
+```
+# Procfile (repository root)
+web: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+### Required environment variables
+
+Set these in the Catalyst service environment (never commit secrets):
+
+| Variable | Value |
+|----------|-------|
+| `ENVIRONMENT` | `production` (disables `/docs`, `/openapi.json`; enables production guard) |
+| `DATA_BACKEND` | `postgres` |
+| `DATABASE_URL` | Supabase pooled connection string (workspace secret) |
+| `DATABASE_POOL_MIN` / `DATABASE_POOL_MAX` | tier-appropriate pool bounds |
+| `JWT_`* `SUPABASE_`*  | token verification: `SUPABASE_JWT_SECRET`, `SUPABASE_JWKS_URL`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE`, `JWKS_CACHE_TTL` |
+| `RBAC_ENABLED` | `true` (default role `RBAC_DEFAULT_ROLE=FIELD_OFFICER`) |
+| `CORS_ORIGINS` | Catalyst public URL(s) |
+| `RATE_LIMIT_*` | defaults are in-process; raise `RATE_LIMIT_*` limits or add a gateway before scaling multi-replica |
+
+### Efficient defaults for production
+
+- `ENVIRONMENT=production` must be set or the app refuses to start with
+  `REQUIRE_AUTH` unset.
+- Keep `DATA_BACKEND=postgres`; CSV mode is for local development and
+  will 503 the audit read API (`DEPENDENCY_UNAVAILABLE`).
+- Migrations (`supabase/migrations/*.sql`) must be applied to the target
+  DB before first boot; the app validates schema at startup.
+
+### Verification status note
+
+- **Migrations 002 / 003 / 004 are applied and verified live** (this
+  session): `audit_events` (with `role` column), `idx_firs_incident_date_date`
+  (expression index on `(incident_date AT TIME ZONE 'UTC')::date`) and
+  `idx_audit_events_role` exist in the database. RLS is enabled on all 8
+  tables. Migration 003 was corrected so the date-range expression index is
+  IMMUTABLE (TIMESTAMPTZ `::date` alone is rejected by PostgreSQL); the
+  Postgres FIR repository predicates were aligned to the UTC expression.
+- The `.env` in `backend/` is configured (gitignored). `DATABASE_URL`
+  verifies and connections are established.
+- Endpoint-level live re-verification against Supabase is marked
+  **LIVE_VERIFICATION_BLOCKED_BY_NETWORK**: the current network path to the
+  IPv6-only Supabase PostgreSQL endpoint drops packets, making live
+  requests stall (13–92s) and intermittently disconnect. This is an
+  environment limitation, not a code failure. The local automated suite
+  (734 tests) runs against the CSV backend and passes. End-to-end live
+  checks (Phase 3, 12; Catalyst deploy) remain to be re-run from a stable
+  network.
 
 ## Next Steps
 
 1. ~~Apply migration to Supabase PostgreSQL instance~~ ✅
 2. ~~Run ingestion pipeline~~ ✅
 3. ~~Verify data integrity~~ ✅
-4. Implement RLS policies (BLOCKED — pending role definitions)
-5. Add PII classification labels
+4. ~~Add RLS policies~~ ✅ (`005_rls.sql`; selective reads + deny-by-default)
+5. Add PII classification labels (run "Phase 7 PII audit" checklist on new endpoints)
 6. ~~Production health check integration~~ ✅
-7. Add pagination to list endpoints for large result sets
-8. Add rate limiting for API protection
+7. ~~Add pagination to list endpoints~~ ✅ (field cases, stations, audit events)
+8. ~~Add rate limiting for API protection~~ ✅ (in-process; see notes above)

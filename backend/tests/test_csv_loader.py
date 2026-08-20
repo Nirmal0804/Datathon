@@ -25,12 +25,13 @@ from app.database.csv_loader import (
     parse_float,
     parse_int,
 )
+from app.core.config import settings
 
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
 
-FIXTURES_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "schema_reference"
+FIXTURES_DIR = Path(settings.DATA_DIR)
 
 
 @pytest.fixture()

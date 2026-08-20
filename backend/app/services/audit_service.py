@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from app.core.audit import AuditEvent
+from app.core.exceptions import DependencyUnavailableError
 from app.database.repositories.protocols import AuditRepository
 
 logger = logging.getLogger("crime_analytics.audit")
@@ -52,6 +53,7 @@ def write_audit_event(event: AuditEvent) -> None:
         "event_timestamp": event.event_timestamp,
         "request_id": event.request_id,
         "user_id": event.user_id,
+        "role": event.role,
         "http_method": event.http_method,
         "route": event.route,
         "action": event.action,
@@ -76,3 +78,44 @@ def write_audit_event(event: AuditEvent) -> None:
             event.status_code,
             exc_info=True,
         )
+
+
+def query_audit_events(
+    filters: dict | None = None,
+    *,
+    page: int = 1,
+    page_size: int = 50,
+    max_page_size: int = 200,
+) -> dict:
+    """Read audit events (read-only, permission-gated by the API layer).
+
+    Returns a paginated dict::
+
+        {
+            "items": [ {event fields}, ... ],
+            "page": 1,
+            "page_size": 50,
+            "total": 1234,       # matching filters (unpaginated)
+            "total_pages": 25,
+        }
+
+    If the configured repository cannot serve reads (CSV/dev NoOp
+    adapter) this raises ``DependencyUnavailableError`` (HTTP 503) —
+    the API never fabricates an empty success page.
+    """
+    if _repo is None:
+        raise DependencyUnavailableError("Audit repository is not initialized.")
+
+    safe_page = max(page, 1)
+    safe_page_size = min(max(page_size, 1), max_page_size)
+
+    rows, total = _repo.query(filters or {}, safe_page_size, (safe_page - 1) * safe_page_size)
+
+    total_pages = max(1, (total + safe_page_size - 1) // safe_page_size)
+    return {
+        "items": rows,
+        "page": safe_page,
+        "page_size": safe_page_size,
+        "total": total,
+        "total_pages": total_pages,
+    }

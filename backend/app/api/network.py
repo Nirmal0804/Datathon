@@ -13,12 +13,14 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Path, Query
 
+from app.api.rbac_deps import require_any_permission, require_permission
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.network import (
     NetworkEntityDetail,
     NetworkGraphResponse,
     NetworkSearchResponse,
 )
+from app.schemas.auth import AuthenticatedIdentity
 from app.services.network_service import NetworkService
 
 router = APIRouter(prefix="/network", tags=["network"])
@@ -51,6 +53,7 @@ async def get_network_graph(
     start_date: Optional[date] = Query(None, description="Inclusive start date (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(None, description="Inclusive end date (YYYY-MM-DD)"),
     service: NetworkService = Depends(_get_network_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("network.read")),
 ) -> NetworkGraphResponse:
     result = service.get_graph(
         district=district,
@@ -79,6 +82,7 @@ async def get_entity_detail(
     ),
     entity_id: str = Path(..., description="Entity identifier"),
     service: NetworkService = Depends(_get_network_service),
+    _identity: AuthenticatedIdentity = Depends(require_any_permission(["network.read", "network.person.read"])),
 ) -> NetworkEntityDetail:
     from app.core.exceptions import ResourceNotFoundError
 
@@ -111,6 +115,7 @@ async def search_network(
         le=100,
     ),
     service: NetworkService = Depends(_get_network_service),
+    _identity: AuthenticatedIdentity = Depends(require_permission("network.read")),
 ) -> NetworkSearchResponse:
     result = service.search(q, limit=limit)
     return NetworkSearchResponse(**result)

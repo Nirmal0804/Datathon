@@ -30,7 +30,9 @@ class Settings(BaseSettings):
         "http://localhost:3000",
     ]
 
-    DATA_DIR: str = str(_PROJECT_ROOT / "data" / "schema_reference")
+    # Authoritative approved datasets live under ml-engine/datasets/.
+    # Override with DATA_DIR when the repository layout differs.
+    DATA_DIR: str = str(_PROJECT_ROOT / "ml-engine" / "datasets")
 
     # Persistence: "csv" (transitional) or "postgres" (production)
     DATA_BACKEND: str = "csv"
@@ -73,6 +75,50 @@ class Settings(BaseSettings):
     # Whether authentication is enforced on protected routes.
     # Set to "false" ONLY for local development without Supabase.
     REQUIRE_AUTH: bool = True
+
+    # ------------------------------------------------------------------
+    # Role-based access control (RBAC)
+    # ------------------------------------------------------------------
+
+    # Whether authorization (permission checks) is enforced.
+    RBAC_ENABLED: bool = True
+
+    # Least-privilege role granted to an authenticated identity that has
+    # no recognized role claim. The role itself is configurable; when a
+    # real role policy is approved, change this to "ANALYST" or keep the
+    # low-tier default. FIELD_OFFICER covers dashboard/field/read data.
+    RBAC_DEFAULT_ROLE: str = "FIELD_OFFICER"
+
+    # Dotted claim paths checked (in order) to resolve an application
+    # role from verified JWT claims.
+    RBAC_ROLE_CLAIM_PATHS: list[str] = [
+        "app_metadata.role",
+        "user_metadata.role",
+        "role",
+    ]
+
+    # ------------------------------------------------------------------
+    # Rate limiting (in-process; single-instance scope)
+    # ------------------------------------------------------------------
+
+    # Whether rate limiting is enforced.
+    RATE_LIMIT_ENABLED: bool = True
+
+    # Default per-window request allowance for API endpoints.
+    RATE_LIMIT_DEFAULT_LIMIT: int = 300
+    RATE_LIMIT_DEFAULT_WINDOW: int = 60
+
+    # Stricter limits for cost-heavy / sensitive route classes.
+    RATE_LIMIT_EXPORT_LIMIT: int = 10
+    RATE_LIMIT_EXPORT_WINDOW: int = 3600
+    RATE_LIMIT_SEARCH_LIMIT: int = 60
+    RATE_LIMIT_SEARCH_WINDOW: int = 60
+    RATE_LIMIT_AUDIT_LIMIT: int = 120
+    RATE_LIMIT_AUDIT_WINDOW: int = 60
+
+    # Client identifier header for proxy deployments (empty = socket peer
+    # only). Standard proxies should set this to X-Forwarded-For.
+    RATE_LIMIT_CLIENT_HEADER: str = "X-Forwarded-For"
 
     @model_validator(mode="before")
     @classmethod
@@ -127,6 +173,15 @@ class Settings(BaseSettings):
             raise ValueError(
                 "REQUIRE_AUTH cannot be False in production environment. "
                 "Set REQUIRE_AUTH=true or change ENVIRONMENT to 'development'."
+            )
+        # RBAC default role must be one of the application roles
+        from app.core.rbac import APP_ROLES, normalize_role
+
+        normalized_default = normalize_role(self.RBAC_DEFAULT_ROLE)
+        if normalized_default not in APP_ROLES:
+            raise ValueError(
+                f"RBAC_DEFAULT_ROLE must be one of {APP_ROLES}, "
+                f"got '{self.RBAC_DEFAULT_ROLE}'"
             )
         return self
 
