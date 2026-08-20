@@ -1,58 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, Home } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, Home, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../auth/AuthContext';
 import kspLogo from '../../assets/ksp-logo.png';
 
+// Presentation-only access level selector. The selected level is UI state for
+// which demo dashboard to render; it is never treated as proof of role in the
+// frontend. Authorization is resolved server-side by the backend only.
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User },
   { id: 'analyst', name: 'Intelligence Analyst', icon: Shield },
   { id: 'admin', name: 'System Administrator', icon: Settings }
 ];
 
-const ROLE_CREDENTIALS = {
-  officer: { email: 'officer.ksp@karnataka.gov.in', password: 'Officer@Pass2026' },
-  analyst: { email: 'analyst.ksp@karnataka.gov.in', password: 'Analyst@Pass2026' },
-  admin:   { email: 'admin.ksp@karnataka.gov.in',   password: 'Admin@Pass2026'   }
-};
+function toSafeAuthMessage(error) {
+  switch (error?.code) {
+    case 'AUTH_NOT_CONFIGURED':
+      return 'Authentication is not configured for this deployment.';
+    case 'invalid_credentials':
+      return 'Incorrect email or password. Please try again.';
+    case 'email_not_confirmed':
+      return 'Please confirm your email address before signing in.';
+    case 'over_email_send_rate_limit':
+    case 'over_request_rate_limit':
+      return 'Too many sign-in attempts. Please wait a moment and try again.';
+    case 'validation_failed':
+    case 'missing_password':
+      return 'Enter a valid official email address and password.';
+    default:
+      return 'Unable to sign in. Check your credentials and try again.';
+  }
+}
 
 export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [selectedRole, setSelectedRole] = useState(role || null);
-  
-  const initialCreds = ROLE_CREDENTIALS[role] || (role === null ? { email: '', password: '' } : ROLE_CREDENTIALS.analyst);
-  const [email, setEmail] = useState(initialCreds.email);
-  const [password, setPassword] = useState(initialCreds.password);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (role) {
-      setSelectedRole(role);
-      const creds = ROLE_CREDENTIALS[role];
-      if (creds) {
-        setEmail(creds.email);
-        setPassword(creds.password);
-      }
-    }
-  }, [role]);
 
   const handleRoleClick = (roleId) => {
     setSelectedRole(roleId);
-    const creds = ROLE_CREDENTIALS[roleId] || ROLE_CREDENTIALS.analyst;
-    setEmail(creds.email);
-    setPassword(creds.password);
+    setErrorMessage(null);
     if (onRoleSelect) {
       onRoleSelect(roleId);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedRole) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    if (!selectedRole || submitting) return;
+    setSubmitting(true);
+    setErrorMessage(null);
+    try {
+      await signIn(email.trim(), password);
       onLogin();
-    }, 1000);
+    } catch (error) {
+      setErrorMessage(toSafeAuthMessage(error));
+      setPassword('');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -170,11 +180,14 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                 <User className="absolute left-4 h-4 w-4 text-slate-400" />
                 <input
                   type="text"
+                  inputMode="email"
+                  autoComplete="username"
                   required
+                  disabled={submitting}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Select access level to autofill"
-                  className="w-full pl-11 pr-4 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm"
+                  placeholder="Enter your official email"
+                  className="w-full pl-11 pr-4 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm disabled:bg-slate-50"
                 />
               </div>
             </div>
@@ -196,11 +209,13 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                 <Lock className="absolute left-4 h-4 w-4 text-slate-400" />
                 <input
                   type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   required
+                  disabled={submitting}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="pasword"
-                  className="w-full pl-11 pr-11 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm"
+                  placeholder="Enter your password"
+                  className="w-full pl-11 pr-11 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm disabled:bg-slate-50"
                 />
                 <button
                   type="button"
@@ -212,12 +227,19 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
               </div>
             </div>
 
+            {errorMessage && (
+              <div className="flex items-start gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={!selectedRole || isLoading}
-              className="w-full py-3.5 mt-6 bg-[#0B2341] hover:bg-[#0A192F] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
+              disabled={!selectedRole || submitting}
+              className="w-full py-3.5 mt-2 bg-[#0B2341] hover:bg-[#0A192F] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
+              {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
             </button>
           </form>
         </motion.div>

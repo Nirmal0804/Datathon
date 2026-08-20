@@ -6,6 +6,9 @@ import { PageTransition } from './components/ui/PageTransition';
 import { NotificationProvider } from './context/NotificationContext';
 import GlobalNotificationCenter from './components/shared/notifications/GlobalNotificationCenter';
 
+import { AuthProvider, useAuth } from './auth/AuthContext';
+import SessionRestoreScreen from './auth/SessionRestoreScreen';
+
 import Navbar from './components/shared/navigation/Navbar';
 import Hero from './modules/dashboard/Hero';
 import Stats from './modules/dashboard/Stats';
@@ -31,8 +34,11 @@ function AppContent() {
     return localStorage.getItem('ksp_selected_role') || null;
   });
 
+  const { isAuthenticated, isAuthenticating, signOut } = useAuth();
+
+  // Persist navigation (never persist internal/authentication views).
   useEffect(() => {
-    if (currentView) {
+    if (currentView && currentView !== 'authenticating') {
       localStorage.setItem('ksp_current_view', currentView);
     }
   }, [currentView]);
@@ -60,12 +66,29 @@ function AppContent() {
     setCurrentView('dashboard');
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigateToLanding();
+  };
+
+  // ── Authentication gate ───────────────────────────────────────────────────
+  // The protected dashboard is only reachable with a real Supabase session.
+  // localStorage role/current-view values are never treated as proof of auth.
+  let view = currentView;
+  if (view === 'dashboard' && !isAuthenticated) {
+    view = isAuthenticating ? 'authenticating' : 'auth-login';
+  } else if (view === 'auth-login' && isAuthenticated) {
+    view = 'dashboard';
+  }
+
   const renderView = () => {
-    switch (currentView) {
+    switch (view) {
+      case 'authenticating':
+        return <SessionRestoreScreen />;
       case 'dashboard':
         return (
           <PageTransition key="dashboard">
-            <DashboardLayout onLogout={navigateToLanding} role={selectedRole || 'analyst'} />
+            <DashboardLayout onLogout={handleLogout} role={selectedRole || 'analyst'} />
           </PageTransition>
         );
       case 'auth-role':
@@ -121,7 +144,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <AppContent />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </ToastProvider>
     </ErrorBoundary>
   );
