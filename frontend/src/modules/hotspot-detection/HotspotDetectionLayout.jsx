@@ -4,6 +4,7 @@ import HotspotTable from './components/HotspotTable';
 import HotspotDetailPanel from './components/HotspotDetailPanel';
 import PatrolRecommendationCard from './components/PatrolRecommendationCard';
 import { MOCK_HOTSPOTS } from '../../mock/hotspotData';
+import { getMLHotspots } from '../../services/api';
 import { ShieldAlert, Radio, ShieldCheck, Activity, Zap, AlertTriangle } from 'lucide-react';
 
 function SkeletonDashboard() {
@@ -29,6 +30,22 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
   const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [mlHotspotData, setMlHotspotData] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    getMLHotspots()
+      .then((data) => {
+        if (isMounted) {
+          setMlHotspotData(data);
+          console.log('[ML Hotspots API Connected]:', data);
+        }
+      })
+      .catch((err) => {
+        console.warn('ML Hotspots API warning:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
 
   // Filters State
   const [filters, setFilters] = useState({

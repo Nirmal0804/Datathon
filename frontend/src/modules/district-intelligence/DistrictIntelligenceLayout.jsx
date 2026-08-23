@@ -13,6 +13,7 @@ import IntelligenceSummary from './components/IntelligenceSummary'; // NEW IMPOR
 
 import DistrictRanking from '../dashboard/components/DistrictRanking';
 import { getDashboardDistricts } from '../dashboard/components/mockData';
+import { getMLRiskScores } from '../../services/api';
 
 export default function DistrictIntelligenceLayout({ onNavigate }) {
   const defaultFilters = { dateRange: 'Monthly', district: 'All', policeStation: 'All', category: 'All', status: 'All' };
@@ -20,6 +21,22 @@ export default function DistrictIntelligenceLayout({ onNavigate }) {
 
   // Selected offender investigation workflow state
   const [selectedOffender, setSelectedOffender] = useState(null);
+  const [mlRiskData, setMlRiskData] = useState(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    getMLRiskScores()
+      .then((data) => {
+        if (isMounted) {
+          setMlRiskData(data);
+          console.log('[ML Risk Scores API Connected]:', data);
+        }
+      })
+      .catch((err) => {
+        console.warn('ML Risk Scores API warning:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
 
   return (
     <motion.div 

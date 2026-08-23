@@ -5,6 +5,7 @@ import AnomalyDetection from './components/AnomalyDetection';
 import PredictiveRisk from './components/PredictiveRisk';
 import HotspotAnalytics from './components/HotspotAnalytics';
 import { SUMMARY_CARDS_DATA } from '../../mock/analyticsData';
+import { getMLForecast } from '../../services/api';
 import { TrendingUp, TrendingDown, ArrowRight, ShieldAlert, Calendar, BarChart2 } from 'lucide-react';
 
 // Pure SVG Sparkline Component for KPI Sparklines
@@ -40,6 +41,22 @@ function Sparkline({ points, strokeColor }) {
 export default function AnalyticsLayout() {
   const [timeFilter, setTimeFilter] = useState('This Month');
   const [customRange, setCustomRange] = useState({ start: '', end: '' });
+  const [mlForecastData, setMlForecastData] = useState(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    getMLForecast(30)
+      .then((data) => {
+        if (isMounted) {
+          setMlForecastData(data);
+          console.log('[ML Forecast API Connected]:', data);
+        }
+      })
+      .catch((err) => {
+        console.warn('ML Forecast API warning:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
 
   const filters = ['Today', 'This Week', 'This Month', 'This Year', 'Custom Range'];
 

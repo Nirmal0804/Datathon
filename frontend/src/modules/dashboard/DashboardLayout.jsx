@@ -45,6 +45,9 @@ import AdminAuditLogs from './components/AdminAuditLogs';
 import AdminSystemHealth from './components/AdminSystemHealth';
 import AdminConfiguration from './components/AdminConfiguration';
 
+// ML Engine API Service
+import { getMLSummary, getMLHotspots, getMLRiskScores, getMLForecast } from '../../services/api';
+
 // Mock DB queries simulating APIs
 import {
   getDashboardSummary,
@@ -83,6 +86,51 @@ export default function DashboardLayout({ onLogout, role }) {
     recentCases: getDashboardRecentCases(filters),
     alerts: getDashboardAlerts(filters),
   });
+
+  // ML Engine Live API Data State
+  const [mlData, setMlData] = useState({
+    summary: null,
+    hotspots: null,
+    riskScores: null,
+    forecast: null,
+    loading: false,
+    error: null,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadLiveMLAnalytics() {
+      setMlData((prev) => ({ ...prev, loading: true }));
+      try {
+        const [summary, hotspots, riskScores, forecast] = await Promise.all([
+          getMLSummary().catch((err) => { console.warn('ML Summary API warning:', err); return null; }),
+          getMLHotspots().catch((err) => { console.warn('ML Hotspots API warning:', err); return null; }),
+          getMLRiskScores().catch((err) => { console.warn('ML RiskScores API warning:', err); return null; }),
+          getMLForecast(30).catch((err) => { console.warn('ML Forecast API warning:', err); return null; }),
+        ]);
+
+        if (isMounted) {
+          setMlData({
+            summary,
+            hotspots,
+            riskScores,
+            forecast,
+            loading: false,
+            error: null,
+          });
+          if (summary && hotspots && riskScores && forecast) {
+            console.log('[ML Engine API Connected]:', { summary, hotspots, riskScores, forecast });
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setMlData((prev) => ({ ...prev, loading: false, error: err.message }));
+        }
+      }
+    }
+    loadLiveMLAnalytics();
+    return () => { isMounted = false; };
+  }, []);
 
   const handleFilterApply = (newFilters) => {
     setIsLoading(true);
