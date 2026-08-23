@@ -1,0 +1,251 @@
+Risk_Rank,Station_ID,Station_Name,District,Zone,Station_Type,FIR_Count,Severity_Load,Hotspot_Count,Personnel_Strength,Patrol_Vehicles,Risk_Score,Risk_Tier,z_Severity,z_FIR,z_Hotspot,z_Personnel_Deficit
+1,PS0069,Belagavi South Traffic Police Station,Belagavi,South,Traffic Police Station,31,85.5,3,90,17,83.96,Critical,0.8910256410256411,0.9443208352447978,1.0,0.898329064821948
+2,PS0188,Bidar West Cyber Crime Police Station,Bidar,West,Cyber Crime Police Station,27,69.0,2,45,17,78.39,Critical,0.6794871794871795,0.8613531161467861,0.6666666666666666,0.9642403945274213
+3,PS0037,Ballari South Cyber Crime Police Station,Ballari,South,Cyber Crime Police Station,28,71.0,3,93,10,76.76,Critical,0.7051282051282052,0.8831565790453322,1.0,0.7777734556480148
+4,PS0187,Bidar East Police Station,Bidar,East,Police Station,25,68.0,2,58,22,75.71,Critical,0.6666666666666666,0.8153072441183079,0.6666666666666666,0.9352188214288728
+5,PS0038,Ballari South Cyber Crime Police Station,Ballari,South,Cyber Crime Police Station,27,70.5,3,106,14,75.03,Critical,0.6987179487179487,0.8613531161467861,1.0,0.7376654879612732
+6,PS0189,Bidar East Rural Police Station,Bidar,East,Rural Police Station,27,75.5,1,50,17,74.11,High,0.7628205128205128,0.8613531161467861,0.3333333333333333,0.9530782510279795
+7,PS0170,Bidar West Cyber Crime Police Station,Bidar,West,Cyber Crime Police Station,25,76.5,1,114,13,72.63,High,0.7756410256410257,0.8153072441183079,0.3333333333333333,0.8102028142351254
+8,PS0053,Belagavi South Town Police Station,Belagavi,South,Town Police Station,26,73.0,2,98,6,71.63,High,0.7307692307692307,0.8387566283357885,0.6666666666666666,0.8835405651596858
+9,PS0190,Bidar East Town Police Station,Bidar,East,Town Police Station,23,68.5,1,45,10,70.47,High,0.6730769230769231,0.7655739135839971,0.3333333333333333,0.9642403945274213
+10,PS0047,Belagavi South Cyber Crime Police Station,Belagavi,South,Cyber Crime Police Station,29,87.5,1,117,17,69.94,High,0.9166666666666666,0.904220797437211,0.3333333333333333,0.8484178784618133
+11,PS0166,Bidar East Rural Police Station,Bidar,East,Rural Police Station,30,85.5,0,178,22,69.23,High,0.8910256410256411,0.9245942598551552,0.0,0.6673273774422712
+12,PS0182,Bidar North Rural Police Station,Bidar,North,Rural Police Station,24,68.5,1,124,14,68.57,High,0.6730769230769231,0.7909380448778324,0.3333333333333333,0.787878527236242
+13,PS0014,Bagalkote North Cyber Crime Police Station,Bagalkote,North,Cyber Crime Police Station,27,69.5,1,60,4,68.06,High,0.6858974358974359,0.8613531161467861,0.3333333333333333,0.9563898139061145
+14,PS0195,Chamarajanagar East Rural Police Station,Chamarajanagar,East,Rural Police Station,34,79.5,1,67,24,67.37,High,0.8141025641025641,1.0,0.3333333333333333,0.7836304885436035
+15,PS0100,Bengaluru Rural West Town Police Station,Bengaluru Rural,West,Town Police Station,27,78.5,2,104,19,66.47,High,0.8012820512820513,0.8613531161467861,0.6666666666666666,0.43911342982844614
+16,PS0159,Bidar Central Town Police Station,Bidar,Central,Town Police Station,28,73.5,0,93,16,66.4,High,0.7371794871794872,0.8831565790453322,0.0,0.8570838169327807
+17,PS0012,Bagalkote North Cyber Crime Police Station,Bagalkote,North,Cyber Crime Police Station,32,78.0,0,62,10,65.95,High,0.7948717948717948,0.9634403417687959,0.0,0.9527794848355717
+18,PS0029,Ballari East Police Station,Ballari,East,Police Station,26,78.5,1,105,4,65.94,High,0.8012820512820513,0.8387566283357885,0.3333333333333333,0.7407507162448688
+19,PS0149,Bengaluru Urban South Traffic Police Station,Bengaluru Urban,South,Traffic Police Station,27,67.0,2,176,9,65.93,High,0.6538461538461539,0.8613531161467861,0.6666666666666666,0.5254471803273258
+20,PS0004,Bagalkote Central Traffic Police Station,Bagalkote,Central,Traffic Police Station,29,68.5,1,175,8,65.9,High,0.6730769230769231,0.904220797437211,0.3333333333333333,0.7487958923499067
+21,PS0186,Bidar East Rural Police Station,Bidar,East,Rural Police Station,26,66.0,0,44,4,65.54,High,0.6410256410256411,0.8387566283357885,0.0,0.9664728232273095
+22,PS0035,Ballari North Traffic Police Station,Ballari,North,Traffic Police Station,34,94.0,0,140,24,64.95,High,1.0,1.0,0.0,0.6327677263190261
+23,PS0193,Chamarajanagar North Rural Police Station,Chamarajanagar,North,Rural Police Station,27,78.0,1,73,13,64.77,High,0.7948717948717948,0.8613531161467861,0.3333333333333333,0.7584601126499801
+24,PS0050,Belagavi South Traffic Police Station,Belagavi,South,Traffic Police Station,32,73.5,1,156,22,64.56,High,0.7371794871794872,0.9634403417687959,0.3333333333333333,0.7763239426082854
+25,PS0161,Bidar East Traffic Police Station,Bidar,East,Traffic Police Station,20,55.5,1,58,5,64.33,High,0.5064102564102564,0.6826061944859854,0.3333333333333333,0.9352188214288728
+26,PS0165,Bidar West Traffic Police Station,Bidar,West,Traffic Police Station,23,61.0,1,177,14,63.89,High,0.5769230769230769,0.7655739135839971,0.3333333333333333,0.6695598061421597
+27,PS0204,Chamarajanagar West Traffic Police Station,Chamarajanagar,West,Traffic Police Station,26,75.5,1,70,11,63.74,High,0.7628205128205128,0.8387566283357885,0.3333333333333333,0.7710453005967918
+28,PS0077,Bengaluru Rural West Cyber Crime Police Station,Bengaluru Rural,West,Cyber Crime Police Station,22,58.5,3,117,10,63.32,High,0.5448717948717948,0.739130138344212,1.0,0.3609151478042023
+29,PS0171,Bidar North Traffic Police Station,Bidar,North,Traffic Police Station,25,47.5,1,55,11,63.14,High,0.40384615384615385,0.8153072441183079,0.3333333333333333,0.9419161075285378
+30,PS0155,Bidar East Cyber Crime Police Station,Bidar,East,Cyber Crime Police Station,24,55.5,1,157,15,62.65,High,0.5064102564102564,0.7909380448778324,0.3333333333333333,0.7142083801399266
+31,PS0218,Chamarajanagar East Police Station,Chamarajanagar,East,Police Station,28,73.0,1,61,21,62.61,High,0.7307692307692307,0.8831565790453322,0.3333333333333333,0.8088008644372268
+32,PS0057,Belagavi East Cyber Crime Police Station,Belagavi,East,Cyber Crime Police Station,31,79.5,0,104,13,61.96,High,0.8141025641025641,0.9443208352447978,0.0,0.8724491904129892
+33,PS0048,Belagavi West Town Police Station,Belagavi,West,Town Police Station,26,71.0,1,78,24,61.55,High,0.7051282051282052,0.8387566283357885,0.3333333333333333,0.9205118143153411
+34,PS0019,Bagalkote Central Rural Police Station,Bagalkote,Central,Rural Police Station,24,73.5,0,55,8,60.82,High,0.7371794871794872,0.7909380448778324,0.0,0.9654156365824713
+35,PS0168,Bidar East Women Police Station,Bidar,East,Women Police Station,23,75.0,0,179,24,60.68,High,0.7564102564102564,0.7655739135839971,0.0,0.665094948742383
+36,PS0073,Bengaluru Rural Central Police Station,Bengaluru Rural,Central,Police Station,20,44.5,3,45,14,60.08,High,0.36538461538461536,0.6826061944859854,1.0,0.794013325169245
+37,PS0111,Bengaluru Urban East Rural Police Station,Bengaluru Urban,East,Rural Police Station,28,59.0,1,92,6,59.71,High,0.5512820512820513,0.8831565790453322,0.3333333333333333,0.7828176944090643
+38,PS0121,Bengaluru Urban North Cyber Crime Police Station,Bengaluru Urban,North,Cyber Crime Police Station,22,44.5,3,136,23,59.66,High,0.36538461538461536,0.739130138344212,1.0,0.6480045679852966
+39,PS0175,Bidar South Traffic Police Station,Bidar,South,Traffic Police Station,18,46.0,1,65,3,59.64,High,0.38461538461538464,0.6204208453129829,0.3333333333333333,0.9195918205296543
+40,PS0076,Bengaluru Rural West Traffic Police Station,Bengaluru Rural,West,Traffic Police Station,33,88.5,0,104,22,59.53,High,0.9294871794871795,0.9819890306738137,0.0,0.43911342982844614
+41,PS0164,Bidar North Women Police Station,Bidar,North,Women Police Station,26,59.5,0,164,9,59.53,High,0.5576923076923077,0.8387566283357885,0.0,0.6985813792407081
+42,PS0169,Bidar North Traffic Police Station,Bidar,North,Traffic Police Station,18,55.0,1,58,19,59.45,High,0.5,0.6204208453129829,0.3333333333333333,0.9352188214288728
+43,PS0180,Bidar North Cyber Crime Police Station,Bidar,North,Cyber Crime Police Station,20,55.0,1,137,19,59.36,High,0.5,0.6826061944859854,0.3333333333333333,0.7588569541376935
+44,PS0066,Belagavi West Women Police Station,Belagavi,West,Women Police Station,27,74.0,0,99,5,59.31,High,0.7435897435897436,0.8613531161467861,0.0,0.8816920027019031
+45,PS0210,Chamarajanagar East Cyber Crime Police Station,Chamarajanagar,East,Cyber Crime Police Station,31,68.0,1,155,17,58.84,High,0.6666666666666666,0.9443208352447978,0.3333333333333333,0.4144649754371287
+46,PS0074,Bengaluru Rural West Town Police Station,Bengaluru Rural,West,Town Police Station,24,58.5,2,122,3,58.81,High,0.5448717948717948,0.7909380448778324,0.6666666666666666,0.33083888548718543
+47,PS0201,Chamarajanagar West Women Police Station,Chamarajanagar,West,Women Police Station,30,70.0,1,148,22,58.7,High,0.6923076923076923,0.9245942598551552,0.3333333333333333,0.44383041397968914
+48,PS0153,Bidar West Rural Police Station,Bidar,West,Rural Police Station,24,61.5,0,149,14,58.65,High,0.5833333333333334,0.7909380448778324,0.0,0.7320678097390333
+49,PS0191,Bidar West Rural Police Station,Bidar,West,Rural Police Station,18,52.5,1,130,12,58.55,High,0.46794871794871795,0.6204208453129829,0.3333333333333333,0.7744839550369119
+50,PS0174,Bidar North Traffic Police Station,Bidar,North,Traffic Police Station,25,50.5,0,36,9,58.4,High,0.4423076923076923,0.8153072441183079,0.0,0.9843322528264163
+51,PS0005,Bagalkote Central Rural Police Station,Bagalkote,Central,Rural Police Station,27,75.5,0,173,25,58.28,High,0.7628205128205128,0.8613531161467861,0.0,0.7524062214204496
+52,PS0025,Bagalkote South Women Police Station,Bagalkote,South,Women Police Station,21,59.5,1,129,12,58.16,High,0.5576923076923077,0.7115107053562038,0.3333333333333333,0.8318334609723899
+53,PS0160,Bidar West Cyber Crime Police Station,Bidar,West,Cyber Crime Police Station,20,48.0,1,144,13,57.8,High,0.41025641025641024,0.6826061944859854,0.3333333333333333,0.7432299532384751
+54,PS0178,Bidar East Rural Police Station,Bidar,East,Rural Police Station,22,60.5,0,141,12,57.58,High,0.5705128205128205,0.739130138344212,0.0,0.7499272393381401
+55,PS0163,Bidar Central Rural Police Station,Bidar,Central,Rural Police Station,22,44.0,1,140,14,57.53,High,0.358974358974359,0.739130138344212,0.3333333333333333,0.7521596680380285
+56,PS0141,Bengaluru Urban North Town Police Station,Bengaluru Urban,North,Town Police Station,23,52.5,2,178,13,57.38,High,0.46794871794871795,0.7655739135839971,0.6666666666666666,0.5193193109444274
+57,PS0130,Bengaluru Urban East Cyber Crime Police Station,Bengaluru Urban,East,Cyber Crime Police Station,18,43.5,3,133,18,57.23,High,0.3525641025641026,0.6204208453129829,1.0,0.6571963720596443
+58,PS0027,Ballari North Traffic Police Station,Ballari,North,Traffic Police Station,24,65.5,1,176,7,57.2,High,0.6346153846153846,0.7909380448778324,0.3333333333333333,0.5216995081095879
+59,PS0042,Ballari Central Traffic Police Station,Ballari,Central,Traffic Police Station,26,74.0,0,35,19,57.19,High,0.7435897435897436,0.8387566283357885,0.0,0.9567166960965541
+60,PS0179,Bidar West Police Station,Bidar,West,Police Station,24,62.5,0,152,25,56.98,High,0.5961538461538461,0.7909380448778324,0.0,0.7253705236393683
+61,PS0032,Ballari East Rural Police Station,Ballari,East,Rural Police Station,26,69.5,0,45,12,56.32,High,0.6858974358974359,0.8387566283357885,0.0,0.9258644132605991
+62,PS0015,Bagalkote North Traffic Police Station,Bagalkote,North,Traffic Police Station,23,50.5,1,89,15,56.14,High,0.4423076923076923,0.7655739135839971,0.3333333333333333,0.9040400423832448
+63,PS0081,Bengaluru Rural South Town Police Station,Bengaluru Rural,South,Town Police Station,27,70.0,1,96,25,56.04,High,0.6923076923076923,0.8613531161467861,0.3333333333333333,0.4872354495356731
+64,PS0110,Bengaluru Urban North Police Station,Bengaluru Urban,North,Police Station,26,60.5,1,96,25,56.03,High,0.5705128205128205,0.8387566283357885,0.3333333333333333,0.7705619556432671
+65,PS0215,Chamarajanagar North Rural Police Station,Chamarajanagar,North,Rural Police Station,29,75.0,0,82,24,55.91,High,0.7564102564102564,0.904220797437211,0.0,0.7207045488095453
+66,PS0095,Bengaluru Rural South Traffic Police Station,Bengaluru Rural,South,Traffic Police Station,22,63.5,1,35,16,55.66,High,0.6089743589743589,0.739130138344212,0.3333333333333333,0.8541658498032787
+67,PS0194,Chamarajanagar Central Town Police Station,Chamarajanagar,Central,Town Police Station,26,59.5,1,135,7,55.53,High,0.5576923076923077,0.8387566283357885,0.3333333333333333,0.49836622841587286
+68,PS0158,Bidar West Rural Police Station,Bidar,West,Rural Police Station,20,55.0,0,145,6,55.31,High,0.5,0.6826061944859854,0.0,0.7409975245385867
+69,PS0184,Bidar South Town Police Station,Bidar,South,Town Police Station,18,52.0,1,149,24,55.08,High,0.46153846153846156,0.6204208453129829,0.3333333333333333,0.7320678097390333
+70,PS0197,Chamarajanagar South Traffic Police Station,Chamarajanagar,South,Traffic Police Station,21,61.5,1,84,10,55.01,High,0.5833333333333334,0.7115107053562038,0.3333333333333333,0.7123144235116707
+71,PS0097,Bengaluru Rural North Town Police Station,Bengaluru Rural,North,Town Police Station,18,42.5,3,85,16,54.87,High,0.33974358974358976,0.6204208453129829,1.0,0.5534032266331103
+72,PS0181,Bidar West Women Police Station,Bidar,West,Women Police Station,19,51.0,0,78,5,54.83,High,0.44871794871794873,0.6522911610246186,0.0,0.8905702474311058
+73,PS0143,Bengaluru Urban North Traffic Police Station,Bengaluru Urban,North,Traffic Police Station,27,53.0,1,161,6,54.82,High,0.47435897435897434,0.8613531161467861,0.3333333333333333,0.5714062006990649
+74,PS0045,Ballari East Rural Police Station,Ballari,East,Rural Police Station,24,63.5,1,132,24,54.71,High,0.6089743589743589,0.7909380448778324,0.3333333333333333,0.6574495525877901
+75,PS0117,Bengaluru Urban West Women Police Station,Bengaluru Urban,West,Women Police Station,26,55.0,1,96,21,54.58,High,0.5,0.8387566283357885,0.3333333333333333,0.7705619556432671
+76,PS0172,Bidar West Cyber Crime Police Station,Bidar,West,Cyber Crime Police Station,21,55.0,0,90,19,54.51,High,0.5,0.7115107053562038,0.0,0.8637811030324457
+77,PS0162,Bidar West Police Station,Bidar,West,Police Station,19,40.0,1,68,20,54.1,High,0.3076923076923077,0.6522911610246186,0.3333333333333333,0.9128945344299894
+78,PS0031,Ballari Central Police Station,Ballari,Central,Police Station,23,56.0,1,73,20,53.71,High,0.5128205128205128,0.7655739135839971,0.3333333333333333,0.8394780213199249
+79,PS0205,Chamarajanagar West Women Police Station,Chamarajanagar,West,Women Police Station,25,58.0,1,167,6,53.27,High,0.5384615384615384,0.8153072441183079,0.3333333333333333,0.36412422364988206
+80,PS0226,Chamarajanagar East Police Station,Chamarajanagar,East,Police Station,28,70.0,0,113,17,53.23,High,0.6923076923076923,0.8831565790453322,0.0,0.5906576066924916
+81,PS0055,Belagavi West Rural Police Station,Belagavi,West,Rural Police Station,18,45.5,2,156,17,52.57,High,0.3782051282051282,0.6204208453129829,0.6666666666666666,0.7763239426082854
+82,PS0003,Bagalkote North Traffic Police Station,Bagalkote,North,Traffic Police Station,22,59.0,0,56,18,52.1,High,0.5512820512820513,0.739130138344212,0.0,0.9636104720472
+83,PS0058,Belagavi Central Police Station,Belagavi,Central,Police Station,23,51.5,1,74,25,51.97,High,0.4551282051282051,0.7655739135839971,0.3333333333333333,0.9279060641464721
+84,PS0061,Belagavi West Police Station,Belagavi,West,Police Station,25,64.0,0,134,16,51.92,High,0.6153846153846154,0.8153072441183079,0.0,0.8169923166795063
+85,PS0176,Bidar West Traffic Police Station,Bidar,West,Traffic Police Station,19,52.5,0,93,19,51.91,High,0.46794871794871795,0.6522911610246186,0.0,0.8570838169327807
+86,PS0084,Bengaluru Rural Central Women Police Station,Bengaluru Rural,Central,Women Police Station,21,47.5,2,113,11,51.81,High,0.40384615384615385,0.7115107053562038,0.6666666666666666,0.3849761576578158
+87,PS0234,Chamarajanagar East Women Police Station,Chamarajanagar,East,Women Police Station,24,58.0,1,108,25,51.78,High,0.5384615384615384,0.7909380448778324,0.3333333333333333,0.6116329199371777
+88,PS0196,Chamarajanagar North Town Police Station,Chamarajanagar,North,Town Police Station,28,56.0,0,39,14,51.42,High,0.5128205128205128,0.8831565790453322,0.0,0.9010922427138455
+89,PS0007,Bagalkote North Traffic Police Station,Bagalkote,North,Traffic Police Station,23,57.0,0,176,10,51.34,High,0.5256410256410257,0.7655739135839971,0.0,0.7469907278146355
+90,PS0225,Chamarajanagar East Police Station,Chamarajanagar,East,Police Station,26,65.0,0,81,20,51.06,High,0.6282051282051282,0.8387566283357885,0.0,0.7248996114584825
+91,PS0156,Bidar North Cyber Crime Police Station,Bidar,North,Cyber Crime Police Station,14,39.0,1,55,13,51.03,High,0.2948717948717949,0.4735442393638178,0.3333333333333333,0.9419161075285378
+92,PS0018,Bagalkote Central Town Police Station,Bagalkote,Central,Town Police Station,21,50.0,0,49,4,50.92,High,0.4358974358974359,0.7115107053562038,0.0,0.9762466237940995
+93,PS0211,Chamarajanagar North Police Station,Chamarajanagar,North,Police Station,24,61.5,1,175,22,50.86,High,0.5833333333333334,0.7909380448778324,0.3333333333333333,0.3305637224583844
+94,PS0030,Ballari East Traffic Police Station,Ballari,East,Traffic Police Station,25,68.0,0,148,20,50.63,High,0.6666666666666666,0.8153072441183079,0.0,0.608085900050262
+95,PS0034,Ballari Central Town Police Station,Ballari,Central,Town Police Station,20,47.0,1,76,8,50.55,High,0.3974358974358974,0.6826061944859854,0.3333333333333333,0.8302223364691383
+96,PS0051,Belagavi West Cyber Crime Police Station,Belagavi,West,Cyber Crime Police Station,24,62.5,0,133,18,50.4,High,0.5961538461538461,0.7909380448778324,0.0,0.818840879137289
+97,PS0068,Belagavi North Police Station,Belagavi,North,Police Station,22,63.5,0,40,22,50.4,High,0.6089743589743589,0.739130138344212,0.0,0.9907571877110862
+98,PS0154,Bidar Central Police Station,Bidar,Central,Police Station,15,42.0,1,46,24,50.32,High,0.3333333333333333,0.5136442771714047,0.3333333333333333,0.9620079658275329
+99,PS0167,Bidar Central Town Police Station,Bidar,Central,Town Police Station,14,37.0,1,81,11,50.28,High,0.2692307692307692,0.4735442393638178,0.3333333333333333,0.8838729613314408
+100,PS0228,Chamarajanagar East Town Police Station,Chamarajanagar,East,Town Police Station,24,64.5,0,54,24,50.06,High,0.6217948717948718,0.7909380448778324,0.0,0.8381663029797872
+101,PS0119,Bengaluru Urban West Police Station,Bengaluru Urban,West,Police Station,26,55.5,0,119,6,49.92,Medium,0.5064102564102564,0.8387566283357885,0.0,0.7000914577399341
+102,PS0126,Bengaluru Urban West Traffic Police Station,Bengaluru Urban,West,Traffic Police Station,24,55.0,0,81,8,49.49,Medium,0.5,0.7909380448778324,0.0,0.8165209760150062
+103,PS0063,Belagavi South Cyber Crime Police Station,Belagavi,South,Cyber Crime Police Station,24,53.5,0,171,3,48.95,Medium,0.4807692307692308,0.7909380448778324,0.0,0.748595505741544
+104,PS0046,Belagavi Central Rural Police Station,Belagavi,Central,Rural Police Station,21,56.0,0,35,12,48.91,Medium,0.5128205128205128,0.7115107053562038,0.0,1.0
+105,PS0024,Bagalkote Central Rural Police Station,Bagalkote,Central,Rural Police Station,21,54.0,0,89,19,48.66,Medium,0.48717948717948717,0.7115107053562038,0.0,0.9040400423832448
+106,PS0039,Ballari West Town Police Station,Ballari,West,Town Police Station,18,59.0,0,42,6,48.59,Medium,0.5512820512820513,0.6204208453129829,0.0,0.9351200981113855
+107,PS0206,Chamarajanagar North Traffic Police Station,Chamarajanagar,North,Traffic Police Station,23,60.5,0,72,16,48.58,Medium,0.5705128205128205,0.7655739135839971,0.0,0.7626551752989174
+108,PS0115,Bengaluru Urban East Rural Police Station,Bengaluru Urban,East,Rural Police Station,17,40.5,2,111,21,48.42,Medium,0.3141025641025641,0.5868269919231961,0.6666666666666666,0.7246029352715282
+109,PS0216,Chamarajanagar Central Women Police Station,Chamarajanagar,Central,Women Police Station,28,63.5,0,164,19,48.28,Medium,0.6089743589743589,0.8831565790453322,0.0,0.3767094115966938
+110,PS0001,Bagalkote East Town Police Station,Bagalkote,East,Town Police Station,21,49.0,0,130,8,48.26,Medium,0.4230769230769231,0.7115107053562038,0.0,0.8300282964371185
+111,PS0043,Ballari East Cyber Crime Police Station,Ballari,East,Cyber Crime Police Station,24,62.0,0,119,22,48.23,Medium,0.5897435897435898,0.7909380448778324,0.0,0.6975575202745317
+112,PS0230,Chamarajanagar North Traffic Police Station,Chamarajanagar,North,Traffic Police Station,24,62.5,0,128,14,47.99,Medium,0.5961538461538461,0.7909380448778324,0.0,0.5277316669584334
+113,PS0022,Bagalkote East Traffic Police Station,Bagalkote,East,Traffic Police Station,21,50.5,0,102,15,47.9,Medium,0.4423076923076923,0.7115107053562038,0.0,0.880572903424717
+114,PS0208,Chamarajanagar Central Women Police Station,Chamarajanagar,Central,Women Police Station,22,63.0,0,130,10,47.63,Medium,0.6025641025641025,0.739130138344212,0.0,0.519341541660559
+115,PS0065,Belagavi South Police Station,Belagavi,South,Police Station,22,57.0,0,151,13,47.62,Medium,0.5256410256410257,0.739130138344212,0.0,0.7855667548971993
+116,PS0173,Bidar East Cyber Crime Police Station,Bidar,East,Cyber Crime Police Station,15,36.5,1,159,19,47.1,Medium,0.26282051282051283,0.5136442771714047,0.3333333333333333,0.7097435227401498
+117,PS0212,Chamarajanagar West Police Station,Chamarajanagar,West,Police Station,18,40.0,1,66,4,46.77,Medium,0.3076923076923077,0.6204208453129829,0.3333333333333333,0.7878255511925407
+118,PS0040,Ballari South Rural Police Station,Ballari,South,Rural Police Station,25,51.5,0,62,22,46.59,Medium,0.4551282051282051,0.8153072441183079,0.0,0.8734155324394755
+119,PS0062,Belagavi West Traffic Police Station,Belagavi,West,Traffic Police Station,19,41.5,1,134,13,46.52,Medium,0.3269230769230769,0.6522911610246186,0.3333333333333333,0.8169923166795063
+120,PS0016,Bagalkote South Cyber Crime Police Station,Bagalkote,South,Cyber Crime Police Station,20,49.0,0,151,12,46.36,Medium,0.4230769230769231,0.6826061944859854,0.0,0.7921198411964198
+121,PS0067,Belagavi North Town Police Station,Belagavi,North,Town Police Station,21,52.5,0,124,10,46.33,Medium,0.46794871794871795,0.7115107053562038,0.0,0.8354779412573339
+122,PS0148,Bengaluru Urban North Town Police Station,Bengaluru Urban,North,Town Police Station,21,46.0,0,40,4,46.32,Medium,0.38461538461538464,0.7115107053562038,0.0,0.9421422983644261
+123,PS0207,Chamarajanagar South Cyber Crime Police Station,Chamarajanagar,South,Cyber Crime Police Station,22,57.5,0,141,4,46.23,Medium,0.532051282051282,0.739130138344212,0.0,0.4731958525222497
+124,PS0028,Ballari East Rural Police Station,Ballari,East,Rural Police Station,24,53.5,0,102,19,46.03,Medium,0.4807692307692308,0.7909380448778324,0.0,0.7500064010956553
+125,PS0200,Chamarajanagar South Traffic Police Station,Chamarajanagar,South,Traffic Police Station,22,56.5,0,77,17,45.98,Medium,0.5192307692307693,0.739130138344212,0.0,0.7416798620542313
+126,PS0232,Chamarajanagar North Rural Police Station,Chamarajanagar,North,Rural Police Station,19,52.5,1,115,23,45.92,Medium,0.46794871794871795,0.6522911610246186,0.3333333333333333,0.5822674813946171
+127,PS0134,Bengaluru Urban South Town Police Station,Bengaluru Urban,South,Town Police Station,20,51.0,0,45,12,45.75,Medium,0.44871794871794873,0.6826061944859854,0.0,0.9268226249071798
+128,PS0185,Bidar East Traffic Police Station,Bidar,East,Traffic Police Station,16,39.0,0,112,11,45.64,Medium,0.2948717948717949,0.5513124726004205,0.0,0.8146676716349022
+129,PS0144,Bengaluru Urban South Rural Police Station,Bengaluru Urban,South,Rural Police Station,22,42.0,1,173,16,45.6,Medium,0.3333333333333333,0.739130138344212,0.3333333333333333,0.5346389844016737
+130,PS0157,Bidar North Traffic Police Station,Bidar,North,Traffic Police Station,18,46.5,0,175,25,45.48,Medium,0.391025641025641,0.6204208453129829,0.0,0.6740246635419364
+131,PS0041,Ballari East Town Police Station,Ballari,East,Town Police Station,21,55.5,0,165,6,45.47,Medium,0.5064102564102564,0.7115107053562038,0.0,0.5556370192291384
+132,PS0002,Bagalkote North Rural Police Station,Bagalkote,North,Rural Police Station,18,49.0,0,127,12,45.28,Medium,0.4230769230769231,0.6204208453129829,0.0,0.8354437900429327
+133,PS0087,Bengaluru Rural North Traffic Police Station,Bengaluru Rural,North,Traffic Police Station,19,46.5,1,112,3,45.22,Medium,0.391025641025641,0.6522911610246186,0.3333333333333333,0.3909914101212191
+134,PS0223,Chamarajanagar North Town Police Station,Chamarajanagar,North,Town Police Station,18,49.0,1,129,16,44.74,Medium,0.4230769230769231,0.6204208453129829,0.3333333333333333,0.5235366043094962
+135,PS0059,Belagavi North Cyber Crime Police Station,Belagavi,North,Cyber Crime Police Station,19,49.0,0,141,4,44.64,Medium,0.4230769230769231,0.6522911610246186,0.0,0.804052379475027
+136,PS0122,Bengaluru Urban East Town Police Station,Bengaluru Urban,East,Town Police Station,20,42.0,1,116,23,44.41,Medium,0.3333333333333333,0.6826061944859854,0.3333333333333333,0.7092832618142819
+137,PS0131,Bengaluru Urban South Cyber Crime Police Station,Bengaluru Urban,South,Cyber Crime Police Station,24,41.5,0,110,3,44.31,Medium,0.3269230769230769,0.7909380448778324,0.0,0.7276668699629775
+138,PS0203,Chamarajanagar Central Cyber Crime Police Station,Chamarajanagar,Central,Cyber Crime Police Station,21,60.5,0,132,19,44.09,Medium,0.5705128205128205,0.7115107053562038,0.0,0.5109514163626846
+139,PS0091,Bengaluru Rural West Cyber Crime Police Station,Bengaluru Rural,West,Cyber Crime Police Station,21,49.0,0,48,7,43.79,Medium,0.4230769230769231,0.7115107053562038,0.0,0.775967567779035
+140,PS0017,Bagalkote Central Town Police Station,Bagalkote,Central,Town Police Station,17,44.0,0,110,9,43.58,Medium,0.358974358974359,0.5868269919231961,0.0,0.8661315871425459
+141,PS0013,Bagalkote South Rural Police Station,Bagalkote,South,Rural Police Station,21,40.5,0,106,17,43.57,Medium,0.3141025641025641,0.7115107053562038,0.0,0.8733522452836314
+142,PS0070,Bengaluru Rural East Traffic Police Station,Bengaluru Rural,East,Traffic Police Station,21,51.0,0,64,8,43.39,Medium,0.44871794871794873,0.7115107053562038,0.0,0.679723528364581
+143,PS0222,Chamarajanagar West Rural Police Station,Chamarajanagar,West,Rural Police Station,18,37.0,1,83,12,43.0,Medium,0.2692307692307692,0.6204208453129829,0.3333333333333333,0.7165094861606081
+144,PS0096,Bengaluru Rural Central Cyber Crime Police Station,Bengaluru Rural,Central,Cyber Crime Police Station,19,52.5,1,107,25,42.86,Medium,0.46794871794871795,0.6522911610246186,0.3333333333333333,0.42106767243823606
+145,PS0078,Bengaluru Rural East Cyber Crime Police Station,Bengaluru Rural,East,Cyber Crime Police Station,19,49.0,1,132,13,42.72,Medium,0.4230769230769231,0.6522911610246186,0.3333333333333333,0.2706863608531517
+146,PS0146,Bengaluru Urban East Traffic Police Station,Bengaluru Urban,East,Traffic Police Station,22,43.0,0,127,6,42.7,Medium,0.34615384615384615,0.739130138344212,0.0,0.67557998020834
+147,PS0192,Bidar West Women Police Station,Bidar,West,Women Police Station,11,22.5,1,120,5,42.49,Medium,0.08333333333333333,0.33489735551060396,0.3333333333333333,0.7968082420357954
+148,PS0147,Bengaluru Urban Central Town Police Station,Bengaluru Urban,Central,Town Police Station,20,42.0,0,83,6,42.42,Medium,0.3333333333333333,0.6826061944859854,0.0,0.8103931066321076
+149,PS0079,Bengaluru Rural West Women Police Station,Bengaluru Rural,West,Women Police Station,16,49.5,1,101,13,42.24,Medium,0.42948717948717946,0.5513124726004205,0.3333333333333333,0.4571591872186562
+150,PS0229,Chamarajanagar East Rural Police Station,Chamarajanagar,East,Rural Police Station,20,41.0,0,42,7,42.19,Medium,0.32051282051282054,0.6826061944859854,0.0,0.8885070547670338
+151,PS0124,Bengaluru Urban West Police Station,Bengaluru Urban,West,Police Station,22,41.5,0,60,17,42.01,Medium,0.3269230769230769,0.739130138344212,0.0,0.8808636045354408
+152,PS0049,Belagavi East Rural Police Station,Belagavi,East,Rural Police Station,18,43.5,0,58,10,41.94,Medium,0.3525641025641026,0.6204208453129829,0.0,0.9574830634709964
+153,PS0010,Bagalkote Central Rural Police Station,Bagalkote,Central,Rural Police Station,17,41.0,0,139,9,41.91,Medium,0.32051282051282054,0.5868269919231961,0.0,0.8137818156196762
+154,PS0021,Bagalkote Central Rural Police Station,Bagalkote,Central,Rural Police Station,19,44.5,0,179,19,41.81,Medium,0.36538461538461536,0.6522911610246186,0.0,0.7415752342088213
+155,PS0224,Chamarajanagar West Cyber Crime Police Station,Chamarajanagar,West,Cyber Crime Police Station,19,41.5,1,162,14,41.75,Medium,0.3269230769230769,0.6522911610246186,0.3333333333333333,0.3850995368945682
+156,PS0052,Belagavi South Traffic Police Station,Belagavi,South,Traffic Police Station,17,49.0,0,62,16,41.68,Medium,0.4230769230769231,0.5868269919231961,0.0,0.9500888136398653
+157,PS0221,Chamarajanagar South Police Station,Chamarajanagar,South,Police Station,17,38.5,1,115,12,41.41,Medium,0.28846153846153844,0.5868269919231961,0.3333333333333333,0.5822674813946171
+158,PS0109,Bengaluru Rural West Police Station,Bengaluru Rural,West,Police Station,18,46.0,1,108,17,41.26,Medium,0.38461538461538464,0.6204208453129829,0.3333333333333333,0.41505241997483266
+159,PS0054,Belagavi South Cyber Crime Police Station,Belagavi,South,Cyber Crime Police Station,19,46.0,0,116,17,41.01,Medium,0.38461538461538464,0.6522911610246186,0.0,0.850266440919596
+160,PS0213,Chamarajanagar West Town Police Station,Chamarajanagar,West,Town Police Station,19,48.0,0,63,18,40.83,Medium,0.41025641025641024,0.6522911610246186,0.0,0.8004107391393522
+161,PS0219,Chamarajanagar South Police Station,Chamarajanagar,South,Police Station,20,50.0,0,79,24,40.44,Medium,0.4358974358974359,0.6826061944859854,0.0,0.7332897367563569
+162,PS0112,Bengaluru Urban North Town Police Station,Bengaluru Urban,North,Town Police Station,18,32.5,1,109,19,40.16,Medium,0.21153846153846154,0.6204208453129829,0.3333333333333333,0.7307308046544267
+163,PS0075,Bengaluru Rural West Police Station,Bengaluru Rural,West,Police Station,24,59.5,0,152,25,40.08,Medium,0.5576923076923077,0.7909380448778324,0.0,0.1503813115850844
+164,PS0085,Bengaluru Rural North Town Police Station,Bengaluru Rural,North,Town Police Station,20,53.0,1,172,25,40.01,Medium,0.47435897435897434,0.6826061944859854,0.3333333333333333,0.030076262317016877
+165,PS0151,Bengaluru Urban South Rural Police Station,Bengaluru Urban,South,Rural Police Station,15,42.5,0,41,7,39.83,Medium,0.33974358974358976,0.5136442771714047,0.0,0.9390783636729768
+166,PS0209,Chamarajanagar East Police Station,Chamarajanagar,East,Police Station,17,43.5,0,72,7,39.72,Medium,0.3525641025641026,0.5868269919231961,0.0,0.7626551752989174
+167,PS0150,Bengaluru Urban South Women Police Station,Bengaluru Urban,South,Women Police Station,18,36.5,0,35,11,39.2,Medium,0.26282051282051283,0.6204208453129829,0.0,0.9574619718216725
+168,PS0089,Bengaluru Rural West Police Station,Bengaluru Rural,West,Police Station,18,48.5,1,155,18,39.16,Medium,0.4166666666666667,0.6204208453129829,0.3333333333333333,0.1323355541948743
+169,PS0026,Ballari West Rural Police Station,Ballari,West,Rural Police Station,20,39.0,0,170,3,38.98,Medium,0.2948717948717949,0.6826061944859854,0.0,0.540210877811161
+170,PS0214,Chamarajanagar North Town Police Station,Chamarajanagar,North,Town Police Station,17,44.5,0,71,12,38.89,Medium,0.36538461538461536,0.5868269919231961,0.0,0.7668502379478546
+171,PS0136,Bengaluru Urban South Traffic Police Station,Bengaluru Urban,South,Traffic Police Station,20,43.0,0,128,19,38.63,Medium,0.34615384615384615,0.6826061944859854,0.0,0.6725160455168907
+172,PS0113,Bengaluru Urban West Cyber Crime Police Station,Bengaluru Urban,West,Cyber Crime Police Station,20,40.0,0,176,7,38.58,Medium,0.3076923076923077,0.6826061944859854,0.0,0.5254471803273258
+173,PS0080,Bengaluru Rural Central Town Police Station,Bengaluru Rural,Central,Town Police Station,18,43.0,1,167,9,38.46,Medium,0.34615384615384615,0.6204208453129829,0.3333333333333333,0.060152524634033644
+174,PS0082,Bengaluru Rural West Cyber Crime Police Station,Bengaluru Rural,West,Cyber Crime Police Station,20,48.0,0,91,15,38.45,Medium,0.41025641025641024,0.6826061944859854,0.0,0.51731171185269
+175,PS0132,Bengaluru Urban East Police Station,Bengaluru Urban,East,Police Station,18,42.0,0,47,22,38.34,Medium,0.3333333333333333,0.6204208453129829,0.0,0.9206947555242813
+176,PS0023,Bagalkote East Cyber Crime Police Station,Bagalkote,East,Cyber Crime Police Station,15,27.5,0,53,3,38.21,Medium,0.14743589743589744,0.5136442771714047,0.0,0.9690259656530141
+177,PS0125,Bengaluru Urban East Police Station,Bengaluru Urban,East,Police Station,20,37.5,0,110,14,38.14,Medium,0.27564102564102566,0.6826061944859854,0.0,0.7276668699629775
+178,PS0202,Chamarajanagar West Traffic Police Station,Chamarajanagar,West,Traffic Police Station,20,43.5,0,155,9,37.98,Medium,0.3525641025641026,0.6826061944859854,0.0,0.4144649754371287
+179,PS0217,Chamarajanagar West Cyber Crime Police Station,Chamarajanagar,West,Cyber Crime Police Station,19,43.5,0,130,11,37.87,Medium,0.3525641025641026,0.6522911610246186,0.0,0.519341541660559
+180,PS0033,Ballari North Women Police Station,Ballari,North,Women Police Station,16,42.0,0,61,14,37.79,Medium,0.3333333333333333,0.5513124726004205,0.0,0.8765007607230709
+181,PS0128,Bengaluru Urban South Cyber Crime Police Station,Bengaluru Urban,South,Cyber Crime Police Station,18,36.0,0,37,17,37.52,Medium,0.2564102564102564,0.6204208453129829,0.0,0.9513341024387739
+182,PS0118,Bengaluru Urban South Cyber Crime Police Station,Bengaluru Urban,South,Cyber Crime Police Station,18,42.0,0,132,15,37.4,Medium,0.3333333333333333,0.6204208453129829,0.0,0.6602603067510936
+183,PS0105,Bengaluru Rural East Cyber Crime Police Station,Bengaluru Rural,East,Cyber Crime Police Station,16,33.0,1,76,13,37.39,Medium,0.21794871794871795,0.5513124726004205,0.3333333333333333,0.6075404988037406
+184,PS0071,Bengaluru Rural North Rural Police Station,Bengaluru Rural,North,Rural Police Station,19,52.0,0,131,15,36.81,Medium,0.46153846153846156,0.6522911610246186,0.0,0.2767016133165552
+185,PS0108,Bengaluru Rural Central Cyber Crime Police Station,Bengaluru Rural,Central,Cyber Crime Police Station,19,55.0,0,127,22,36.63,Medium,0.5,0.6522911610246186,0.0,0.30076262317016866
+186,PS0083,Bengaluru Rural East Town Police Station,Bengaluru Rural,East,Town Police Station,21,52.5,0,170,14,36.36,Medium,0.46794871794871795,0.7115107053562038,0.0,0.042106767243823784
+187,PS0198,Chamarajanagar South Police Station,Chamarajanagar,South,Police Station,19,30.5,1,164,20,36.08,Medium,0.1858974358974359,0.6522911610246186,0.3333333333333333,0.3767094115966938
+188,PS0044,Ballari North Town Police Station,Ballari,North,Town Police Station,16,43.0,0,139,13,36.04,Medium,0.34615384615384615,0.5513124726004205,0.0,0.6358529546026216
+189,PS0060,Belagavi West Cyber Crime Police Station,Belagavi,West,Cyber Crime Police Station,17,36.5,0,40,21,36.02,Medium,0.26282051282051283,0.5868269919231961,0.0,0.9907571877110862
+190,PS0199,Chamarajanagar North Town Police Station,Chamarajanagar,North,Town Police Station,15,31.5,1,68,22,36.02,Medium,0.1987179487179487,0.5136442771714047,0.3333333333333333,0.7794354258946662
+191,PS0129,Bengaluru Urban Central Traffic Police Station,Bengaluru Urban,Central,Traffic Police Station,18,41.5,0,111,23,35.94,Medium,0.3269230769230769,0.6204208453129829,0.0,0.7246029352715282
+192,PS0102,Bengaluru Rural North Police Station,Bengaluru Rural,North,Police Station,16,48.5,0,40,24,35.93,Medium,0.4166666666666667,0.5513124726004205,0.0,0.8240895874862619
+193,PS0236,Chikkaballapura North Town Police Station,Chikkaballapura,North,Town Police Station,17,39.5,0,123,25,35.64,Medium,0.30128205128205127,0.5868269919231961,0.0,0.8328782626716477
+194,PS0138,Bengaluru Urban North Cyber Crime Police Station,Bengaluru Urban,North,Cyber Crime Police Station,18,38.5,0,92,24,35.13,Medium,0.28846153846153844,0.6204208453129829,0.0,0.7828176944090643
+195,PS0006,Bagalkote East Cyber Crime Police Station,Bagalkote,East,Cyber Crime Police Station,14,38.0,0,147,19,34.88,Medium,0.28205128205128205,0.4735442393638178,0.0,0.7993404993375052
+196,PS0135,Bengaluru Urban North Rural Police Station,Bengaluru Urban,North,Rural Police Station,19,30.0,0,110,13,34.72,Medium,0.1794871794871795,0.6522911610246186,0.0,0.7276668699629775
+197,PS0139,Bengaluru Urban Central Women Police Station,Bengaluru Urban,Central,Women Police Station,11,23.0,2,102,20,34.67,Medium,0.08974358974358974,0.33489735551060396,0.6666666666666666,0.7521783474945716
+198,PS0177,Bidar North Cyber Crime Police Station,Bidar,North,Cyber Crime Police Station,11,26.0,0,39,17,34.46,Medium,0.1282051282051282,0.33489735551060396,0.0,0.9776349667267513
+199,PS0008,Bagalkote North Police Station,Bagalkote,North,Police Station,10,31.5,0,52,4,34.32,Medium,0.1987179487179487,0.28083414728281064,0.0,0.9708311301882855
+200,PS0093,Bengaluru Rural Central Cyber Crime Police Station,Bengaluru Rural,Central,Cyber Crime Police Station,14,39.5,1,144,12,34.09,Medium,0.30128205128205127,0.4735442393638178,0.3333333333333333,0.19850333129231124
+201,PS0099,Bengaluru Rural South Women Police Station,Bengaluru Rural,South,Women Police Station,17,46.5,0,108,17,33.89,Medium,0.391025641025641,0.5868269919231961,0.0,0.41505241997483266
+202,PS0133,Bengaluru Urban East Traffic Police Station,Bengaluru Urban,East,Traffic Police Station,17,35.5,0,83,22,33.77,Medium,0.25,0.5868269919231961,0.0,0.8103931066321076
+203,PS0227,Chamarajanagar South Town Police Station,Chamarajanagar,South,Town Police Station,18,41.0,0,125,22,33.74,Medium,0.32051282051282054,0.6204208453129829,0.0,0.5403168549052451
+204,PS0064,Belagavi Central Rural Police Station,Belagavi,Central,Rural Police Station,14,32.0,0,144,7,33.26,Medium,0.20512820512820512,0.4735442393638178,0.0,0.7985066921016787
+205,PS0127,Bengaluru Urban North Rural Police Station,Bengaluru Urban,North,Rural Police Station,16,35.0,0,96,18,33.21,Medium,0.24358974358974358,0.5513124726004205,0.0,0.7705619556432671
+206,PS0250,Chikkaballapura West Traffic Police Station,Chikkaballapura,West,Traffic Police Station,15,32.5,0,111,17,33.18,Medium,0.21153846153846154,0.5136442771714047,0.0,0.855494986900989
+207,PS0233,Chamarajanagar South Police Station,Chamarajanagar,South,Police Station,15,47.0,0,167,15,33.14,Medium,0.3974358974358974,0.5136442771714047,0.0,0.36412422364988206
+208,PS0137,Bengaluru Urban East Traffic Police Station,Bengaluru Urban,East,Traffic Police Station,15,38.0,0,158,12,33.1,Medium,0.28205128205128205,0.5136442771714047,0.0,0.5805980047734126
+209,PS0183,Bidar South Police Station,Bidar,South,Police Station,11,30.0,0,74,23,32.96,Medium,0.1794871794871795,0.33489735551060396,0.0,0.8994999622306592
+210,PS0056,Belagavi South Town Police Station,Belagavi,South,Town Police Station,14,44.0,0,159,23,32.78,Medium,0.358974358974359,0.4735442393638178,0.0,0.7707782552349371
+211,PS0120,Bengaluru Urban North Rural Police Station,Bengaluru Urban,North,Rural Police Station,17,28.0,0,71,16,32.76,Medium,0.15384615384615385,0.5868269919231961,0.0,0.8471603229294988
+212,PS0123,Bengaluru Urban Central Police Station,Bengaluru Urban,Central,Police Station,17,26.0,0,108,10,32.36,Medium,0.1282051282051282,0.5868269919231961,0.0,0.7337947393458759
+213,PS0142,Bengaluru Urban North Town Police Station,Bengaluru Urban,North,Town Police Station,17,34.5,0,112,23,32.25,Medium,0.23717948717948717,0.5868269919231961,0.0,0.721539000580079
+214,PS0011,Bagalkote North Town Police Station,Bagalkote,North,Town Police Station,11,27.0,0,154,4,31.97,Medium,0.14102564102564102,0.33489735551060396,0.0,0.7867043475906056
+215,PS0240,Chikkaballapura North Women Police Station,Chikkaballapura,North,Women Police Station,14,36.0,0,157,19,31.94,Medium,0.2564102564102564,0.4735442393638178,0.0,0.7687975440218471
+216,PS0086,Bengaluru Rural South Traffic Police Station,Bengaluru Rural,South,Traffic Police Station,19,48.5,0,169,22,31.6,Medium,0.4166666666666667,0.6522911610246186,0.0,0.04812201970722696
+217,PS0220,Chamarajanagar West Town Police Station,Chamarajanagar,West,Town Police Station,14,34.5,0,152,4,31.19,Medium,0.23717948717948717,0.4735442393638178,0.0,0.4270501633839403
+218,PS0247,Chikkaballapura South Town Police Station,Chikkaballapura,South,Town Police Station,13,37.0,0,121,21,31.09,Medium,0.2692307692307692,0.430676558073393,0.0,0.8366477167098711
+219,PS0114,Bengaluru Urban South Rural Police Station,Bengaluru Urban,South,Rural Police Station,14,25.5,0,52,11,30.82,Medium,0.12179487179487179,0.4735442393638178,0.0,0.9053750820670349
+220,PS0092,Bengaluru Rural Central Women Police Station,Bengaluru Rural,Central,Women Police Station,16,33.5,1,177,16,30.71,Medium,0.22435897435897437,0.5513124726004205,0.3333333333333333,0.0
+221,PS0094,Bengaluru Rural Central Town Police Station,Bengaluru Rural,Central,Town Police Station,15,35.0,0,89,11,30.31,Medium,0.24358974358974358,0.5136442771714047,0.0,0.5293422167794968
+222,PS0152,Bengaluru Urban East Traffic Police Station,Bengaluru Urban,East,Traffic Police Station,12,27.5,0,102,4,30.2,Medium,0.14743589743589744,0.3846306860449148,0.0,0.7521783474945716
+223,PS0242,Chikkaballapura Central Women Police Station,Chikkaballapura,Central,Women Police Station,14,35.5,0,176,23,30.18,Medium,0.25,0.4735442393638178,0.0,0.7329877306587231
+224,PS0036,Ballari East Traffic Police Station,Ballari,East,Traffic Police Station,13,32.0,0,44,18,29.97,Medium,0.20512820512820512,0.430676558073393,0.0,0.9289496415441946
+225,PS0241,Chikkaballapura West Rural Police Station,Chikkaballapura,West,Rural Police Station,12,30.0,0,53,17,29.62,Medium,0.1794871794871795,0.3846306860449148,0.0,0.9648091540094723
+226,PS0101,Bengaluru Rural West Police Station,Bengaluru Rural,West,Police Station,15,44.5,0,117,22,29.17,Medium,0.36538461538461536,0.5136442771714047,0.0,0.3609151478042023
+227,PS0231,Chamarajanagar Central Police Station,Chamarajanagar,Central,Police Station,15,30.5,0,129,14,28.67,Medium,0.1858974358974359,0.5136442771714047,0.0,0.5235366043094962
+228,PS0020,Bagalkote Central Police Station,Bagalkote,Central,Police Station,12,26.0,0,65,21,28.39,Medium,0.1282051282051282,0.3846306860449148,0.0,0.9473639912297577
+229,PS0098,Bengaluru Rural Central Traffic Police Station,Bengaluru Rural,Central,Traffic Police Station,12,30.0,0,71,5,28.26,Medium,0.1794871794871795,0.3846306860449148,0.0,0.6376167611207575
+230,PS0104,Bengaluru Rural East Traffic Police Station,Bengaluru Rural,East,Traffic Police Station,13,41.0,0,160,5,28.18,Medium,0.32051282051282054,0.430676558073393,0.0,0.10225929187785743
+231,PS0244,Chikkaballapura East Traffic Police Station,Chikkaballapura,East,Traffic Police Station,11,29.0,0,92,14,28.15,Medium,0.16666666666666666,0.33489735551060396,0.0,0.8913048002641129
+232,PS0249,Chikkaballapura Central Cyber Crime Police Station,Chikkaballapura,Central,Cyber Crime Police Station,11,29.5,0,174,12,27.55,Medium,0.17307692307692307,0.33489735551060396,0.0,0.7367571846969467
+233,PS0090,Bengaluru Rural East Traffic Police Station,Bengaluru Rural,East,Traffic Police Station,14,35.5,0,157,6,26.91,Medium,0.25,0.4735442393638178,0.0,0.12030504926806762
+234,PS0116,Bengaluru Urban South Cyber Crime Police Station,Bengaluru Urban,South,Cyber Crime Police Station,14,31.0,0,176,20,26.42,Medium,0.19230769230769232,0.4735442393638178,0.0,0.5254471803273258
+235,PS0235,Chikkaballapura South Police Station,Chikkaballapura,South,Police Station,12,30.0,0,79,25,26.35,Medium,0.1794871794871795,0.3846306860449148,0.0,0.915806251512566
+236,PS0072,Bengaluru Rural North Rural Police Station,Bengaluru Rural,North,Rural Police Station,14,32.5,0,61,25,25.81,Medium,0.21153846153846154,0.4735442393638178,0.0,0.6977692857547911
+237,PS0140,Bengaluru Urban West Women Police Station,Bengaluru Urban,West,Women Police Station,14,28.0,0,132,23,25.71,Medium,0.15384615384615385,0.4735442393638178,0.0,0.6602603067510936
+238,PS0243,Chikkaballapura South Cyber Crime Police Station,Chikkaballapura,South,Cyber Crime Police Station,10,28.5,0,66,19,24.83,Low,0.16025641025641027,0.28083414728281064,0.0,0.9403077027610192
+239,PS0237,Chikkaballapura Central Rural Police Station,Chikkaballapura,Central,Rural Police Station,12,24.0,0,75,25,24.12,Low,0.10256410256410256,0.3846306860449148,0.0,0.9233451595890132
+240,PS0248,Chikkaballapura North Police Station,Chikkaballapura,North,Police Station,10,31.0,0,102,23,23.47,Low,0.19230769230769232,0.28083414728281064,0.0,0.8724575300729951
+241,PS0145,Bengaluru Urban West Town Police Station,Bengaluru Urban,West,Town Police Station,8,17.5,1,139,11,23.18,Low,0.019230769230769232,0.1561504338498032,0.3333333333333333,0.6388127639109487
+242,PS0245,Chikkaballapura East Police Station,Chikkaballapura,East,Police Station,10,20.0,0,176,11,22.77,Low,0.05128205128205128,0.28083414728281064,0.0,0.7329877306587231
+243,PS0107,Bengaluru Rural North Women Police Station,Bengaluru Rural,North,Women Police Station,14,31.5,0,138,19,22.6,Low,0.1987179487179487,0.4735442393638178,0.0,0.2345948460727315
+244,PS0088,Bengaluru Rural South Women Police Station,Bengaluru Rural,South,Women Police Station,13,33.5,0,109,25,21.91,Low,0.22435897435897437,0.430676558073393,0.0,0.40903716751142927
+245,PS0009,Bagalkote North Rural Police Station,Bagalkote,North,Rural Police Station,9,20.5,0,89,20,20.84,Low,0.057692307692307696,0.22161460295122568,0.0,0.9040400423832448
+246,PS0239,Chikkaballapura North Women Police Station,Chikkaballapura,North,Women Police Station,8,17.0,0,176,7,20.13,Low,0.01282051282051282,0.1561504338498032,0.0,0.7329877306587231
+247,PS0106,Bengaluru Rural West Women Police Station,Bengaluru Rural,West,Women Police Station,11,26.5,0,175,4,19.89,Low,0.1346153846153846,0.33489735551060396,0.0,0.012030504926806684
+248,PS0246,Chikkaballapura East Rural Police Station,Chikkaballapura,East,Rural Police Station,8,24.5,0,78,21,17.83,Low,0.10897435897435898,0.1561504338498032,0.0,0.9176909785316778
+249,PS0103,Bengaluru Rural Central Police Station,Bengaluru Rural,Central,Police Station,13,30.0,0,167,23,17.72,Low,0.1794871794871795,0.430676558073393,0.0,0.060152524634033644
+250,PS0238,Chikkaballapura East Rural Police Station,Chikkaballapura,East,Rural Police Station,6,16.0,0,70,10,15.68,Low,0.0,0.0,0.0,0.9327687946845721
