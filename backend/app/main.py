@@ -48,6 +48,7 @@ from app.api.stations import router as stations_router
 from app.api.auth import router as auth_router
 from app.api.network import router as network_router
 from app.api.admin import router as admin_router
+from app.api.ml import router as ml_router
 from app.core.logging import RequestIDMiddleware, StructuredLoggingMiddleware, get_request_id
 from app.core.audit import AuditMiddleware
 from app.core.rate_limit import RateLimitMiddleware
@@ -129,6 +130,14 @@ async def lifespan(app: FastAPI):
     else:
         from app.database.repositories.csv.audit_repo import NoOpAuditRepository
         init_audit_repository(NoOpAuditRepository())
+
+    # Startup: ML Engine Service
+    try:
+        from app.services.ml_service import get_ml_service
+        get_ml_service()
+        _logger.info("ML Engine Service initialized and models pre-loaded.")
+    except Exception as exc:
+        _logger.warning("ML Engine Service pre-loading deferred/degraded: %s", exc)
 
     yield
 
@@ -538,3 +547,4 @@ app.include_router(field_map_router, prefix=settings.API_PREFIX)
 app.include_router(intelligence_map_router, prefix=settings.API_PREFIX)
 app.include_router(stations_router, prefix=settings.API_PREFIX)
 app.include_router(admin_router, prefix=settings.API_PREFIX)
+app.include_router(ml_router, prefix=settings.API_PREFIX)

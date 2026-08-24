@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     # Authoritative approved datasets live under ml-engine/datasets/.
     # Override with DATA_DIR when the repository layout differs.
     DATA_DIR: str = str(_PROJECT_ROOT / "ml-engine" / "datasets")
+    ML_MODEL_DIR: str = str(_PROJECT_ROOT / "ml-engine" / "models")
+    ML_OUTPUT_DIR: str = str(_PROJECT_ROOT / "ml-engine" / "outputs")
 
     # Persistence: "csv" (transitional) or "postgres" (production)
     DATA_BACKEND: str = "csv"
