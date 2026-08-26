@@ -99,41 +99,68 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       {/* 2. MAIN WORKSPACE WITH FLOATING IMAGE PLACEHOLDERS */}
       <main className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)]">
         
-        {/* FLOATING DECORATIVE IMAGE PLACEHOLDERS (Asymmetric composition around center login card) */}
+        {/* FLOATING PHOTOGRAPHIC FRAME PLACEHOLDERS (Asymmetric, organic photo-frame composition around login portal) */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
           
-          {/* Top-Left: Small Circle */}
-          <div className="hidden md:block absolute top-10 left-8 lg:left-16 w-16 h-16 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs transition-transform hover:scale-105" />
+          {/* TOP LEFT: Small Circular Photo Frame (-rotate-6) */}
+          <div className="hidden md:block absolute top-10 left-8 lg:left-20 w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-white p-2 shadow-[0_14px_30px_rgba(0,0,0,0.07)] border border-slate-200/70 -rotate-6 transition-transform duration-500">
+            <div className="w-full h-full rounded-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Upper-Left: Medium Hexagon */}
+          {/* UPPER LEFT: Medium Hexagonal Photo Frame (rotate-3) */}
           <div 
             style={hexagonStyle}
-            className="hidden md:block absolute top-32 left-4 lg:left-12 w-28 h-28 bg-white/85 border border-slate-200/80 shadow-xs backdrop-blur-xs" 
-          />
+            className="hidden md:block absolute top-28 left-3 lg:left-10 w-32 h-32 bg-white p-2 shadow-[0_18px_38px_rgba(0,0,0,0.08)] border border-slate-200/70 rotate-3 transition-transform duration-500"
+          >
+            <div style={hexagonStyle} className="w-full h-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Middle-Left: Small Circle */}
-          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-8 lg:left-24 w-20 h-20 rounded-full bg-white/75 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+          {/* MID LEFT: Small Circular Photo Frame (-rotate-3) */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-6 lg:left-24 w-22 h-22 rounded-full bg-white p-2 shadow-[0_12px_28px_rgba(0,0,0,0.06)] border border-slate-200/70 -rotate-3 transition-transform duration-500">
+            <div className="w-full h-full rounded-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Bottom-Left: Medium Rounded Frame */}
-          <div className="hidden md:block absolute bottom-12 left-6 lg:left-16 w-32 h-32 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+          {/* LOWER LEFT: Large Rounded Rectangular Photo Frame (rotate-4) */}
+          <div className="hidden md:block absolute bottom-16 left-4 lg:left-14 w-44 h-44 rounded-[28px] bg-white p-3 shadow-[0_22px_48px_rgba(0,0,0,0.09)] border border-slate-200/80 rotate-4 transition-transform duration-500">
+            <div className="w-full h-full rounded-[20px] bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Top-Right: Medium Circle */}
-          <div className="hidden md:block absolute top-12 right-8 lg:right-20 w-28 h-28 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+          {/* BOTTOM LEFT: Small Accent Photo Frame (-rotate-2) */}
+          <div className="hidden xl:block absolute bottom-6 left-36 lg:left-48 w-14 h-14 rounded-2xl bg-white p-1.5 shadow-[0_8px_20px_rgba(0,0,0,0.05)] border border-slate-200/70 -rotate-2">
+            <div className="w-full h-full rounded-xl bg-[#CBD5E1]/60" />
+          </div>
 
-          {/* Upper-Right: Small Hexagon */}
+          {/* TOP RIGHT: Large Circular Photo Frame (rotate-3) */}
+          <div className="hidden md:block absolute top-10 right-8 lg:right-20 w-44 h-44 rounded-full bg-white p-3 shadow-[0_22px_48px_rgba(0,0,0,0.09)] border border-slate-200/80 rotate-3 transition-transform duration-500">
+            <div className="w-full h-full rounded-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
+
+          {/* UPPER RIGHT: Small Hexagonal Photo Frame (-rotate-4) */}
           <div 
             style={hexagonStyle}
-            className="hidden md:block absolute top-44 right-4 lg:right-10 w-22 h-22 bg-white/85 border border-slate-200/80 shadow-xs backdrop-blur-xs" 
-          />
+            className="hidden md:block absolute top-48 right-3 lg:right-8 w-24 h-24 bg-white p-2 shadow-[0_14px_30px_rgba(0,0,0,0.07)] border border-slate-200/70 -rotate-4 transition-transform duration-500"
+          >
+            <div style={hexagonStyle} className="w-full h-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Middle-Right: Medium Rounded Frame */}
-          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-6 lg:right-24 w-32 h-32 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+          {/* MID RIGHT: Medium Rounded-Rectangle Photo Frame (rotate-2) */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-6 lg:right-24 w-36 h-36 rounded-[26px] bg-white p-2.5 shadow-[0_16px_38px_rgba(0,0,0,0.08)] border border-slate-200/80 rotate-2 transition-transform duration-500">
+            <div className="w-full h-full rounded-[18px] bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Bottom-Right: Small Circle */}
-          <div className="hidden md:block absolute bottom-14 right-10 lg:right-16 w-20 h-20 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+          {/* LOWER RIGHT: Small Circular Photo Frame (-rotate-5) */}
+          <div className="hidden md:block absolute bottom-28 right-8 lg:right-16 w-22 h-22 rounded-full bg-white p-2 shadow-[0_12px_28px_rgba(0,0,0,0.06)] border border-slate-200/70 -rotate-5">
+            <div className="w-full h-full rounded-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
 
-          {/* Far Top-Center: Subtle Tiny Circle */}
-          <div className="hidden xl:block absolute top-8 left-1/3 w-12 h-12 rounded-full bg-white/60 border border-slate-200/60 shadow-xs" />
+          {/* BOTTOM RIGHT: Medium Hexagonal Photo Frame (rotate-4) */}
+          <div 
+            style={hexagonStyle}
+            className="hidden md:block absolute bottom-8 right-24 lg:right-36 w-32 h-32 bg-white p-2 shadow-[0_16px_36px_rgba(0,0,0,0.08)] border border-slate-200/70 rotate-4 transition-transform duration-500"
+          >
+            <div style={hexagonStyle} className="w-full h-full bg-[#E2E8F0] border border-slate-300/40" />
+          </div>
+
         </div>
 
         {/* 3. CENTER LOGIN CARD */}
