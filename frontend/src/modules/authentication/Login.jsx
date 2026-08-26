@@ -96,7 +96,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       {/* 2. MAIN WORKSPACE WITH HIGH-RES FLOATING SHAPES BACKGROUND */}
       <main 
         className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)] bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${loginBg})` }}
+        style={{ backgroundImage: `url(${loginBg})`, imageRendering: '-webkit-optimize-contrast' }}
       >
 
         {/* 3. CENTER LOGIN CARD */}
