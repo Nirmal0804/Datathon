@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import kspLogo from '../../../assets/ksp-official-logo.png';
 
-export default function Footer() {
+export default function Footer({ onLoginClick }) {
   return (
     <footer className="bg-[#E00000] text-white pt-14 pb-8 border-t border-[#C90000] relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +68,6 @@ export default function Footer() {
                 { label: 'Workflow', href: '#workflow' },
                 { label: 'Modules', href: '#modules' },
                 { label: 'About', href: '#about' },
-                { label: 'Login Portal', href: '#login' },
               ].map((item) => (
                 <li key={item.label}>
                   <a href={item.href} className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors">
@@ -77,6 +76,15 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <button 
+                  onClick={() => onLoginClick && onLoginClick()}
+                  className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer text-left font-medium text-xs sm:text-sm"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 text-white/80" />
+                  Login Portal
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -97,10 +105,10 @@ export default function Footer() {
                 'API Access',
               ].map((label) => (
                 <li key={label}>
-                  <a href="#" className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors">
+                  <span className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
                     <ChevronRight className="w-3.5 h-3.5 text-white/80" />
                     {label}
-                  </a>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -115,28 +123,28 @@ export default function Footer() {
             
             <ul className="space-y-3 text-xs sm:text-sm font-medium">
               <li>
-                <a href="#" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
                   <Headphones className="w-4 h-4 text-white" />
                   Help Center
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
                   <Lock className="w-4 h-4 text-white" />
                   Security Guidelines
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
                   <HelpCircle className="w-4 h-4 text-white" />
                   FAQs
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#" className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
                   <Mail className="w-4 h-4 text-white" />
                   Contact Support
-                </a>
+                </span>
               </li>
             </ul>
           </div>

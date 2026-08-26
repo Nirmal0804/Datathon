@@ -100,7 +100,7 @@ function AppContent() {
                 <ModulesOverview />
                 <About />
               </main>
-              <Footer />
+              <Footer onLoginClick={navigateToAuth} />
             </div>
           </PageTransition>
         );
