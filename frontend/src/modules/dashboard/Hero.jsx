@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
-import kspLogo from '../../assets/ksp-logo.png';
+import kspLogo from '../../assets/ksp-official-logo.png';
+import vidhanSoudha from '../../assets/vidhan-soudha-exact.jpg';
 
 export default function Hero({ onLoginClick }) {
   const handleReadDocumentation = () => {
@@ -12,7 +13,7 @@ export default function Hero({ onLoginClick }) {
     const maxLineWidth = pageWidth - margin * 2;
     
     // Header / Title Banner
-    doc.setFillColor(11, 35, 65); // #0B2341
+    doc.setFillColor(224, 0, 0); // #E00000 Primary Red
     doc.rect(0, 0, pageWidth, 80, 'F');
     
     doc.setTextColor(255, 255, 255);
@@ -21,7 +22,7 @@ export default function Hero({ onLoginClick }) {
     doc.text('CrimeIntel Platform Documentation', margin, 42);
     
     doc.setFontSize(9);
-    doc.setTextColor(199, 154, 43); // #C79A2B Gold accent
+    doc.setTextColor(212, 154, 0); // #D49A00 Primary Gold accent
     doc.text('KARNATAKA STATE POLICE INTELLIGENCE & CRIME ANALYTICS PLATFORM (README)', margin, 62);
     
     let y = 110;
@@ -92,11 +93,11 @@ export default function Hero({ onLoginClick }) {
       checkPageBreak(40);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(12);
-      doc.setTextColor(11, 35, 65);
+      doc.setTextColor(20, 43, 69); // #142B45 Navy
       doc.text(sec.title, margin, y);
       y += 18;
       
-      doc.setDrawColor(230, 232, 236);
+      doc.setDrawColor(232, 238, 245); // #E8EEF5 Light Navy
       doc.line(margin, y - 4, pageWidth - margin, y - 4);
       y += 8;
 
@@ -104,7 +105,7 @@ export default function Hero({ onLoginClick }) {
         const isBullet = line.startsWith('•');
         doc.setFont('helvetica', isBullet ? 'bold' : 'normal');
         doc.setFontSize(10);
-        doc.setTextColor(50, 60, 75);
+        doc.setTextColor(20, 43, 69); // #142B45 Navy
         
         const splitLines = doc.splitTextToSize(line, maxLineWidth);
         splitLines.forEach(l => {
@@ -134,77 +135,85 @@ export default function Hero({ onLoginClick }) {
   };
 
   return (
-    <section id="home" className="pt-32 pb-20 lg:pt-40 lg:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative overflow-hidden">
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#153E75]/4 rounded-full blur-[140px] -z-10 pointer-events-none"></div>
-      
-      <div className="text-center max-w-4xl mx-auto z-10 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="mb-6 flex justify-center"
-        >
-          <img 
-            src={kspLogo} 
-            alt="Karnataka State Police Emblem" 
-            className="h-16 md:h-20 w-auto object-contain"
-          />
-        </motion.div>
+    <section 
+      id="home" 
+      className="relative w-full min-h-[540px] lg:min-h-[600px] pt-28 pb-20 sm:pt-32 sm:pb-24 lg:pt-36 lg:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-slate-200/60 bg-white"
+    >
+      {/* High-res Vidhan Soudha Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-[position:90%_center] lg:bg-[position:95%_center] bg-no-repeat opacity-100 z-0"
+        style={{ backgroundImage: `url(${vidhanSoudha})` }}
+      />
 
-        <motion.div 
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#153E75]/8 border border-[#153E75]/15 text-[#153E75] mb-8 shadow-sm"
-        >
-          <ShieldCheck className="w-4 h-4 text-[#153E75]" />
-          <span className="text-xs font-bold tracking-wider uppercase">State Intelligence Network</span>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#C79A2B] ml-0.5" />
-        </motion.div>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.08, ease: "easeOut" }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#111827] mb-6 leading-[1.1]"
-        >
-          Predict. Prevent. <br className="hidden md:block"/>
-          <span className="text-[#153E75] relative inline-block">
-            Protect Karnataka.
-            <span className="absolute bottom-1.5 left-0 w-full h-1.5 bg-[#C79A2B]/25 rounded-full -z-10" />
-          </span>
-        </motion.h1>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.16, ease: "easeOut" }}
-          className="text-lg md:text-xl text-[#4B5563] mb-10 max-w-2xl mx-auto font-normal leading-relaxed text-balance"
-        >
-          An AI-driven crime analytics and visualization platform providing real-time intelligence, geospatial mapping, and predictive modeling for law enforcement.
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.24, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <button 
-            onClick={onLoginClick} 
-            className="w-full sm:w-auto px-8 py-3.5 text-sm font-semibold text-white bg-[#153E75] hover:bg-[#0F2D56] rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(21,62,117,0.2)] hover:shadow-[0_6px_20px_rgba(21,62,117,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-2 active:translate-y-0 cursor-pointer"
+      {/* Smooth left-to-right white gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 via-20% to-transparent z-[1] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="max-w-2xl text-left">
+          {/* Badge */}
+          <motion.div 
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300 bg-white/90 text-slate-800 text-xs font-bold shadow-sm mb-6"
           >
-            Access Dashboard
-            <ArrowRight className="w-4 h-4" />
-          </button>
-          <button 
-            onClick={handleReadDocumentation}
-            className="w-full sm:w-auto px-8 py-3.5 text-sm font-semibold text-[#111827] bg-white border border-[#E6E8EC] hover:bg-[#F8F9FB] hover:border-[#D1D5DB] rounded-xl transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 flex items-center justify-center gap-2 active:translate-y-0 cursor-pointer"
+            <ShieldCheck className="w-4 h-4 text-[#142B45]" />
+            <span className="tracking-wider uppercase">STATE INTELLIGENCE NETWORK</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#E00000] ml-0.5 animate-pulse" />
+          </motion.div>
+
+          {/* Main Heading */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.08, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] mb-2"
           >
-            <FileText className="w-4 h-4 text-[#153E75]" />
-            Read Documentation
-          </button>
-        </motion.div>
+            <span className="text-[#142B45] block">Predict. Prevent.</span>
+            <span className="text-[#D49A00] block mt-1">Protect Karnataka.</span>
+          </motion.h1>
+
+          {/* Red Underline */}
+          <motion.div 
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 56 }}
+            transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+            className="h-1 bg-[#E00000] rounded-full my-5" 
+          />
+
+          {/* Description */}
+          <motion.p 
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.18, ease: "easeOut" }}
+            className="text-base sm:text-lg text-[#142B45]/80 max-w-xl font-normal leading-relaxed mb-8"
+          >
+            An AI-driven crime analytics and visualization platform providing real-time intelligence, geospatial mapping, and predictive modeling for law enforcement.
+          </motion.p>
+
+          {/* Buttons on same row */}
+          <motion.div 
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.24, ease: "easeOut" }}
+            className="flex flex-row items-center gap-4 flex-wrap"
+          >
+            <button 
+              onClick={onLoginClick} 
+              className="px-6 py-3.5 text-sm font-semibold text-white bg-[#E00000] hover:bg-[#C90000] rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2 active:translate-y-0 cursor-pointer"
+            >
+              Access Dashboard
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={handleReadDocumentation}
+              className="px-6 py-3.5 text-sm font-semibold text-[#E00000] bg-white border border-[#E00000] hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 flex items-center gap-2 active:translate-y-0 cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-[#E00000]" />
+              Read Documentation
+            </button>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

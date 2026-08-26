@@ -2,7 +2,7 @@ import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
-import kspLogo from '../../../assets/ksp-logo-official.png';
+import kspLogo from '../../../assets/ksp-logo.png';
 
 const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },

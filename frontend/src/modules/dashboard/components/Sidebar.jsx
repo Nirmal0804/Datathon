@@ -5,7 +5,7 @@ import {
   Shield, Activity, BookOpen, BarChart2, Bell, ShieldAlert, Briefcase,
   Users, Database
 } from 'lucide-react';
-import kspLogo from '../../../assets/ksp-logo-official.png';
+import kspLogo from '../../../assets/ksp-logo.png';
 
 const ANALYST_NAV_SECTIONS = [
   {
