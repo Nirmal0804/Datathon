@@ -145,8 +145,8 @@ export default function Hero({ onLoginClick }) {
         style={{ backgroundImage: `url(${vidhanSoudha})` }}
       />
 
-      {/* Smooth left-to-right white gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 via-20% to-transparent z-[1] pointer-events-none" />
+      {/* Smooth left white gradient backdrop (covers only left text column, leaving center & right side 100% crisp & untouched) */}
+      <div className="absolute inset-y-0 left-0 w-full max-w-xl lg:max-w-2xl bg-gradient-to-r from-white via-white/80 via-50% to-transparent z-[1] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="max-w-2xl text-left">
