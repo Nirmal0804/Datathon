@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.png';
+import loginBg from '../../assets/login-bg.png';
 
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User },
@@ -55,10 +56,6 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     }, 1000);
   };
 
-  const hexagonStyle = {
-    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-  };
-
   return (
     <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#E00000]/10 selection:text-[#E00000]">
 
@@ -96,130 +93,11 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
         )}
       </header>
 
-      {/* 2. MAIN WORKSPACE WITH FLOATING IMAGE PLACEHOLDERS */}
-      <main className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)]">
-
-        {/* FLOATING DECORATIVE SHAPE FRAMES & CONSTELLATION ACCENTS (Replicated from reference design mockup image_0) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          
-          {/* Background Network Constellation Lines */}
-          <svg className="absolute inset-0 w-full h-full opacity-35" fill="none">
-            <path d="M 120 120 L 320 200 M 240 380 L 100 500 M 800 160 L 980 300 M 850 480 L 920 620" stroke="#E00000" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-            <path d="M 280 180 L 220 300 M 720 220 L 820 140 M 840 340 L 760 520" stroke="#D49A00" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-          </svg>
-
-          {/* LEFT SIDE FLOATING FRAMES */}
-          
-          {/* 1. Large Hexagonal Frame near Upper-Left (Gold border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute top-8 left-6 lg:left-14 w-36 h-36 lg:w-40 lg:h-40 bg-white p-1.5 shadow-lg border-2 border-[#D49A00]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 2. Small Hexagonal Frame slightly inward near Upper-Middle-Left (Red border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute top-28 left-48 lg:left-64 w-22 h-22 lg:w-26 lg:h-26 bg-white p-1.5 shadow-md border-2 border-[#E00000]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 3. Medium Hexagonal Frame around Middle-Left (Red border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute top-1/2 -translate-y-16 left-4 lg:left-10 w-28 h-28 lg:w-32 lg:h-32 bg-white p-1.5 shadow-md border-2 border-[#E00000]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 4. Medium Circular Frame around Lower-Middle-Left (Gold border) */}
-          <div className="hidden lg:block absolute top-1/2 translate-y-8 left-36 lg:left-52 w-24 h-24 lg:w-28 lg:h-28 rounded-full bg-white p-1 shadow-md border-2 border-[#D49A00]/60">
-            <div className="w-full h-full rounded-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 5. Large Hexagonal Frame near Bottom-Left (Red border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute bottom-6 left-12 lg:left-24 w-40 h-40 lg:w-48 lg:h-48 bg-white p-2 shadow-xl border-2 border-[#E00000]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* RIGHT SIDE FLOATING FRAMES */}
-
-          {/* 6. Medium Hexagonal Frame near Upper-Right (Gold border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute top-8 right-44 lg:right-64 w-22 h-22 lg:w-24 lg:h-24 bg-white p-1 shadow-md border-2 border-[#D49A00]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 7. Large Circular Frame around Upper-Right / Middle-Right (White/Gold border) */}
-          <div className="hidden md:block absolute top-14 right-8 lg:right-16 w-36 h-36 lg:w-40 lg:h-40 rounded-full bg-white p-1.5 shadow-xl border-2 border-[#D49A00]/30">
-            <div className="w-full h-full rounded-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 8. Large Hexagonal Frame around Middle-Right (Red border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden lg:block absolute top-1/2 -translate-y-16 right-36 lg:right-52 w-36 h-36 lg:w-40 lg:h-40 bg-white p-1.5 shadow-lg border-2 border-[#E00000]/60"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 9. Medium Hexagonal Frame around Lower-Right (Gold border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute bottom-36 right-6 lg:right-14 w-28 h-28 lg:w-32 lg:h-32 bg-white p-1.5 shadow-md border-2 border-[#D49A00]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* 10. Medium Circular Frame near Bottom-Right (White/Red border) */}
-          <div className="hidden md:block absolute bottom-10 right-16 lg:right-28 w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-white p-1.5 shadow-lg border-2 border-[#E00000]/30">
-            <div className="w-full h-full rounded-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* BOTTOM FLOATING FRAMES (Around / below login card) */}
-          
-          {/* 11. Small Floating Hexagonal Frame below login card (Red border) */}
-          <div 
-            style={hexagonStyle}
-            className="hidden md:block absolute bottom-4 right-44 lg:right-64 w-20 h-20 lg:w-24 lg:h-24 bg-white p-1 shadow-sm border-2 border-[#E00000]/50"
-          >
-            <div style={hexagonStyle} className="w-full h-full bg-[#EEF2F6] border border-slate-300/40" />
-          </div>
-
-          {/* HOLLOW GEOMETRIC ACCENTS & NODES */}
-          
-          {/* Top-Left Hollow Gold Hexagon Outline */}
-          <div style={hexagonStyle} className="hidden lg:block absolute top-16 left-48 w-6 h-6 border-2 border-[#D49A00]" />
-
-          {/* Upper-Left Hollow Red Hexagon Outline */}
-          <div style={hexagonStyle} className="hidden lg:block absolute top-40 left-36 w-6 h-6 border-2 border-[#E00000]" />
-
-          {/* Solid Gold Node Mid-Left */}
-          <div className="hidden lg:block absolute bottom-48 left-20 w-3.5 h-3.5 bg-[#D49A00] rotate-45 rounded-xs" />
-
-          {/* Hollow Gold Hexagon Bottom-Center */}
-          <div style={hexagonStyle} className="hidden lg:block absolute bottom-8 left-1/3 w-6 h-6 border-2 border-[#D49A00]" />
-
-          {/* Hollow Red Hexagon Upper-Right */}
-          <div style={hexagonStyle} className="hidden lg:block absolute top-52 right-36 w-6 h-6 border-2 border-[#E00000]" />
-
-          {/* Solid Gold Node Mid-Right */}
-          <div className="hidden lg:block absolute top-60 right-64 w-3 h-3 bg-[#D49A00] rounded-full" />
-
-          {/* Hollow Gold Hexagon Bottom-Right */}
-          <div style={hexagonStyle} className="hidden lg:block absolute bottom-28 right-56 w-6 h-6 border-2 border-[#D49A00]" />
-
-          {/* Hollow Red Hexagon Far-Bottom-Right */}
-          <div style={hexagonStyle} className="hidden lg:block absolute bottom-36 right-8 w-6 h-6 border-2 border-[#E00000]" />
-
-        </div>
+      {/* 2. MAIN WORKSPACE WITH HIGH-RES FLOATING SHAPES BACKGROUND */}
+      <main 
+        className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)] bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${loginBg})` }}
+      >
 
         {/* 3. CENTER LOGIN CARD */}
         <motion.div
