@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, Home } from 'lucide-react';
+import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-import kspLogo from '../../assets/ksp-logo.png';
+import kspLogo from '../../assets/ksp-official-logo.png';
 
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User },
@@ -55,102 +55,135 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     }, 1000);
   };
 
+  const hexagonStyle = {
+    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+  };
+
   return (
-    <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col lg:flex-row relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#2563EB]/10 selection:text-[#2563EB]">
+    <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#E00000]/10 selection:text-[#E00000]">
+      
+      {/* 1. TOP NAVBAR: Karnataka Police Red */}
+      <header className="w-full bg-[#E00000] text-white px-4 sm:px-8 py-3.5 border-b border-[#C90000] shadow-sm relative z-30 flex items-center justify-between">
+        {/* Left Branding */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
+            <img 
+              src={kspLogo} 
+              alt="Karnataka State Police Emblem" 
+              className="h-full w-auto object-contain" 
+            />
+          </div>
+          <div>
+            <span className="text-white font-extrabold tracking-tight text-base sm:text-lg flex items-center gap-1.5 leading-none">
+              KARNATAKA POLICE
+              <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+            </span>
+            <p className="text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">
+              Crime Analytics Platform
+            </p>
+          </div>
+        </div>
 
-      {/* Top Right "Back to Home" Navigation */}
-      {onBack && (
-        <button
-          onClick={onBack}
-          className="absolute top-6 right-6 sm:top-8 sm:right-12 z-30 flex items-center gap-2 text-sm font-semibold text-[#2563EB] hover:underline cursor-pointer"
-        >
-          <Home className="w-4 h-4 text-[#2563EB]" />
-          Back to Home
-        </button>
-      )}
+        {/* Right Navigation */}
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#F5E7C1] transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-white/10"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </button>
+        )}
+      </header>
 
-      {/* Left Branding Panel - Reduced Width & Curved Edges */}
-      <div className="hidden lg:flex lg:w-[38%] min-h-screen relative flex-col items-center justify-center p-8 sm:p-12 text-center text-white overflow-hidden bg-[#0B2341] border-r-4 border-[#C79A2B] rounded-r-[40px]">
+      {/* 2. MAIN WORKSPACE WITH FLOATING IMAGE PLACEHOLDERS */}
+      <main className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)]">
+        
+        {/* FLOATING DECORATIVE IMAGE PLACEHOLDERS (Asymmetric composition around center login card) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          
+          {/* Top-Left: Small Circle */}
+          <div className="hidden md:block absolute top-10 left-8 lg:left-16 w-16 h-16 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs transition-transform hover:scale-105" />
 
-        {/* Background Watermark */}
-        <img
-          src={kspLogo}
-          alt=""
-          className="absolute opacity-[0.04] w-[450px] h-[450px] object-contain pointer-events-none select-none z-0 top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2"
-        />
-
-        {/* Branding Content */}
-        <div className="w-full max-w-sm mx-auto flex flex-col items-center justify-center my-auto relative z-20 lg:-translate-x-8">
-          <img
-            src={kspLogo}
-            alt="Karnataka State Police Emblem"
-            className="h-44 sm:h-52 w-auto object-contain mb-4 drop-shadow-lg"
+          {/* Upper-Left: Medium Hexagon */}
+          <div 
+            style={hexagonStyle}
+            className="hidden md:block absolute top-32 left-4 lg:left-12 w-28 h-28 bg-white/85 border border-slate-200/80 shadow-xs backdrop-blur-xs" 
           />
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-            Welcome!
-          </h1>
+          {/* Middle-Left: Small Circle */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-8 lg:left-24 w-20 h-20 rounded-full bg-white/75 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
 
-          <div className="text-[#C79A2B] text-xs tracking-[0.4em] font-bold mb-4">
-            ★ ★ ★
-          </div>
+          {/* Bottom-Left: Medium Rounded Frame */}
+          <div className="hidden md:block absolute bottom-12 left-6 lg:left-16 w-32 h-32 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
 
-          <p className="text-slate-200 text-sm max-w-xs leading-relaxed font-normal mb-8 mx-auto">
-            Secure access to the KSP Crime Analytics &amp; Intelligence Platform.
-          </p>
+          {/* Top-Right: Medium Circle */}
+          <div className="hidden md:block absolute top-12 right-8 lg:right-20 w-28 h-28 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
 
-          <Shield className="w-8 h-8 text-[#C79A2B] stroke-[1.5] mb-4" />
+          {/* Upper-Right: Small Hexagon */}
+          <div 
+            style={hexagonStyle}
+            className="hidden md:block absolute top-44 right-4 lg:right-10 w-22 h-22 bg-white/85 border border-slate-200/80 shadow-xs backdrop-blur-xs" 
+          />
 
-          <p className="text-slate-300 text-xs font-medium tracking-wide mb-1">
-            Protection. Service. Integrity.
-          </p>
-          <p className="text-[#C79A2B] font-bold text-sm tracking-wide">
-            Karnataka State Police
-          </p>
+          {/* Middle-Right: Medium Rounded Frame */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-6 lg:right-24 w-32 h-32 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+
+          {/* Bottom-Right: Small Circle */}
+          <div className="hidden md:block absolute bottom-14 right-10 lg:right-16 w-20 h-20 rounded-full bg-white/80 border border-slate-200/80 shadow-xs backdrop-blur-xs" />
+
+          {/* Far Top-Center: Subtle Tiny Circle */}
+          <div className="hidden xl:block absolute top-8 left-1/3 w-12 h-12 rounded-full bg-white/60 border border-slate-200/60 shadow-xs" />
         </div>
-      </div>
 
-      {/* Right Login Card Panel - Moved Right */}
-      <div className="flex-1 w-full lg:w-[62%] min-h-screen flex items-center justify-center p-6 sm:p-8 lg:p-12 relative z-20 my-auto">
+        {/* 3. CENTER LOGIN CARD */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="bg-white rounded-[32px] p-8 sm:p-10 shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-[#E2E8F0] w-full max-w-[460px]"
+          className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-200/80 w-full max-w-[460px] relative z-20 my-auto"
         >
-          {/* Card Top Official Logo */}
-          <img src={kspLogo} alt="Karnataka State Police Emblem" className="h-14 w-auto object-contain mx-auto mb-3 drop-shadow-sm" />
+          {/* Card Official Logo */}
+          <img 
+            src={kspLogo} 
+            alt="Karnataka State Police Emblem" 
+            className="h-16 w-auto object-contain mx-auto mb-3 drop-shadow-xs" 
+          />
 
-          <h2 className="text-2xl font-bold text-[#0F172A] text-center mb-1 tracking-tight">
+          {/* Card Header */}
+          <h2 className="text-2xl font-extrabold text-[#142B45] text-center mb-1 tracking-tight">
             Secure Portal Login
           </h2>
-          <p className="text-xs text-slate-500 text-center mb-8 font-medium">
+          <p className="text-xs text-slate-500 text-center mb-7 font-medium">
             Select your access level and enter credentials to authenticate.
           </p>
 
-          {/* Role Selection Header */}
-          <label className="block text-xs font-bold text-[#1E293B] mb-4">
-            Select Access Level <span className="text-red-500">*</span>
+          {/* Access Level Selector Label */}
+          <label className="block text-xs font-bold text-[#142B45] mb-3">
+            Select Access Level <span className="text-[#E00000]">*</span>
           </label>
 
-          {/* 3 Circular Role Option Selectors */}
+          {/* 3 Circular Access Level Selectors */}
           <div className="grid grid-cols-3 gap-3 mb-6">
             {roles.map((r) => {
               const isSelected = selectedRole === r.id;
+              const Icon = r.icon;
               return (
                 <div
                   key={r.id}
                   onClick={() => handleRoleClick(r.id)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center border transition-all duration-200 ${isSelected
-                      ? 'border-2 border-[#2563EB] bg-blue-50/20 text-[#2563EB] shadow-sm'
-                      : 'border-[#E2E8F0] bg-white text-[#1E293B] group-hover:border-slate-300 group-hover:bg-slate-50/50'
-                    }`}>
-                    <r.icon className="w-6 h-6 stroke-[1.8]" />
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center border transition-all duration-200 ${
+                    isSelected
+                      ? 'border-2 border-[#E00000] bg-[#FFF1F1] text-[#E00000] shadow-xs'
+                      : 'border-slate-200 bg-white text-slate-600 group-hover:border-slate-300 group-hover:bg-slate-50/50'
+                  }`}>
+                    <Icon className="w-6 h-6 stroke-[1.8]" />
                   </div>
-                  <span className={`text-[11px] font-bold text-center mt-2.5 leading-tight ${isSelected ? 'text-[#2563EB]' : 'text-[#1E293B]'
-                    }`}>
+                  <span className={`text-[11px] font-bold text-center mt-2.5 leading-tight ${
+                    isSelected ? 'text-[#E00000]' : 'text-[#142B45]/80'
+                  }`}>
                     {r.name}
                   </span>
                 </div>
@@ -158,12 +191,12 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             })}
           </div>
 
-          <div className="border-b border-[#F1F5F9] my-6" />
+          <div className="border-b border-slate-100 my-6" />
 
           {/* Login Credentials Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1E293B] mb-1.5">
+              <label className="block text-xs font-bold text-[#142B45] mb-1.5">
                 Official ID / Email
               </label>
               <div className="relative flex items-center">
@@ -174,20 +207,20 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Select access level to autofill"
-                  className="w-full pl-11 pr-4 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm"
+                  className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs font-semibold text-[#1E293B]">
+                <label className="block text-xs font-bold text-[#142B45]">
                   Password
                 </label>
                 <button
                   type="button"
                   onClick={onForgot}
-                  className="text-xs text-[#2563EB] hover:underline font-semibold transition-colors"
+                  className="text-xs text-[#E00000] hover:underline font-bold transition-colors cursor-pointer"
                 >
                   Forgot?
                 </button>
@@ -199,29 +232,31 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="pasword"
-                  className="w-full pl-11 pr-11 py-3 rounded-full border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all shadow-sm"
+                  placeholder="Enter password"
+                  className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  className="absolute right-4 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
+            {/* Primary Login Button */}
             <button
               type="submit"
               disabled={!selectedRole || isLoading}
-              className="w-full py-3.5 mt-6 bg-[#0B2341] hover:bg-[#0A192F] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
+              className="w-full py-3.5 mt-6 bg-[#E00000] hover:bg-[#C90000] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
             </button>
           </form>
+
         </motion.div>
-      </div>
+      </main>
 
     </div>
   );
