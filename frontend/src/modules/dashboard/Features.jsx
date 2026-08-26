@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, BrainCircuit, Network, BellRing, PieChart, FileText } from 'lucide-react';
+import featuresBg from '../../assets/features-bg.png';
 
 const features = [
   {
@@ -37,7 +38,11 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-24 md:py-28 lg:py-32 relative bg-[#F7F8FA]">
+    <section 
+      id="features" 
+      className="py-24 md:py-28 lg:py-32 relative bg-[#F7F8FA] bg-cover bg-center bg-no-repeat overflow-hidden border-b border-slate-200/60"
+      style={{ backgroundImage: `url(${featuresBg})` }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
           <h2 className="text-3xl md:text-4xl font-extrabold text-[#142B45] mb-4 tracking-tight">Core Platform Capabilities</h2>
