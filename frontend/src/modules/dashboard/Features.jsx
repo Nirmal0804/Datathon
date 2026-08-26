@@ -44,7 +44,7 @@ export default function Features() {
       style={{ backgroundImage: `url(${featuresBg})` }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10">
           <h2 className="text-3xl md:text-4xl font-extrabold text-[#142B45] mb-4 tracking-tight">Core Platform Capabilities</h2>
           <p className="text-[#142B45]/70 text-lg font-normal leading-relaxed text-balance">
             A comprehensive suite of tools engineered for modern law enforcement, combining raw data with actionable intelligence.
