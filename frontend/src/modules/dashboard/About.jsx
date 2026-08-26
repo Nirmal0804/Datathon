@@ -40,7 +40,7 @@ export default function About() {
 
             {/* Main Heading */}
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#142B45] mb-3 tracking-tight leading-[1.15]">
-              Built for the Karnataka Police Datathon 
+              Built for the Karnataka Police Datathon
             </h2>
 
             {/* Red + Gold Accent Underline */}
