@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
+import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.png';
 import loginBg from '../../assets/login-bg.png';
@@ -87,8 +87,8 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             onClick={onBack}
             className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#F5E7C1] transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-white/10"
           >
-            <ArrowLeft className="w-4 h-4" />
             Back to Home
+            <ArrowRight className="w-4 h-4" />
           </button>
         )}
       </header>
