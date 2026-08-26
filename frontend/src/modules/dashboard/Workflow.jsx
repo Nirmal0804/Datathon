@@ -128,8 +128,8 @@ export default function Workflow() {
                     <div>
                       {/* Top Row: Icon Container + Step Number */}
                       <div className="flex items-center justify-between mb-5">
-                        <div className={`w-13 h-13 rounded-2xl ${iconBg} border flex items-center justify-center shadow-2xs`}>
-                          <Icon className="w-6 h-6" />
+                        <div className={`w-16 h-16 sm:w-18 sm:h-18 rounded-2xl ${iconBg} border flex items-center justify-center shadow-xs shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+                          <Icon className="w-8 h-8 sm:w-9 sm:h-9 stroke-[1.8]" />
                         </div>
                         <div className="flex flex-col items-end">
                           <span className={`text-2xl font-extrabold tracking-tight font-mono ${numColor}`}>
