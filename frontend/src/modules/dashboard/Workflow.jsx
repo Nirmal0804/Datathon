@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import workflowBg from '../../assets/workflow-bg.png';
 
 const steps = [
   { id: '01', title: 'Data Ingestion', desc: 'Securely import records from police stations.' },
@@ -10,7 +11,11 @@ const steps = [
 
 export default function Workflow() {
   return (
-    <section id="workflow" className="py-24 md:py-28 lg:py-32 bg-white border-y border-[#E8EEF5] relative overflow-hidden">
+    <section 
+      id="workflow" 
+      className="py-24 md:py-28 lg:py-32 bg-white bg-cover bg-center bg-no-repeat border-y border-[#E8EEF5] relative overflow-hidden"
+      style={{ backgroundImage: `url(${workflowBg})` }}
+    >
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#FFF1F1] rounded-full blur-[120px] -z-10 pointer-events-none"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
