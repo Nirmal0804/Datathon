@@ -17,7 +17,7 @@ export default function Hero({ onLoginClick }) {
       {/* High-res Vidhan Soudha Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-[position:90%_center] lg:bg-[position:95%_center] bg-no-repeat opacity-100 z-0"
-        style={{ backgroundImage: `url(${vidhanSoudha})` }}
+        style={{ backgroundImage: `url(${vidhanSoudha})`, imageRendering: '-webkit-optimize-contrast' }}
       />
 
       {/* Smooth left white gradient backdrop (covers only left text column, leaving center & right side 100% crisp & untouched) */}
