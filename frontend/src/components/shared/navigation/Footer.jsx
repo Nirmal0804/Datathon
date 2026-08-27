@@ -1,6 +1,6 @@
 import React from 'react';
-import { 
-  Shield, ShieldCheck, Mail, ChevronRight, 
+import {
+  Shield, ShieldCheck, Mail, ChevronRight,
   Headphones, Lock, HelpCircle, Globe, Share2
 } from 'lucide-react';
 import kspLogo from '../../../assets/ksp-official-logo.png';
@@ -8,23 +8,23 @@ import kspLogo from '../../../assets/ksp-official-logo.png';
 export default function Footer({ onLoginClick, rounded = false }) {
   return (
     <footer className={`bg-[#E00000] text-white pt-12 pb-8 relative z-10 transition-all ${
-      rounded 
-        ? 'rounded-[20px] border border-[#C90000] shadow-md overflow-hidden w-full' 
+      rounded
+        ? 'rounded-[20px] border border-[#C90000] shadow-md overflow-hidden w-full'
         : 'border-t border-[#C90000]'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* 4-Column Main Footer Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 text-left">
-          
+
           {/* 1. BRAND INFORMATION — LEFT (lg:col-span-4) */}
           <div className="lg:col-span-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
-                <img 
-                  src={kspLogo} 
-                  alt="Karnataka State Police Emblem" 
-                  className="h-full w-auto object-contain" 
+                <img
+                  src={kspLogo}
+                  alt="Karnataka State Police Emblem"
+                  className="h-full w-auto object-contain"
                 />
               </div>
               <div>
@@ -64,7 +64,7 @@ export default function Footer({ onLoginClick, rounded = false }) {
               PLATFORM
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
-            
+
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium">
               {[
                 { label: 'Home', href: '#home' },
@@ -81,7 +81,7 @@ export default function Footer({ onLoginClick, rounded = false }) {
                 </li>
               ))}
               <li>
-                <button 
+                <button
                   onClick={() => onLoginClick && onLoginClick()}
                   className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer text-left font-medium text-xs sm:text-sm"
                 >
@@ -98,7 +98,7 @@ export default function Footer({ onLoginClick, rounded = false }) {
               RESOURCES
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
-            
+
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium">
               {[
                 'Privacy Policy',
@@ -124,7 +124,7 @@ export default function Footer({ onLoginClick, rounded = false }) {
               SUPPORT
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
-            
+
             <ul className="space-y-3 text-xs sm:text-sm font-medium">
               <li>
                 <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">

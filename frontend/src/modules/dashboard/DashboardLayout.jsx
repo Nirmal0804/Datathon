@@ -202,9 +202,9 @@ export default function DashboardLayout({ onLogout, role }) {
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
 
       return (
-        <div className="flex-1 overflow-y-auto px-5 sm:px-10 py-8 mx-auto w-full max-w-[1500px]">
+        <main className="flex-1 overflow-y-auto px-5 sm:px-10 py-8 mx-auto w-full max-w-[1500px]">
           {content}
-        </div>
+        </main>
       );
     }
 
@@ -223,9 +223,9 @@ export default function DashboardLayout({ onLogout, role }) {
       const content = adminModuleMap[activeModule] || adminModuleMap.overview;
 
       return (
-        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
+        <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
           {content}
-        </div>
+        </main>
       );
     }
 
@@ -288,15 +288,16 @@ export default function DashboardLayout({ onLogout, role }) {
     };
 
     const content = moduleMap[activeModule] || moduleMap.overview;
+    const isNetwork = activeModule === 'network';
 
     const layoutClasses = isCompact
-      ? (activeModule === 'network' ? 'w-full p-4 sm:p-6 overflow-y-auto' : 'flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]')
-      : (activeModule === 'network' ? 'w-full p-4 sm:p-6 lg:p-8 overflow-y-auto' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8');
+      ? (isNetwork ? 'w-full p-4 sm:p-6 overflow-y-auto' : 'flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]')
+      : (isNetwork ? 'w-full p-4 sm:p-6 lg:p-8 overflow-y-auto' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8');
 
     return (
-      <div className={layoutClasses}>
+      <main className={layoutClasses}>
         {content}
-      </div>
+      </main>
     );
   };
 
