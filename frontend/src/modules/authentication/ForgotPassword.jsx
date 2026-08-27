@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Shield, Mail, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.png';
-import loginBg from '../../assets/login-bg.png';
 
 export default function ForgotPassword({ onBack }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,11 +54,8 @@ export default function ForgotPassword({ onBack }) {
         )}
       </header>
 
-      {/* 2. MAIN WORKSPACE WITH HIGH-RES FLOATING SHAPES BACKGROUND */}
-      <main 
-        className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)] bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${loginBg})`, imageRendering: '-webkit-optimize-contrast' }}
-      >
+      {/* 2. MAIN WORKSPACE */}
+      <main className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 md:p-8 relative min-h-[calc(100vh-64px)]">
 
         {/* 3. CENTERED RESET CARD */}
         <motion.div 
