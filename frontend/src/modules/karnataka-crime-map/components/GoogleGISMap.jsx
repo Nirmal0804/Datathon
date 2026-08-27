@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { APIProvider, Map, InfoWindow, useMap } from '@vis.gl/react-google-maps';
-import { ZoomIn, ZoomOut, Maximize2, MapPin, ShieldAlert, Zap, Layers, Network, Activity, Download, Globe } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Layers, Zap } from 'lucide-react';
 import { KARNATAKA_DISTRICTS_GEOJSON } from '../../../mock/karnatakaDistrictsGeoJSON';
 import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
 
@@ -10,6 +10,15 @@ const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 // Approximate center of Karnataka
 export const KARNATAKA_CENTER = [15.3173, 75.7139];
 export const GOOGLE_KARNATAKA_CENTER = { lat: 15.3173, lng: 75.7139 };
+
+// Safe Risk Color Resolver (Supports uppercase, lowercase, mixed case strings)
+export const getRiskColor = (riskStr) => {
+  if (!riskStr) return '#22c55e';
+  const r = String(riskStr).toLowerCase();
+  if (r.includes('critical') || r.includes('high')) return '#ef4444'; // Red
+  if (r.includes('medium') || r.includes('warning')) return '#f59e0b'; // Amber/Orange
+  return '#22c55e'; // Green
+};
 
 // Geographic district centers
 export const districtCoords = {
@@ -46,7 +55,7 @@ export const districtCoords = {
   'Bengaluru Rural': [13.2284, 77.5786]
 };
 
-// Compute jitter coordinates for case
+// Compute deterministic jitter coordinates for each case
 export const getCoordinatesForCase = (caseItem) => {
   if (!caseItem) return KARNATAKA_CENTER;
   const districtName = caseItem.district || 'Bengaluru City';
@@ -58,7 +67,7 @@ export const getCoordinatesForCase = (caseItem) => {
   return [base[0] + latOffset, base[1] + lngOffset];
 };
 
-// Map Controller Sub-component to manage viewport, center, and GeoJSON overlays
+// Map Controller Sub-component to manage viewport, center, GeoJSON, and circles
 function GoogleMapController({
   safeMapState,
   selectedCase,
@@ -91,7 +100,7 @@ function GoogleMapController({
     }
   }, [map, selectedCase, safeMapState.resetKey, safeMapState.center, safeMapState.zoom]);
 
-  // Manage Google Maps GeoJSON Boundaries Data Layer
+  // Manage Google Maps GeoJSON District Boundaries Data Layer
   useEffect(() => {
     if (!map) return;
 
@@ -107,14 +116,11 @@ function GoogleMapController({
         map.data.setStyle((feature) => {
           const districtId = feature.getProperty('districtId');
           const p = districtId ? (DISTRICT_PREDICTION_DATA[districtId] || null) : null;
-          const riskColor = !p ? '#6366f1' :
-            p.riskLevel === 'Critical' ? '#ef4444' :
-            p.riskLevel === 'High' ? '#f97316' :
-            p.riskLevel === 'Medium' ? '#eab308' : '#10b981';
+          const riskColor = !p ? '#6366f1' : getRiskColor(p.riskLevel);
 
           return {
             fillColor: isAnalyst ? riskColor : '#6366f1',
-            fillOpacity: isAnalyst ? 0.15 : 0.04,
+            fillOpacity: isAnalyst ? 0.12 : 0.04,
             strokeColor: isAnalyst ? riskColor : '#6366f1',
             strokeWeight: 1.5,
             strokeOpacity: 0.8
@@ -137,7 +143,7 @@ function GoogleMapController({
     }
   }, [map, safeLayers.showBoundaries, isAnalyst, onDistrictClick]);
 
-  // Manage Hotspot & Case Circles Overlay
+  // Manage Hotspot & Case-Level Circles Overlay
   useEffect(() => {
     if (!map) return;
 
@@ -145,15 +151,18 @@ function GoogleMapController({
     circlesRef.current.forEach((c) => c.setMap(null));
     circlesRef.current = [];
 
-    // Render Hotspot Circles
+    // 1. PRIMARY VISUALIZATION: Render District Hotspot Circles (when showHotspots is true)
     if (safeLayers.showHotspots) {
       dynamicHotspots.forEach((h) => {
+        // Square-root scaling for district volume (prevents covering full state)
+        const radiusMeters = Math.sqrt(h.count) * 2400 + 4000;
+
         const circle = new google.maps.Circle({
           map,
           center: { lat: h.center[0], lng: h.center[1] },
-          radius: Math.min(Math.max(h.count * 1800, 8000), 25000), // Scaled radius
+          radius: Math.min(radiusMeters, 24000),
           fillColor: h.color,
-          fillOpacity: 0.2,
+          fillOpacity: 0.15,
           strokeColor: h.color,
           strokeOpacity: 0.8,
           strokeWeight: 2
@@ -169,7 +178,34 @@ function GoogleMapController({
       });
     }
 
-    // Render Heatmap / Density Circles if enabled
+    // 2. SECONDARY VISUALIZATION: Render Individual Case Circles (ONLY when showMarkers is true)
+    if (safeLayers.showMarkers) {
+      safeCases.forEach((c) => {
+        const coords = getCoordinatesForCase(c);
+        const color = getRiskColor(c.risk);
+
+        const circle = new google.maps.Circle({
+          map,
+          center: { lat: coords[0], lng: coords[1] },
+          radius: 2200, // Small controlled incident radius
+          fillColor: color,
+          fillOpacity: 0.45,
+          strokeColor: '#ffffff',
+          strokeOpacity: 0.9,
+          strokeWeight: 1.5
+        });
+
+        circle.addListener('click', () => {
+          if (onSelectCase) {
+            onSelectCase(c);
+          }
+        });
+
+        circlesRef.current.push(circle);
+      });
+    }
+
+    // 3. Optional Crime Density Layer Overlay
     if (isAnalyst && safeLayers.showDensity) {
       safeCases.forEach((c) => {
         const coords = getCoordinatesForCase(c);
@@ -178,7 +214,7 @@ function GoogleMapController({
           center: { lat: coords[0], lng: coords[1] },
           radius: 5000,
           fillColor: '#6366f1',
-          fillOpacity: 0.15,
+          fillOpacity: 0.12,
           strokeColor: 'transparent',
           strokeWeight: 0
         });
@@ -190,7 +226,7 @@ function GoogleMapController({
       circlesRef.current.forEach((c) => c.setMap(null));
       circlesRef.current = [];
     };
-  }, [map, safeLayers.showHotspots, safeLayers.showDensity, dynamicHotspots, safeCases, isAnalyst, onSelectHotspot]);
+  }, [map, safeLayers.showHotspots, safeLayers.showMarkers, safeLayers.showDensity, dynamicHotspots, safeCases, isAnalyst, onSelectHotspot, onSelectCase]);
 
   return null;
 }
@@ -212,13 +248,15 @@ export default function GoogleGISMap({
   const safeLayers = layers || {};
   const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
 
-  const [activeInfoWindow, setActiveInfoWindow] = useState(null); // { lat, lng, content }
+  const [activeInfoWindow, setActiveInfoWindow] = useState(null); // { type, position, data }
   const [layersMenuOpen, setLayersMenuOpen] = useState(false);
 
-  // Compute dynamic hotspots from the mock dataset
+  // Compute dynamic district hotspots from actual filteredCases (count > 0)
   const dynamicHotspots = useMemo(() => {
     const counts = {};
     const categories = {};
+    const highestRisk = {};
+
     safeCases.forEach((c) => {
       if (!c || !c.district) return;
       counts[c.district] = (counts[c.district] || 0) + 1;
@@ -226,10 +264,13 @@ export default function GoogleGISMap({
       if (c.category) {
         categories[c.district][c.category] = (categories[c.district][c.category] || 0) + 1;
       }
+      if (c.risk) {
+        highestRisk[c.district] = highestRisk[c.district] || c.risk;
+      }
     });
 
     return Object.entries(counts)
-      .filter(([_, count]) => count > 4) // hotspot if > 4 cases
+      .filter(([_, count]) => count > 0) // count > 0 includes all active districts in filteredCases
       .map(([district, count]) => {
         let dominantCat = '';
         let maxCount = 0;
@@ -241,8 +282,8 @@ export default function GoogleGISMap({
             }
           });
         }
-        const level = count > 10 ? 'Critical' : count > 6 ? 'High' : 'Medium';
-        const color = level === 'Critical' || level === 'High' ? '#ef4444' : level === 'Medium' ? '#f59e0b' : '#22c55e';
+        const level = count >= 8 ? 'Critical' : count >= 5 ? 'High' : count >= 3 ? 'Medium' : 'Low';
+        const color = getRiskColor(highestRisk[district] || level);
         return {
           district,
           center: districtCoords[district] || KARNATAKA_CENTER,
@@ -286,8 +327,19 @@ export default function GoogleGISMap({
 
   const handleSelectHotspot = (hotspot) => {
     setActiveInfoWindow({
+      type: 'district',
       position: { lat: hotspot.center[0], lng: hotspot.center[1] },
       data: hotspot
+    });
+  };
+
+  const handleSelectCase = (caseItem) => {
+    setSelectedCase(caseItem); // Opens CrimeIntel case drawer
+    const coords = getCoordinatesForCase(caseItem);
+    setActiveInfoWindow({
+      type: 'case',
+      position: { lat: coords[0], lng: coords[1] },
+      data: caseItem
     });
   };
 
@@ -320,45 +372,92 @@ export default function GoogleGISMap({
               dynamicHotspots={dynamicHotspots}
               safeCases={safeCases}
               onSelectHotspot={handleSelectHotspot}
-              onSelectCase={setSelectedCase}
+              onSelectCase={handleSelectCase}
             />
 
-            {/* InfoWindow on Hotspot Click */}
+            {/* InfoWindow on District Hotspot or Individual Case Click */}
             {activeInfoWindow && (
               <InfoWindow
                 position={activeInfoWindow.position}
                 onCloseClick={() => setActiveInfoWindow(null)}
               >
-                <div className="p-2 min-w-[160px] text-slate-900 font-sans">
-                  <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1">
-                    AI Hotspot Intelligence
-                  </span>
-                  <h4 className="font-extrabold text-sm text-slate-900 mb-1 leading-tight">
-                    {activeInfoWindow.data.district}
-                  </h4>
-                  <div className="space-y-1 text-xs text-slate-700">
-                    <div className="flex justify-between gap-4">
-                      <span className="text-slate-500">Risk Level:</span>
-                      <span
-                        className="font-bold px-1.5 py-0.2 rounded text-[10px]"
-                        style={{
-                          backgroundColor: `${activeInfoWindow.data.color}20`,
-                          color: activeInfoWindow.data.color
-                        }}
-                      >
-                        {activeInfoWindow.data.level}
-                      </span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="text-slate-500">Total Cases:</span>
-                      <span className="font-bold">{activeInfoWindow.data.count}</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="text-slate-500">Dominant Crime:</span>
-                      <span className="font-bold text-[#E00000]">{activeInfoWindow.data.dominantCat || 'N/A'}</span>
+                {activeInfoWindow.type === 'case' ? (
+                  /* Individual Case InfoWindow */
+                  <div className="p-2 min-w-[180px] text-slate-900 font-sans">
+                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                      FIR Case Detail
+                    </span>
+                    <h4 className="font-extrabold text-sm text-[#0B1F4D] mb-1">
+                      {activeInfoWindow.data.id}
+                    </h4>
+                    <div className="space-y-1 text-xs text-slate-700">
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Category:</span>
+                        <span className="font-bold">{activeInfoWindow.data.category}</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">District:</span>
+                        <span className="font-bold">{activeInfoWindow.data.district}</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Station:</span>
+                        <span className="font-bold">{activeInfoWindow.data.policeStation}</span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Risk Level:</span>
+                        <span
+                          className="font-bold px-1.5 py-0.2 rounded text-[10px]"
+                          style={{
+                            backgroundColor: `${getRiskColor(activeInfoWindow.data.risk)}20`,
+                            color: getRiskColor(activeInfoWindow.data.risk)
+                          }}
+                        >
+                          {activeInfoWindow.data.risk || 'Normal'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <span className="text-slate-500">Status:</span>
+                        <span className="font-bold text-slate-900">{activeInfoWindow.data.status}</span>
+                      </div>
+                      <div className="flex justify-between gap-3 pt-1 border-t border-slate-200">
+                        <span className="text-slate-500">Date:</span>
+                        <span className="font-semibold text-slate-600">{activeInfoWindow.data.date}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  /* District Hotspot InfoWindow */
+                  <div className="p-2 min-w-[160px] text-slate-900 font-sans">
+                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                      AI Hotspot Intelligence
+                    </span>
+                    <h4 className="font-extrabold text-sm text-slate-900 mb-1 leading-tight">
+                      {activeInfoWindow.data.district}
+                    </h4>
+                    <div className="space-y-1 text-xs text-slate-700">
+                      <div className="flex justify-between gap-4">
+                        <span className="text-slate-500">Risk Level:</span>
+                        <span
+                          className="font-bold px-1.5 py-0.2 rounded text-[10px]"
+                          style={{
+                            backgroundColor: `${activeInfoWindow.data.color}20`,
+                            color: activeInfoWindow.data.color
+                          }}
+                        >
+                          {activeInfoWindow.data.level}
+                        </span>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <span className="text-slate-500">Total Cases:</span>
+                        <span className="font-bold">{activeInfoWindow.data.count}</span>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <span className="text-slate-500">Dominant Crime:</span>
+                        <span className="font-bold text-[#E00000]">{activeInfoWindow.data.dominantCat || 'N/A'}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </InfoWindow>
             )}
           </Map>
@@ -405,6 +504,15 @@ export default function GoogleGISMap({
           {layersMenuOpen && (
             <div className="absolute right-0 top-11 w-52 bg-slate-900/95 border border-slate-800 rounded-2xl p-3 shadow-2xl z-30 backdrop-blur-md space-y-2 text-xs">
               <h4 className="font-bold text-slate-300 text-[11px] uppercase tracking-wider mb-2">Map Layers</h4>
+              <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
+                <span>Case Markers</span>
+                <input
+                  type="checkbox"
+                  checked={!!safeLayers.showMarkers}
+                  onChange={() => toggleLayer('showMarkers')}
+                  className="rounded bg-slate-800 border-slate-700 text-red-600 focus:ring-red-500"
+                />
+              </label>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
                 <span>District Boundaries</span>
                 <input
