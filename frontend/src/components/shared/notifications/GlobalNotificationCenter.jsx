@@ -50,7 +50,7 @@ export default function GlobalNotificationCenter() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePanel}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 lg:hidden"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[99990]"
           />
 
           {/* Slide-out Panel */}
@@ -59,7 +59,7 @@ export default function GlobalNotificationCenter() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0.5 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="fixed top-0 right-0 bottom-0 w-full lg:w-[420px] bg-white shadow-2xl z-[60] flex flex-col border-l border-[#E7ECF3]"
+            className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col border-l border-[#E7ECF3]"
           >
             {/* Header */}
             <div className="bg-[#0B1F4D] px-6 py-5 flex items-center justify-between shrink-0">
