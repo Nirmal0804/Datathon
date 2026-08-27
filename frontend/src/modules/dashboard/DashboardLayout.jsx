@@ -338,7 +338,7 @@ export default function DashboardLayout({ onLogout, role }) {
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0 bg-transparent gap-3 min-h-screen">
         {isCompact && (
-          <div className="hidden md:block shrink-0">
+          <div className="hidden md:block shrink-0 sticky top-3 z-30">
             <AnalystTopNav
               activeModule={activeModule}
               setActiveModule={handleModuleChange}
