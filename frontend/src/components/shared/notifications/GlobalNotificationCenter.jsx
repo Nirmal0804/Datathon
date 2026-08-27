@@ -53,24 +53,26 @@ export default function GlobalNotificationCenter() {
             className="fixed inset-0 bg-slate-900/10 z-[99990]"
           />
 
-          {/* Slide-out Panel (Aligned with Top Navbar top-3 position, 72px height, and rounded-[20px] radius) */}
+          {/* Slide-out Panel (Full-height right panel fixed top-0 right-0 bottom-0 with KSP Red navbar theme & rounded-l-[20px]) */}
           <motion.div
             initial={{ x: '100%', opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0.5 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
+            className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-l-[20px] border-l border-[#E7ECF3] overflow-hidden"
           >
-            {/* Header (Matching exact 72px height of role top navbar) */}
-            <div className="h-[72px] bg-[#0B1F4D] px-6 flex items-center justify-between shrink-0">
+            {/* Header (Matching exact #E00000 red theme & border of global top navbar) */}
+            <div className="bg-[#E00000] border-b border-[#C90000] px-6 py-4 flex items-center justify-between shrink-0 shadow-xs">
               <div className="flex items-center gap-3 text-white">
                 <div className="relative">
-                  <Bell className="w-5 h-5" />
+                  <Bell className="w-5 h-5 text-white" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#C79A2B] rounded-full border border-[#0B1F4D]" />
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[14px] h-[14px] px-1 bg-[#D49A00] border-2 border-[#E00000] rounded-full text-[8px] font-black text-[#142B45]">
+                      {unreadCount}
+                    </span>
                   )}
                 </div>
-                <h2 className="text-base font-black tracking-wide">
+                <h2 className="text-base font-black tracking-wide text-white">
                   {showSettings ? 'Notification Preferences' : 'Intelligence Feed'}
                 </h2>
               </div>
@@ -125,10 +127,10 @@ export default function GlobalNotificationCenter() {
                         <button
                           key={tab}
                           onClick={() => setActiveTab(tab)}
-                          className={`px-3 py-1 rounded-full text-[11px] font-bold transition-colors whitespace-nowrap ${
+                          className={`px-3 py-1 rounded-full text-[11px] font-bold transition-colors whitespace-nowrap cursor-pointer ${
                             activeTab === tab 
-                            ? 'bg-[#0B1F4D] text-white shadow-sm' 
-                            : 'bg-white border border-[#E7ECF3] text-slate-500 hover:text-[#0B1F4D]'
+                            ? 'bg-[#E00000] text-white shadow-sm' 
+                            : 'bg-white border border-[#E7ECF3] text-slate-500 hover:text-[#E00000]'
                           }`}
                         >
                           {tab}
@@ -143,7 +145,7 @@ export default function GlobalNotificationCenter() {
                   <div className="flex items-center justify-between px-5 py-2.5 bg-white border-b border-[#E7ECF3] text-xs font-bold shrink-0">
                     <button 
                       onClick={markAllAsRead}
-                      className="flex items-center gap-1.5 text-[#0B1F4D] hover:text-[#143275] transition-colors"
+                      className="flex items-center gap-1.5 text-[#E00000] hover:text-[#C90000] transition-colors cursor-pointer"
                     >
                       <CheckCheck className="w-3.5 h-3.5" /> Mark All Read
                     </button>
