@@ -3,15 +3,15 @@ import { Settings, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function AnalystProfileWidget({ onLogout, onNavigate, role }) {
-  const profile = role === 'officer' 
+  const profile = role === 'officer'
     ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer' }
     : role === 'admin'
-    ? { initials: 'SA', name: 'Admin Gowda', roleText: 'Administrator' }
-    : { initials: 'JD', name: 'Inspector Patil', roleText: 'Analyst' };
+      ? { initials: 'SA', name: 'Admin Gowda', roleText: 'Administrator' }
+      : { initials: 'JD', name: 'Inspector Patil', roleText: 'Analyst' };
 
   return (
     <div className="fixed bottom-6 left-6 z-40 hidden md:flex">
-      <motion.div 
+      <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="bg-white rounded-[20px] p-2 flex flex-col items-center gap-2 shadow-md border border-[#E7ECF3] transition-all"

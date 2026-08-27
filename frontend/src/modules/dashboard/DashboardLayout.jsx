@@ -203,9 +203,9 @@ export default function DashboardLayout({ onLogout, role }) {
         map: <CrimeMapLayout role={role} />,
         settings: <SettingsLayout role={role} />
       };
-      
+
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
-      
+
       return (
         <main className="flex-1 overflow-y-auto px-5 sm:px-10 py-8 mx-auto w-full max-w-[1500px]">
           <div className="min-h-[calc(100vh-250px)]">
@@ -229,9 +229,9 @@ export default function DashboardLayout({ onLogout, role }) {
         config: <AdminConfiguration />,
         settings: <SettingsLayout role={role} />
       };
-      
+
       const content = adminModuleMap[activeModule] || adminModuleMap.overview;
-      
+
       return (
         <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
           <div className="min-h-[calc(100vh-250px)]">
@@ -245,7 +245,7 @@ export default function DashboardLayout({ onLogout, role }) {
     }
 
     const moduleMap = {
-      overview:  (
+      overview: (
         <div className="w-full mx-auto space-y-12">
           <DashboardHeader compact={isCompact} />
           <FilterBar
@@ -292,20 +292,20 @@ export default function DashboardLayout({ onLogout, role }) {
           )}
         </div>
       ),
-      map:       <CrimeMapLayout role={role} />,
-      network:   <NetworkAnalysisLayout />,
-      district:  <DistrictIntelligenceLayout onNavigate={setActiveModule} />,
+      map: <CrimeMapLayout role={role} />,
+      network: <NetworkAnalysisLayout />,
+      district: <DistrictIntelligenceLayout onNavigate={setActiveModule} />,
       analytics: <AnalyticsLayout />,
-      reports:   <ReportsLayout role={role} />,
+      reports: <ReportsLayout role={role} />,
       correlation: <SocioEconomicCorrelation role={role} />,
-      hotspots:  <AnalystHotspotLayout onNavigate={setActiveModule} />,
-      settings:  <SettingsLayout role={role} />,
+      hotspots: <AnalystHotspotLayout onNavigate={setActiveModule} />,
+      settings: <SettingsLayout role={role} />,
     };
 
     const content = moduleMap[activeModule] || moduleMap.overview;
     const isNetwork = activeModule === 'network';
 
-    const layoutClasses = isCompact 
+    const layoutClasses = isCompact
       ? (isNetwork ? 'w-full p-4 sm:p-6 overflow-y-auto' : 'flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]')
       : (isNetwork ? 'w-full p-4 sm:p-6 lg:p-8 overflow-y-auto' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8');
 
@@ -325,7 +325,7 @@ export default function DashboardLayout({ onLogout, role }) {
 
   return (
     <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
-        {/* Analyst Profile Widget */}
+      {/* Analyst Profile Widget */}
       {isCompact && (
         <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
       )}
