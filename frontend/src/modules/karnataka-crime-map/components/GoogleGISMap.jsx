@@ -2,38 +2,16 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { APIProvider, Map as GoogleMap, InfoWindow, useMap } from '@vis.gl/react-google-maps';
 import { ZoomIn, ZoomOut, Maximize2, Layers, Zap } from 'lucide-react';
 import { KARNATAKA_DISTRICTS_GEOJSON } from '../../../mock/karnatakaDistrictsGeoJSON';
-import { KARNATAKA_STATE_BOUNDARY_GEOJSON } from '../../../mock/karnatakaStateBoundaryGeoJSON';
 import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
 
 // Google Maps API Key from Environment
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
-// Geographic center of Karnataka
+// Approximate center of Karnataka
 export const KARNATAKA_CENTER = [15.3173, 75.7139];
 export const GOOGLE_KARNATAKA_CENTER = { lat: 15.3173, lng: 75.7139 };
 
-// Robust GeoJSON coordinate converter to Google Maps LatLng paths
-export const geoJsonCoordinatesToGooglePath = (geometry) => {
-  if (!geometry || !geometry.coordinates) return [];
-
-  if (geometry.type === 'Polygon') {
-    const exteriorRing = geometry.coordinates[0] || [];
-    return exteriorRing.map(([lng, lat]) => ({ lat, lng }));
-  }
-
-  if (geometry.type === 'MultiPolygon') {
-    const allPaths = [];
-    geometry.coordinates.forEach((polygon) => {
-      const exteriorRing = polygon[0] || [];
-      allPaths.push(exteriorRing.map(([lng, lat]) => ({ lat, lng })));
-    });
-    return allPaths;
-  }
-
-  return [];
-};
-
-// Safe Risk Color Resolver
+// Safe Risk Color Resolver (Supports uppercase, lowercase, mixed case strings)
 export const getRiskColor = (riskStr) => {
   if (!riskStr) return '#22c55e';
   const r = String(riskStr).toLowerCase();
@@ -42,7 +20,7 @@ export const getRiskColor = (riskStr) => {
   return '#22c55e'; // Green
 };
 
-// Geographic district center coordinates
+// Geographic district centers
 export const districtCoords = {
   'Bengaluru City': [12.9716, 77.5946],
   'Mysuru': [12.2958, 76.6394],
@@ -89,7 +67,7 @@ export const getCoordinatesForCase = (caseItem) => {
   return [base[0] + latOffset, base[1] + lngOffset];
 };
 
-// Map Controller Sub-component to manage viewport, GeoJSON district polygons, state outline, and circles
+// Map Controller Sub-component to manage viewport, center, and circles
 function GoogleMapController({
   safeMapState,
   selectedCase,
@@ -97,24 +75,13 @@ function GoogleMapController({
   isAnalyst,
   onDistrictClick,
   dynamicHotspots,
-  districtCrimeCounts,
   safeCases,
   onSelectHotspot,
-  onSelectCase,
-  setHoveredDistrict
+  onSelectCase
 }) {
   const map = useMap();
   const prevResetKeyRef = useRef(null);
   const circlesRef = useRef([]);
-  const stateBorderPolylineRef = useRef(null);
-
-  // Extract authentic Karnataka State Perimeter Path from KARNATAKA_STATE_BOUNDARY_GEOJSON
-  const stateBoundaryPath = useMemo(() => {
-    if (!KARNATAKA_STATE_BOUNDARY_GEOJSON || !KARNATAKA_STATE_BOUNDARY_GEOJSON.features) return [];
-    const feat = KARNATAKA_STATE_BOUNDARY_GEOJSON.features[0];
-    if (!feat || !feat.geometry) return [];
-    return geoJsonCoordinatesToGooglePath(feat.geometry);
-  }, []);
 
   // Handle Map Panning and Zooming when selectedCase or resetKey changes
   useEffect(() => {
@@ -133,33 +100,7 @@ function GoogleMapController({
     }
   }, [map, selectedCase, safeMapState.resetKey, safeMapState.center, safeMapState.zoom]);
 
-  // 1. KARNATAKA OUTER STATE PERIMETER (Authentic State Boundary GeoJSON - 4px Red State Border)
-  useEffect(() => {
-    if (!map) return;
-
-    if (stateBorderPolylineRef.current) {
-      stateBorderPolylineRef.current.setMap(null);
-    }
-
-    if (safeLayers.showBoundaries && stateBoundaryPath.length > 0) {
-      stateBorderPolylineRef.current = new google.maps.Polyline({
-        map,
-        path: stateBoundaryPath,
-        strokeColor: '#E00000', // Karnataka Police Red Accent
-        strokeOpacity: 1.0,
-        strokeWeight: 4, // 4px prominent outer border
-        zIndex: 200
-      });
-    }
-
-    return () => {
-      if (stateBorderPolylineRef.current) {
-        stateBorderPolylineRef.current.setMap(null);
-      }
-    };
-  }, [map, safeLayers.showBoundaries, stateBoundaryPath]);
-
-  // 2. CHOROPLETH DISTRICT POLYGONS DATA LAYER (All 31 Karnataka Districts)
+  // Manage Google Maps GeoJSON District Boundaries Data Layer
   useEffect(() => {
     if (!map) return;
 
@@ -172,72 +113,20 @@ function GoogleMapController({
       try {
         map.data.addGeoJson(KARNATAKA_DISTRICTS_GEOJSON);
 
-        // Apply Translucent Choropleth Styling based on actual crime volume and risk
         map.data.setStyle((feature) => {
-          const districtName = feature.getProperty('districtName');
           const districtId = feature.getProperty('districtId');
-          const count = districtCrimeCounts[districtName] || 0;
           const p = districtId ? (DISTRICT_PREDICTION_DATA[districtId] || null) : null;
-
-          // Default style for districts with no cases
-          let fillColor = '#64748b'; // Neutral grey
-          let fillOpacity = 0.08;
-          let strokeColor = '#94a3b8';
-          let strokeWeight = 1.5;
-
-          if (count >= 8 || (p && p.riskLevel === 'Critical')) {
-            fillColor = '#ef4444'; // Critical Red
-            fillOpacity = 0.35;
-            strokeColor = '#ef4444';
-            strokeWeight = 1.5;
-          } else if (count >= 5 || (p && p.riskLevel === 'High')) {
-            fillColor = '#f97316'; // High Orange
-            fillOpacity = 0.30;
-            strokeColor = '#f97316';
-            strokeWeight = 1.5;
-          } else if (count >= 3 || (p && p.riskLevel === 'Medium')) {
-            fillColor = '#f59e0b'; // Medium Amber
-            fillOpacity = 0.25;
-            strokeColor = '#f59e0b';
-            strokeWeight = 1.5;
-          } else if (count >= 1) {
-            fillColor = '#22c55e'; // Low Green
-            fillOpacity = 0.20;
-            strokeColor = '#22c55e';
-            strokeWeight = 1.5;
-          }
+          const riskColor = !p ? '#6366f1' : getRiskColor(p.riskLevel);
 
           return {
-            fillColor,
-            fillOpacity,
-            strokeColor,
-            strokeWeight,
-            strokeOpacity: 0.85,
-            zIndex: 10
+            fillColor: isAnalyst ? riskColor : '#6366f1',
+            fillOpacity: isAnalyst ? 0.06 : 0.03,
+            strokeColor: isAnalyst ? riskColor : '#6366f1',
+            strokeWeight: 1,
+            strokeOpacity: 0.5
           };
         });
 
-        // Hover Effect
-        const mouseoverListener = map.data.addListener('mouseover', (event) => {
-          const districtName = event.feature.getProperty('districtName');
-          const count = districtCrimeCounts[districtName] || 0;
-          setHoveredDistrict({ name: districtName, count });
-
-          map.data.overrideStyle(event.feature, {
-            fillOpacity: 0.50,
-            strokeWeight: 2.5,
-            strokeColor: '#ffffff',
-            strokeOpacity: 1.0,
-            zIndex: 20
-          });
-        });
-
-        const mouseoutListener = map.data.addListener('mouseout', () => {
-          setHoveredDistrict(null);
-          map.data.revertStyle();
-        });
-
-        // Click Effect
         const clickListener = map.data.addListener('click', (event) => {
           const districtId = event.feature.getProperty('districtId');
           if (onDistrictClick && districtId) {
@@ -246,17 +135,15 @@ function GoogleMapController({
         });
 
         return () => {
-          google.maps.event.removeListener(mouseoverListener);
-          google.maps.event.removeListener(mouseoutListener);
           google.maps.event.removeListener(clickListener);
         };
       } catch (err) {
         console.warn('GeoJSON layer error:', err);
       }
     }
-  }, [map, safeLayers.showBoundaries, isAnalyst, districtCrimeCounts, onDistrictClick, setHoveredDistrict]);
+  }, [map, safeLayers.showBoundaries, isAnalyst, onDistrictClick]);
 
-  // 3. Manage Hotspot & Case-Level Circles Overlay
+  // Manage Hotspot & Case-Level Circles Overlay
   useEffect(() => {
     if (!map) return;
 
@@ -264,10 +151,10 @@ function GoogleMapController({
     circlesRef.current.forEach((c) => c.setMap(null));
     circlesRef.current = [];
 
-    // Render District Hotspot Circles (when showHotspots is true)
+    // 1. PRIMARY VISUALIZATION: Render District Hotspot Circles (when showHotspots is true)
     if (safeLayers.showHotspots) {
       dynamicHotspots.forEach((h) => {
-        // Controlled square-root scaling for district volume
+        // Controlled square-root scaling for district volume (clear visual hierarchy without obscuring full state)
         const radiusMeters = Math.sqrt(h.count) * 5500 + 6000;
 
         const circle = new google.maps.Circle({
@@ -278,8 +165,7 @@ function GoogleMapController({
           fillOpacity: 0.25,
           strokeColor: h.color,
           strokeOpacity: 0.9,
-          strokeWeight: 3,
-          zIndex: 50
+          strokeWeight: 3
         });
 
         circle.addListener('click', () => {
@@ -292,7 +178,7 @@ function GoogleMapController({
       });
     }
 
-    // Render Individual Incident Markers (ONLY when showMarkers is true)
+    // 2. SECONDARY VISUALIZATION: Render Individual Incident Markers (ONLY when showMarkers is true)
     if (safeLayers.showMarkers) {
       safeCases.forEach((c) => {
         const coords = getCoordinatesForCase(c);
@@ -301,13 +187,12 @@ function GoogleMapController({
         const circle = new google.maps.Circle({
           map,
           center: { lat: coords[0], lng: coords[1] },
-          radius: 1200, // Small incident dot (1.2km)
+          radius: 1200, // Tightly controlled small incident dot (1.2km)
           fillColor: color,
           fillOpacity: 0.45,
           strokeColor: '#ffffff',
           strokeOpacity: 0.9,
-          strokeWeight: 1,
-          zIndex: 60
+          strokeWeight: 1
         });
 
         circle.addListener('click', () => {
@@ -320,7 +205,7 @@ function GoogleMapController({
       });
     }
 
-    // Optional Crime Density Layer Overlay
+    // 3. Optional Crime Density Layer Overlay
     if (isAnalyst && safeLayers.showDensity) {
       safeCases.forEach((c) => {
         const coords = getCoordinatesForCase(c);
@@ -331,8 +216,7 @@ function GoogleMapController({
           fillColor: '#6366f1',
           fillOpacity: 0.1,
           strokeColor: 'transparent',
-          strokeWeight: 0,
-          zIndex: 40
+          strokeWeight: 0
         });
         circlesRef.current.push(circle);
       });
@@ -364,20 +248,8 @@ export default function GoogleGISMap({
   const safeLayers = layers || {};
   const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
 
-  const [activeInfoWindow, setActiveInfoWindow] = useState(null);
+  const [activeInfoWindow, setActiveInfoWindow] = useState(null); // { type, position, data }
   const [layersMenuOpen, setLayersMenuOpen] = useState(false);
-  const [hoveredDistrict, setHoveredDistrict] = useState(null);
-
-  // Compute District Crime Counts for choropleth rendering
-  const districtCrimeCounts = useMemo(() => {
-    const counts = {};
-    safeCases.forEach((c) => {
-      if (c && c.district) {
-        counts[c.district] = (counts[c.district] || 0) + 1;
-      }
-    });
-    return counts;
-  }, [safeCases]);
 
   // Compute dynamic district hotspots from actual filteredCases (count > 0)
   const dynamicHotspots = useMemo(() => {
@@ -499,11 +371,9 @@ export default function GoogleGISMap({
               isAnalyst={isAnalyst}
               onDistrictClick={onDistrictClick}
               dynamicHotspots={dynamicHotspots}
-              districtCrimeCounts={districtCrimeCounts}
               safeCases={safeCases}
               onSelectHotspot={handleSelectHotspot}
               onSelectCase={handleSelectCase}
-              setHoveredDistrict={setHoveredDistrict}
             />
 
             {/* InfoWindow on District Hotspot or Individual Case Click */}
@@ -593,15 +463,6 @@ export default function GoogleGISMap({
             )}
           </GoogleMap>
         </APIProvider>
-      )}
-
-      {/* District Hover Badge */}
-      {hoveredDistrict && (
-        <div className="absolute top-4 left-4 z-20 pointer-events-none bg-slate-900/90 border border-slate-700/80 px-3.5 py-1.5 rounded-full shadow-lg backdrop-blur-md flex items-center gap-2 text-white">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-xs font-bold font-sans">{hoveredDistrict.name}:</span>
-          <span className="text-xs font-mono font-bold text-amber-300">{hoveredDistrict.count} cases</span>
-        </div>
       )}
 
       {/* Floating Map Controls Overlay (Preserved from CrimeIntel UI) */}
