@@ -58,7 +58,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
     showClusters: isAnalyst, // default true for analyst
     showDensity: false,
     showJurisdictions: false,
-    showHotspots: isAnalyst,
+    showHotspots: true,
     showBoundaries: true
   });
 
