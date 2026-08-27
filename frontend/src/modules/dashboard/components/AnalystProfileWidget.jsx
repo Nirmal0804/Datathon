@@ -10,7 +10,7 @@ export default function AnalystProfileWidget({ onLogout, onNavigate, role }) {
       : { initials: 'JD', name: 'Inspector Patil', roleText: 'Analyst' };
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 hidden md:flex">
+    <div className="fixed bottom-6 left-6 z-50 hidden md:flex">
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
