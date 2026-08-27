@@ -44,13 +44,13 @@ export default function GlobalNotificationCenter() {
     <AnimatePresence>
       {isPanelOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop (No Blur - Background remains crisp and sharp) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePanel}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[99990]"
+            className="fixed inset-0 bg-slate-900/10 z-[99990]"
           />
 
           {/* Slide-out Panel */}
