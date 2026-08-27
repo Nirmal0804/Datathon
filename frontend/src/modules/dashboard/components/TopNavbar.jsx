@@ -26,7 +26,7 @@ export default function TopNavbar({ toggleMobileMenu }) {
   }, []);
 
   return (
-    <header className="h-[72px] bg-[#E00000] text-white flex items-center justify-between px-6 lg:px-8 sticky top-0 z-30 shrink-0 border-b border-[#C90000] shadow-md rounded-2xl mb-3">
+    <header className="h-[72px] bg-[#E00000] text-white flex items-center justify-between px-6 lg:px-8 sticky top-0 z-30 shrink-0 border-b border-[#C90000] shadow-md rounded-[20px]">
       <div className="flex items-center gap-4 w-full md:w-auto">
         {/* Mobile hamburger */}
         <button

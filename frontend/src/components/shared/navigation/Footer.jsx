@@ -9,7 +9,7 @@ export default function Footer({ onLoginClick, rounded = false }) {
   return (
     <footer className={`bg-[#E00000] text-white pt-12 pb-8 relative z-10 transition-all ${
       rounded 
-        ? 'rounded-[20px] border border-[#C90000] shadow-md overflow-hidden mt-10 mb-3 w-full' 
+        ? 'rounded-[20px] border border-[#C90000] shadow-md overflow-hidden w-full' 
         : 'border-t border-[#C90000]'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

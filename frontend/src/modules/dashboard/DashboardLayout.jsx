@@ -181,13 +181,8 @@ export default function DashboardLayout({ onLogout, role }) {
   const renderContent = () => {
     if (FULL_HEIGHT_MODULES.has(activeModule)) {
       return (
-        <div className="h-[calc(100vh-4rem)] w-full p-4 sm:p-6 overflow-y-auto flex flex-col justify-between">
-          <div className="flex-1">
-            {activeModule === 'map' && <CrimeMapLayout role={role} />}
-          </div>
-          <div className="mt-8">
-            <Footer rounded={true} />
-          </div>
+        <div className="h-[calc(100vh-4rem)] w-full p-4 sm:p-6 overflow-y-auto">
+          {activeModule === 'map' && <CrimeMapLayout role={role} />}
         </div>
       );
     }
@@ -207,14 +202,9 @@ export default function DashboardLayout({ onLogout, role }) {
       const content = officerModuleMap[activeModule] || officerModuleMap.overview;
 
       return (
-        <main className="flex-1 overflow-y-auto px-5 sm:px-10 py-8 mx-auto w-full max-w-[1500px]">
-          <div className="min-h-[calc(100vh-250px)]">
-            {content}
-          </div>
-          <div className="mt-8">
-            <Footer rounded={true} />
-          </div>
-        </main>
+        <div className="flex-1 overflow-y-auto px-5 sm:px-10 py-8 mx-auto w-full max-w-[1500px]">
+          {content}
+        </div>
       );
     }
 
@@ -233,14 +223,9 @@ export default function DashboardLayout({ onLogout, role }) {
       const content = adminModuleMap[activeModule] || adminModuleMap.overview;
 
       return (
-        <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
-          <div className="min-h-[calc(100vh-250px)]">
-            {content}
-          </div>
-          <div className="mt-8">
-            <Footer rounded={true} />
-          </div>
-        </main>
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]">
+          {content}
+        </div>
       );
     }
 
@@ -303,21 +288,15 @@ export default function DashboardLayout({ onLogout, role }) {
     };
 
     const content = moduleMap[activeModule] || moduleMap.overview;
-    const isNetwork = activeModule === 'network';
 
     const layoutClasses = isCompact
-      ? (isNetwork ? 'w-full p-4 sm:p-6 overflow-y-auto' : 'flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]')
-      : (isNetwork ? 'w-full p-4 sm:p-6 lg:p-8 overflow-y-auto' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8');
+      ? (activeModule === 'network' ? 'w-full p-4 sm:p-6 overflow-y-auto' : 'flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 mx-auto w-full max-w-[1600px]')
+      : (activeModule === 'network' ? 'w-full p-4 sm:p-6 lg:p-8 overflow-y-auto' : 'flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8');
 
     return (
-      <main className={layoutClasses}>
-        <div className="min-h-[calc(100vh-250px)]">
-          {content}
-        </div>
-        <div className="mt-8">
-          <Footer rounded={true} />
-        </div>
-      </main>
+      <div className={layoutClasses}>
+        {content}
+      </div>
     );
   };
 
@@ -363,7 +342,7 @@ export default function DashboardLayout({ onLogout, role }) {
       </div>
 
       {/* Main content area */}
-      <div className={`flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
+      <div className={`flex-1 flex flex-col min-w-0 bg-transparent overflow-y-auto gap-3 ${isNetwork ? '' : 'h-full'}`}>
         {isCompact && (
           <div className="hidden md:block shrink-0">
             <AnalystTopNav
@@ -374,7 +353,7 @@ export default function DashboardLayout({ onLogout, role }) {
           </div>
         )}
 
-        <div className={`flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden ${isNetwork ? '' : 'h-full'}`}>
+        <div className={`flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] ${isNetwork ? '' : 'min-h-[500px]'}`}>
           <div className={isCompact ? 'block md:hidden' : 'block'}>
             <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
           </div>
@@ -388,6 +367,11 @@ export default function DashboardLayout({ onLogout, role }) {
               </AnimatePresence>
             </Suspense>
           </ErrorBoundary>
+        </div>
+
+        {/* Global Role Page Footer — Perfectly Aligned with Top Navbar */}
+        <div className="shrink-0 w-full">
+          <Footer rounded={true} />
         </div>
       </div>
     </div>
