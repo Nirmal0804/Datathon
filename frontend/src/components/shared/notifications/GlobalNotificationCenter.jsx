@@ -53,16 +53,16 @@ export default function GlobalNotificationCenter() {
             className="fixed inset-0 bg-slate-900/10 z-[99990]"
           />
 
-          {/* Slide-out Panel (Full-height right panel fixed top-0 right-0 bottom-0 with KSP Red navbar theme & rounded-l-[20px]) */}
+          {/* Slide-out Panel (Even alignment matching Top Navbar top-3, h-[72px], right-3, bottom-3, and rounded-[20px]) */}
           <motion.div
             initial={{ x: '100%', opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0.5 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-l-[20px] border-l border-[#E7ECF3] overflow-hidden"
+            className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
           >
-            {/* Header (Matching exact #E00000 red theme & border of global top navbar) */}
-            <div className="bg-[#E00000] border-b border-[#C90000] px-6 py-4 flex items-center justify-between shrink-0 shadow-xs">
+            {/* Header (Exact 72px height matching red top navbar) */}
+            <div className="h-[72px] bg-[#E00000] border-b border-[#C90000] px-6 flex items-center justify-between shrink-0 shadow-xs">
               <div className="flex items-center gap-3 text-white">
                 <div className="relative">
                   <Bell className="w-5 h-5 text-white" />
