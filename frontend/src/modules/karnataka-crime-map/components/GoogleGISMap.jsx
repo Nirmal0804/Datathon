@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { APIProvider, Map as GoogleMap, InfoWindow, useMap } from '@vis.gl/react-google-maps';
 import { ZoomIn, ZoomOut, Maximize2, Layers, Zap } from 'lucide-react';
 import { KARNATAKA_DISTRICTS_GEOJSON } from '../../../mock/karnatakaDistrictsGeoJSON';
+import { KARNATAKA_STATE_BOUNDARY_GEOJSON } from '../../../mock/karnatakaStateBoundaryGeoJSON';
 import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
 
 // Google Maps API Key from Environment
@@ -11,98 +12,25 @@ const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 export const KARNATAKA_CENTER = [15.3173, 75.7139];
 export const GOOGLE_KARNATAKA_CENTER = { lat: 15.3173, lng: 75.7139 };
 
-// Extract true external perimeter ring from district polygon collection (Geometric Dissolve / Boundary Extraction)
-export const extractOuterPerimeter = (geoJson) => {
-  if (!geoJson || !geoJson.features || geoJson.features.length === 0) return [];
+// Robust GeoJSON coordinate converter to Google Maps LatLng paths
+export const geoJsonCoordinatesToGooglePath = (geometry) => {
+  if (!geometry || !geometry.coordinates) return [];
 
-  const segmentCount = new Map();
-  const segmentMap = new Map();
-
-  const round = (val) => Math.round(val * 1000) / 1000;
-  const pointKey = (p) => `${round(p[0])},${round(p[1])}`;
-  const segKey = (p1, p2) => {
-    const k1 = pointKey(p1);
-    const k2 = pointKey(p2);
-    return k1 < k2 ? `${k1}|${k2}` : `${k2}|${k1}`;
-  };
-
-  // 1. Extract all edges across all district polygons
-  geoJson.features.forEach((feature) => {
-    const geom = feature.geometry;
-    if (!geom) return;
-
-    const rings = geom.type === 'Polygon'
-      ? geom.coordinates
-      : geom.type === 'MultiPolygon'
-        ? geom.coordinates.flat(1)
-        : [];
-
-    rings.forEach((ring) => {
-      for (let i = 0; i < ring.length - 1; i++) {
-        const p1 = ring[i];
-        const p2 = ring[i + 1];
-        const key = segKey(p1, p2);
-        segmentCount.set(key, (segmentCount.get(key) || 0) + 1);
-        if (!segmentMap.has(key)) {
-          segmentMap.set(key, [p1, p2]);
-        }
-      }
-    });
-  });
-
-  // 2. Identify segments that appear only ONCE (External perimeter edges)
-  const outerSegments = [];
-  segmentCount.forEach((count, key) => {
-    if (count === 1) {
-      outerSegments.push(segmentMap.get(key));
-    }
-  });
-
-  if (outerSegments.length === 0) return [];
-
-  // 3. Chain segments head-to-tail to form continuous closed perimeter loop
-  const adjacency = new Map();
-  outerSegments.forEach(([p1, p2]) => {
-    const k1 = pointKey(p1);
-    const k2 = pointKey(p2);
-    if (!adjacency.has(k1)) adjacency.set(k1, []);
-    if (!adjacency.has(k2)) adjacency.set(k2, []);
-    adjacency.get(k1).push({ from: p1, to: p2 });
-    adjacency.get(k2).push({ from: p2, to: p1 });
-  });
-
-  const visited = new Set();
-  const path = [];
-  const startKey = pointKey(outerSegments[0][0]);
-  let currentKey = startKey;
-  let currentPoint = outerSegments[0][0];
-  path.push({ lat: currentPoint[1], lng: currentPoint[0] });
-
-  while (currentKey) {
-    const neighbors = adjacency.get(currentKey) || [];
-    let nextStep = null;
-
-    for (const step of neighbors) {
-      const sKey = segKey(step.from, step.to);
-      if (!visited.has(sKey)) {
-        visited.add(sKey);
-        nextStep = step;
-        break;
-      }
-    }
-
-    if (!nextStep) break;
-
-    currentPoint = nextStep.to;
-    currentKey = pointKey(currentPoint);
-    path.push({ lat: currentPoint[1], lng: currentPoint[0] });
-
-    if (currentKey === startKey && path.length > 3) {
-      break;
-    }
+  if (geometry.type === 'Polygon') {
+    const exteriorRing = geometry.coordinates[0] || [];
+    return exteriorRing.map(([lng, lat]) => ({ lat, lng }));
   }
 
-  return path;
+  if (geometry.type === 'MultiPolygon') {
+    const allPaths = [];
+    geometry.coordinates.forEach((polygon) => {
+      const exteriorRing = polygon[0] || [];
+      allPaths.push(exteriorRing.map(([lng, lat]) => ({ lat, lng })));
+    });
+    return allPaths;
+  }
+
+  return [];
 };
 
 // Safe Risk Color Resolver
@@ -180,9 +108,12 @@ function GoogleMapController({
   const circlesRef = useRef([]);
   const stateBorderPolylineRef = useRef(null);
 
-  // Memoize derived outer perimeter from actual GeoJSON features
-  const outerPerimeterPath = useMemo(() => {
-    return extractOuterPerimeter(KARNATAKA_DISTRICTS_GEOJSON);
+  // Extract authentic Karnataka State Perimeter Path from KARNATAKA_STATE_BOUNDARY_GEOJSON
+  const stateBoundaryPath = useMemo(() => {
+    if (!KARNATAKA_STATE_BOUNDARY_GEOJSON || !KARNATAKA_STATE_BOUNDARY_GEOJSON.features) return [];
+    const feat = KARNATAKA_STATE_BOUNDARY_GEOJSON.features[0];
+    if (!feat || !feat.geometry) return [];
+    return geoJsonCoordinatesToGooglePath(feat.geometry);
   }, []);
 
   // Handle Map Panning and Zooming when selectedCase or resetKey changes
@@ -202,7 +133,7 @@ function GoogleMapController({
     }
   }, [map, selectedCase, safeMapState.resetKey, safeMapState.center, safeMapState.zoom]);
 
-  // 1. KARNATAKA OUTER STATE PERIMETER (Derived from real GeoJSON outer edges - 4px Red Border)
+  // 1. KARNATAKA OUTER STATE PERIMETER (Authentic State Boundary GeoJSON - 4px Red State Border)
   useEffect(() => {
     if (!map) return;
 
@@ -210,13 +141,13 @@ function GoogleMapController({
       stateBorderPolylineRef.current.setMap(null);
     }
 
-    if (safeLayers.showBoundaries && outerPerimeterPath.length > 0) {
+    if (safeLayers.showBoundaries && stateBoundaryPath.length > 0) {
       stateBorderPolylineRef.current = new google.maps.Polyline({
         map,
-        path: outerPerimeterPath,
-        strokeColor: '#E00000', // KSP Red Accent
+        path: stateBoundaryPath,
+        strokeColor: '#E00000', // Karnataka Police Red Accent
         strokeOpacity: 1.0,
-        strokeWeight: 4, // 4px strong outer perimeter
+        strokeWeight: 4, // 4px prominent outer border
         zIndex: 200
       });
     }
@@ -226,7 +157,7 @@ function GoogleMapController({
         stateBorderPolylineRef.current.setMap(null);
       }
     };
-  }, [map, safeLayers.showBoundaries, outerPerimeterPath]);
+  }, [map, safeLayers.showBoundaries, stateBoundaryPath]);
 
   // 2. CHOROPLETH DISTRICT POLYGONS DATA LAYER (All 31 Karnataka Districts)
   useEffect(() => {
