@@ -176,6 +176,7 @@ export default function DashboardLayout({ onLogout, role }) {
   const handleModuleChange = (mod) => {
     setActiveModule(mod);
     setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderContent = () => {

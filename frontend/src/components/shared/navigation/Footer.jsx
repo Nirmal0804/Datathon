@@ -75,7 +75,10 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                   return (
                     <li key={item.id}>
                       <button
-                        onClick={() => onNavigate && onNavigate(item.id)}
+                        onClick={() => {
+                          if (onNavigate) onNavigate(item.id);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer text-left ${
                           isActive ? 'text-[#D49A00] font-bold' : 'text-white/90 hover:text-white font-medium'
                         }`}
