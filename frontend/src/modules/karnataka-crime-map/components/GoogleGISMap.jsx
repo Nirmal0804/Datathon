@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { APIProvider, Map, InfoWindow, useMap } from '@vis.gl/react-google-maps';
+import { APIProvider, Map as GoogleMap, InfoWindow, useMap } from '@vis.gl/react-google-maps';
 import { ZoomIn, ZoomOut, Maximize2, Layers, Zap } from 'lucide-react';
 import { KARNATAKA_DISTRICTS_GEOJSON } from '../../../mock/karnatakaDistrictsGeoJSON';
 import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
@@ -552,7 +552,7 @@ export default function GoogleGISMap({
         </div>
       ) : (
         <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
-          <Map
+          <GoogleMap
             defaultCenter={GOOGLE_KARNATAKA_CENTER}
             defaultZoom={7}
             gestureHandling="greedy"
@@ -660,7 +660,7 @@ export default function GoogleGISMap({
                 )}
               </InfoWindow>
             )}
-          </Map>
+          </GoogleMap>
         </APIProvider>
       )}
 
