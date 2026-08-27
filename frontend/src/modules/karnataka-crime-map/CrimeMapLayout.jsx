@@ -565,46 +565,36 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       {/* 4. Sliding Context Information Drawer (Shared - Floating Overlay Panel sitting ABOVE top navbar z-[100000]) */}
       <AnimatePresence>
         {selectedCase && (
-          <>
-            {/* Non-blur translucent click-outside backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedCase(null)}
-              className="fixed inset-0 bg-slate-900/10 z-[99990] cursor-pointer"
-            />
-
-            <motion.div
-              initial={{ x: '100%', opacity: 0.5 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: '100%', opacity: 0.5 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-              className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
-            >
-              {/* Dark Navy Header (Matching Intelligence Feed header style) */}
-              <div className="h-[72px] bg-[#0B1F4D] border-b border-[#142B45] px-6 flex items-center justify-between shrink-0 shadow-xs">
-                <div className="flex items-center gap-3 text-white">
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                    <Shield className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block leading-tight">
-                      FIR CASE DETAIL
-                    </span>
-                    <h3 className="text-sm font-black text-white font-mono tracking-wide">
-                      {selectedCase.id}
-                    </h3>
-                  </div>
+          <motion.div
+            initial={{ x: '100%', opacity: 0.5 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0.5 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+            className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
+          >
+            {/* Karnataka Police Red Header (Matching exact #E00000 red theme & border of global top navbar) */}
+            <div className="h-[72px] bg-[#E00000] border-b border-[#C90000] px-6 flex items-center justify-between shrink-0 shadow-xs">
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                  <Shield className="w-4 h-4 text-white" />
                 </div>
-                <button
-                  onClick={() => setSelectedCase(null)}
-                  className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors cursor-pointer"
-                  aria-label="Close Case Details"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+                <div>
+                  <span className="text-[10px] font-mono font-bold text-white/90 uppercase tracking-widest block leading-tight">
+                    FIR CASE DETAIL
+                  </span>
+                  <h3 className="text-sm font-black text-white font-mono tracking-wide">
+                    {selectedCase.id}
+                  </h3>
+                </div>
               </div>
+              <button
+                onClick={() => setSelectedCase(null)}
+                className="p-2 bg-white/15 hover:bg-white/25 text-white rounded-full transition-colors cursor-pointer"
+                aria-label="Close Case Details"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
+            </div>
 
               {/* Drawer Body Scroll */}
               <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-4 text-xs bg-white">
@@ -734,7 +724,6 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
               </div>
             </motion.div>
-          </>
         )}
       </AnimatePresence>
 
