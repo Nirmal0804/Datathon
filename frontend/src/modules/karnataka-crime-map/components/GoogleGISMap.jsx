@@ -120,10 +120,10 @@ function GoogleMapController({
 
           return {
             fillColor: isAnalyst ? riskColor : '#6366f1',
-            fillOpacity: isAnalyst ? 0.12 : 0.04,
+            fillOpacity: isAnalyst ? 0.06 : 0.03,
             strokeColor: isAnalyst ? riskColor : '#6366f1',
-            strokeWeight: 1.5,
-            strokeOpacity: 0.8
+            strokeWeight: 1,
+            strokeOpacity: 0.5
           };
         });
 
@@ -154,18 +154,18 @@ function GoogleMapController({
     // 1. PRIMARY VISUALIZATION: Render District Hotspot Circles (when showHotspots is true)
     if (safeLayers.showHotspots) {
       dynamicHotspots.forEach((h) => {
-        // Square-root scaling for district volume (prevents covering full state)
-        const radiusMeters = Math.sqrt(h.count) * 2400 + 4000;
+        // Controlled square-root scaling for district volume (clear visual hierarchy without obscuring full state)
+        const radiusMeters = Math.sqrt(h.count) * 4500 + 5000;
 
         const circle = new google.maps.Circle({
           map,
           center: { lat: h.center[0], lng: h.center[1] },
-          radius: Math.min(radiusMeters, 24000),
+          radius: Math.min(radiusMeters, 25000),
           fillColor: h.color,
-          fillOpacity: 0.15,
+          fillOpacity: 0.22,
           strokeColor: h.color,
-          strokeOpacity: 0.8,
-          strokeWeight: 2
+          strokeOpacity: 0.85,
+          strokeWeight: 2.5
         });
 
         circle.addListener('click', () => {
@@ -178,7 +178,7 @@ function GoogleMapController({
       });
     }
 
-    // 2. SECONDARY VISUALIZATION: Render Individual Case Circles (ONLY when showMarkers is true)
+    // 2. SECONDARY VISUALIZATION: Render Individual Incident Markers (ONLY when showMarkers is true)
     if (safeLayers.showMarkers) {
       safeCases.forEach((c) => {
         const coords = getCoordinatesForCase(c);
@@ -187,12 +187,12 @@ function GoogleMapController({
         const circle = new google.maps.Circle({
           map,
           center: { lat: coords[0], lng: coords[1] },
-          radius: 2200, // Small controlled incident radius
+          radius: 1400, // Small incident dot (1.4km)
           fillColor: color,
-          fillOpacity: 0.45,
+          fillOpacity: 0.5,
           strokeColor: '#ffffff',
           strokeOpacity: 0.9,
-          strokeWeight: 1.5
+          strokeWeight: 1.2
         });
 
         circle.addListener('click', () => {
@@ -212,9 +212,9 @@ function GoogleMapController({
         const circle = new google.maps.Circle({
           map,
           center: { lat: coords[0], lng: coords[1] },
-          radius: 5000,
+          radius: 4500,
           fillColor: '#6366f1',
-          fillOpacity: 0.12,
+          fillOpacity: 0.1,
           strokeColor: 'transparent',
           strokeWeight: 0
         });
