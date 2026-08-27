@@ -562,126 +562,140 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
         />
       </div>
 
-      {/* 4. Sliding Context Information Drawer (Shared) */}
+      {/* 4. Sliding Context Information Drawer (Shared - Floating Overlay Panel sitting ABOVE top navbar z-[100000]) */}
       <AnimatePresence>
         {selectedCase && (
           <>
-            <div
-              className="fixed inset-0 bg-black/40 z-[490] md:hidden cursor-pointer"
+            {/* Non-blur translucent click-outside backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setSelectedCase(null)}
+              className="fixed inset-0 bg-slate-900/10 z-[99990] cursor-pointer"
             />
 
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', ease: 'easeInOut', duration: 0.3 }}
-              className="absolute right-0 top-0 bottom-0 z-[500] w-80 sm:w-96 bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between"
+              initial={{ x: '100%', opacity: 0.5 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0.5 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+              className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
             >
-              {/* Header */}
-              <div className="px-5 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2.5">
-                  <Shield className="w-5 h-5 text-primary" />
+              {/* Dark Navy Header (Matching Intelligence Feed header style) */}
+              <div className="h-[72px] bg-[#0B1F4D] border-b border-[#142B45] px-6 flex items-center justify-between shrink-0 shadow-xs">
+                <div className="flex items-center gap-3 text-white">
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                    <Shield className="w-4 h-4 text-white" />
+                  </div>
                   <div>
-                    <span className="text-2xs font-mono font-bold text-slate-500 uppercase tracking-widest">Case Profile</span>
-                    <h3 className="text-sm font-bold text-white font-mono">{selectedCase.id}</h3>
+                    <span className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block leading-tight">
+                      FIR CASE DETAIL
+                    </span>
+                    <h3 className="text-sm font-black text-white font-mono tracking-wide">
+                      {selectedCase.id}
+                    </h3>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedCase(null)}
-                  className="p-1 rounded bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                  className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors cursor-pointer"
+                  aria-label="Close Case Details"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 text-white" />
                 </button>
               </div>
 
               {/* Drawer Body Scroll */}
-              <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-5 text-xs">
+              <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-4 text-xs bg-white">
 
                 {/* Severity & Status */}
-                <div className="grid grid-cols-2 gap-3.5">
-                  <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-                    <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Severity Level</span>
-                    <span className={`inline-block py-0.5 px-2 rounded text-4xs font-bold text-white uppercase ${selectedCase.risk === 'Critical' || selectedCase.risk === 'High' ? 'bg-red-500' : selectedCase.risk === 'Medium' ? 'bg-amber-500' : 'bg-emerald-500'
-                      }`}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3.5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">Severity Level</span>
+                    <span className={`inline-block py-0.5 px-2.5 rounded-full text-[10px] font-bold text-white uppercase tracking-wider ${
+                      selectedCase.risk === 'Critical' || selectedCase.risk === 'High' ? 'bg-[#E00000]' : 
+                      selectedCase.risk === 'Medium' ? 'bg-amber-500' : 'bg-emerald-600'
+                    }`}>
                       {selectedCase.risk}
                     </span>
                   </div>
 
-                  <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850">
-                    <span className="block text-4xs text-slate-500 font-bold uppercase mb-1">Status Code</span>
-                    <span className="text-slate-200 font-semibold flex items-center gap-1.5 mt-0.5">
-                      <span className={`w-1.5 h-1.5 rounded-full ${selectedCase.status === 'Closed' ? 'bg-slate-500' : 'bg-success glow-success animate-pulse-soft'
-                        }`} />
+                  <div className="p-3.5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">Status Code</span>
+                    <span className="text-[#0F172A] font-bold text-xs flex items-center gap-1.5 mt-1">
+                      <span className={`w-2 h-2 rounded-full ${
+                        selectedCase.status === 'Closed' ? 'bg-slate-400' : 'bg-emerald-500 animate-pulse'
+                      }`} />
                       {selectedCase.status}
                     </span>
                   </div>
                 </div>
 
                 {/* Case Meta Details */}
-                <div className="space-y-2.5 p-3.5 bg-slate-950/40 rounded-lg border border-slate-850">
-                  <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-                    <span className="text-slate-400 font-medium">Crime Category</span>
-                    <span className="font-semibold text-slate-200">{selectedCase.category}</span>
+                <div className="space-y-2.5 p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+                  <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
+                    <span className="text-[#64748B] font-semibold">Crime Category</span>
+                    <span className="font-bold text-[#0F172A]">{selectedCase.category}</span>
                   </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-                    <span className="text-slate-400 font-medium">Precinct Station</span>
-                    <span className="font-semibold text-slate-200">{selectedCase.policeStation}</span>
+                  <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
+                    <span className="text-[#64748B] font-semibold">Precinct Station</span>
+                    <span className="font-bold text-[#0F172A]">{selectedCase.policeStation}</span>
                   </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-                    <span className="text-slate-400 font-medium">Jurisdiction District</span>
-                    <span className="font-semibold text-slate-200">{selectedCase.district}</span>
+                  <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
+                    <span className="text-[#64748B] font-semibold">Jurisdiction District</span>
+                    <span className="font-bold text-[#0F172A]">{selectedCase.district}</span>
                   </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-                    <span className="text-slate-400 font-medium">IPC Legal Code</span>
-                    <span className="font-mono text-slate-200">{selectedCase.details?.section || 'Section 379 IPC'}</span>
+                  <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
+                    <span className="text-[#64748B] font-semibold">IPC Legal Code</span>
+                    <span className="font-mono font-bold text-[#0B1F4D]">{selectedCase.details?.section || 'Section 379 IPC'}</span>
                   </div>
-                  <div className="flex justify-between items-center py-1.5 border-b border-slate-850/40">
-                    <span className="text-slate-400 font-medium">Date Logged</span>
-                    <span className="font-semibold text-slate-200">{selectedCase.date}</span>
+                  <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
+                    <span className="text-[#64748B] font-semibold">Date Logged</span>
+                    <span className="font-bold text-[#0F172A]">{selectedCase.date}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5">
-                    <span className="text-slate-400 font-medium">Officer Assigned</span>
-                    <span className="font-semibold text-slate-250">{selectedCase.details?.officer || 'Inspector Patil'}</span>
+                    <span className="text-[#64748B] font-semibold">Officer Assigned</span>
+                    <span className="font-bold text-[#0B1F4D]">{selectedCase.details?.officer || 'Inspector Patil'}</span>
                   </div>
                 </div>
 
                 {/* Analyst-specific details dashboard extensions */}
                 {isAnalyst && caseMetrics && (
-                  <div className="space-y-3.5 p-3.5 bg-slate-950/50 rounded-lg border border-slate-800/80">
-                    <h4 className="text-slate-400 font-bold uppercase tracking-wider text-4xs">GIS Spatial Indicators</h4>
+                  <div className="space-y-2.5 p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px] mb-1">GIS Spatial Indicators</h4>
 
-                    <div className="flex justify-between items-center py-1 border-b border-slate-850/40">
-                      <span className="text-slate-400">District Crime Volume</span>
-                      <span className="font-semibold text-slate-200 font-mono">{caseMetrics.totalDistrictCrimes} cases</span>
+                    <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
+                      <span className="text-[#64748B] font-medium">District Crime Volume</span>
+                      <span className="font-bold text-[#0F172A] font-mono">{caseMetrics.totalDistrictCrimes} cases</span>
                     </div>
 
-                    <div className="flex justify-between items-center py-1 border-b border-slate-850/40">
-                      <span className="text-slate-400">High-Severity Ratio</span>
-                      <span className="font-semibold text-rose-400 font-mono">{caseMetrics.highSeverityCount} cases</span>
+                    <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
+                      <span className="text-[#64748B] font-medium">High-Severity Ratio</span>
+                      <span className="font-bold text-[#E00000] font-mono">{caseMetrics.highSeverityCount} cases</span>
                     </div>
 
-                    <div className="flex justify-between items-center py-1 border-b border-slate-850/40">
-                      <span className="text-slate-400">Zone Hotspot Status</span>
-                      <span className={`font-semibold ${caseMetrics.isHotspot ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                    <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
+                      <span className="text-[#64748B] font-medium">Zone Hotspot Status</span>
+                      <span className={`font-bold ${caseMetrics.isHotspot ? 'text-[#E00000]' : 'text-slate-500'}`}>
                         {caseMetrics.isHotspot ? 'Active Hotspot' : 'Normal Beat'}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-slate-400">Related Crimes in District</span>
-                      <span className="font-semibold text-indigo-400 font-mono">{caseMetrics.relatedCrimes} identical</span>
+                      <span className="text-[#64748B] font-medium">Related Crimes in District</span>
+                      <span className="font-bold text-[#0B1F4D] font-mono">{caseMetrics.relatedCrimes} identical</span>
                     </div>
 
                     {caseMetrics.nearby.length > 0 && (
-                      <div className="pt-2 border-t border-slate-850/50 space-y-1">
-                        <span className="text-slate-500 text-3xs font-bold uppercase">Nearby Incidents:</span>
-                        <div className="flex gap-1.5 flex-wrap pt-0.5">
+                      <div className="pt-2 border-t border-[#E7ECF3] space-y-1">
+                        <span className="text-[#64748B] text-[10px] font-bold uppercase block mb-1">Nearby Incidents:</span>
+                        <div className="flex gap-1.5 flex-wrap">
                           {caseMetrics.nearby.map(nb => (
                             <button
                               key={nb.id}
                               onClick={() => setSelectedCase(nb)}
-                              className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-slate-600 text-slate-300 font-mono hover:text-white transition-colors text-4xs"
+                              className="px-2.5 py-1 rounded-full bg-white border border-[#E7ECF3] hover:border-[#0B1F4D] text-[#0B1F4D] font-mono hover:bg-[#0B1F4D] hover:text-white transition-colors text-[10px] font-bold cursor-pointer"
                             >
                               {nb.id}
                             </button>
@@ -693,9 +707,9 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 )}
 
                 {/* Summary */}
-                <div className="space-y-2">
-                  <h4 className="text-slate-400 font-bold uppercase tracking-wider text-4xs">Incident Narrative Summary</h4>
-                  <div className="p-3 bg-slate-950/40 rounded-lg border border-slate-850 text-slate-350 leading-relaxed">
+                <div className="space-y-1.5">
+                  <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">Incident Narrative Summary</h4>
+                  <div className="p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] text-[#334155] leading-relaxed font-normal">
                     {selectedCase.details?.summary}
                   </div>
                 </div>
@@ -703,15 +717,15 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 {/* Timeline */}
                 {selectedCase.details?.timeline && selectedCase.details.timeline.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-slate-400 font-bold uppercase tracking-wider text-4xs">Investigation Milestones</h4>
-                    <div className="border-l border-slate-800 pl-3 ml-1.5 space-y-3 pt-1">
+                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">Investigation Milestones</h4>
+                    <div className="border-l-2 border-[#E7ECF3] pl-4 ml-2 space-y-3.5 pt-1">
                       {selectedCase.details.timeline.map((item, idx) => (
                         <div key={idx} className="relative">
-                          <span className="absolute left-[-16.5px] top-1 w-2.5 h-2.5 rounded-full bg-slate-950 border border-primary flex items-center justify-center">
-                            <span className="w-1 h-1 rounded-full bg-primary" />
+                          <span className="absolute left-[-21px] top-1 w-3 h-3 rounded-full bg-white border-2 border-[#0B1F4D] flex items-center justify-center">
+                            <span className="w-1 h-1 rounded-full bg-[#0B1F4D]" />
                           </span>
-                          <span className="block text-4xs text-slate-500 font-mono">{item.date}</span>
-                          <p className="text-slate-300 font-medium mt-0.5">{item.desc}</p>
+                          <span className="block text-[10px] text-[#64748B] font-mono font-bold">{item.date}</span>
+                          <p className="text-[#0F172A] font-semibold mt-0.5">{item.desc}</p>
                         </div>
                       ))}
                     </div>
