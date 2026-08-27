@@ -303,6 +303,10 @@ export default function DashboardLayout({ onLogout, role }) {
 
   return (
     <div className="flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 min-h-screen relative">
+      {/* Floating Settings + Logout Controls across ALL Role Pages */}
+      {isCompact && (
+        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
+      )}
       {/* Desktop Sidebar */}
       {!isCompact && (
         <div className="hidden md:block flex-shrink-0 sticky top-3 h-[calc(100vh-1.5rem)]">
