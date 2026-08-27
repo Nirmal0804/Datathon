@@ -155,17 +155,17 @@ function GoogleMapController({
     if (safeLayers.showHotspots) {
       dynamicHotspots.forEach((h) => {
         // Controlled square-root scaling for district volume (clear visual hierarchy without obscuring full state)
-        const radiusMeters = Math.sqrt(h.count) * 4500 + 5000;
+        const radiusMeters = Math.sqrt(h.count) * 5500 + 6000;
 
         const circle = new google.maps.Circle({
           map,
           center: { lat: h.center[0], lng: h.center[1] },
-          radius: Math.min(radiusMeters, 25000),
+          radius: Math.min(radiusMeters, 27000),
           fillColor: h.color,
-          fillOpacity: 0.22,
+          fillOpacity: 0.25,
           strokeColor: h.color,
-          strokeOpacity: 0.85,
-          strokeWeight: 2.5
+          strokeOpacity: 0.9,
+          strokeWeight: 3
         });
 
         circle.addListener('click', () => {
@@ -187,12 +187,12 @@ function GoogleMapController({
         const circle = new google.maps.Circle({
           map,
           center: { lat: coords[0], lng: coords[1] },
-          radius: 1400, // Small incident dot (1.4km)
+          radius: 1200, // Tightly controlled small incident dot (1.2km)
           fillColor: color,
-          fillOpacity: 0.5,
+          fillOpacity: 0.45,
           strokeColor: '#ffffff',
           strokeOpacity: 0.9,
-          strokeWeight: 1.2
+          strokeWeight: 1
         });
 
         circle.addListener('click', () => {
