@@ -7,46 +7,103 @@ import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
 // Google Maps API Key from Environment
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
-// Approximate geographic center of Karnataka
+// Geographic center of Karnataka
 export const KARNATAKA_CENTER = [15.3173, 75.7139];
 export const GOOGLE_KARNATAKA_CENTER = { lat: 15.3173, lng: 75.7139 };
 
-// Karnataka Outer State Perimeter Boundary (Strong 4px Red Outer Border)
-export const KARNATAKA_STATE_OUTER_BOUNDARY = [
-  { lat: 18.45, lng: 76.85 }, // Bidar NW
-  { lat: 18.45, lng: 77.35 }, // Bidar NE
-  { lat: 18.05, lng: 77.65 }, // Bidar East
-  { lat: 17.65, lng: 77.45 }, // Kalaburagi East
-  { lat: 17.05, lng: 77.40 }, // Yadgir NE
-  { lat: 16.50, lng: 77.55 }, // Yadgir East
-  { lat: 16.20, lng: 77.60 }, // Raichur East
-  { lat: 15.80, lng: 77.30 }, // Raichur SE
-  { lat: 15.30, lng: 77.15 }, // Ballari East
-  { lat: 14.70, lng: 76.90 }, // Ballari SE
-  { lat: 14.65, lng: 76.90 }, // Chitradurga East
-  { lat: 14.10, lng: 77.30 }, // Tumakuru NE
-  { lat: 13.80, lng: 78.15 }, // Chikkaballapura East
-  { lat: 13.35, lng: 78.45 }, // Kolar East
-  { lat: 12.90, lng: 78.40 }, // Kolar SE
-  { lat: 12.40, lng: 77.45 }, // Ramanagara SE
-  { lat: 12.10, lng: 77.40 }, // Chamarajanagar East
-  { lat: 11.55, lng: 77.30 }, // Chamarajanagar SE
-  { lat: 11.60, lng: 76.55 }, // Chamarajanagar South
-  { lat: 11.85, lng: 76.15 }, // Mysuru South
-  { lat: 11.95, lng: 76.15 }, // Kodagu South
-  { lat: 12.00, lng: 75.50 }, // Kodagu SW
-  { lat: 12.50, lng: 74.85 }, // Dakshina Kannada Coast
-  { lat: 13.20, lng: 74.65 }, // Udupi Coast
-  { lat: 13.95, lng: 74.55 }, // Udupi / Uttara Kannada Coast
-  { lat: 14.05, lng: 74.15 }, // Uttara Kannada Coast
-  { lat: 14.85, lng: 74.05 }, // Karwar Coast
-  { lat: 15.35, lng: 74.10 }, // Belagavi West
-  { lat: 15.85, lng: 74.05 }, // Belagavi West (Khanapur)
-  { lat: 16.55, lng: 74.20 }, // Belagavi NW
-  { lat: 17.30, lng: 75.30 }, // Vijayapura NW
-  { lat: 17.75, lng: 76.25 }, // Kalaburagi NW
-  { lat: 18.45, lng: 76.85 }  // Return to Bidar NW
-];
+// Extract true external perimeter ring from district polygon collection (Geometric Dissolve / Boundary Extraction)
+export const extractOuterPerimeter = (geoJson) => {
+  if (!geoJson || !geoJson.features || geoJson.features.length === 0) return [];
+
+  const segmentCount = new Map();
+  const segmentMap = new Map();
+
+  const round = (val) => Math.round(val * 1000) / 1000;
+  const pointKey = (p) => `${round(p[0])},${round(p[1])}`;
+  const segKey = (p1, p2) => {
+    const k1 = pointKey(p1);
+    const k2 = pointKey(p2);
+    return k1 < k2 ? `${k1}|${k2}` : `${k2}|${k1}`;
+  };
+
+  // 1. Extract all edges across all district polygons
+  geoJson.features.forEach((feature) => {
+    const geom = feature.geometry;
+    if (!geom) return;
+
+    const rings = geom.type === 'Polygon'
+      ? geom.coordinates
+      : geom.type === 'MultiPolygon'
+        ? geom.coordinates.flat(1)
+        : [];
+
+    rings.forEach((ring) => {
+      for (let i = 0; i < ring.length - 1; i++) {
+        const p1 = ring[i];
+        const p2 = ring[i + 1];
+        const key = segKey(p1, p2);
+        segmentCount.set(key, (segmentCount.get(key) || 0) + 1);
+        if (!segmentMap.has(key)) {
+          segmentMap.set(key, [p1, p2]);
+        }
+      }
+    });
+  });
+
+  // 2. Identify segments that appear only ONCE (External perimeter edges)
+  const outerSegments = [];
+  segmentCount.forEach((count, key) => {
+    if (count === 1) {
+      outerSegments.push(segmentMap.get(key));
+    }
+  });
+
+  if (outerSegments.length === 0) return [];
+
+  // 3. Chain segments head-to-tail to form continuous closed perimeter loop
+  const adjacency = new Map();
+  outerSegments.forEach(([p1, p2]) => {
+    const k1 = pointKey(p1);
+    const k2 = pointKey(p2);
+    if (!adjacency.has(k1)) adjacency.set(k1, []);
+    if (!adjacency.has(k2)) adjacency.set(k2, []);
+    adjacency.get(k1).push({ from: p1, to: p2 });
+    adjacency.get(k2).push({ from: p2, to: p1 });
+  });
+
+  const visited = new Set();
+  const path = [];
+  const startKey = pointKey(outerSegments[0][0]);
+  let currentKey = startKey;
+  let currentPoint = outerSegments[0][0];
+  path.push({ lat: currentPoint[1], lng: currentPoint[0] });
+
+  while (currentKey) {
+    const neighbors = adjacency.get(currentKey) || [];
+    let nextStep = null;
+
+    for (const step of neighbors) {
+      const sKey = segKey(step.from, step.to);
+      if (!visited.has(sKey)) {
+        visited.add(sKey);
+        nextStep = step;
+        break;
+      }
+    }
+
+    if (!nextStep) break;
+
+    currentPoint = nextStep.to;
+    currentKey = pointKey(currentPoint);
+    path.push({ lat: currentPoint[1], lng: currentPoint[0] });
+
+    if (currentKey === startKey && path.length > 3) {
+      break;
+    }
+  }
+
+  return path;
+};
 
 // Safe Risk Color Resolver
 export const getRiskColor = (riskStr) => {
@@ -123,6 +180,11 @@ function GoogleMapController({
   const circlesRef = useRef([]);
   const stateBorderPolylineRef = useRef(null);
 
+  // Memoize derived outer perimeter from actual GeoJSON features
+  const outerPerimeterPath = useMemo(() => {
+    return extractOuterPerimeter(KARNATAKA_DISTRICTS_GEOJSON);
+  }, []);
+
   // Handle Map Panning and Zooming when selectedCase or resetKey changes
   useEffect(() => {
     if (!map) return;
@@ -140,7 +202,7 @@ function GoogleMapController({
     }
   }, [map, selectedCase, safeMapState.resetKey, safeMapState.center, safeMapState.zoom]);
 
-  // 1. KARNATAKA OUTER STATE BORDER (Prominent 4px Red State Perimeter)
+  // 1. KARNATAKA OUTER STATE PERIMETER (Derived from real GeoJSON outer edges - 4px Red Border)
   useEffect(() => {
     if (!map) return;
 
@@ -148,10 +210,10 @@ function GoogleMapController({
       stateBorderPolylineRef.current.setMap(null);
     }
 
-    if (safeLayers.showBoundaries) {
+    if (safeLayers.showBoundaries && outerPerimeterPath.length > 0) {
       stateBorderPolylineRef.current = new google.maps.Polyline({
         map,
-        path: KARNATAKA_STATE_OUTER_BOUNDARY,
+        path: outerPerimeterPath,
         strokeColor: '#E00000', // KSP Red Accent
         strokeOpacity: 1.0,
         strokeWeight: 4, // 4px strong outer perimeter
@@ -164,7 +226,7 @@ function GoogleMapController({
         stateBorderPolylineRef.current.setMap(null);
       }
     };
-  }, [map, safeLayers.showBoundaries]);
+  }, [map, safeLayers.showBoundaries, outerPerimeterPath]);
 
   // 2. CHOROPLETH DISTRICT POLYGONS DATA LAYER (All 31 Karnataka Districts)
   useEffect(() => {
@@ -371,9 +433,9 @@ export default function GoogleGISMap({
   const safeLayers = layers || {};
   const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
 
-  const [activeInfoWindow, setActiveInfoWindow] = useState(null); // { type, position, data }
+  const [activeInfoWindow, setActiveInfoWindow] = useState(null);
   const [layersMenuOpen, setLayersMenuOpen] = useState(false);
-  const [hoveredDistrict, setHoveredDistrict] = useState(null); // { name, count }
+  const [hoveredDistrict, setHoveredDistrict] = useState(null);
 
   // Compute District Crime Counts for choropleth rendering
   const districtCrimeCounts = useMemo(() => {
@@ -602,7 +664,7 @@ export default function GoogleGISMap({
         </APIProvider>
       )}
 
-      {/* District Hover Badge (Lightweight indicator) */}
+      {/* District Hover Badge */}
       {hoveredDistrict && (
         <div className="absolute top-4 left-4 z-20 pointer-events-none bg-slate-900/90 border border-slate-700/80 px-3.5 py-1.5 rounded-full shadow-lg backdrop-blur-md flex items-center gap-2 text-white">
           <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
