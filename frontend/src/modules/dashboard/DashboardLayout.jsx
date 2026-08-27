@@ -301,18 +301,11 @@ export default function DashboardLayout({ onLogout, role }) {
     );
   };
 
-  const isNetwork = activeModule === 'network';
-
   return (
-    <div className={`flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 ${isNetwork ? 'min-h-screen' : 'h-screen overflow-hidden'} relative`}>
-      {/* Analyst Profile Widget */}
-      {isCompact && (
-        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
-      )}
-
+    <div className="flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 min-h-screen relative">
       {/* Desktop Sidebar */}
       {!isCompact && (
-        <div className="hidden md:block flex-shrink-0">
+        <div className="hidden md:block flex-shrink-0 sticky top-3 h-[calc(100vh-1.5rem)]">
           <Sidebar
             role={role}
             onLogout={onLogout}
@@ -343,7 +336,7 @@ export default function DashboardLayout({ onLogout, role }) {
       </div>
 
       {/* Main content area */}
-      <div className={`flex-1 flex flex-col min-w-0 bg-transparent overflow-y-auto gap-3 ${isNetwork ? '' : 'h-full'}`}>
+      <div className="flex-1 flex flex-col min-w-0 bg-transparent gap-3 min-h-screen">
         {isCompact && (
           <div className="hidden md:block shrink-0">
             <AnalystTopNav
@@ -354,7 +347,7 @@ export default function DashboardLayout({ onLogout, role }) {
           </div>
         )}
 
-        <div className={`flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] ${isNetwork ? '' : 'min-h-[500px]'}`}>
+        <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
           <div className={isCompact ? 'block md:hidden' : 'block'}>
             <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
           </div>
@@ -362,7 +355,7 @@ export default function DashboardLayout({ onLogout, role }) {
           <ErrorBoundary key={activeModule}>
             <Suspense fallback={<div className="p-8"><SkeletonDashboard /></div>}>
               <AnimatePresence mode="wait">
-                <PageTransition key={activeModule} className={isNetwork ? 'w-full' : 'flex-1 flex flex-col min-h-0'}>
+                <PageTransition key={activeModule} className="flex-1 flex flex-col min-h-0">
                   {renderContent()}
                 </PageTransition>
               </AnimatePresence>
@@ -370,7 +363,7 @@ export default function DashboardLayout({ onLogout, role }) {
           </ErrorBoundary>
         </div>
 
-        {/* Global Role Page Footer — Perfectly Aligned with Top Navbar */}
+        {/* Global Role Page Footer — Placed naturally after ALL page content */}
         <div className="shrink-0 w-full">
           <Footer rounded={true} />
         </div>
