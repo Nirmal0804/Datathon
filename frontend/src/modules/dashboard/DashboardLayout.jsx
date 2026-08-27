@@ -302,28 +302,30 @@ export default function DashboardLayout({ onLogout, role }) {
   };
 
   return (
-    <div className="flex bg-[#F7F8FA] text-[#0F172A] font-sans p-3 gap-3 min-h-screen relative">
-      {/* Floating Settings + Logout Controls across ALL Role Pages */}
+    <div className="bg-[#F7F8FA] text-[#0F172A] font-sans min-h-screen relative selection:bg-[#E00000]/10 selection:text-[#E00000]">
+      {/* 1. FIXED TOP NAVBAR (position: fixed attached directly to viewport top with z-9999) */}
       {isCompact && (
-        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
-      )}
-      {/* Desktop Sidebar */}
-      {!isCompact && (
-        <div className="hidden md:block flex-shrink-0 sticky top-3 h-[calc(100vh-1.5rem)]">
-          <Sidebar
-            role={role}
-            onLogout={onLogout}
-            activeModule={activeModule}
-            setActiveModule={handleModuleChange}
-          />
-        </div>
+        <header className="fixed top-0 left-0 right-0 z-[9999] bg-[#F7F8FA] p-3 shadow-xs">
+          <div className="max-w-[1600px] mx-auto w-full">
+            <div className="hidden md:block">
+              <AnalystTopNav
+                activeModule={activeModule}
+                setActiveModule={handleModuleChange}
+                role={role}
+              />
+            </div>
+            <div className="block md:hidden">
+              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
+            </div>
+          </div>
+        </header>
       )}
 
       {/* Mobile backdrop */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-[#0F172A]/40 z-40 md:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-[#0F172A]/40 z-50 md:hidden backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}
@@ -339,22 +341,15 @@ export default function DashboardLayout({ onLogout, role }) {
         />
       </div>
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-transparent gap-3 min-h-screen">
-        {isCompact && (
-          <div className="hidden md:block shrink-0 sticky top-3 z-50 bg-[#F7F8FA] pb-1">
-            <AnalystTopNav
-              activeModule={activeModule}
-              setActiveModule={handleModuleChange}
-              role={role}
-            />
-          </div>
-        )}
-
-        <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-          <div className={isCompact ? 'block md:hidden' : 'block'}>
-            <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
-          </div>
+      {/* 2. SCROLLABLE MAIN CONTENT (Top padding pt-[92px] ensures content starts below fixed navbar) */}
+      <main className={`max-w-[1600px] mx-auto w-full min-h-screen p-3 ${isCompact ? 'pt-[92px]' : 'pt-3'} flex flex-col gap-3`}>
+        {/* Main Content Card Container */}
+        <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] min-h-[500px]">
+          {!isCompact && (
+            <div className="block">
+              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
+            </div>
+          )}
 
           <ErrorBoundary key={activeModule}>
             <Suspense fallback={<div className="p-8"><SkeletonDashboard /></div>}>
@@ -367,11 +362,16 @@ export default function DashboardLayout({ onLogout, role }) {
           </ErrorBoundary>
         </div>
 
-        {/* Global Role Page Footer — Placed naturally after ALL page content */}
+        {/* 3. FOOTER (Normal document flow, rendered naturally AFTER all content at document end) */}
         <div className="shrink-0 w-full">
           <Footer rounded={true} />
         </div>
-      </div>
+      </main>
+
+      {/* 4. FIXED FLOATING SETTINGS + LOGOUT CONTROLS (Lower-left viewport) */}
+      {isCompact && (
+        <AnalystProfileWidget onLogout={onLogout} onNavigate={handleModuleChange} role={role} />
+      )}
     </div>
   );
 }
