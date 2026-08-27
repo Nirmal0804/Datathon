@@ -171,40 +171,46 @@ export default function GISSidebar({
           </button>
 
           {legendExpanded && (
-            <div className="p-3 space-y-2.5 text-xs text-[#64748B] font-medium">
+            <div className="p-3 space-y-2 text-xs text-[#64748B] font-medium">
+              <span className="block text-[10px] font-bold text-[#0B1F4D] uppercase tracking-wider mb-1.5">District Crime Risk</span>
               <div className="flex items-center gap-2.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">Critical Incident</span>
+                <span className="w-3 h-3 rounded bg-red-500/80 border border-red-500 shadow-xs"></span>
+                <span className="text-[#0F172A]">Critical / Very High Risk</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">High / Medium Incident</span>
+                <span className="w-3 h-3 rounded bg-orange-500/80 border border-orange-500 shadow-xs"></span>
+                <span className="text-[#0F172A]">High Risk</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">Low Incident</span>
+                <span className="w-3 h-3 rounded bg-amber-500/80 border border-amber-500 shadow-xs"></span>
+                <span className="text-[#0F172A]">Medium Risk</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded bg-emerald-500/80 border border-emerald-500 shadow-xs"></span>
+                <span className="text-[#0F172A]">Low Risk</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded bg-slate-200 border border-slate-300 shadow-xs"></span>
+                <span className="text-[#0F172A]">No Current Data</span>
               </div>
 
-              {isAnalyst && layers.showHeatmap && (
+              <div className="pt-2 border-t border-[#E7ECF3] space-y-2">
+                <span className="block text-[10px] font-bold text-[#0B1F4D] uppercase tracking-wider mb-1">Overlays Legend</span>
                 <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-4 rounded bg-gradient-to-r from-rose-500/30 via-amber-500/30 to-emerald-500/30 border border-[#E7ECF3]"></span>
-                  <span className="text-[#0F172A]">Heatmap Glow</span>
+                  <span className="w-4 h-4 rounded-full border border-dashed border-rose-500 bg-rose-50 flex items-center justify-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                  </span>
+                  <span className="text-[#0F172A]">Hotspot Circle Zone</span>
                 </div>
-              )}
-
-              {isAnalyst && layers.showClusters && (
                 <div className="flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-[#0B1F4D] text-white flex items-center justify-center text-[9px] font-mono font-bold shadow-sm">12</span>
-                  <span className="text-[#0F172A]">Crime Cluster</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border border-white shadow-xs"></span>
+                  <span className="text-[#0F172A]">Incident Case Dot</span>
                 </div>
-              )}
-
-              {layers.showHotspots && (
                 <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-4 rounded-full border border-dashed border-rose-500 bg-rose-50"></span>
-                  <span className="text-[#0F172A]">Hotspot Zone</span>
+                  <span className="w-5 h-1 bg-[#E00000] rounded-full"></span>
+                  <span className="text-[#0F172A]">Karnataka Outer Border</span>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
