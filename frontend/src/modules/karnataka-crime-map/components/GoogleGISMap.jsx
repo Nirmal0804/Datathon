@@ -72,7 +72,6 @@ function GoogleMapController({
   safeMapState,
   selectedCase,
   safeLayers,
-  isAnalyst,
   onDistrictClick,
   dynamicHotspots,
   safeCases,
@@ -100,14 +99,16 @@ function GoogleMapController({
     }
   }, [map, selectedCase, safeMapState.resetKey, safeMapState.center, safeMapState.zoom]);
 
-  // Manage Google Maps GeoJSON District Boundaries Data Layer
+  // Manage Google Maps GeoJSON District Boundaries Data Layer (Strictly conditional on safeLayers.showBoundaries)
   useEffect(() => {
     if (!map) return;
 
-    // Clear previous data layer features
+    // Clear all previous data layer features safely
+    const featuresToRemove = [];
     map.data.forEach((feature) => {
-      map.data.remove(feature);
+      featuresToRemove.push(feature);
     });
+    featuresToRemove.forEach((f) => map.data.remove(f));
 
     if (safeLayers.showBoundaries && KARNATAKA_DISTRICTS_GEOJSON) {
       try {
@@ -119,11 +120,12 @@ function GoogleMapController({
           const riskColor = !p ? '#6366f1' : getRiskColor(p.riskLevel);
 
           return {
-            fillColor: isAnalyst ? riskColor : '#6366f1',
-            fillOpacity: isAnalyst ? 0.06 : 0.03,
-            strokeColor: isAnalyst ? riskColor : '#6366f1',
-            strokeWeight: 1,
-            strokeOpacity: 0.5
+            fillColor: riskColor,
+            fillOpacity: 0.12,
+            strokeColor: riskColor,
+            strokeWeight: 2,
+            strokeOpacity: 0.85,
+            zIndex: 10
           };
         });
 
@@ -136,12 +138,15 @@ function GoogleMapController({
 
         return () => {
           google.maps.event.removeListener(clickListener);
+          const cleanupFeatures = [];
+          map.data.forEach((f) => cleanupFeatures.push(f));
+          cleanupFeatures.forEach((f) => map.data.remove(f));
         };
       } catch (err) {
         console.warn('GeoJSON layer error:', err);
       }
     }
-  }, [map, safeLayers.showBoundaries, isAnalyst, onDistrictClick]);
+  }, [map, safeLayers.showBoundaries, onDistrictClick]);
 
   // Manage Hotspot & Case-Level Circles Overlay
   useEffect(() => {
@@ -154,7 +159,7 @@ function GoogleMapController({
     // 1. PRIMARY VISUALIZATION: Render District Hotspot Circles (when showHotspots is true)
     if (safeLayers.showHotspots) {
       dynamicHotspots.forEach((h) => {
-        // Controlled square-root scaling for district volume (clear visual hierarchy without obscuring full state)
+        // Controlled square-root scaling for district volume
         const radiusMeters = Math.sqrt(h.count) * 5500 + 6000;
 
         const circle = new google.maps.Circle({
@@ -165,7 +170,8 @@ function GoogleMapController({
           fillOpacity: 0.25,
           strokeColor: h.color,
           strokeOpacity: 0.9,
-          strokeWeight: 3
+          strokeWeight: 3,
+          zIndex: 50
         });
 
         circle.addListener('click', () => {
@@ -192,7 +198,8 @@ function GoogleMapController({
           fillOpacity: 0.45,
           strokeColor: '#ffffff',
           strokeOpacity: 0.9,
-          strokeWeight: 1
+          strokeWeight: 1,
+          zIndex: 60
         });
 
         circle.addListener('click', () => {
@@ -206,7 +213,7 @@ function GoogleMapController({
     }
 
     // 3. Optional Crime Density Layer Overlay
-    if (isAnalyst && safeLayers.showDensity) {
+    if (safeLayers.showDensity) {
       safeCases.forEach((c) => {
         const coords = getCoordinatesForCase(c);
         const circle = new google.maps.Circle({
@@ -216,7 +223,8 @@ function GoogleMapController({
           fillColor: '#6366f1',
           fillOpacity: 0.1,
           strokeColor: 'transparent',
-          strokeWeight: 0
+          strokeWeight: 0,
+          zIndex: 40
         });
         circlesRef.current.push(circle);
       });
@@ -226,7 +234,7 @@ function GoogleMapController({
       circlesRef.current.forEach((c) => c.setMap(null));
       circlesRef.current = [];
     };
-  }, [map, safeLayers.showHotspots, safeLayers.showMarkers, safeLayers.showDensity, dynamicHotspots, safeCases, isAnalyst, onSelectHotspot, onSelectCase]);
+  }, [map, safeLayers.showHotspots, safeLayers.showMarkers, safeLayers.showDensity, dynamicHotspots, safeCases, onSelectHotspot, onSelectCase]);
 
   return null;
 }
@@ -243,7 +251,6 @@ export default function GoogleGISMap({
   onExportSnapshot = () => { },
   onDistrictClick = () => { }
 }) {
-  const isAnalyst = role === 'analyst';
   const safeCases = useMemo(() => (Array.isArray(filteredCases) ? filteredCases : []), [filteredCases]);
   const safeLayers = layers || {};
   const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
@@ -368,7 +375,6 @@ export default function GoogleGISMap({
               safeMapState={safeMapState}
               selectedCase={selectedCase}
               safeLayers={safeLayers}
-              isAnalyst={isAnalyst}
               onDistrictClick={onDistrictClick}
               dynamicHotspots={dynamicHotspots}
               safeCases={safeCases}
@@ -506,7 +512,7 @@ export default function GoogleGISMap({
             <div className="absolute right-0 top-11 w-52 bg-slate-900/95 border border-slate-800 rounded-2xl p-3 shadow-2xl z-30 backdrop-blur-md space-y-2 text-xs">
               <h4 className="font-bold text-slate-300 text-[11px] uppercase tracking-wider mb-2">Map Layers</h4>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>Case Markers</span>
+                <span>Severity Markers</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showMarkers}
@@ -524,7 +530,7 @@ export default function GoogleGISMap({
                 />
               </label>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>Hotspots</span>
+                <span>Emerging Hotspots</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showHotspots}

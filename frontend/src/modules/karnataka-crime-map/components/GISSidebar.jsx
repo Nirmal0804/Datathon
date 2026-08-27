@@ -10,8 +10,6 @@ export default function GISSidebar({
   onReset,
   role
 }) {
-  const isAnalyst = role === 'analyst';
-
   // Accordion Expand/Collapse States
   const [layersExpanded, setLayersExpanded] = useState(true);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
@@ -85,63 +83,59 @@ export default function GISSidebar({
                 <span className="text-xs text-[#334155] font-semibold">Severity Markers</span>
                 <input
                   type="checkbox"
-                  checked={layers.showMarkers}
+                  checked={!!layers.showMarkers}
                   onChange={() => toggleLayer('showMarkers')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]"
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D] cursor-pointer"
                 />
               </label>
 
-              {isAnalyst && (
-                <>
-                  <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                    <span className="text-xs text-[#334155] font-semibold">Heatmap Layer</span>
-                    <input
-                      type="checkbox"
-                      checked={layers.showHeatmap}
-                      onChange={() => toggleLayer('showHeatmap')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-emerald-600 focus:ring-emerald-600"
-                    />
-                  </label>
+              <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
+                <span className="text-xs text-[#334155] font-semibold">Heatmap Layer</span>
+                <input
+                  type="checkbox"
+                  checked={!!layers.showHeatmap}
+                  onChange={() => toggleLayer('showHeatmap')}
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-emerald-600 focus:ring-emerald-600 cursor-pointer"
+                />
+              </label>
 
-                  <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                    <span className="text-xs text-[#334155] font-semibold">Crime Clusters</span>
-                    <input
-                      type="checkbox"
-                      checked={layers.showClusters}
-                      onChange={() => toggleLayer('showClusters')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]"
-                    />
-                  </label>
+              <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
+                <span className="text-xs text-[#334155] font-semibold">Crime Clusters</span>
+                <input
+                  type="checkbox"
+                  checked={!!layers.showClusters}
+                  onChange={() => toggleLayer('showClusters')}
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D] cursor-pointer"
+                />
+              </label>
 
-                  <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                    <span className="text-xs text-[#334155] font-semibold">Crime Density</span>
-                    <input
-                      type="checkbox"
-                      checked={layers.showDensity}
-                      onChange={() => toggleLayer('showDensity')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600"
-                    />
-                  </label>
+              <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
+                <span className="text-xs text-[#334155] font-semibold">Crime Density</span>
+                <input
+                  type="checkbox"
+                  checked={!!layers.showDensity}
+                  onChange={() => toggleLayer('showDensity')}
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600 cursor-pointer"
+                />
+              </label>
 
-                  <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                    <span className="text-xs text-[#334155] font-semibold">Beat Sectors</span>
-                    <input
-                      type="checkbox"
-                      checked={layers.showJurisdictions}
-                      onChange={() => toggleLayer('showJurisdictions')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-purple-600 focus:ring-purple-600"
-                    />
-                  </label>
-                </>
-              )}
+              <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
+                <span className="text-xs text-[#334155] font-semibold">Beat Sectors</span>
+                <input
+                  type="checkbox"
+                  checked={!!layers.showJurisdictions}
+                  onChange={() => toggleLayer('showJurisdictions')}
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-purple-600 focus:ring-purple-600 cursor-pointer"
+                />
+              </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                 <span className="text-xs text-[#334155] font-semibold">Emerging Hotspots</span>
                 <input
                   type="checkbox"
-                  checked={layers.showHotspots}
+                  checked={!!layers.showHotspots}
                   onChange={() => toggleLayer('showHotspots')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-rose-600 focus:ring-rose-600"
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-rose-600 focus:ring-rose-600 cursor-pointer"
                 />
               </label>
 
@@ -149,9 +143,9 @@ export default function GISSidebar({
                 <span className="text-xs text-[#334155] font-semibold">District Boundaries</span>
                 <input
                   type="checkbox"
-                  checked={layers.showBoundaries}
+                  checked={!!layers.showBoundaries}
                   onChange={() => toggleLayer('showBoundaries')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600"
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600 cursor-pointer"
                 />
               </label>
             </div>
@@ -185,14 +179,14 @@ export default function GISSidebar({
                 <span className="text-[#0F172A]">Low Incident</span>
               </div>
 
-              {isAnalyst && layers.showHeatmap && (
+              {layers.showHeatmap && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded bg-gradient-to-r from-rose-500/30 via-amber-500/30 to-emerald-500/30 border border-[#E7ECF3]"></span>
                   <span className="text-[#0F172A]">Heatmap Glow</span>
                 </div>
               )}
 
-              {isAnalyst && layers.showClusters && (
+              {layers.showClusters && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-[#0B1F4D] text-white flex items-center justify-center text-[9px] font-mono font-bold shadow-sm">12</span>
                   <span className="text-[#0F172A]">Crime Cluster</span>
@@ -203,6 +197,13 @@ export default function GISSidebar({
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded-full border border-dashed border-rose-500 bg-rose-50"></span>
                   <span className="text-[#0F172A]">Hotspot Zone</span>
+                </div>
+              )}
+
+              {layers.showBoundaries && (
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded border-2 border-indigo-500 bg-indigo-500/10"></span>
+                  <span className="text-[#0F172A]">District Boundaries</span>
                 </div>
               )}
             </div>
