@@ -53,16 +53,16 @@ export default function GlobalNotificationCenter() {
             className="fixed inset-0 bg-slate-900/10 z-[99990]"
           />
 
-          {/* Slide-out Panel */}
+          {/* Slide-out Panel (Aligned with Top Navbar top-3 position, 72px height, and rounded-[20px] radius) */}
           <motion.div
             initial={{ x: '100%', opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0.5 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col border-l border-[#E7ECF3]"
+            className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
           >
-            {/* Header */}
-            <div className="bg-[#0B1F4D] px-6 py-5 flex items-center justify-between shrink-0">
+            {/* Header (Matching exact 72px height of role top navbar) */}
+            <div className="h-[72px] bg-[#0B1F4D] px-6 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3 text-white">
                 <div className="relative">
                   <Bell className="w-5 h-5" />
