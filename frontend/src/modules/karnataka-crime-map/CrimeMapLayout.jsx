@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Search, X, Shield, ShieldAlert, BarChart2, Download, Play, RefreshCw, Layers } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import GISMap, { getCoordinatesForCase } from './components/GISMap';
+import GoogleGISMap, { getCoordinatesForCase } from './components/GoogleGISMap';
 import GISSidebar from './components/GISSidebar';
 import AnalyticsPanel from './components/AnalyticsPanel';
 import TimelineSlider from './components/TimelineSlider';
@@ -516,7 +516,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
         <div className="flex-1 w-full lg:w-auto bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden relative h-[750px] min-h-[750px] max-h-[750px] flex flex-col min-w-0 shrink-0">
           {isLoading && <SkeletonMapOverlay />}
 
-          <GISMap
+          <GoogleGISMap
             filteredCases={filteredCases}
             layers={layers}
             setLayers={setLayers}
