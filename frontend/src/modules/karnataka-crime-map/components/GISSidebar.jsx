@@ -2,11 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { Layers, Filter, Calendar, Zap, ShieldAlert, Activity, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 import { DISTRICTS, POLICE_STATIONS, CATEGORIES, STATUSES } from '../../dashboard/components/mockData';
 
-export default function GISSidebar({ 
-  filters, 
-  setFilters, 
-  layers, 
-  setLayers, 
+export default function GISSidebar({
+  filters,
+  setFilters,
+  layers,
+  setLayers,
   onReset,
   role
 }) {
@@ -49,7 +49,7 @@ export default function GISSidebar({
   return (
     <div className="h-full bg-white border border-[#E7ECF3] rounded-[20px] shadow-sm flex flex-col justify-between overflow-y-auto no-scrollbar p-5 space-y-5">
       <div className="space-y-5">
-        
+
         {/* Module Title */}
         <div className="flex items-center justify-between pb-4 border-b border-[#E7ECF3]">
           <div className="flex items-center gap-2.5">
@@ -58,7 +58,7 @@ export default function GISSidebar({
             </div>
             <h2 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Map Layers</h2>
           </div>
-          <button 
+          <button
             onClick={onReset}
             className="p-2 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] hover:bg-slate-100 text-slate-500 hover:text-[#0F172A] transition-colors cursor-pointer"
             title="Reset Filters"
@@ -69,7 +69,7 @@ export default function GISSidebar({
 
         {/* 1. Map Layers Accordion */}
         <div className="border border-[#E7ECF3] rounded-[16px] overflow-hidden bg-[#F8F9FB]">
-          <button 
+          <button
             onClick={() => setLayersExpanded(!layersExpanded)}
             className="w-full px-3.5 py-3 bg-white border-b border-[#E7ECF3] flex items-center justify-between text-[11px] font-bold text-[#0F172A] uppercase tracking-wider transition-colors cursor-pointer"
           >
@@ -83,11 +83,11 @@ export default function GISSidebar({
             <div className="p-3 space-y-2">
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                 <span className="text-xs text-[#334155] font-semibold">Severity Markers</span>
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={layers.showMarkers}
                   onChange={() => toggleLayer('showMarkers')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]" 
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]"
                 />
               </label>
 
@@ -95,41 +95,41 @@ export default function GISSidebar({
                 <>
                   <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                     <span className="text-xs text-[#334155] font-semibold">Heatmap Layer</span>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={layers.showHeatmap}
                       onChange={() => toggleLayer('showHeatmap')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-emerald-600 focus:ring-emerald-600" 
+                      className="w-4 h-4 rounded border-[#D9E2EC] text-emerald-600 focus:ring-emerald-600"
                     />
                   </label>
 
                   <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                     <span className="text-xs text-[#334155] font-semibold">Crime Clusters</span>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={layers.showClusters}
                       onChange={() => toggleLayer('showClusters')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]" 
+                      className="w-4 h-4 rounded border-[#D9E2EC] text-[#0B1F4D] focus:ring-[#0B1F4D]"
                     />
                   </label>
 
                   <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                     <span className="text-xs text-[#334155] font-semibold">Crime Density</span>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={layers.showDensity}
                       onChange={() => toggleLayer('showDensity')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600" 
+                      className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600"
                     />
                   </label>
 
                   <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                     <span className="text-xs text-[#334155] font-semibold">Beat Sectors</span>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={layers.showJurisdictions}
                       onChange={() => toggleLayer('showJurisdictions')}
-                      className="w-4 h-4 rounded border-[#D9E2EC] text-purple-600 focus:ring-purple-600" 
+                      className="w-4 h-4 rounded border-[#D9E2EC] text-purple-600 focus:ring-purple-600"
                     />
                   </label>
                 </>
@@ -137,21 +137,21 @@ export default function GISSidebar({
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                 <span className="text-xs text-[#334155] font-semibold">Emerging Hotspots</span>
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={layers.showHotspots}
                   onChange={() => toggleLayer('showHotspots')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-rose-600 focus:ring-rose-600" 
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-rose-600 focus:ring-rose-600"
                 />
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
                 <span className="text-xs text-[#334155] font-semibold">District Boundaries</span>
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={layers.showBoundaries}
                   onChange={() => toggleLayer('showBoundaries')}
-                  className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600" 
+                  className="w-4 h-4 rounded border-[#D9E2EC] text-indigo-600 focus:ring-indigo-600"
                 />
               </label>
             </div>
@@ -160,7 +160,7 @@ export default function GISSidebar({
 
         {/* 2. Legend Accordion */}
         <div className="border border-[#E7ECF3] rounded-[16px] overflow-hidden bg-[#F8F9FB]">
-          <button 
+          <button
             onClick={() => setLegendExpanded(!legendExpanded)}
             className="w-full px-3.5 py-3 bg-white border-b border-[#E7ECF3] flex items-center justify-between text-[11px] font-bold text-[#0F172A] uppercase tracking-wider transition-colors cursor-pointer"
           >
@@ -184,7 +184,7 @@ export default function GISSidebar({
                 <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
                 <span className="text-[#0F172A]">Low Incident</span>
               </div>
-              
+
               {isAnalyst && layers.showHeatmap && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded bg-gradient-to-r from-rose-500/30 via-amber-500/30 to-emerald-500/30 border border-[#E7ECF3]"></span>

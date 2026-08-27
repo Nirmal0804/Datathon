@@ -210,11 +210,11 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       const doc = new jsPDF();
       doc.setFont('Courier');
       doc.setFontSize(14);
-      
+
       doc.text('CONFIDENTIAL - INTERNAL USE ONLY', 10, 15);
       doc.text('===================================================', 10, 22);
       doc.text('REPORT TYPE: GEOSPATIAL CRIME MAP SNAPSHOT REPORT', 10, 29);
-      
+
       doc.setFontSize(10);
       doc.text(`REPORT ID:             MAP-SNP-${todayStr}`, 10, 38);
       doc.text(`GENERATION DATE & TIME: ${todayStr} 09:30 AM`, 10, 45);
@@ -223,7 +223,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       doc.text(`DISTRICT JURISDICTION: ${filters.district === 'All' ? 'Statewide (All Karnataka)' : filters.district}`, 10, 66);
       doc.text(`CLASSIFICATION:        CONFIDENTIAL - INTERNAL USE ONLY`, 10, 73);
       doc.text('---------------------------------------------------', 10, 80);
-      
+
       doc.setFontSize(12);
       doc.text('1. VISIBLE GEOSPATIAL LAYERS & FILTERS', 10, 90);
       doc.text('--------------------------------------', 10, 95);
@@ -232,7 +232,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       doc.text(`• Crime Classification Filter: ${filters.category === 'All' ? 'All Categories' : filters.category}`, 10, 109);
       doc.text(`• Current Date Range Filter: ${filters.dateRange}`, 10, 116);
       doc.text(`• Total Layer Intakes: ${filteredCases.length} crime markers active`, 10, 123);
-      
+
       doc.setFontSize(12);
       doc.text('2. GEOGRAPHIC HOTSPOT DISTRIBUTION & RISK RATINGS', 10, 135);
       doc.text('-------------------------------------------------', 10, 140);
@@ -240,7 +240,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       doc.text(`• Active Markers Rendered: ${filteredCases.length} incidents`, 10, 147);
       doc.text(`• Overlay Layer: District Boundaries GeoJSON Overlay Rendered`, 10, 154);
       doc.text(`• Risk Indicators: Color-coded (Red=Critical, Orange=High, Yellow=Medium, Green=Low)`, 10, 161);
-      
+
       doc.setFontSize(12);
       doc.text('3. ACTIVE PRECINCT INTEL SUMMARY', 10, 175);
       doc.text('--------------------------------', 10, 180);
@@ -250,7 +250,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
         doc.text(`${idx + 1}. Case ${c.id}: ${c.category} at ${c.policeStation} (Risk: ${c.risk})`, 10, yPos);
         yPos += 7;
       });
-      
+
       doc.text('CONFIDENTIAL MAP SNAPSHOT REPORT END', 10, yPos + 10);
       doc.save(`${filenameBase}.pdf`);
 
@@ -358,7 +358,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
       {/* Top GIS Floating Command Bar (Relocated Horizontal Filters) */}
       <div className="w-full bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
-          
+
           {/* Search Box */}
           <div className="relative w-64 sm:w-72">
             <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -408,7 +408,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </div>
 
           {/* District Dropdown */}
-          <select 
+          <select
             value={filters.district}
             onChange={(e) => handleFilterChange('district', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
@@ -420,7 +420,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </select>
 
           {/* Police Station Dropdown */}
-          <select 
+          <select
             value={filters.policeStation}
             onChange={(e) => handleFilterChange('policeStation', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
@@ -431,7 +431,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </select>
 
           {/* Crime Category Dropdown */}
-          <select 
+          <select
             value={filters.category}
             onChange={(e) => handleFilterChange('category', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
@@ -443,7 +443,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           </select>
 
           {/* Severity Dropdown */}
-          <select 
+          <select
             value={filters.severity}
             onChange={(e) => handleFilterChange('severity', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
@@ -457,18 +457,18 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
           {/* Date Range Inputs */}
           <div className="flex items-center gap-2">
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={filters.startDate}
               onChange={(e) => handleFilterChange('startDate', e.target.value)}
-              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]" 
+              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]"
             />
             <span className="text-slate-400 text-xs">to</span>
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={filters.endDate}
               onChange={(e) => handleFilterChange('endDate', e.target.value)}
-              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]" 
+              className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]"
             />
           </div>
 
