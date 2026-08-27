@@ -185,8 +185,8 @@ export default function DashboardLayout({ onLogout, role }) {
           <div className="flex-1">
             {activeModule === 'map' && <CrimeMapLayout role={role} />}
           </div>
-          <div className="mt-12 -mx-4 sm:-mx-6 -mb-4 sm:-mb-6">
-            <Footer />
+          <div className="mt-8">
+            <Footer rounded={true} />
           </div>
         </div>
       );
@@ -211,8 +211,8 @@ export default function DashboardLayout({ onLogout, role }) {
           <div className="min-h-[calc(100vh-250px)]">
             {content}
           </div>
-          <div className="mt-12 -mx-5 sm:-mx-10 -mb-8">
-            <Footer />
+          <div className="mt-8">
+            <Footer rounded={true} />
           </div>
         </main>
       );
@@ -237,8 +237,8 @@ export default function DashboardLayout({ onLogout, role }) {
           <div className="min-h-[calc(100vh-250px)]">
             {content}
           </div>
-          <div className="mt-12 -mx-4 sm:-mx-8 -mb-4 sm:-mb-6">
-            <Footer />
+          <div className="mt-8">
+            <Footer rounded={true} />
           </div>
         </main>
       );
@@ -314,8 +314,8 @@ export default function DashboardLayout({ onLogout, role }) {
         <div className="min-h-[calc(100vh-250px)]">
           {content}
         </div>
-        <div className="mt-12 -mx-4 sm:-mx-8 -mb-4 sm:-mb-6">
-          <Footer />
+        <div className="mt-8">
+          <Footer rounded={true} />
         </div>
       </main>
     );
