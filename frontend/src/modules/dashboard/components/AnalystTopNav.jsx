@@ -121,7 +121,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     : defaultProfile.initials;
 
   return (
-    <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full mb-3 text-white">
+    <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full text-white">
       {/* Left Section: Branding */}
       <div className="flex items-center gap-3 pr-4 border-r border-white/20 shrink-0 h-[42px]">
         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">

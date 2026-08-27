@@ -342,8 +342,8 @@ export default function DashboardLayout({ onLogout, role }) {
         />
       </div>
 
-      {/* 2. SCROLLABLE MAIN CONTENT (Top padding pt-[92px] ensures content starts below fixed navbar) */}
-      <main className={`max-w-[1600px] mx-auto w-full min-h-screen p-3 ${isCompact ? 'pt-[92px]' : 'pt-3'} flex flex-col gap-3`}>
+      {/* 2. SCROLLABLE MAIN CONTENT (Top padding pt-[96px] ensures content starts below fixed navbar) */}
+      <main className={`max-w-[1600px] mx-auto w-full min-h-screen p-3 ${isCompact ? 'pt-[96px]' : 'pt-3'} flex flex-col gap-3`}>
         {/* Main Content Card Container */}
         <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] min-h-[500px]">
           {!isCompact && (
