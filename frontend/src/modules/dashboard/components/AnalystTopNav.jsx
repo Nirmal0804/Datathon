@@ -2,7 +2,7 @@ import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
-import kspLogo from '../../../assets/ksp-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.png';
 
 const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
@@ -113,13 +113,18 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     : defaultProfile.initials;
 
   return (
-    <nav className="h-[72px] bg-[#0B1F4D] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-sm border border-white/10 w-full mb-3">
+    <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full mb-3 text-white">
       {/* Left Section: Branding */}
-      <div className="flex items-center gap-3 pr-4 border-r border-white/10 shrink-0 h-[40px]">
-        <img src={kspLogo} alt="Karnataka Police Logo" className="h-9 w-auto object-contain drop-shadow-sm" />
+      <div className="flex items-center gap-3 pr-4 border-r border-white/20 shrink-0 h-[42px]">
+        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
+          <img src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" />
+        </div>
         <div className="hidden xl:block">
-          <h2 className="text-white font-bold tracking-wide text-[13px] uppercase leading-tight">KARNATAKA POLICE</h2>
-          <p className="text-[10px] text-[#C79A2B] uppercase tracking-widest font-medium mt-0.5">{platformSubtitle}</p>
+          <h2 className="text-white font-extrabold tracking-tight text-xs lg:text-sm flex items-center gap-1.5 leading-none">
+            KARNATAKA POLICE
+            <span className="text-[9px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+          </h2>
+          <p className="text-[10px] text-[#F5E7C1] font-medium tracking-wide mt-0.5">{platformSubtitle}</p>
         </div>
       </div>
 
@@ -131,8 +136,8 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
             <button
               key={item.id}
               onClick={() => setActiveModule(item.id)}
-              className={`relative h-full flex items-center justify-center text-[12px] xl:text-[13px] font-semibold transition-colors duration-200 whitespace-nowrap cursor-pointer px-2 xl:px-2.5 ${
-                isActive ? 'text-[#C79A2B]' : 'text-white/80 hover:text-white'
+              className={`relative h-full flex items-center justify-center text-[12px] xl:text-[13px] transition-colors duration-200 whitespace-nowrap cursor-pointer px-2 xl:px-2.5 ${
+                isActive ? 'font-bold text-white' : 'font-semibold text-white/80 hover:text-white'
               }`}
             >
               <div className="relative h-full flex items-center">
@@ -141,7 +146,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
                   <motion.div
                     layoutId="topNavActiveUnderline"
                     transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-full bg-[#C79A2B]"
+                    className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-full bg-[#D49A00]"
                   />
                 )}
               </div>
@@ -151,21 +156,21 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
       </div>
 
       {/* Right Section: Relocated Officer Profile Card */}
-      <div className="flex items-center gap-3 pl-6 border-l border-white/10 shrink-0 ml-auto h-[40px]">
-        <div className="hidden sm:flex items-center gap-2.5 bg-white/10 border border-white/15 px-3 py-1.5 rounded-full shadow-xs text-white">
+      <div className="flex items-center gap-3 pl-4 sm:pl-6 border-l border-white/20 shrink-0 ml-auto h-[42px]">
+        <div className="hidden sm:flex items-center gap-2.5 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full shadow-xs text-white">
           <div className="relative">
-            <div className="w-7 h-7 rounded-full bg-[#C79A2B] text-[#0B1F4D] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+            <div className="w-7 h-7 rounded-full bg-[#D49A00] text-[#142B45] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
               {avatarUrl ? (
                 <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
               ) : (
                 profileInitials
               )}
             </div>
-            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#0B1F4D]" />
+            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#E00000]" />
           </div>
           <div className="text-left min-w-0 pr-1">
             <p className="text-xs font-bold leading-tight text-white truncate">{profileName}</p>
-            <p className="text-[10px] text-[#C79A2B] font-semibold truncate">{profileRank} • {profileStation}</p>
+            <p className="text-[10px] text-[#F5E7C1] font-medium truncate">{profileRank} • {profileStation}</p>
           </div>
         </div>
 
@@ -174,7 +179,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
           onClick={togglePanel}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10 cursor-pointer"
+          className="relative w-[38px] h-[38px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/20 cursor-pointer"
           aria-label={`Notifications (${unreadCount} unread)`}
         >
           <motion.div
@@ -183,13 +188,13 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
             animate={unreadCount > 0 ? { rotate: [0, -15, 15, -15, 15, 0] } : {}}
             transition={{ duration: 0.5 }}
           >
-            <Bell className="w-4 h-4" />
+            <Bell className="w-4 h-4 text-white" />
           </motion.div>
           {unreadCount > 0 && (
             <motion.span 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#C79A2B] border-2 border-[#0B1F4D] rounded-full text-[9px] font-black text-[#0B1F4D]"
+              className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#D49A00] border-2 border-[#E00000] rounded-full text-[9px] font-black text-[#142B45]"
             >
               {unreadCount > 9 ? '9+' : unreadCount}
             </motion.span>
