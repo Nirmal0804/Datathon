@@ -4,8 +4,11 @@ import {
   Headphones, Lock, HelpCircle, Globe, Share2
 } from 'lucide-react';
 import kspLogo from '../../../assets/ksp-official-logo.png';
+import { getRoleNavItems } from '../../../modules/dashboard/components/AnalystTopNav';
 
-export default function Footer({ onLoginClick, rounded = false }) {
+export default function Footer({ onLoginClick, rounded = false, role = null, activeModule = null, onNavigate = null }) {
+  const roleNavItems = role ? getRoleNavItems(role) : null;
+
   return (
     <footer className={`bg-[#E00000] text-white pt-12 pb-8 relative z-10 transition-all ${
       rounded
@@ -66,29 +69,50 @@ export default function Footer({ onLoginClick, rounded = false }) {
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
 
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium">
-              {[
-                { label: 'Home', href: '#home' },
-                { label: 'Features', href: '#features' },
-                { label: 'Workflow', href: '#workflow' },
-                { label: 'Modules', href: '#modules' },
-                { label: 'About', href: '#about' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <a href={item.href} className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors">
-                    <ChevronRight className="w-3.5 h-3.5 text-white/80" />
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-              <li>
-                <button
-                  onClick={() => onLoginClick && onLoginClick()}
-                  className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer text-left font-medium text-xs sm:text-sm"
-                >
-                  <ChevronRight className="w-3.5 h-3.5 text-white/80" />
-                  Login Portal
-                </button>
-              </li>
+              {roleNavItems ? (
+                roleNavItems.map((item) => {
+                  const isActive = activeModule === item.id;
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => onNavigate && onNavigate(item.id)}
+                        className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer text-left ${
+                          isActive ? 'text-[#D49A00] font-bold' : 'text-white/90 hover:text-white font-medium'
+                        }`}
+                      >
+                        <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#D49A00]' : 'text-white/80'}`} />
+                        {item.name}
+                      </button>
+                    </li>
+                  );
+                })
+              ) : (
+                <>
+                  {[
+                    { label: 'Home', href: '#home' },
+                    { label: 'Features', href: '#features' },
+                    { label: 'Workflow', href: '#workflow' },
+                    { label: 'Modules', href: '#modules' },
+                    { label: 'About', href: '#about' },
+                  ].map((item) => (
+                    <li key={item.label}>
+                      <a href={item.href} className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors">
+                        <ChevronRight className="w-3.5 h-3.5 text-white/80" />
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <button
+                      onClick={() => onLoginClick && onLoginClick()}
+                      className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer text-left font-medium text-xs sm:text-sm"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5 text-white/80" />
+                      Login Portal
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 

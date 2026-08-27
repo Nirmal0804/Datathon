@@ -364,7 +364,12 @@ export default function DashboardLayout({ onLogout, role }) {
 
         {/* 3. FOOTER (Normal document flow, rendered naturally AFTER all content at document end) */}
         <div className="shrink-0 w-full">
-          <Footer rounded={true} />
+          <Footer
+            rounded={true}
+            role={role}
+            activeModule={activeModule}
+            onNavigate={handleModuleChange}
+          />
         </div>
       </main>
 

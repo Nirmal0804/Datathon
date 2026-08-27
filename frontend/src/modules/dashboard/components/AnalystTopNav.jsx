@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
 import kspLogo from '../../../assets/ksp-official-logo.png';
 
-const ANALYST_NAV_ITEMS = [
+export const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
   { id: 'map', name: 'Crime Map' },
   { id: 'district', name: 'District Intel' },
@@ -15,7 +15,7 @@ const ANALYST_NAV_ITEMS = [
   { id: 'correlation', name: 'Socio-economic' },
 ];
 
-const OFFICER_NAV_ITEMS = [
+export const OFFICER_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
   { id: 'assigned_cases', name: 'Assigned Cases' },
   { id: 'fir_management', name: 'FIR Management' },
@@ -24,7 +24,7 @@ const OFFICER_NAV_ITEMS = [
   { id: 'alerts', name: 'Alerts Feed' },
 ];
 
-const ADMIN_NAV_ITEMS = [
+export const ADMIN_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
   { id: 'users', name: 'Users Control' },
   { id: 'roles', name: 'Roles & Privileges' },
@@ -32,6 +32,14 @@ const ADMIN_NAV_ITEMS = [
   { id: 'system_health', name: 'System Health' },
   { id: 'config', name: 'Configuration' },
 ];
+
+export function getRoleNavItems(role) {
+  return role === 'officer' 
+    ? OFFICER_NAV_ITEMS 
+    : role === 'admin' 
+    ? ADMIN_NAV_ITEMS 
+    : ANALYST_NAV_ITEMS;
+}
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
   const { unreadCount, togglePanel } = useNotification();
