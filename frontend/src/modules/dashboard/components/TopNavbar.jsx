@@ -19,14 +19,14 @@ export default function TopNavbar({ toggleMobileMenu }) {
       try {
         const saved = localStorage.getItem('ksp_user_avatar');
         setAvatarUrl(saved && saved !== 'undefined' && saved !== 'null' ? saved : null);
-      } catch {}
+      } catch { }
     };
     window.addEventListener('ksp_avatar_updated', handleAvatarUpdate);
     return () => window.removeEventListener('ksp_avatar_updated', handleAvatarUpdate);
   }, []);
 
   return (
-    <header className="h-[72px] bg-[#E00000] text-white flex items-center justify-between px-6 lg:px-8 sticky top-0 z-30 shrink-0 border-b border-[#C90000] shadow-md rounded-[20px]">
+    <header className="h-[72px] bg-[#E00000] text-white flex items-center justify-between px-6 lg:px-8 sticky top-0 z-30 shrink-0 border-b border-[#C90000] shadow-md rounded-2xl mb-3">
       <div className="flex items-center gap-4 w-full md:w-auto">
         {/* Mobile hamburger */}
         <button
@@ -84,7 +84,7 @@ export default function TopNavbar({ toggleMobileMenu }) {
             <Bell className="w-5 h-5 text-white" />
           </motion.div>
           {unreadCount > 0 && (
-            <motion.span 
+            <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               className="absolute top-2 right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#D49A00] border-2 border-[#E00000] rounded-full text-[9px] font-black text-[#142B45]"
@@ -95,7 +95,7 @@ export default function TopNavbar({ toggleMobileMenu }) {
         </motion.button>
 
         {/* User menu */}
-        <motion.div 
+        <motion.div
           whileHover={{ y: -1 }}
           className="flex items-center gap-3 px-3 py-2 bg-white/10 border border-white/20 rounded-[16px] shadow-xs hover:bg-white/20 transition-all duration-200 ease-in-out cursor-pointer group"
         >

@@ -65,11 +65,11 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
           const parsed = JSON.parse(saved);
           setCustomProfile(parsed && typeof parsed === 'object' ? parsed : null);
         }
-      } catch {}
+      } catch { }
       try {
         const savedAvatar = localStorage.getItem('ksp_user_avatar');
         setAvatarUrl(savedAvatar && savedAvatar !== 'undefined' && savedAvatar !== 'null' ? savedAvatar : null);
-      } catch {}
+      } catch { }
     };
 
     window.addEventListener('ksp_profile_updated', handleSync);
@@ -80,23 +80,23 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     };
   }, []);
 
-  const navItems = role === 'officer' 
-    ? OFFICER_NAV_ITEMS 
-    : role === 'admin' 
-    ? ADMIN_NAV_ITEMS 
-    : ANALYST_NAV_ITEMS;
+  const navItems = role === 'officer'
+    ? OFFICER_NAV_ITEMS
+    : role === 'admin'
+      ? ADMIN_NAV_ITEMS
+      : ANALYST_NAV_ITEMS;
 
-  const platformSubtitle = role === 'officer' 
-    ? 'FIELD OPERATIONS' 
-    : role === 'admin' 
-    ? 'SYSTEM ADMINISTRATION PLATFORM' 
-    : 'INTELLIGENCE PLATFORM';
+  const platformSubtitle = role === 'officer'
+    ? 'FIELD OPERATIONS'
+    : role === 'admin'
+      ? 'SYSTEM ADMINISTRATION PLATFORM'
+      : 'INTELLIGENCE PLATFORM';
 
-  const defaultProfile = role === 'officer' 
+  const defaultProfile = role === 'officer'
     ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }
-    : role === 'admin' 
-    ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
-    : { initials: 'AR', name: 'Analyst S. Rao', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+    : role === 'admin'
+      ? { initials: 'SA', name: 'Super Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
+      : { initials: 'AR', name: 'Analyst S. Rao', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
 
   const profileName = (customProfile && typeof customProfile.fullName === 'string' && customProfile.fullName.trim())
     ? customProfile.fullName.trim()
@@ -113,7 +113,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     : defaultProfile.initials;
 
   return (
-    <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full text-white">
+    <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full mb-3 text-white">
       {/* Left Section: Branding */}
       <div className="flex items-center gap-3 pr-4 border-r border-white/20 shrink-0 h-[42px]">
         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
@@ -136,9 +136,8 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
             <button
               key={item.id}
               onClick={() => setActiveModule(item.id)}
-              className={`relative h-full flex items-center justify-center text-[12px] xl:text-[13px] transition-colors duration-200 whitespace-nowrap cursor-pointer px-2 xl:px-2.5 ${
-                isActive ? 'font-bold text-white' : 'font-semibold text-white/80 hover:text-white'
-              }`}
+              className={`relative h-full flex items-center justify-center text-[12px] xl:text-[13px] transition-colors duration-200 whitespace-nowrap cursor-pointer px-2 xl:px-2.5 ${isActive ? 'font-bold text-white' : 'font-semibold text-white/80 hover:text-white'
+                }`}
             >
               <div className="relative h-full flex items-center">
                 <span>{item.name}</span>
@@ -191,7 +190,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
             <Bell className="w-4 h-4 text-white" />
           </motion.div>
           {unreadCount > 0 && (
-            <motion.span 
+            <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#D49A00] border-2 border-[#E00000] rounded-full text-[9px] font-black text-[#142B45]"
