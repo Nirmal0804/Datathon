@@ -24,6 +24,16 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isInitializingSDK, setIsInitializingSDK] = useState(false);
   const catalystContainerRef = useRef(null);
+  const onLoginRef = useRef(onLogin);
+  const addToastRef = useRef(addToast);
+
+  useEffect(() => {
+    onLoginRef.current = onLogin;
+  }, [onLogin]);
+
+  useEffect(() => {
+    addToastRef.current = addToast;
+  }, [addToast]);
 
   useEffect(() => {
     if (role) {
@@ -62,21 +72,25 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
           const validation = validateEmailForRole(userEmail, selectedRole);
 
           if (validation.valid) {
-            onLogin(selectedRole, {
-              email: userEmail,
-              raw: user,
-              verifiedByCatalyst: true,
-              name: user?.first_name
-                ? `${user.first_name} ${user.last_name || ''}`.trim()
-                : ROLE_DISPLAY_NAMES[selectedRole],
-            });
+            if (onLoginRef.current) {
+              onLoginRef.current(selectedRole, {
+                email: userEmail,
+                raw: user,
+                verifiedByCatalyst: true,
+                name: user?.first_name
+                  ? `${user.first_name} ${user.last_name || ''}`.trim()
+                  : ROLE_DISPLAY_NAMES[selectedRole],
+              });
+            }
           } else {
             setErrorMessage(validation.reason);
-            addToast({
-              title: 'Authentication Denied',
-              message: validation.reason,
-              type: 'error',
-            });
+            if (addToastRef.current) {
+              addToastRef.current({
+                title: 'Authentication Denied',
+                message: validation.reason,
+                type: 'error',
+              });
+            }
             signOutCatalyst();
           }
         },
@@ -85,11 +99,13 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
           setIsInitializingSDK(false);
           const msg = err?.message || 'Authentication error from Zoho Catalyst. Please verify credentials.';
           setErrorMessage(msg);
-          addToast({
-            title: 'Authentication Error',
-            message: msg,
-            type: 'error',
-          });
+          if (addToastRef.current) {
+            addToastRef.current({
+              title: 'Authentication Error',
+              message: msg,
+              type: 'error',
+            });
+          }
         }
       });
 
@@ -123,11 +139,8 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
     return () => {
       isMounted = false;
       if (pollInterval) clearInterval(pollInterval);
-      if (catalystContainerRef.current) {
-        catalystContainerRef.current.innerHTML = '';
-      }
     };
-  }, [selectedRole, onLogin, addToast]);
+  }, [selectedRole]);
 
   return (
     <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#E00000]/10 selection:text-[#E00000]">
@@ -257,8 +270,8 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
                 </span>
               </div>
 
-              {/* Native Catalyst IAM Embedded Authentication Frame */}
-              <div className="relative">
+              {/* Native Catalyst IAM Embedded Authentication Frame Container */}
+              <div className="relative w-full">
                 {isInitializingSDK && (
                   <div className="flex items-center justify-center p-8 text-xs text-slate-500 gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-[#E00000]" />
@@ -268,7 +281,8 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
                 <div
                   id="catalyst-auth-container"
                   ref={catalystContainerRef}
-                  className="w-full min-h-[380px] rounded-2xl bg-white border border-slate-100 overflow-hidden"
+                  style={{ width: '100%', height: '420px', minHeight: '420px' }}
+                  className="w-full h-[420px] min-h-[420px] rounded-2xl bg-white border border-slate-100 overflow-hidden"
                 />
               </div>
             </div>
