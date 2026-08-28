@@ -26,7 +26,11 @@ export const EXPECTED_EMAILS = {
  * Check if the Catalyst Web SDK has been loaded and initialized in the browser
  */
 export function isCatalystSDKAvailable() {
-  return typeof window !== 'undefined' && Boolean(window.catalyst?.auth);
+  return (
+    typeof window !== 'undefined' &&
+    Boolean(window.catalyst?.auth) &&
+    (Boolean(window.__catalyst) || Boolean(window.catalyst?.config?.ProjectID))
+  );
 }
 
 /**
@@ -89,7 +93,7 @@ export async function checkCatalystAuth() {
  * Render Zoho Catalyst Embedded Sign-In widget into a target container
  */
 export function renderCatalystSignIn(elementId, config = {}) {
-  if (!isCatalystSDKAvailable()) {
+  if (typeof window === 'undefined' || !window.catalyst?.auth) {
     console.warn('[Catalyst Auth] Web SDK is not available in window.catalyst.auth');
     return false;
   }
@@ -121,7 +125,7 @@ export function renderCatalystSignIn(elementId, config = {}) {
  * Sign out of active Catalyst session
  */
 export async function signOutCatalyst() {
-  if (isCatalystSDKAvailable() && typeof window.catalyst.auth.signOut === 'function') {
+  if (typeof window !== 'undefined' && typeof window.catalyst?.auth?.signOut === 'function') {
     try {
       await window.catalyst.auth.signOut();
     } catch (err) {

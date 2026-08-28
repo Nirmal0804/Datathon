@@ -16,12 +16,10 @@
     <!-- Zoho Catalyst Web SDK v4 (Embedded Authentication) -->
     <script src="https://static.zohocdn.com/catalyst/sdk/js/4.6.2/catalystWebSDK.js"></script>
     <script>
-      (function() {
-        var initScript = document.createElement('script');
-        initScript.src = '/__catalyst/sdk/init.js';
-        initScript.async = true;
-        document.head.appendChild(initScript);
-      })();
+      var initScript = document.createElement('script');
+      initScript.src = '/__catalyst/sdk/init.js';
+      initScript.async = false;
+      document.head.appendChild(initScript);
     </script>
   </head>
   <body>
