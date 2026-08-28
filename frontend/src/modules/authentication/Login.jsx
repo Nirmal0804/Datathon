@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.png';
+import { useToast } from '../../components/ui/Toast';
+import {
+  EXPECTED_EMAILS,
+  ROLE_DISPLAY_NAMES,
+  authenticateCatalystUser
+} from '../../utils/catalystAuth';
 
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User },
@@ -9,50 +15,84 @@ const roles = [
   { id: 'admin', name: 'System Administrator', icon: Settings }
 ];
 
-const ROLE_CREDENTIALS = {
-  officer: { email: 'officer.ksp@karnataka.gov.in', password: 'Officer@Pass2026' },
-  analyst: { email: 'analyst.ksp@karnataka.gov.in', password: 'Analyst@Pass2026' },
-  admin: { email: 'admin.ksp@karnataka.gov.in', password: 'Admin@Pass2026' }
-};
-
 export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
+  const { addToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role || null);
-
-  const initialCreds = ROLE_CREDENTIALS[role] || (role === null ? { email: '', password: '' } : ROLE_CREDENTIALS.analyst);
-  const [email, setEmail] = useState(initialCreds.email);
-  const [password, setPassword] = useState(initialCreds.password);
+  const [email, setEmail] = useState(role ? EXPECTED_EMAILS[role] || '' : '');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (role) {
       setSelectedRole(role);
-      const creds = ROLE_CREDENTIALS[role];
-      if (creds) {
-        setEmail(creds.email);
-        setPassword(creds.password);
-      }
+      setEmail(EXPECTED_EMAILS[role] || '');
+      setPassword('');
+      setErrorMessage('');
     }
   }, [role]);
 
   const handleRoleClick = (roleId) => {
     setSelectedRole(roleId);
-    const creds = ROLE_CREDENTIALS[roleId] || ROLE_CREDENTIALS.analyst;
-    setEmail(creds.email);
-    setPassword(creds.password);
+    setEmail(EXPECTED_EMAILS[roleId] || '');
+    setPassword('');
+    setErrorMessage('');
     if (onRoleSelect) {
       onRoleSelect(roleId);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedRole) return;
+    if (!selectedRole) {
+      addToast({
+        title: 'Access Level Required',
+        message: 'Please select an access level before logging in.',
+        type: 'warning',
+      });
+      return;
+    }
+
+    if (!password || password.trim() === '') {
+      setErrorMessage('Please enter your password.');
+      addToast({
+        title: 'Password Required',
+        message: 'Please enter your password to authenticate.',
+        type: 'warning',
+      });
+      return;
+    }
+
+    setErrorMessage('');
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      // Authenticate directly with Zoho Catalyst Native Authentication
+      const result = await authenticateCatalystUser(email, password, selectedRole);
+
+      if (result.success && result.user) {
+        onLogin(selectedRole, result.user);
+      } else {
+        const errorMsg = result.error || 'Invalid credentials. Password verification failed in Catalyst.';
+        setErrorMessage(errorMsg);
+        addToast({
+          title: 'Authentication Failed',
+          message: errorMsg,
+          type: 'error',
+        });
+      }
+    } catch (err) {
+      const errorMsg = err?.message || 'Authentication error. Please try again.';
+      setErrorMessage(errorMsg);
+      addToast({
+        title: 'Login Error',
+        message: errorMsg,
+        type: 'error',
+      });
+    } finally {
       setIsLoading(false);
-      onLogin();
-    }, 1000);
+    }
   };
 
   return (
@@ -150,6 +190,21 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
 
           <div className="border-b border-slate-100 my-6" />
 
+          {/* Error Message Banner */}
+          <AnimatePresence>
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-start gap-2"
+              >
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{errorMessage}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Login Credentials Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -159,12 +214,12 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
               <div className="relative flex items-center">
                 <User className="absolute left-4 h-4 w-4 text-slate-400" />
                 <input
-                  type="text"
+                  type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Select access level to autofill"
-                  className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
+                  className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs font-medium"
                 />
               </div>
             </div>

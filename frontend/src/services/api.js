@@ -6,10 +6,24 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function fetchAPI(endpoint) {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  // If a Catalyst token/session is available in the browser session, attach it
+  try {
+    if (typeof window !== 'undefined' && window.catalyst?.auth) {
+      const token = window.catalyst.auth.getAccessToken?.() || window.catalyst.auth.token;
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+  } catch {
+    // Non-blocking credential lookup
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   });
 
   if (!response.ok) {
