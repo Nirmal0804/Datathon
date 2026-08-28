@@ -292,19 +292,20 @@ export default function NetworkAnalysisLayout() {
             />
 
             {/* Node Legend */}
-            <div className="flex flex-wrap gap-4 pt-4 border-t border-[#F1F5F9]">
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#F1F5F9]">
               {[
                 { label: 'Critical Accused', color: '#EF4444' },
                 { label: 'High Risk',        color: '#F97316' },
                 { label: 'Medium Risk',      color: '#F59E0B' },
                 { label: 'Low Risk',         color: '#10B981' },
-                { label: 'Case / FIR',       color: '#818CF8' },
-                { label: 'Police Station',   color: '#60A5FA' },
-                { label: 'District',         color: '#A78BFA' },
+                { label: 'Case / FIR',       color: '#8B5CF6' },
+                { label: 'Police Station',   color: '#3B82F6' },
+                { label: 'District',         color: '#6366F1' },
+                { label: 'Crime Category',   color: '#EC4899' },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full border-2" style={{ borderColor: item.color, background: item.color + '20' }} />
-                  <span className="text-[10px] font-semibold text-[#64748B]">{item.label}</span>
+                  <div className="w-2.5 h-2.5 rounded-full border-2 bg-white" style={{ borderColor: item.color }} />
+                  <span className="text-[10.5px] font-semibold text-[#64748B]">{item.label}</span>
                 </div>
               ))}
             </div>
