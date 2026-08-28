@@ -259,10 +259,6 @@ export default function GraphCanvas({
       <svg className="w-full h-full">
         {/* SVG Definitions */}
         <defs>
-          {/* Subtle Dotted Grid Pattern for #F1F3F5 Canvas */}
-          <pattern id="ksp-grid-dots" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="1.1" fill="#64748B" opacity="0.25" />
-          </pattern>
           {/* Subtle Drop Shadows */}
           <filter id="node-shadow" x="-40%" y="-40%" width="180%" height="180%">
             <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#0F172A" floodOpacity="0.08" />
@@ -272,7 +268,8 @@ export default function GraphCanvas({
           </filter>
         </defs>
 
-        <rect id="bg-grid" width="100%" height="100%" fill="url(#ksp-grid-dots)" />
+        {/* Clean solid background hit-target for panning */}
+        <rect id="bg-grid" width="100%" height="100%" fill="transparent" />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
 
