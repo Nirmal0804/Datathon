@@ -83,7 +83,6 @@ export default function GraphCanvas({
         setZoom(z => Math.max(z / zoomFactor, 0.4));
       }
     }
-    // else: do nothing — let browser scroll the page naturally
   }, []);
 
   useEffect(() => {
@@ -184,10 +183,10 @@ export default function GraphCanvas({
           </pattern>
           {/* Subtle Drop Shadows */}
           <filter id="node-shadow" x="-40%" y="-40%" width="180%" height="180%">
-            <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#0F172A" floodOpacity="0.08" />
+            <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#0F172A" floodOpacity="0.08" />
           </filter>
           <filter id="node-shadow-selected" x="-60%" y="-60%" width="220%" height="220%">
-            <feDropShadow dx="0" dy="3" stdDeviation="4.5" floodColor="#0F172A" floodOpacity="0.16" />
+            <feDropShadow dx="0" dy="2.5" stdDeviation="3.5" floodColor="#0F172A" floodOpacity="0.16" />
           </filter>
         </defs>
 
@@ -195,49 +194,63 @@ export default function GraphCanvas({
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
 
-          {/* 1. RELATIONSHIP EDGES */}
+          {/* 1. RELATIONSHIP EDGES (Rendered first so lines sit underneath nodes) */}
           {edges.map((edge, i) => {
             const src = nodes.find(n => n.id === edge.source);
             const tgt = nodes.find(n => n.id === edge.target);
             if (!src || !tgt) return null;
-            const mx = (src.x + tgt.x) / 2;
-            const my = (src.y + tgt.y) / 2;
+
             const isCoOffender = edge.label === 'Repeat Co-Offender';
-            const labelWidth = Math.max(edge.label.length * 3.8 + 10, 36);
+            const dx = tgt.x - src.x;
+            const dy = tgt.y - src.y;
+            const len = Math.sqrt(dx * dx + dy * dy) || 1;
+
+            // Unit normal vector perpendicular to the edge
+            const nx = -dy / len;
+            const ny = dx / len;
+
+            // Offset label slightly along the normal to stay clear of the center line and endpoints
+            const offsetDist = isCoOffender ? 4.5 : 3.5;
+            const lx = (src.x + tgt.x) / 2 + nx * offsetDist;
+            const ly = (src.y + tgt.y) / 2 + ny * offsetDist;
+
+            // Compact badge width based on label text length
+            const labelWidth = Math.max(edge.label.length * 2.45 + 6, 26);
+            const labelHeight = 9;
 
             return (
-              <g key={i}>
+              <g key={`edge-${i}`}>
                 {/* Edge line */}
                 <line
                   x1={src.x} y1={src.y}
                   x2={tgt.x} y2={tgt.y}
                   stroke={isCoOffender ? '#EF4444' : '#CBD5E1'}
-                  strokeWidth={isCoOffender ? '1.8' : '1.3'}
-                  strokeDasharray={isCoOffender ? '4,3' : undefined}
-                  strokeOpacity={isCoOffender ? '0.85' : '0.75'}
+                  strokeWidth={isCoOffender ? '1.5' : '1.1'}
+                  strokeDasharray={isCoOffender ? '3.5,2.5' : undefined}
+                  strokeOpacity={isCoOffender ? '0.85' : '0.65'}
                 />
 
-                {/* Relationship Label Pill */}
+                {/* Compact Relationship Badge */}
                 <g className="pointer-events-none">
                   <rect
-                    x={mx - labelWidth / 2}
-                    y={my - 6.5}
+                    x={lx - labelWidth / 2}
+                    y={ly - labelHeight / 2}
                     width={labelWidth}
-                    height="13"
-                    rx="4"
-                    fill="#FFFFFF"
-                    stroke={isCoOffender ? '#FECACA' : '#E2E8F0'}
-                    strokeWidth="0.8"
-                    filter="drop-shadow(0 1px 2px rgba(0,0,0,0.04))"
+                    height={labelHeight}
+                    rx="2.5"
+                    fill="rgba(255, 255, 255, 0.94)"
+                    stroke={isCoOffender ? '#FCA5A5' : '#E2E8F0'}
+                    strokeWidth="0.6"
                   />
                   <text
-                    x={mx}
-                    y={my + 2.5}
-                    fill={isCoOffender ? '#DC2626' : '#475569'}
-                    fontSize="5"
+                    x={lx}
+                    y={ly + 1.8}
+                    fill={isCoOffender ? '#DC2626' : '#64748B'}
+                    fontSize="3.9"
                     fontWeight="600"
                     textAnchor="middle"
                     className="font-sans select-none"
+                    letterSpacing="-0.01em"
                   >
                     {edge.label}
                   </text>
@@ -246,13 +259,13 @@ export default function GraphCanvas({
             );
           })}
 
-          {/* 2. ENTITY NODES */}
+          {/* 2. ENTITY NODES (Rendered after edges so all nodes & labels sit ABOVE relationship lines) */}
           {nodes.map((node) => {
             const isSelected = selectedNode?.id === node.id;
             const isMatch    = matchesSearch(node.label);
             const color      = getNodeColor(node.type, node.risk);
             const isHighRisk = node.risk === 'Critical' || node.risk === 'High';
-            const radius     = isHighRisk ? 13.5 : 11.5;
+            const radius     = isHighRisk ? 13 : 11;
 
             return (
               <g
@@ -267,28 +280,28 @@ export default function GraphCanvas({
                 {/* Search Highlight Halo */}
                 {isMatch && (
                   <circle
-                    cx={node.x} cy={node.y} r={radius + 9}
-                    fill="none" stroke="#6366F1" strokeWidth="2"
+                    cx={node.x} cy={node.y} r={radius + 8}
+                    fill="none" stroke="#6366F1" strokeWidth="1.8"
                     strokeDasharray="3,3"
                     className="animate-pulse"
                   />
                 )}
 
-                {/* High-Risk Ambient Pulse Ring */}
+                {/* High-Risk Ambient Ring */}
                 {isHighRisk && !isSelected && (
                   <circle
-                    cx={node.x} cy={node.y} r={radius + 6}
-                    fill="none" stroke={color} strokeWidth="1.2"
-                    strokeDasharray="2,2" opacity="0.4"
+                    cx={node.x} cy={node.y} r={radius + 5}
+                    fill="none" stroke={color} strokeWidth="1.0"
+                    strokeDasharray="2,2" opacity="0.35"
                   />
                 )}
 
                 {/* Selected Halo Ring */}
                 {isSelected && (
                   <circle
-                    cx={node.x} cy={node.y} r={radius + 7}
+                    cx={node.x} cy={node.y} r={radius + 6}
                     fill={color} fillOpacity="0.10"
-                    stroke={color} strokeWidth="2"
+                    stroke={color} strokeWidth="1.8"
                     strokeDasharray="3,2"
                   />
                 )}
@@ -298,21 +311,21 @@ export default function GraphCanvas({
                   cx={node.x} cy={node.y} r={radius}
                   fill="#FFFFFF"
                   stroke={color}
-                  strokeWidth={isSelected ? '3' : isHighRisk ? '2.5' : '2'}
+                  strokeWidth={isSelected ? '2.8' : isHighRisk ? '2.2' : '1.8'}
                   filter={isSelected ? 'url(#node-shadow-selected)' : 'url(#node-shadow)'}
-                  className="group-hover/node:stroke-[3.2px] transition-all duration-150"
+                  className="group-hover/node:stroke-[2.8px] transition-all duration-150"
                 />
 
                 {/* Node Icon */}
-                <g transform={`translate(${node.x}, ${node.y}) scale(${isHighRisk ? 1.05 : 0.95})`}>
+                <g transform={`translate(${node.x}, ${node.y}) scale(${isHighRisk ? 1.0 : 0.9})`}>
                   {renderNodeIcon(node.type, node.risk, color)}
                 </g>
 
-                {/* Node Primary Label */}
+                {/* Node Primary Label (Entity Name) */}
                 <text
-                  x={node.x} y={node.y + radius + 11}
+                  x={node.x} y={node.y + radius + 8.5}
                   fill="#0F172A"
-                  fontSize="7"
+                  fontSize="6.5"
                   fontWeight="700"
                   textAnchor="middle"
                   className="select-none pointer-events-none font-sans"
@@ -322,10 +335,10 @@ export default function GraphCanvas({
 
                 {/* Node Subtitle / Risk Tag */}
                 <text
-                  x={node.x} y={node.y + radius + 19}
+                  x={node.x} y={node.y + radius + 15}
                   fill={node.risk ? color : '#64748B'}
-                  fontSize="5.2"
-                  fontWeight="600"
+                  fontSize="4.6"
+                  fontWeight="700"
                   textAnchor="middle"
                   className="select-none pointer-events-none font-sans uppercase tracking-wider"
                 >
@@ -335,17 +348,17 @@ export default function GraphCanvas({
                 {/* Hover Tooltip Card */}
                 <g className="opacity-0 group-hover/node:opacity-100 pointer-events-none transition-opacity duration-150">
                   <rect
-                    x={node.x - 45} y={node.y - radius - 24}
-                    width="90" height="18"
-                    rx="5"
+                    x={node.x - 42} y={node.y - radius - 22}
+                    width="84" height="16"
+                    rx="4.5"
                     fill="#0B1F4D"
                     opacity="0.95"
-                    filter="drop-shadow(0 2px 5px rgba(0,0,0,0.2))"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.18))"
                   />
                   <text
-                    x={node.x} y={node.y - radius - 12.5}
+                    x={node.x} y={node.y - radius - 11.5}
                     fill="#F8FAFC"
-                    fontSize="5.8"
+                    fontSize="5.2"
                     fontWeight="600"
                     textAnchor="middle"
                     className="font-sans"
