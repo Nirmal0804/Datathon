@@ -147,39 +147,121 @@ export default function GraphCanvas({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="w-full bg-[#FAFBFD] border border-[#E2E8F0] rounded-[18px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
-      style={{ height: '530px' }}
+      className="w-full bg-[#F1F3F5] border border-[#E2E8F0] rounded-[18px] relative overflow-hidden select-none cursor-grab active:cursor-grabbing shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+      style={{ height: '540px' }}
     >
-      {/* Zoom Controls */}
+      {/* Zoom Controls (Bottom-Left) */}
       <div className="absolute bottom-4 left-4 flex gap-2 z-10">
         <button
           onClick={() => setZoom(z => Math.min(z + 0.15, 3.0))}
-          className="w-8 h-8 rounded-[10px] bg-white border border-[#E2E8F0] text-[#0B1F4D] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] font-bold text-sm cursor-pointer flex items-center justify-center shadow-xs transition-all"
+          className="w-8 h-8 rounded-[10px] bg-white/95 border border-[#E2E8F0] text-[#0B1F4D] hover:bg-white hover:border-[#CBD5E1] font-bold text-sm cursor-pointer flex items-center justify-center shadow-xs transition-all backdrop-blur-xs"
           title="Zoom In"
         >+</button>
         <button
           onClick={() => setZoom(z => Math.max(z - 0.15, 0.4))}
-          className="w-8 h-8 rounded-[10px] bg-white border border-[#E2E8F0] text-[#0B1F4D] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] font-bold text-sm cursor-pointer flex items-center justify-center shadow-xs transition-all"
+          className="w-8 h-8 rounded-[10px] bg-white/95 border border-[#E2E8F0] text-[#0B1F4D] hover:bg-white hover:border-[#CBD5E1] font-bold text-sm cursor-pointer flex items-center justify-center shadow-xs transition-all backdrop-blur-xs"
           title="Zoom Out"
         >−</button>
         <button
           onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-          className="px-3 h-8 rounded-[10px] bg-white border border-[#E2E8F0] text-[#0B1F4D] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] text-[11px] font-bold cursor-pointer flex items-center justify-center shadow-xs transition-all"
+          className="px-3 h-8 rounded-[10px] bg-white/95 border border-[#E2E8F0] text-[#0B1F4D] hover:bg-white hover:border-[#CBD5E1] text-[11px] font-bold cursor-pointer flex items-center justify-center shadow-xs transition-all backdrop-blur-xs"
         >Reset View</button>
       </div>
 
-      {/* Navigation Hint */}
-      <div className="absolute top-3.5 right-3.5 z-10 bg-white/90 border border-[#E2E8F0] rounded-[10px] px-3 py-1.5 text-[10px] font-semibold text-[#64748B] shadow-xs pointer-events-none backdrop-blur-xs flex items-center gap-1.5">
+      {/* Navigation Hint (Top-Right) */}
+      <div className="absolute top-3.5 right-3.5 z-10 bg-white/95 border border-[#E2E8F0] rounded-[10px] px-3 py-1.5 text-[10px] font-semibold text-[#64748B] shadow-xs pointer-events-none backdrop-blur-xs flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-[#0B1F4D]" />
         Ctrl + scroll to zoom · Drag nodes to reposition
+      </div>
+
+      {/* Floating Legend Box (Bottom-Right Inside Canvas) */}
+      <div
+        className="absolute bottom-4 right-4 z-10 bg-white/95 border border-[#E2E8F0] rounded-[14px] p-3 shadow-md select-none pointer-events-auto backdrop-blur-md"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <div className="text-[10px] font-black text-[#0B1F4D] uppercase tracking-wider mb-2 flex items-center justify-between gap-4">
+          <span>LEGEND</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[10px] font-semibold text-[#334155]">
+          {/* Suspect / Critical */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#EF4444] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Accused', 'Critical', '#EF4444')}
+              </svg>
+            </span>
+            <span>Suspect</span>
+          </div>
+
+          {/* Police Station */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#3B82F6] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Police Station', null, '#3B82F6')}
+              </svg>
+            </span>
+            <span>Police Station</span>
+          </div>
+
+          {/* Associate */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#F97316] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Accused', 'High', '#F97316')}
+              </svg>
+            </span>
+            <span>Associate</span>
+          </div>
+
+          {/* Location / District */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#6366F1] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('District', null, '#6366F1')}
+              </svg>
+            </span>
+            <span>Location</span>
+          </div>
+
+          {/* Witness / Low */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#10B981] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Accused', 'Low', '#10B981')}
+              </svg>
+            </span>
+            <span>Witness</span>
+          </div>
+
+          {/* Crime Category */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#EC4899] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Crime Category', null, '#EC4899')}
+              </svg>
+            </span>
+            <span>Crime Category</span>
+          </div>
+
+          {/* FIR / Case */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-full border border-[#8B5CF6] bg-white flex items-center justify-center shrink-0">
+              <svg className="w-2.5 h-2.5" viewBox="-8 -8 16 16">
+                {renderNodeIcon('Case', null, '#8B5CF6')}
+              </svg>
+            </span>
+            <span>FIR</span>
+          </div>
+        </div>
       </div>
 
       <svg className="w-full h-full">
         {/* SVG Definitions */}
         <defs>
-          {/* Dotted Grid Pattern */}
+          {/* Subtle Dotted Grid Pattern for #F1F3F5 Canvas */}
           <pattern id="ksp-grid-dots" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="1" fill="#94A3B8" opacity="0.30" />
+            <circle cx="1.5" cy="1.5" r="1.1" fill="#64748B" opacity="0.25" />
           </pattern>
           {/* Subtle Drop Shadows */}
           <filter id="node-shadow" x="-40%" y="-40%" width="180%" height="180%">
