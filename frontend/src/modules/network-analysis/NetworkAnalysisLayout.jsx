@@ -4,7 +4,7 @@ import GraphCanvas from './components/GraphCanvas';
 import NodeInfoPanel from './components/NodeInfoPanel';
 import {
   Users, Share2, AlertTriangle, Network, ShieldAlert,
-  Compass, Brain, Search, Filter, BarChart2, TrendingUp,
+  Compass, Search, Filter, BarChart2, TrendingUp,
   TrendingDown, X, Activity, Link2, ChevronDown
 } from 'lucide-react';
 
@@ -58,14 +58,6 @@ const KPI_DATA = [
   { label: 'Cross-District',   value: '2',  icon: Compass,    color: '#10B981', bg: 'bg-emerald-500/10',trend: 'Stable',up: null},
 ];
 
-// ─── AI OBSERVATIONS ──────────────────────────────────────────────────────────
-
-const AI_OBSERVATIONS = [
-  { id: 1, priority: 'High',   text: 'High-frequency cooperation identified between Ramesh Kumar and Suresh Gowda across 3 shared FIR cases.' },
-  { id: 2, priority: 'Medium', text: 'Emerging cyber fraud clusters localized in Bengaluru City sector, specifically Tech Corridors.' },
-  { id: 3, priority: 'Low',    text: 'Territorial transit warnings flagged between Mysuru and Mandya checking divisions.' },
-];
-
 // ─── NETWORK STATS ────────────────────────────────────────────────────────────
 
 const NETWORK_STATS = [
@@ -74,21 +66,6 @@ const NETWORK_STATS = [
   { label: 'Isolated Nodes',     value: '3',     bar: 11, color: '#EF4444' },
   { label: 'Active Syndicates',  value: '2',     bar: 40, color: '#7C3AED' },
 ];
-
-// ─── PRIORITY BADGE ───────────────────────────────────────────────────────────
-
-function PriorityBadge({ priority }) {
-  const map = {
-    High:   'bg-rose-50 text-rose-600 border-rose-200',
-    Medium: 'bg-amber-50 text-amber-600 border-amber-200',
-    Low:    'bg-emerald-50 text-emerald-600 border-emerald-200',
-  };
-  return (
-    <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${map[priority] || map.Low}`}>
-      {priority}
-    </span>
-  );
-}
 
 // ─── SELECT DROPDOWN ──────────────────────────────────────────────────────────
 
@@ -357,25 +334,7 @@ export default function NetworkAnalysisLayout() {
             </div>
           </div>
 
-          {/* Card 2 — AI Observations */}
-          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-sm">
-            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-[#F1F5F9]">
-              <div className="w-7 h-7 bg-violet-500/10 rounded-[8px] flex items-center justify-center">
-                <Brain className="w-3.5 h-3.5 text-violet-600" />
-              </div>
-              <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">AI Observations</h3>
-            </div>
-            <div className="space-y-3">
-              {AI_OBSERVATIONS.map(obs => (
-                <div key={obs.id} className="flex gap-3 p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[12px]">
-                  <PriorityBadge priority={obs.priority} />
-                  <p className="text-[11px] font-semibold text-[#374151] leading-relaxed">{obs.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Card 3 — Network Statistics */}
+          {/* Card 2 — Network Statistics */}
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-sm">
             <div className="flex items-center gap-2 pb-3 mb-4 border-b border-[#F1F5F9]">
               <div className="w-7 h-7 bg-[#C79A2B]/10 rounded-[8px] flex items-center justify-center">
