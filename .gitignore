@@ -16,3 +16,5 @@ venv
 **/.catalyst
 .catalystrc
 catalyst-web-client-backup
+catalyst-web-client/*
+!catalyst-web-client/client-package.json
