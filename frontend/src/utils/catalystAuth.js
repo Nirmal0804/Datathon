@@ -1,6 +1,6 @@
 /**
  * Zoho Catalyst Authentication & Role Mapping Utility
- * Supports Zoho Catalyst Web SDK v4 (Embedded & BaaS Native Authentication)
+ * Supports Zoho Catalyst Web SDK v4 (Native Embedded Authentication)
  */
 
 // Confirmed Zoho Catalyst Application Users & Role Mappings
@@ -86,118 +86,28 @@ export async function checkCatalystAuth() {
 }
 
 /**
- * Authenticate credentials against Zoho Catalyst Native Authentication
- */
-export async function authenticateCatalystUser(email, password, expectedRole) {
-  const normalizedEmail = email.trim().toLowerCase();
-
-  // 1. Role-to-email pre-check
-  const roleCheck = validateEmailForRole(normalizedEmail, expectedRole);
-  if (!roleCheck.valid) {
-    return { success: false, error: roleCheck.reason };
-  }
-
-  // 2. Dispatch authentication to Catalyst Native Auth endpoints
-  try {
-    // Attempt standard Catalyst BaaS / Native Auth login endpoints
-    const endpoints = [
-      '/__catalyst/auth/login',
-      '/baas/v1/auth/login',
-    ];
-
-    let authResponse = null;
-    for (const endpoint of endpoints) {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            email_id: normalizedEmail,
-            user_name: normalizedEmail,
-            password: password,
-          }),
-        });
-
-        if (res.ok) {
-          authResponse = await res.json();
-          break;
-        } else if (res.status === 401 || res.status === 400) {
-          const errData = await res.json().catch(() => ({}));
-          return {
-            success: false,
-            error: errData.message || 'Invalid credentials. Password verification failed in Catalyst.',
-          };
-        }
-      } catch {
-        // Continue checking next endpoint or SDK session
-      }
-    }
-
-    // Check if session was established or if SDK is active
-    if (isCatalystSDKAvailable()) {
-      const verifiedSession = await checkCatalystAuth();
-      if (verifiedSession && verifiedSession.email) {
-        if (verifiedSession.email !== normalizedEmail) {
-          await signOutCatalyst();
-          return {
-            success: false,
-            error: `Account mismatch. Please sign in using the account assigned to the ${ROLE_DISPLAY_NAMES[expectedRole]} role.`,
-          };
-        }
-        return { success: true, user: verifiedSession };
-      }
-    }
-
-    if (authResponse && (authResponse.status === 'success' || authResponse.content)) {
-      const user = authResponse.content || authResponse;
-      const userEmail = (user.email_id || user.email || user.user_name || normalizedEmail).toLowerCase();
-      
-      if (userEmail !== normalizedEmail) {
-        await signOutCatalyst();
-        return {
-          success: false,
-          error: `Account mismatch. Please sign in using the account assigned to the ${ROLE_DISPLAY_NAMES[expectedRole]} role.`,
-        };
-      }
-
-      return {
-        success: true,
-        user: {
-          raw: user,
-          email: userEmail,
-          name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || ROLE_DISPLAY_NAMES[expectedRole],
-          role: expectedRole,
-          verifiedByCatalyst: true,
-        },
-      };
-    }
-
-    // If Catalyst endpoints return 404 or are unreachable in standalone Vite
-    return {
-      success: false,
-      error: 'Catalyst Authentication Service Unavailable. Run through Catalyst environment (catalyst serve) or deploy to Catalyst.',
-    };
-  } catch (err) {
-    return {
-      success: false,
-      error: err?.message || 'Authentication failed. Please verify your Catalyst credentials.',
-    };
-  }
-}
-
-/**
- * Render Catalyst Embedded Sign-In widget into a target container
+ * Render Zoho Catalyst Embedded Sign-In widget into a target container
  */
 export function renderCatalystSignIn(elementId, config = {}) {
   if (!isCatalystSDKAvailable()) {
+    console.warn('[Catalyst Auth] Web SDK is not available in window.catalyst.auth');
     return false;
   }
 
   try {
+    const targetElement = document.getElementById(elementId);
+    if (!targetElement) {
+      console.warn(`[Catalyst Auth] Target element #${elementId} not found in DOM.`);
+      return false;
+    }
+
+    // Clean previous contents to prevent duplicate iframe instances
+    targetElement.innerHTML = '';
+
+    // Mount native Catalyst IAM embedded authentication iframe
     window.catalyst.auth.signIn(elementId, {
+      service_url: '/app/index.html',
+      always_render_login: true,
       ...config,
     });
     return true;

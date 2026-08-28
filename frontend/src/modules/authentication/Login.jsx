@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Shield, User, Settings, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.png';
 import { useToast } from '../../components/ui/Toast';
 import {
   EXPECTED_EMAILS,
   ROLE_DISPLAY_NAMES,
-  authenticateCatalystUser
+  validateEmailForRole,
+  isCatalystSDKAvailable,
+  renderCatalystSignIn,
+  signOutCatalyst
 } from '../../utils/catalystAuth';
 
 const roles = [
@@ -15,85 +18,116 @@ const roles = [
   { id: 'admin', name: 'System Administrator', icon: Settings }
 ];
 
-export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
+export default function Login({ role, onRoleSelect, onBack, onLogin }) {
   const { addToast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role || null);
-  const [email, setEmail] = useState(role ? EXPECTED_EMAILS[role] || '' : '');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isInitializingSDK, setIsInitializingSDK] = useState(false);
+  const catalystContainerRef = useRef(null);
 
   useEffect(() => {
     if (role) {
       setSelectedRole(role);
-      setEmail(EXPECTED_EMAILS[role] || '');
-      setPassword('');
       setErrorMessage('');
     }
   }, [role]);
 
   const handleRoleClick = (roleId) => {
     setSelectedRole(roleId);
-    setEmail(EXPECTED_EMAILS[roleId] || '');
-    setPassword('');
     setErrorMessage('');
     if (onRoleSelect) {
       onRoleSelect(roleId);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedRole) {
-      addToast({
-        title: 'Access Level Required',
-        message: 'Please select an access level before logging in.',
-        type: 'warning',
+  // Mount Zoho Catalyst Native Embedded Authentication widget
+  useEffect(() => {
+    let isMounted = true;
+    let pollInterval = null;
+
+    const initWidget = () => {
+      if (!selectedRole || !catalystContainerRef.current) return;
+
+      setIsInitializingSDK(true);
+
+      const success = renderCatalystSignIn('catalyst-auth-container', {
+        service_url: '/app/index.html',
+        always_render_login: true,
+        onSuccess: (user) => {
+          if (!isMounted) return;
+          setIsInitializingSDK(false);
+
+          // Safely read user email from Catalyst response
+          const userEmail = user?.email_id || user?.email || user?.user_name || '';
+          const validation = validateEmailForRole(userEmail, selectedRole);
+
+          if (validation.valid) {
+            onLogin(selectedRole, {
+              email: userEmail,
+              raw: user,
+              verifiedByCatalyst: true,
+              name: user?.first_name
+                ? `${user.first_name} ${user.last_name || ''}`.trim()
+                : ROLE_DISPLAY_NAMES[selectedRole],
+            });
+          } else {
+            setErrorMessage(validation.reason);
+            addToast({
+              title: 'Authentication Denied',
+              message: validation.reason,
+              type: 'error',
+            });
+            signOutCatalyst();
+          }
+        },
+        onError: (err) => {
+          if (!isMounted) return;
+          setIsInitializingSDK(false);
+          const msg = err?.message || 'Authentication error from Zoho Catalyst. Please verify credentials.';
+          setErrorMessage(msg);
+          addToast({
+            title: 'Authentication Error',
+            message: msg,
+            type: 'error',
+          });
+        }
       });
-      return;
-    }
 
-    if (!password || password.trim() === '') {
-      setErrorMessage('Please enter your password.');
-      addToast({
-        title: 'Password Required',
-        message: 'Please enter your password to authenticate.',
-        type: 'warning',
-      });
-      return;
-    }
-
-    setErrorMessage('');
-    setIsLoading(true);
-
-    try {
-      // Authenticate directly with Zoho Catalyst Native Authentication
-      const result = await authenticateCatalystUser(email, password, selectedRole);
-
-      if (result.success && result.user) {
-        onLogin(selectedRole, result.user);
-      } else {
-        const errorMsg = result.error || 'Invalid credentials. Password verification failed in Catalyst.';
-        setErrorMessage(errorMsg);
-        addToast({
-          title: 'Authentication Failed',
-          message: errorMsg,
-          type: 'error',
-        });
+      if (success && isMounted) {
+        setIsInitializingSDK(false);
       }
-    } catch (err) {
-      const errorMsg = err?.message || 'Authentication error. Please try again.';
-      setErrorMessage(errorMsg);
-      addToast({
-        title: 'Login Error',
-        message: errorMsg,
-        type: 'error',
-      });
-    } finally {
-      setIsLoading(false);
+    };
+
+    if (selectedRole) {
+      if (isCatalystSDKAvailable()) {
+        initWidget();
+      } else {
+        // Wait briefly for Catalyst SDK scripts if still initializing
+        let attempts = 0;
+        pollInterval = setInterval(() => {
+          attempts += 1;
+          if (isCatalystSDKAvailable()) {
+            clearInterval(pollInterval);
+            initWidget();
+          } else if (attempts >= 10) {
+            clearInterval(pollInterval);
+            if (isMounted) {
+              setIsInitializingSDK(false);
+              setErrorMessage('Catalyst Authentication SDK is initializing. Please refresh if login does not appear.');
+            }
+          }
+        }, 300);
+      }
     }
-  };
+
+    return () => {
+      isMounted = false;
+      if (pollInterval) clearInterval(pollInterval);
+      if (catalystContainerRef.current) {
+        catalystContainerRef.current.innerHTML = '';
+      }
+    };
+  }, [selectedRole, onLogin, addToast]);
 
   return (
     <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#E00000]/10 selection:text-[#E00000]">
@@ -140,7 +174,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-200/80 w-full max-w-[460px] relative z-20 my-auto"
+          className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-200/80 w-full max-w-[480px] relative z-20 my-auto"
         >
           {/* Card Official Logo */}
           <img
@@ -205,67 +239,44 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             )}
           </AnimatePresence>
 
-          {/* Login Credentials Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-[#142B45] mb-1.5">
-                Official ID / Email
-              </label>
-              <div className="relative flex items-center">
-                <User className="absolute left-4 h-4 w-4 text-slate-400" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Select access level to autofill"
-                  className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs font-medium"
+          {/* Role Selected: Zoho Catalyst Native Embedded Authentication */}
+          {selectedRole ? (
+            <div className="space-y-4">
+              {/* Authorized Account Information */}
+              <div className="p-3 rounded-xl bg-[#F8FAFC] border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+                    Authorized Official Account
+                  </span>
+                  <span className="text-xs font-bold text-[#142B45]">
+                    {EXPECTED_EMAILS[selectedRole]}
+                  </span>
+                </div>
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
+                  {ROLE_DISPLAY_NAMES[selectedRole]}
+                </span>
+              </div>
+
+              {/* Native Catalyst IAM Embedded Authentication Frame */}
+              <div className="relative">
+                {isInitializingSDK && (
+                  <div className="flex items-center justify-center p-8 text-xs text-slate-500 gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#E00000]" />
+                    <span>Connecting to Zoho Catalyst Security...</span>
+                  </div>
+                )}
+                <div
+                  id="catalyst-auth-container"
+                  ref={catalystContainerRef}
+                  className="w-full min-h-[380px] rounded-2xl bg-white border border-slate-100 overflow-hidden"
                 />
               </div>
             </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs font-bold text-[#142B45]">
-                  Password
-                </label>
-                <button
-                  type="button"
-                  onClick={onForgot}
-                  className="text-xs text-[#E00000] hover:underline font-bold transition-colors cursor-pointer"
-                >
-                  Forgot?
-                </button>
-              </div>
-              <div className="relative flex items-center">
-                <Lock className="absolute left-4 h-4 w-4 text-slate-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
+          ) : (
+            <div className="text-center py-6 text-xs text-slate-400 font-medium">
+              Please select an access level above to proceed.
             </div>
-
-            {/* Primary Login Button */}
-            <button
-              type="submit"
-              disabled={!selectedRole || isLoading}
-              className="w-full py-3.5 mt-6 bg-[#E00000] hover:bg-[#C90000] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
-            >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
-            </button>
-          </form>
+          )}
 
         </motion.div>
       </main>

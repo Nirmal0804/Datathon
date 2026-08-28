@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Karnataka Police - Crime Analytics Platform</title>
 
+    <!-- Anti-Framing Guard: Prevents CrimeIntel from booting inside authentication iframes -->
+    <script>
+      if (window.self !== window.top) {
+        if (window.stop) window.stop();
+      }
+    </script>
+
     <!-- Zoho Catalyst Web SDK v4 (Embedded Authentication) -->
     <script src="https://static.zohocdn.com/catalyst/sdk/js/4.6.2/catalystWebSDK.js"></script>
     <script>
