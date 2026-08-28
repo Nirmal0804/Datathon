@@ -61,6 +61,7 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
       setIsInitializingSDK(true);
 
       const success = renderCatalystSignIn('catalyst-auth-container', {
+        css_url: '/css/embedded-auth.css',
         service_url: '/app/index.html',
         always_render_login: true,
         onSuccess: (user) => {
@@ -281,8 +282,8 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
                 <div
                   id="catalyst-auth-container"
                   ref={catalystContainerRef}
-                  style={{ width: '100%', height: '420px', minHeight: '420px' }}
-                  className="w-full h-[420px] min-h-[420px] rounded-2xl bg-white border border-slate-100 overflow-hidden"
+                  style={{ width: '100%', minHeight: '480px' }}
+                  className="w-full min-h-[480px] rounded-2xl bg-white border border-slate-100 overflow-visible"
                 />
               </div>
             </div>

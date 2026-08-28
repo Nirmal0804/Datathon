@@ -108,8 +108,12 @@ export function renderCatalystSignIn(elementId, config = {}) {
     // Clean previous contents to prevent duplicate iframe instances
     targetElement.innerHTML = '';
 
-    // Mount native Catalyst IAM embedded authentication iframe
+    const basePath = window.location.pathname.startsWith('/app') ? '/app' : '';
+    const cssUrl = `${basePath}/css/embedded-auth.css`;
+
+    // Mount native Catalyst IAM embedded authentication iframe with custom responsive CSS
     window.catalyst.auth.signIn(elementId, {
+      css_url: cssUrl,
       service_url: '/app/index.html',
       always_render_login: true,
       ...config,
