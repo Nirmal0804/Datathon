@@ -422,17 +422,30 @@ export default function AdminUsers() {
       {/* ── 5. Add User Modal ────────────────────────────────────────────────── */}
       <AnimatePresence>
         {addUserModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <>
+            {/* Backdrop — starts below the navbar, never covers it */}
+            <div
+              className="fixed left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm"
+              style={{ top: '68px', zIndex: 1000 }}
+              onClick={() => setAddUserModal(false)}
+            />
+            {/* Modal — positioned above backdrop, also below the navbar */}
+            <div
+              className="fixed left-0 right-0 bottom-0 flex items-start justify-center overflow-y-auto"
+              style={{ top: '68px', zIndex: 1001, paddingTop: '20px', paddingBottom: '24px', paddingLeft: '16px', paddingRight: '16px' }}
+              onClick={(e) => { if (e.target === e.currentTarget) setAddUserModal(false); }}
+            >
             <motion.form
               initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
               transition={{ duration: 0.15 }}
               onSubmit={handleAddUser}
-              className="bg-white rounded-[24px] border border-[#E7ECF3] w-full max-w-md overflow-hidden shadow-2xl"
+              className="bg-white rounded-[24px] border border-[#E7ECF3] w-full max-w-md shadow-2xl flex flex-col"
+              style={{ maxHeight: 'calc(100vh - 112px)' }}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-7 py-5 bg-[#0B1F4D] rounded-t-[24px]">
+              <div className="flex items-center justify-between px-7 py-5 bg-[#0B1F4D] rounded-t-[24px] flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-[10px] bg-white/10 flex items-center justify-center">
                     <Plus className="w-4 h-4 text-[#C79A2B]" />
@@ -449,7 +462,7 @@ export default function AdminUsers() {
               </div>
 
               {/* Modal Body */}
-              <div className="p-7 space-y-5">
+              <div className="p-7 space-y-5 overflow-y-auto flex-1 min-h-0">
                 {[
                   { label: 'Username (Unique handle)', key: 'username', type: 'text', placeholder: 'e.g. patil_cp' },
                   { label: 'Full Name', key: 'name', type: 'text', placeholder: 'e.g. Inspector Patil' },
@@ -491,7 +504,7 @@ export default function AdminUsers() {
               </div>
 
               {/* Modal Footer */}
-              <div className="px-7 py-5 border-t border-[#E7ECF3] bg-[#F8F9FB] rounded-b-[24px] flex justify-end gap-3">
+              <div className="px-7 py-5 border-t border-[#E7ECF3] bg-[#F8F9FB] rounded-b-[24px] flex justify-end gap-3 flex-shrink-0">
                 <button
                   type="button"
                   onClick={() => setAddUserModal(false)}
@@ -508,7 +521,8 @@ export default function AdminUsers() {
                 </button>
               </div>
             </motion.form>
-          </div>
+            </div>
+          </>
         )}
       </AnimatePresence>
     </div>

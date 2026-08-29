@@ -67,7 +67,7 @@ function Toast({ id, type = 'info', title, message, onDismiss }) {
       animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: 30, scale: 0.94 }}
       transition={{ type: 'spring', stiffness: 450, damping: 32 }}
-      className="flex items-start gap-3 w-[330px] sm:w-[350px] p-3.5 sm:p-4 rounded-[14px] bg-white/98 border border-[#E2E8F0] shadow-[0_10px_25px_-5px_rgba(15,23,42,0.10),0_8px_10px_-6px_rgba(15,23,42,0.05)] backdrop-blur-md relative overflow-hidden"
+      className="flex items-start gap-3 w-[330px] sm:w-[350px] p-3.5 sm:p-4 rounded-[14px] bg-white border border-[#E2E8F0] shadow-[0_10px_25px_-5px_rgba(15,23,42,0.10),0_8px_10px_-6px_rgba(15,23,42,0.05)] relative overflow-hidden"
       role="alert"
       aria-live="polite"
     >

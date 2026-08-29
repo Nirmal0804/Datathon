@@ -397,16 +397,30 @@ export default function FieldOfficerFIRManagement() {
       {/* 12. FIR Case Detail Modal Overlay */}
       <AnimatePresence>
         {selectedCase && (
-          <div className="fixed inset-0 bg-[#0F172A]/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <>
+            {/* Backdrop — starts below the navbar, never covers it */}
+            <div
+              className="fixed left-0 right-0 bottom-0 bg-[#0F172A]/60 backdrop-blur-md"
+              style={{ top: '68px', zIndex: 1000 }}
+              onClick={() => setSelectedCase(null)}
+            />
+
+            {/* Modal — positioned above backdrop, also below the navbar */}
+            <div
+              className="fixed left-0 right-0 bottom-0 flex items-start justify-center overflow-y-auto"
+              style={{ top: '68px', zIndex: 1001, paddingTop: '20px', paddingBottom: '24px', paddingLeft: '16px', paddingRight: '16px' }}
+              onClick={(e) => { if (e.target === e.currentTarget) setSelectedCase(null); }}
+            >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="bg-white border border-[#E7ECF3] rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl relative"
+              className="bg-white border border-[#E7ECF3] rounded-[24px] w-full max-w-2xl shadow-2xl relative flex flex-col"
+              style={{ maxHeight: 'calc(100vh - 112px)' }}
             >
               {/* Top Banner */}
-              <div className="flex items-center justify-between px-6 py-5 bg-[#0B1F4D] text-white border-b border-[#0A192F]">
+              <div className="flex items-center justify-between px-6 py-5 bg-[#0B1F4D] text-white border-b border-[#0A192F] flex-shrink-0 rounded-t-[24px]">
                 <div className="flex items-center gap-4">
                   <div className="p-2.5 rounded-xl bg-white/10 text-[#C79A2B]">
                     <Shield className="w-6 h-6" />
@@ -425,7 +439,7 @@ export default function FieldOfficerFIRManagement() {
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 space-y-6 max-h-[65vh] overflow-y-auto">
+              <div className="p-6 space-y-6 overflow-y-auto flex-1 min-h-0">
                 {/* Meta details grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
                   <div>
@@ -504,7 +518,7 @@ export default function FieldOfficerFIRManagement() {
               </div>
 
               {/* Footer Actions: Start, Investigate, Close Case */}
-              <div className="px-6 py-4 bg-[#F8F9FB] border-t border-[#E7ECF3] flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="px-6 py-4 bg-[#F8F9FB] border-t border-[#E7ECF3] flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0 rounded-b-[24px]">
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'open')}
@@ -533,7 +547,8 @@ export default function FieldOfficerFIRManagement() {
                 </button>
               </div>
             </motion.div>
-          </div>
+            </div>
+          </>
         )}
       </AnimatePresence>
     </div>

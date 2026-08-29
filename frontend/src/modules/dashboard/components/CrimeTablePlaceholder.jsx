@@ -322,35 +322,49 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
       {/* CASE DETAIL DIALOG OVERLAY */}
       <AnimatePresence>
         {selectedCase && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <>
+            {/* Backdrop — starts below the navbar, never covers it */}
+            <div
+              className="fixed left-0 right-0 bottom-0 bg-slate-900/60 backdrop-blur-md"
+              style={{ top: '68px', zIndex: 1000 }}
+              onClick={() => setSelectedCase(null)}
+            />
+
+            {/* Modal — positioned above backdrop, also below the navbar */}
+            <div
+              className="fixed left-0 right-0 bottom-0 flex items-start justify-center overflow-y-auto"
+              style={{ top: '68px', zIndex: 1001, paddingTop: '20px', paddingBottom: '24px', paddingLeft: '16px', paddingRight: '16px' }}
+              onClick={(e) => { if (e.target === e.currentTarget) setSelectedCase(null); }}
+            >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="bg-white border border-[#E7EAF0] rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl relative"
+              className="bg-white border border-[#E7EAF0] rounded-[24px] w-full max-w-2xl shadow-2xl relative flex flex-col"
+              style={{ maxHeight: 'calc(100vh - 112px)' }}
             >
               {/* Top Banner */}
-              <div className="flex items-center justify-between px-8 py-6 bg-[#F7F8FA] border-b border-[#E7EAF0]">
+              <div className="flex items-center justify-between px-8 py-6 bg-[#0B1F4D] border-b border-[#0A192F] flex-shrink-0 rounded-t-[24px]">
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 rounded-xl bg-[#1E3A8A]/10 text-[#1E3A8A]">
+                  <div className="p-2.5 rounded-xl bg-white/10 text-[#C79A2B]">
                     <Shield className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="text-xl font-extrabold text-[#0F172A] font-mono tracking-tight">{selectedCase.id}</h4>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Case Intelligence Brief</p>
+                    <h4 className="text-xl font-extrabold text-white font-mono tracking-tight">{selectedCase.id}</h4>
+                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mt-1">Case Intelligence Brief</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedCase(null)}
-                  className="p-2 rounded-xl bg-white border border-[#E7EAF0] text-slate-400 hover:text-[#0F172A] hover:bg-slate-50 transition-colors shadow-sm"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Modal Body */}
-              <div className="p-8 space-y-8 max-h-[70vh] overflow-y-auto no-scrollbar">
+              <div className="p-8 space-y-8 overflow-y-auto flex-1 min-h-0 no-scrollbar">
                 {/* Meta details */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-[#F7F8FA] p-5 rounded-2xl border border-[#E7EAF0]">
                   <div>
@@ -428,7 +442,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
               </div>
 
               {/* Footer with action buttons */}
-              <div className="px-8 py-5 bg-[#F7F8FA] border-t border-[#E7EAF0] flex items-center justify-between gap-3">
+              <div className="px-8 py-5 bg-[#F7F8FA] border-t border-[#E7EAF0] flex items-center justify-between gap-3 flex-shrink-0 rounded-b-[24px]">
                 {/* Action feedback badge */}
                 <AnimatePresence>
                   {actionFeedback?.id === selectedCase?.id && (
@@ -477,7 +491,8 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                 </div>
               </div>
             </motion.div>
-          </div>
+            </div>
+          </>
         )}
       </AnimatePresence>
     </div>
