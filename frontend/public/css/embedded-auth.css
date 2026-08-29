@@ -1,6 +1,6 @@
 /**
  * Zoho Catalyst IAM Embedded Authentication Stylesheet
- * Crime-Intel Clean Minimal Authentication UI
+ * Clean Crime-Intel Authentication Theme
  */
 
 /* 1. Global Reset & Base */
@@ -152,22 +152,20 @@ html, body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* 6. Password Field Container (Zoho 2-Step Native Flow Preserved) */
+/* 6. Password Field Container (Zoho Native Transitions Preserved without !important collision) */
 .getpassword {
   width: 100% !important;
   max-width: 100% !important;
   margin-top: 10px !important;
-  transition: all 0.3s ease !important;
 }
 
 .getpassword.zeroheight {
-  height: 0 !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  opacity: 0 !important;
-  display: none !important;
+  height: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
 }
 
 /* Eye Show/Hide Icon */
@@ -209,7 +207,7 @@ html, body {
   text-decoration: underline !important;
 }
 
-/* 8. CAPTCHA Container (Controlled Naturally by Zoho IAM) */
+/* 8. CAPTCHA Container (Display Managed Naturally by Zoho IAM) */
 #captcha_container {
   width: 100% !important;
   max-width: 100% !important;
@@ -217,7 +215,7 @@ html, body {
   box-sizing: border-box !important;
 }
 
-/* When active and visible, render clean inline layout */
+/* Active CAPTCHA Styling */
 #captcha_container:not([style*="display: none"]):not([style*="display:none"]) {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -283,7 +281,7 @@ html, body {
   border-color: #cbd5e1 !important;
 }
 
-/* 9. Primary Action Button: Navy "Sign In" */
+/* 9. Primary Action Button: Navy "Next / Sign In" */
 .btn, .signinbtn, #nextbtn {
   width: 100% !important;
   max-width: 100% !important;
@@ -311,18 +309,44 @@ html, body {
 }
 
 /* 10. Hide ALL Unwanted Native IAM Sections */
+.nopassword_container,
+.nopassword_icon,
+.nopassword_message,
+.setpassword,
+.pass_name,
+#password_desc,
+.password_expired,
+.resetIP_container,
+.terminate_session_container,
+#terminate_session_form,
+#terminate_web_sess,
+#terminate_mob_apps,
+#terminate_api_tok,
+.terminate_session_button,
+.trustbrowser_ui,
+#trust_device_container,
+.trustdevice,
+.trustbtn,
+.notnowbtn,
+#recoverybtn,
+#recovery_container,
+#recoverymodeContainer,
+#recoverOption,
+#problemsignin,
+.cant_access,
+#backup_container,
+#backupcode_container,
+.backuphead,
+.backup_desc,
+.verifyBackupCodebtn,
+.oneAuthLable,
+.oneauthdiv,
+.togglebtn_div,
+.include_oneAuth_button,
 #enableotpoption,
 #otp_container,
 #mfa_totp_container,
 #mfa_otp_container,
-#recovery_container,
-#recoverymodeContainer,
-#recoverOption,
-#recoverybtn,
-#problemsignin,
-#backup_container,
-#backupcode_container,
-.verifyBackupCodebtn,
 #emailcheck_container,
 #emailvalidate_container,
 #emailverify_container,
@@ -333,27 +357,14 @@ html, body {
 #rpassword_container,
 #changepassword,
 .change_pwd_container,
-#terminate_session_form,
-#terminate_session_container,
-#terminate_web_sess,
-#terminate_mob_apps,
-#terminate_api_tok,
-#terminate_session_skip,
-#terminate_session_submit,
-#trust_device_container,
-.trustdevice,
-.trustbtn,
-.notnowbtn,
-#oneauth_container,
-.showOneAuthTerminate,
-.real_togglebtn,
 .passphrase_container,
 #passphrase,
 .fed_2show,
 .fed_container,
 .federate_container,
 #enablemore,
-.cant_access,
+.textbox_actions_more,
+.contactSupport,
 .help_link,
 .support_link,
 .footer_container,
@@ -363,8 +374,7 @@ html, body {
 .oneauth_desc,
 .hellouser,
 #success_pcontainer,
-#emailverify_desc,
-#password_desc {
+#emailverify_desc {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
