@@ -1,6 +1,6 @@
 /**
  * Zoho Catalyst IAM Embedded Authentication Stylesheet
- * Exact match for Crime-Intel Clean Auth Design
+ * Crime-Intel Clean Minimal Authentication UI
  */
 
 /* 1. Global Reset & Base */
@@ -96,7 +96,7 @@ html, body {
 
 /* Field Labels */
 #getusername::before {
-  content: "Email" !important;
+  content: "Email Address" !important;
   display: block !important;
   font-size: 13px !important;
   font-weight: 700 !important;
@@ -152,24 +152,22 @@ html, body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* 6. Password Field Container */
-.getpassword, .getpassword.zeroheight {
+/* 6. Password Field Container (Zoho 2-Step Native Flow Preserved) */
+.getpassword {
   width: 100% !important;
   max-width: 100% !important;
-  height: auto !important;
-  min-height: auto !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
+  margin-top: 10px !important;
+  transition: all 0.3s ease !important;
 }
 
-#password_container {
-  display: block !important;
-  visibility: visible !important;
-  height: auto !important;
+.getpassword.zeroheight {
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  display: none !important;
 }
 
 /* Eye Show/Hide Icon */
@@ -185,37 +183,33 @@ html, body {
   background-position: center !important;
 }
 
-/* 7. Primary Forgot Password Link (Below Password Field Only) */
-#enableforgot {
+/* 7. Forgot Password Link (Below Password Field) */
+.textbox_actions, #enableforgot {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
   margin: 6px 0 12px 0 !important;
 }
 
-#enableforgot #forgotpassword,
-#enableforgot .blueforgotpassword,
-#enableforgot .goToForgotPassword {
+#forgotpassword, .blueforgotpassword, .goToForgotPassword {
   color: #2563eb !important;
-  font-size: 12px !important;
+  font-size: 12.5px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
   cursor: pointer !important;
   display: inline-block !important;
 }
 
-#enableforgot #forgotpassword a,
-#enableforgot .goToForgotPassword a {
+#forgotpassword a, .goToForgotPassword a {
   color: #2563eb !important;
   text-decoration: none !important;
 }
 
-#enableforgot #forgotpassword:hover,
-#enableforgot #forgotpassword a:hover {
+#forgotpassword:hover, #forgotpassword a:hover {
   text-decoration: underline !important;
 }
 
-/* 8. CAPTCHA Container (Display Managed Naturally by Zoho IAM) */
+/* 8. CAPTCHA Container (Controlled Naturally by Zoho IAM) */
 #captcha_container {
   width: 100% !important;
   max-width: 100% !important;
@@ -223,7 +217,7 @@ html, body {
   box-sizing: border-box !important;
 }
 
-/* Only style CAPTCHA elements when Zoho IAM makes it active */
+/* When active and visible, render clean inline layout */
 #captcha_container:not([style*="display: none"]):not([style*="display:none"]) {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -254,7 +248,7 @@ html, body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: #f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E") !important;
+  background: #f8fafc !important;
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 10px !important;
   height: 44px !important;
@@ -289,7 +283,7 @@ html, body {
   border-color: #cbd5e1 !important;
 }
 
-/* 9. Primary Action Button: Navy "Sign in" */
+/* 9. Primary Action Button: Navy "Sign In" */
 .btn, .signinbtn, #nextbtn {
   width: 100% !important;
   max-width: 100% !important;
@@ -302,8 +296,8 @@ html, body {
   font-size: 15px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
-  margin-top: 6px !important;
-  margin-bottom: 16px !important;
+  margin-top: 10px !important;
+  margin-bottom: 12px !important;
   transition: all 0.2s ease !important;
   box-shadow: 0 2px 6px rgba(16, 42, 69, 0.2) !important;
   display: flex !important;
@@ -316,91 +310,11 @@ html, body {
   box-shadow: 0 4px 10px rgba(16, 42, 69, 0.3) !important;
 }
 
-/* Change button text to "Sign in" */
-#nextbtn span {
-  font-size: 0 !important;
-}
-
-#nextbtn span::after {
-  content: "Sign in" !important;
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-}
-
-/* 10. "OR" Divider and "Sign in using OTP" Button */
-#enableotpoption {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-align: center !important;
-  display: block !important;
-}
-
-#enableotpoption::before {
-  content: "OR" !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #94a3b8 !important;
-  text-align: center !important;
-  margin: 4px 0 14px 0 !important;
-  letter-spacing: 0.05em !important;
-}
-
-#enableotpoption #signin_with_otp,
-#enableotpoption a#signin_with_otp {
-  width: 100% !important;
-  height: 42px !important;
-  background: #ffffff !important;
-  color: #2563eb !important;
-  border: 1.5px solid #bfdbfe !important;
-  border-radius: 8px !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  text-decoration: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-}
-
-/* Add Shield Icon to OTP Button */
-#enableotpoption #signin_with_otp::before,
-#enableotpoption a#signin_with_otp::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: 16px !important;
-  height: 16px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-}
-
-#enableotpoption #signin_with_otp:hover,
-#enableotpoption a#signin_with_otp:hover {
-  background: #f0f7ff !important;
-  border-color: #93c5fd !important;
-  color: #1d4ed8 !important;
-}
-
-/* HIDE the duplicate Forgot Password link inside/below the OTP container */
-#enableotpoption .blueforgotpassword,
-#enableotpoption .goToForgotPassword,
-#enableotpoption #forgotpassword,
-#enableotpoption a:not(#signin_with_otp) {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* 11. Hide All Unnecessary Native IAM Bloat Panels */
+/* 10. Hide ALL Unwanted Native IAM Sections */
+#enableotpoption,
+#otp_container,
+#mfa_totp_container,
+#mfa_otp_container,
 #recovery_container,
 #recoverymodeContainer,
 #recoverOption,
@@ -409,6 +323,17 @@ html, body {
 #backup_container,
 #backupcode_container,
 .verifyBackupCodebtn,
+#emailcheck_container,
+#emailvalidate_container,
+#emailverify_container,
+#emailotpverify_container,
+#verifycaptcha_container,
+#captchaverify_container,
+#npassword_container,
+#rpassword_container,
+#changepassword,
+.change_pwd_container,
+#terminate_session_form,
 #terminate_session_container,
 #terminate_web_sess,
 #terminate_mob_apps,
@@ -422,13 +347,6 @@ html, body {
 #oneauth_container,
 .showOneAuthTerminate,
 .real_togglebtn,
-#npassword_container,
-#rpassword_container,
-#changepassword,
-.change_pwd_container,
-#emailvalidate_container,
-#emailotpverify_container,
-#captchaverify_container,
 .passphrase_container,
 #passphrase,
 .fed_2show,
@@ -444,12 +362,18 @@ html, body {
 .troubleshoot,
 .oneauth_desc,
 .hellouser,
-#mfa_totp_container,
-#mfa_otp_container {
+#success_pcontainer,
+#emailverify_desc,
+#password_desc {
   display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
-/* 12. Error Message Alerts */
+/* 11. Error Message Alerts */
 .fielderror, .Errormsg, .Alert {
   color: #dc2626 !important;
   font-size: 12px !important;
