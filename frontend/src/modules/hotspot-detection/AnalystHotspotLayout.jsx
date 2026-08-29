@@ -329,14 +329,14 @@ export default function AnalystHotspotLayout({ onNavigate }) {
       {/* Header */}
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[22px] p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 w-full lg:w-auto">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#E00000] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm text-white">
-            <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm text-white">
+            <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-[#C79A2B]" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
               <h1 className="text-lg sm:text-2xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Intelligence</h1>
-              <div className="px-2.5 py-0.5 rounded-full bg-[#E00000]/10 border border-[#E00000]/20 flex items-center gap-1.5">
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#E00000] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+              <div className="px-2.5 py-0.5 rounded-full bg-[#0B1F4D]/10 border border-[#0B1F4D]/20 flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
               </div>
             </div>
             <p className="text-xs font-semibold text-[#64748B]">Tactical command suite for district-level risk rankings and predictive hotspot telemetry.</p>

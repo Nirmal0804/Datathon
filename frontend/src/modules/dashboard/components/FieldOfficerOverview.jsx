@@ -247,7 +247,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
         {/* Right Section: Compact Status Chips */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2 bg-[#F8F9FB] px-3 sm:px-4 h-8 sm:h-10 rounded-[14px] sm:rounded-[16px] border border-[#E5E7EB] shadow-sm cursor-default">
-            <Clock className="w-4 h-4 text-[#D49A00]" />
+            <Clock className="w-4 h-4 text-[#C79A2B]" />
             <span className="text-[11px] sm:text-xs font-bold text-[#0F172A]">Active Shift: 14:00 - 22:00</span>
           </div>
         </div>

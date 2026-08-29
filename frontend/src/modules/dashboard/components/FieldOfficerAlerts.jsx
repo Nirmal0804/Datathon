@@ -108,13 +108,13 @@ export default function FieldOfficerAlerts() {
       {/* 1. Compact Page Header Banner */}
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[80px] shrink-0">
         <div className="flex items-center gap-3.5 sm:gap-4">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#E00000] text-white flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#0B1F4D] text-white flex items-center justify-center shrink-0 shadow-xs">
             <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Operations Alerts Feed</h2>
-              <span className="bg-[#E00000]/10 text-[#E00000] border border-[#E00000]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
+              <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
                 {alertsList.length} Active Feeds
               </span>
             </div>
@@ -157,7 +157,7 @@ export default function FieldOfficerAlerts() {
             <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Feeds</p>
             <h3 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight mt-1">{kpis.active}</h3>
           </div>
-          <div className="w-10 h-10 rounded-[14px] bg-[#E00000]/10 border border-[#E00000]/20 flex items-center justify-center text-[#E00000] font-extrabold">
+          <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/10 border border-[#0B1F4D]/20 flex items-center justify-center text-[#0B1F4D] font-extrabold">
             <Bell className="w-5 h-5" />
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function FieldOfficerAlerts() {
             placeholder="Search alerts by keyword, title, description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#E00000] transition-all placeholder:text-slate-400 font-sans"
+            className="w-full h-10 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400 font-sans"
           />
         </div>
 
@@ -195,7 +195,7 @@ export default function FieldOfficerAlerts() {
             <select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#E00000] cursor-pointer"
+              className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
             >
               <option value="all">All Severities</option>
               <option value="critical">Critical Only</option>
@@ -208,7 +208,7 @@ export default function FieldOfficerAlerts() {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#E00000] cursor-pointer"
+            className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -217,7 +217,7 @@ export default function FieldOfficerAlerts() {
           {/* Refresh Button */}
           <button 
             onClick={() => { setSearchQuery(''); setSelectedSeverity('all'); }} 
-            className="h-10 w-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#E00000] hover:text-white transition-colors flex items-center justify-center cursor-pointer shadow-xs"
+            className="h-10 w-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#0B1F4D] hover:text-white transition-colors flex items-center justify-center cursor-pointer shadow-xs"
             title="Reset Filters"
           >
             <RefreshCw className="w-4 h-4" />
@@ -226,10 +226,10 @@ export default function FieldOfficerAlerts() {
           {/* Export Button */}
           <button 
             onClick={exportAlertsCSV} 
-            className="h-10 px-4 rounded-[14px] bg-[#E00000] text-white hover:bg-[#C90000] font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+            className="h-10 px-4 rounded-[14px] bg-[#0B1F4D] text-white hover:bg-[#143275] font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
             title="Export Alerts Data"
           >
-            <Download className="w-4 h-4 text-[#D49A00]" />
+            <Download className="w-4 h-4 text-[#C79A2B]" />
             <span className="hidden sm:inline">Export</span>
           </button>
         </div>

@@ -421,13 +421,13 @@ export default function SettingsLayout({ role = 'admin' }) {
       {/* ── 1. Page Header ──────────────────────────────────────────────────── */}
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[80px]">
         <div className="flex items-center gap-3.5 sm:gap-4">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#E00000] text-white flex items-center justify-center shrink-0 shadow-xs">
-            <Sliders className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#0B1F4D] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Sliders className="w-5 h-5 sm:w-6 sm:h-6 text-[#C79A2B]" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Platform Settings</h1>
-              <span className="bg-[#E00000]/10 text-[#E00000] border border-[#E00000]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
+              <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
                 Account Governance
               </span>
             </div>
@@ -440,7 +440,7 @@ export default function SettingsLayout({ role = 'admin' }) {
         {/* Top-Right Header Status & Action */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-end">
           <div className="hidden md:flex items-center gap-1.5 bg-[#F8F9FB] border border-[#E7ECF3] px-3.5 py-2 rounded-full text-xs font-bold text-[#64748B]">
-            <Clock className="w-3.5 h-3.5 text-[#E00000]" />
+            <Clock className="w-3.5 h-3.5 text-[#0B1F4D]" />
             Last Updated: Today 09:15 AM
           </div>
 
@@ -458,11 +458,11 @@ export default function SettingsLayout({ role = 'admin' }) {
             disabled={!isProfileDirty}
             className={`h-9 sm:h-10 px-4 sm:px-5 rounded-full font-extrabold text-xs transition-all duration-150 flex items-center gap-2 cursor-pointer shadow-sm ${
               isProfileDirty
-                ? 'bg-[#E00000] text-white hover:bg-[#C90000]'
+                ? 'bg-[#0B1F4D] hover:bg-[#143275] text-white'
                 : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
             }`}
           >
-            <Save className="w-4 h-4 text-[#D49A00]" />
+            <Save className="w-4 h-4 text-[#C79A2B]" />
             Save Changes
           </button>
         </div>
@@ -486,17 +486,17 @@ export default function SettingsLayout({ role = 'admin' }) {
                 onClick={() => setActiveSection(sec.id)}
                 className={`relative w-full p-3 sm:p-3.5 rounded-[14px] sm:rounded-[16px] text-left transition-all duration-200 flex items-center gap-3.5 group cursor-pointer overflow-hidden ${
                   isActive
-                    ? 'bg-[#E00000] text-white shadow-sm font-black'
+                    ? 'bg-[#0B1F4D] text-white shadow-sm font-black'
                     : 'bg-white text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] font-extrabold border border-transparent'
                 }`}
               >
                 {/* Active Left Gold Bar Indicator */}
                 {isActive && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#D49A00] rounded-r-full" />
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#C79A2B] rounded-r-full" />
                 )}
 
                 <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] sm:rounded-[12px] flex items-center justify-center shrink-0 text-base transition-colors ${
-                  isActive ? 'bg-white/20 text-[#D49A00]' : 'bg-[#E00000]/10 text-[#E00000]'
+                  isActive ? 'bg-white/20 text-[#C79A2B]' : 'bg-[#0B1F4D]/10 text-[#0B1F4D]'
                 }`}>
                   <Icon className="w-4 h-4" />
                 </div>
@@ -510,7 +510,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                   </p>
                 </div>
 
-                <ChevronRight className={`w-4 h-4 transition-transform ${isActive ? 'text-[#D49A00] translate-x-0.5' : 'text-slate-400 opacity-0 group-hover:opacity-100'}`} />
+                <ChevronRight className={`w-4 h-4 transition-transform ${isActive ? 'text-[#C79A2B] translate-x-0.5' : 'text-slate-400 opacity-0 group-hover:opacity-100'}`} />
               </button>
             );
           })}
@@ -529,7 +529,7 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="bg-white border border-[#E7ECF3] rounded-[22px] sm:rounded-[26px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
                 {/* Circular Avatar */}
                 <div className="relative group shrink-0">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#E00000] text-white font-black text-xl sm:text-2xl border-4 border-[#E7ECF3] flex items-center justify-center overflow-hidden shadow-md">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0B1F4D] text-white font-black text-xl sm:text-2xl border-4 border-[#E7ECF3] flex items-center justify-center overflow-hidden shadow-md">
                     {profile?.avatarUrl ? (
                       <img src={profile.avatarUrl} alt={profile?.fullName || 'User Avatar'} className="w-full h-full object-cover" />
                     ) : (
@@ -560,10 +560,10 @@ export default function SettingsLayout({ role = 'admin' }) {
                     <div>
                       <h2 className="text-base sm:text-lg font-black text-[#0F172A] tracking-tight">{profile.fullName}</h2>
                       <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-1">
-                        <span className="bg-[#E00000] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
+                        <span className="bg-[#0B1F4D] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
                           {profile.rank}
                         </span>
-                        <span className="bg-[#F8F9FB] border border-[#E7ECF3] text-[#E00000] text-[10px] font-extrabold px-2.5 py-0.5 rounded-full font-mono">
+                        <span className="bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] text-[10px] font-extrabold px-2.5 py-0.5 rounded-full font-mono">
                           {profile.badgeNumber}
                         </span>
                         <span className="text-xs font-semibold text-[#64748B]">
@@ -576,7 +576,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="h-9 px-4 rounded-full border border-[#E00000]/20 bg-[#E00000]/5 text-[#E00000] text-xs font-extrabold hover:bg-[#E00000] hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
+                        className="h-9 px-4 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] text-xs font-extrabold hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         Upload New Photo

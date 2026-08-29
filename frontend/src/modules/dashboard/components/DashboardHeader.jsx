@@ -46,7 +46,7 @@ export default function DashboardHeader({ compact = false }) {
 
         {/* Updated Chip */}
         <div className="flex items-center gap-2 bg-[#F8F9FB] px-3 sm:px-4 h-8 sm:h-10 rounded-[14px] sm:rounded-[16px] border border-[#E7ECF3] shadow-sm cursor-default">
-          <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D49A00]" />
+          <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C79A2B]" />
           <span className="text-[11px] sm:text-xs font-bold text-[#0F172A]">Live Sync</span>
         </div>
 

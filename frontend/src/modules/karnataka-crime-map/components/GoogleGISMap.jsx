@@ -460,7 +460,7 @@ export default function GoogleGISMap({
                       </div>
                       <div className="flex justify-between gap-4">
                         <span className="text-slate-500">Dominant Crime:</span>
-                        <span className="font-bold text-[#E00000]">{activeInfoWindow.data.dominantCat || 'N/A'}</span>
+                        <span className="font-bold text-[#0B1F4D]">{activeInfoWindow.data.dominantCat || 'N/A'}</span>
                       </div>
                     </div>
                   </div>

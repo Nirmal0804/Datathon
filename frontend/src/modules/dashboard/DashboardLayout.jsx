@@ -336,7 +336,7 @@ export default function DashboardLayout({ onLogout, role }) {
   };
 
   return (
-    <div className="bg-[#F7F8FA] text-[#0F172A] font-sans min-h-screen relative selection:bg-[#E00000]/10 selection:text-[#E00000]">
+    <div className="bg-[#F7F8FA] text-[#0F172A] font-sans min-h-screen relative selection:bg-[#0B1F4D]/10 selection:text-[#0B1F4D]">
       {/* 1. FIXED TOP NAVBAR (position: fixed attached directly to viewport top with z-9999) */}
       {isCompact && (
         <header className="fixed top-0 left-0 right-0 z-[9999] bg-[#F7F8FA] p-3 shadow-xs">

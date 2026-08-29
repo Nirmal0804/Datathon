@@ -572,11 +572,11 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
             className="fixed top-3 right-3 bottom-3 w-[calc(100%-1.5rem)] sm:w-[420px] bg-white shadow-2xl z-[100000] flex flex-col rounded-[20px] border border-[#E7ECF3] overflow-hidden"
           >
-            {/* Karnataka Police Red Header (Matching exact #E00000 red theme & border of global top navbar) */}
-            <div className="h-[72px] bg-[#E00000] border-b border-[#C90000] px-6 flex items-center justify-between shrink-0 shadow-xs">
+            {/* Karnataka Police Navy Header */}
+            <div className="h-[72px] bg-[#0B1F4D] border-b border-[#0A192F] px-6 flex items-center justify-between shrink-0 shadow-xs">
               <div className="flex items-center gap-3 text-white">
                 <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-                  <Shield className="w-4 h-4 text-white" />
+                  <Shield className="w-4 h-4 text-[#C79A2B]" />
                 </div>
                 <div>
                   <span className="text-[10px] font-mono font-bold text-white/90 uppercase tracking-widest block leading-tight">
@@ -604,7 +604,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                   <div className="p-3.5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
                     <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">Severity Level</span>
                     <span className={`inline-block py-0.5 px-2.5 rounded-full text-[10px] font-bold text-white uppercase tracking-wider ${
-                      selectedCase.risk === 'Critical' || selectedCase.risk === 'High' ? 'bg-[#E00000]' : 
+                      selectedCase.risk === 'Critical' || selectedCase.risk === 'High' ? 'bg-rose-600' : 
                       selectedCase.risk === 'Medium' ? 'bg-amber-500' : 'bg-emerald-600'
                     }`}>
                       {selectedCase.risk}
@@ -662,12 +662,12 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
                     <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
                       <span className="text-[#64748B] font-medium">High-Severity Ratio</span>
-                      <span className="font-bold text-[#E00000] font-mono">{caseMetrics.highSeverityCount} cases</span>
+                      <span className="font-bold text-rose-600 font-mono">{caseMetrics.highSeverityCount} cases</span>
                     </div>
 
                     <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
                       <span className="text-[#64748B] font-medium">Zone Hotspot Status</span>
-                      <span className={`font-bold ${caseMetrics.isHotspot ? 'text-[#E00000]' : 'text-slate-500'}`}>
+                      <span className={`font-bold ${caseMetrics.isHotspot ? 'text-rose-600' : 'text-slate-500'}`}>
                         {caseMetrics.isHotspot ? 'Active Hotspot' : 'Normal Beat'}
                       </span>
                     </div>

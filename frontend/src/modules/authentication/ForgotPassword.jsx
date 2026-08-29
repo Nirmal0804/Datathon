@@ -18,7 +18,7 @@ export default function ForgotPassword({ onBack }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#E00000]/10 selection:text-[#E00000]">
+    <div className="min-h-screen w-full bg-[#F4F6F9] flex flex-col relative overflow-hidden font-sans text-[#0F172A] selection:bg-[#0B1F4D]/10 selection:text-[#0B1F4D]">
       
       {/* 1. TOP NAVBAR: Matching Login Page Red Header */}
       <header className="w-full bg-[#E00000] text-white px-4 sm:px-8 py-3.5 border-b border-[#C90000] shadow-sm relative z-30 flex items-center justify-between">

@@ -163,9 +163,9 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
     : defaultProfile.initials;
 
   return (
-    <aside className="w-[280px] max-w-[85vw] flex flex-col h-full bg-[#E00000] text-white rounded-r-[24px] md:rounded-[24px] overflow-hidden shadow-2xl border-r border-[#C90000]">
+    <aside className="w-[280px] max-w-[85vw] flex flex-col h-full bg-[#0B1F4D] text-white rounded-r-[24px] md:rounded-[24px] overflow-hidden shadow-2xl border-r border-[#0A192F]">
       {/* Header / Logo */}
-      <div className="p-5 flex items-center justify-between gap-3 border-b border-white/20 shrink-0 bg-[#C90000]/40">
+      <div className="p-5 flex items-center justify-between gap-3 border-b border-white/10 shrink-0 bg-[#0A192F]/60">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
             <img src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" />
@@ -173,9 +173,9 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
           <div className="min-w-0">
             <h2 className="text-white font-extrabold tracking-tight text-xs flex items-center gap-1.5 leading-none">
               KARNATAKA POLICE
-              <span className="text-[9px] bg-[#D49A00] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+              <span className="text-[9px] bg-[#C79A2B] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
             </h2>
-            <p className="text-[10px] text-[#F5E7C1] font-semibold uppercase tracking-wider mt-1 truncate">
+            <p className="text-[10px] text-white/60 font-semibold uppercase tracking-wider mt-1 truncate">
               {platformSubtitle}
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
         {onClose && (
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1"
             aria-label="Close navigation menu"
           >
             <X className="w-4 h-4 text-white" />
@@ -197,7 +197,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
       <nav className="flex-1 overflow-y-auto py-5 px-3 space-y-5 no-scrollbar" aria-label="Main navigation">
         {navSections.map(section => (
           <div key={section.label}>
-            <p className="text-[10px] font-bold text-[#F5E7C1] uppercase tracking-widest px-3 mb-2 opacity-95">
+            <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest px-3 mb-2">
               {section.label}
             </p>
             <div className="space-y-1">
@@ -213,15 +213,15 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
                     whileTap={{ scale: 0.98 }}
                     className={`w-full h-11 flex items-center gap-3 px-3.5 rounded-[14px] text-[13px] font-bold transition-all duration-200 ease-in-out cursor-pointer ${
                       isActive 
-                        ? 'bg-white text-[#E00000] shadow-md' 
-                        : 'bg-transparent text-white/90 hover:bg-white/15 hover:text-white'
+                        ? 'bg-white text-[#0B1F4D] shadow-md' 
+                        : 'bg-transparent text-white/80 hover:bg-white/10 hover:text-white'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#E00000]' : 'text-white'}`} aria-hidden="true" />
+                    <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#0B1F4D]' : 'text-white'}`} aria-hidden="true" />
                     <span className="truncate">{item.name}</span>
                     {isActive && (
-                      <div className="ml-auto w-2 h-2 rounded-full bg-[#D49A00] shrink-0" />
+                      <div className="ml-auto w-2 h-2 rounded-full bg-[#C79A2B] shrink-0" />
                     )}
                   </motion.button>
                 );
@@ -232,10 +232,10 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
       </nav>
 
       {/* Bottom User & Action Panel */}
-      <div className="p-3.5 border-t border-white/20 space-y-2.5 bg-[#C90000]/30 shrink-0">
+      <div className="p-3.5 border-t border-white/10 space-y-2.5 bg-[#0A192F]/40 shrink-0">
         {/* User Card */}
-        <div className="flex items-center gap-3 bg-white/10 border border-white/20 px-3 py-2 rounded-[14px] text-white">
-          <div className="w-8 h-8 rounded-full bg-[#D49A00] text-[#142B45] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+        <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-2 rounded-[14px] text-white">
+          <div className="w-8 h-8 rounded-full bg-[#C79A2B] text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
             {avatarUrl ? (
               <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
             ) : (
@@ -244,7 +244,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold text-white truncate leading-tight">{profileName}</p>
-            <p className="text-[10px] font-medium text-[#F5E7C1] truncate">{profileRank} • {profileStation}</p>
+            <p className="text-[10px] font-medium text-white/60 truncate">{profileRank} • {profileStation}</p>
           </div>
         </div>
 
@@ -256,19 +256,19 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
               if (onClose) onClose();
             }}
             whileTap={{ scale: 0.98 }}
-            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-white/15 hover:bg-white/25 border border-white/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
-            <Settings className="w-3.5 h-3.5 text-[#D49A00] shrink-0" />
+            <Settings className="w-3.5 h-3.5 text-[#C79A2B] shrink-0" />
             <span>Settings</span>
           </motion.button>
 
           <motion.button
             onClick={onLogout}
             whileTap={{ scale: 0.98 }}
-            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-[#990000] hover:bg-[#800000] border border-white/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-rose-200 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
             aria-label="Secure logout"
           >
-            <LogOut className="w-3.5 h-3.5 text-white shrink-0" />
+            <LogOut className="w-3.5 h-3.5 text-rose-300 shrink-0" />
             <span>Logout</span>
           </motion.button>
         </div>
