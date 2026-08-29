@@ -18,7 +18,7 @@ const roles = [
   { id: 'admin', name: 'System Administrator', icon: Settings }
 ];
 
-export default function Login({ role, onRoleSelect, onBack, onLogin }) {
+export default function Login({ role, onRoleSelect, onBack, onLogin, onForgot }) {
   const { addToast } = useToast();
   const [selectedRole, setSelectedRole] = useState(role || null);
   const [errorMessage, setErrorMessage] = useState('');
@@ -26,6 +26,7 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
   const catalystContainerRef = useRef(null);
   const onLoginRef = useRef(onLogin);
   const addToastRef = useRef(addToast);
+  const onForgotRef = useRef(onForgot);
 
   useEffect(() => {
     onLoginRef.current = onLogin;
@@ -34,6 +35,10 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
   useEffect(() => {
     addToastRef.current = addToast;
   }, [addToast]);
+
+  useEffect(() => {
+    onForgotRef.current = onForgot;
+  }, [onForgot]);
 
   useEffect(() => {
     if (role) {
@@ -111,6 +116,36 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
 
       if (success && isMounted) {
         setIsInitializingSDK(false);
+
+        // Intercept "Forgot Password" inside the IAM iframe to route to Crime-Intel React ForgotPassword view
+        setTimeout(() => {
+          try {
+            const iframe = document.getElementById('iam_iframe');
+            if (iframe) {
+              const attachFpListener = () => {
+                try {
+                  const iframeDoc = iframe.contentWindow?.document;
+                  if (iframeDoc) {
+                    const fpLink = iframeDoc.getElementById('forgotpassword') || iframeDoc.querySelector('.goToForgotPassword');
+                    if (fpLink) {
+                      fpLink.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (onForgotRef.current) {
+                          onForgotRef.current();
+                        }
+                      };
+                    }
+                  }
+                } catch (_) {
+                  // cross-origin guard
+                }
+              };
+              attachFpListener();
+              iframe.addEventListener('load', attachFpListener);
+            }
+          } catch (_) {}
+        }, 500);
       }
     };
 
