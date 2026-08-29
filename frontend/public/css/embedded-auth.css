@@ -39,7 +39,7 @@ html, body {
   max-width: 100% !important;
   min-height: auto !important;
   height: auto !important;
-  padding: 8px 4px !important;
+  padding: 4px !important;
   box-sizing: border-box !important;
   display: block !important;
   float: none !important;
@@ -51,19 +51,19 @@ html, body {
 /* 3. Header: "Crime-Intel" & "Sign in to access Crime-Intel" */
 .signin_head, .alt_signin_head {
   text-align: center !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 20px !important;
   padding: 0 !important;
 }
 
 #headtitle {
-  font-size: 24px !important;
+  font-size: 22px !important;
   font-weight: 800 !important;
   font-family: "Georgia", serif, -apple-system, sans-serif !important;
-  color: #1e293b !important;
-  margin-bottom: 6px !important;
+  color: #142b45 !important;
+  margin-bottom: 4px !important;
   display: block !important;
   text-align: center !important;
-  letter-spacing: -0.02em !important;
+  letter-spacing: -0.01em !important;
 }
 
 .service_name {
@@ -84,16 +84,17 @@ html, body {
   max-width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
+  display: block !important;
 }
 
 .textbox_div {
   width: 100% !important;
   max-width: 100% !important;
-  margin-bottom: 16px !important;
+  margin-bottom: 14px !important;
   position: relative !important;
 }
 
-/* Add labels above inputs */
+/* Field Labels */
 #getusername::before {
   content: "Email" !important;
   display: block !important;
@@ -101,6 +102,7 @@ html, body {
   font-weight: 700 !important;
   color: #334155 !important;
   margin-bottom: 6px !important;
+  text-align: left !important;
 }
 
 .getpassword .textbox_div::before {
@@ -110,14 +112,14 @@ html, body {
   font-weight: 700 !important;
   color: #334155 !important;
   margin-bottom: 6px !important;
+  text-align: left !important;
 }
 
-/* 5. Inputs Styling */
+/* 5. Inputs Styling with Icons */
 .textbox {
   width: 100% !important;
   max-width: 100% !important;
-  height: 46px !important;
-  padding: 10px 14px !important;
+  height: 44px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
   color: #1e293b !important;
@@ -129,35 +131,58 @@ html, body {
   box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
 }
 
+/* Email Input with Mail Icon */
+#login_id {
+  padding: 10px 14px 10px 40px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='16' x='2' y='4' rx='2'/%3E%3Cpath d='m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+}
+
+/* Password Input with Lock Icon */
+#password {
+  padding: 10px 40px 10px 40px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+}
+
 .textbox:focus {
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* 6. Password Container (Zoho 2-step transition) */
-.getpassword {
+/* 6. Make Password Field Visible Simultaneously */
+.getpassword, .getpassword.zeroheight {
   width: 100% !important;
   max-width: 100% !important;
-  margin-top: 10px !important;
-  transition: all 0.3s ease !important;
-}
-
-.getpassword.zeroheight {
-  height: 0 !important;
-  min-height: 0 !important;
+  height: auto !important;
+  min-height: auto !important;
   margin: 0 !important;
   padding: 0 !important;
-  overflow: hidden !important;
-  opacity: 0 !important;
-  display: none !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
 }
 
+#password_container {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
+}
+
+/* Eye Show/Hide Icon */
 .show_hide_pwd, .show_pwd {
   position: absolute !important;
   right: 14px !important;
   top: 36px !important;
+  width: 20px !important;
+  height: 20px !important;
   cursor: pointer !important;
-  color: #64748b !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
 }
 
 /* 7. Forgot Password Link */
@@ -165,12 +190,12 @@ html, body {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
-  margin: 8px 0 14px 0 !important;
+  margin: 6px 0 12px 0 !important;
 }
 
 #forgotpassword, .blueforgotpassword, .goToForgotPassword {
   color: #2563eb !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
   cursor: pointer !important;
@@ -186,28 +211,34 @@ html, body {
   text-decoration: underline !important;
 }
 
-/* 8. CAPTCHA Container (Preserve native dynamic IAM state) */
+/* 8. Enter CAPTCHA Row */
 #captcha_container {
   width: 100% !important;
   max-width: 100% !important;
   margin-bottom: 16px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
   box-sizing: border-box !important;
 }
 
 #captcha_container::before {
   content: "Enter CAPTCHA" !important;
   display: block !important;
+  width: 100% !important;
   font-size: 13px !important;
   font-weight: 700 !important;
   color: #334155 !important;
   margin-bottom: 6px !important;
+  text-align: left !important;
 }
 
 #captcha {
   width: 48% !important;
   display: inline-block !important;
-  vertical-align: middle !important;
+  padding: 10px 12px !important;
   margin-right: 2% !important;
+  height: 44px !important;
 }
 
 #captcha_img {
@@ -215,100 +246,110 @@ html, body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  vertical-align: middle !important;
-  background: #f8fafc !important;
-  border: 1px dashed #cbd5e1 !important;
-  border-radius: 8px !important;
-  height: 46px !important;
+  background: #f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E") !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  height: 44px !important;
   padding: 2px !important;
 }
 
 #captcha_img img {
-  height: 38px !important;
+  height: 34px !important;
   border-radius: 6px !important;
   object-fit: contain !important;
 }
 
 .reloadcaptcha, #captcha_refresh {
   width: 12% !important;
-  height: 46px !important;
+  height: 44px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  vertical-align: middle !important;
-  background: #f1f5f9 !important;
-  border-radius: 8px !important;
+  background: #ffffff !important;
+  border-radius: 10px !important;
   cursor: pointer !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #475569 !important;
-  font-size: 18px !important;
+  border: 1.5px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E293B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3Cpath d='M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16'/%3E%3Cpath d='M8 16H3v5'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  transition: all 0.2s ease !important;
 }
 
 .reloadcaptcha:hover {
-  background: #e2e8f0 !important;
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
 }
 
 /* 9. Primary Action Button: Navy "Sign in" */
 .btn, .signinbtn, #nextbtn {
   width: 100% !important;
   max-width: 100% !important;
-  height: 48px !important;
-  background: #142b45 !important;
+  height: 46px !important;
+  background: #102a45 !important;
   color: #ffffff !important;
   border: none !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   padding: 10px 16px !important;
   font-size: 15px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
-  margin-bottom: 18px !important;
+  margin-top: 6px !important;
+  margin-bottom: 16px !important;
   transition: all 0.2s ease !important;
-  box-shadow: 0 4px 12px rgba(20, 43, 69, 0.18) !important;
+  box-shadow: 0 2px 6px rgba(16, 42, 69, 0.2) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
 .btn:hover, .signinbtn:hover, #nextbtn:hover {
-  background: #0f1e36 !important;
-  box-shadow: 0 6px 16px rgba(20, 43, 69, 0.25) !important;
-  transform: translateY(-1px) !important;
+  background: #0b1d30 !important;
+  box-shadow: 0 4px 10px rgba(16, 42, 69, 0.3) !important;
 }
 
-.btn:active, .signinbtn:active, #nextbtn:active {
-  transform: translateY(0) !important;
+/* Change button text to "Sign in" */
+#nextbtn span {
+  font-size: 0 !important;
 }
 
-/* 10. Secondary Action Button: "Sign in using OTP" */
+#nextbtn span::after {
+  content: "Sign in" !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* 10. "OR" Divider and "Sign in using OTP" Button */
 #enableotpoption {
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
   text-align: center !important;
-  position: relative !important;
+  display: block !important;
 }
 
-/* OR divider before OTP button */
 #enableotpoption::before {
   content: "OR" !important;
-  display: block !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   color: #94a3b8 !important;
   text-align: center !important;
-  margin-bottom: 14px !important;
-  position: relative !important;
+  margin: 4px 0 14px 0 !important;
+  letter-spacing: 0.05em !important;
 }
 
 #enableotpoption a, #enableotpoption span, #signin_with_otp {
   width: 100% !important;
-  height: 44px !important;
+  height: 42px !important;
   background: #ffffff !important;
   color: #2563eb !important;
-  border: 1.5px solid #cbd5e1 !important;
-  border-radius: 10px !important;
-  font-size: 14px !important;
+  border: 1.5px solid #bfdbfe !important;
+  border-radius: 8px !important;
+  font-size: 13.5px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
   display: flex !important;
@@ -319,9 +360,20 @@ html, body {
   transition: all 0.2s ease !important;
 }
 
+/* Add Shield Icon to OTP Button */
+#enableotpoption a::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
 #enableotpoption a:hover, #enableotpoption span:hover {
-  background: #f8fafc !important;
-  border-color: #94a3b8 !important;
+  background: #f0f7ff !important;
+  border-color: #93c5fd !important;
   color: #1d4ed8 !important;
 }
 
