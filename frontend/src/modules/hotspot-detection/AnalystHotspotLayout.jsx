@@ -329,7 +329,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
       {/* Header */}
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[22px] p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 w-full lg:w-auto">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm text-white">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm text-[#C79A2B]">
             <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-[#C79A2B]" />
           </div>
           <div>
