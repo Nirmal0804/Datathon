@@ -43,9 +43,9 @@ export default {
         'border-subtle': '#F3F4F6',
       },
       fontFamily: {
-        heading: ["'Sora'", 'system-ui', '-apple-system', 'sans-serif'],
-        body: ["'Heebo'", 'system-ui', '-apple-system', 'sans-serif'],
-        sans: ["'Heebo'", 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ["'Inter'", 'system-ui', '-apple-system', 'sans-serif'],
+        body: ["'Fira Sans'", 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ["'Fira Sans'", 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {

@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-heading: 'Sora', system-ui, -apple-system, sans-serif;
-  --font-body: 'Heebo', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Fira Sans', system-ui, -apple-system, sans-serif;
 }
 
 /* ============================================================
@@ -32,22 +32,24 @@
     @apply bg-[#F7F8FA] text-[#0F172A] antialiased;
   }
 
-  /* Headings, Page Titles, Navigation, Buttons, Tabs, Badges, KPI Values, Card Titles, Table Headers, Modal Titles, Labels */
+  /* Headings: Inter for all page headings, section headings, card titles, modal titles, navigation headings, KPI headings, and prominent display text */
   h1, h2, h3, h4, h5, h6,
-  nav, button,
-  label, th,
   .font-heading,
-  .btn,
-  .badge,
-  .kpi-value,
-  .kpi-label,
-  .nav-item,
-  .section-title {
+  .section-title,
+  .card-title,
+  .modal-title,
+  .kpi-value {
     font-family: var(--font-heading);
   }
 
-  /* Body, Paragraphs, Explanatory Text, Case Narratives, Form Inputs, Table Body */
-  p, article, input, select, textarea, td, .font-body, .prose {
+  /* Body / UI text: Fira Sans for body text, descriptions, labels, buttons, form text, table content, alerts, tooltips, and general UI text */
+  p, article, nav, button, input, select, textarea, label, table, th, td,
+  .font-body,
+  .btn,
+  .badge,
+  .kpi-label,
+  .nav-item,
+  .prose {
     font-family: var(--font-body);
   }
 
