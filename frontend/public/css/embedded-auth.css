@@ -152,20 +152,21 @@ html, body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* 6. Password Field Container (Zoho Native Transitions Preserved without !important collision) */
-.getpassword {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-top: 10px !important;
+/* 6. Password Field Container - Always Visible in the Card */
+.getpassword, .getpassword.zeroheight, #password_container {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
+  min-height: auto !important;
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important;
+  overflow: visible !important;
 }
 
-.getpassword.zeroheight {
-  height: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  opacity: 0;
+#password_container .textbox_div {
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Eye Show/Hide Icon */
@@ -181,12 +182,12 @@ html, body {
   background-position: center !important;
 }
 
-/* 7. Forgot Password Link (Below Password Field) */
+/* 7. Forgot Password Link (Directly Below Password Field) */
 .textbox_actions, #enableforgot {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
-  margin: 6px 0 12px 0 !important;
+  margin: 4px 0 14px 0 !important;
 }
 
 #forgotpassword, .blueforgotpassword, .goToForgotPassword {
@@ -207,22 +208,27 @@ html, body {
   text-decoration: underline !important;
 }
 
-/* 8. CAPTCHA Container (Display Managed Naturally by Zoho IAM) */
+/* 8. CAPTCHA Container - Hidden when inactive, styled cleanly when active */
 #captcha_container {
+  display: none;
   width: 100% !important;
   max-width: 100% !important;
-  margin-bottom: 16px !important;
+  margin-bottom: 14px !important;
   box-sizing: border-box !important;
 }
 
-/* Active CAPTCHA Styling */
-#captcha_container:not([style*="display: none"]):not([style*="display:none"]) {
+/* Only display CAPTCHA when active / populated by Zoho IAM */
+#captcha_container.active,
+#captcha_container:has(#captcha_img img),
+#captcha_container[style*="display: block"],
+#captcha_container[style*="display: inline-block"],
+#captcha_container[style*="display: flex"] {
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: center !important;
 }
 
-#captcha_container:not([style*="display: none"]):not([style*="display:none"])::before {
+#captcha_container::before {
   content: "Enter CAPTCHA" !important;
   display: block !important;
   width: 100% !important;
@@ -281,7 +287,7 @@ html, body {
   border-color: #cbd5e1 !important;
 }
 
-/* 9. Primary Action Button: Navy "Next / Sign In" */
+/* 9. Primary Action Button: Navy "Sign In" */
 .btn, .signinbtn, #nextbtn {
   width: 100% !important;
   max-width: 100% !important;
@@ -294,7 +300,7 @@ html, body {
   font-size: 15px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
+  margin-top: 6px !important;
   margin-bottom: 12px !important;
   transition: all 0.2s ease !important;
   box-shadow: 0 2px 6px rgba(16, 42, 69, 0.2) !important;
@@ -306,6 +312,17 @@ html, body {
 .btn:hover, .signinbtn:hover, #nextbtn:hover {
   background: #0b1d30 !important;
   box-shadow: 0 4px 10px rgba(16, 42, 69, 0.3) !important;
+}
+
+#nextbtn span {
+  font-size: 0 !important;
+}
+
+#nextbtn span::after {
+  content: "Sign In" !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
 }
 
 /* 10. Hide ALL Unwanted Native IAM Sections */
