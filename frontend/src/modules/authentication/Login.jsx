@@ -61,7 +61,6 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
       setIsInitializingSDK(true);
 
       const success = renderCatalystSignIn('catalyst-auth-container', {
-        css_url: '/css/embedded-auth.css',
         service_url: '/app/index.html',
         always_render_login: true,
         onSuccess: (user) => {

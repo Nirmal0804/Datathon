@@ -108,15 +108,18 @@ export function renderCatalystSignIn(elementId, config = {}) {
     // Clean previous contents to prevent duplicate iframe instances
     targetElement.innerHTML = '';
 
-    const basePath = window.location.pathname.startsWith('/app') ? '/app' : '';
-    const cssUrl = `${basePath}/css/embedded-auth.css`;
+    const basePath =
+      typeof window !== 'undefined' && window.location.pathname.startsWith('/app')
+        ? '/app'
+        : '';
+    const defaultCssUrl = `${basePath}/css/embedded-auth.css`;
 
     // Mount native Catalyst IAM embedded authentication iframe with custom responsive CSS
     window.catalyst.auth.signIn(elementId, {
-      css_url: cssUrl,
       service_url: '/app/index.html',
       always_render_login: true,
       ...config,
+      css_url: defaultCssUrl,
     });
     return true;
   } catch (err) {
