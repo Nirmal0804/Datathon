@@ -1,15 +1,35 @@
 /**
  * Zoho Catalyst IAM Embedded Authentication Responsive Stylesheet
- * Overrides default Zoho IAM 520px fixed desktop layout to fit responsive card containers
+ * CrimeIntel / Karnataka Police Intelligence Theme
  */
 
+/* 1. Global Reset & Container */
 html, body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
   background: transparent !important;
-  font-family: inherit !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  color: #142b45 !important;
   overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+.signin_container, #signin_flow {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: auto !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: block !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .signin_box {
@@ -17,87 +37,256 @@ html, body {
   max-width: 100% !important;
   min-height: auto !important;
   height: auto !important;
-  padding: 20px 16px !important;
+  padding: 12px 4px !important;
   box-sizing: border-box !important;
   display: block !important;
   float: none !important;
-  border-right: none !important;
+  border: none !important;
   background: transparent !important;
   box-shadow: none !important;
-  border-radius: 0 !important;
 }
 
-.signin_container {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: auto !important;
-  height: auto !important;
-  margin: 0 auto !important;
+/* 2. Header & Title */
+.signin_head, .alt_signin_head {
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  padding: 0 !important;
+}
+
+#headtitle {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #142b45 !important;
+  margin-bottom: 4px !important;
+  display: block !important;
+  text-align: center !important;
+  letter-spacing: -0.01em !important;
+}
+
+.service_name {
+  font-size: 12px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+  text-align: center !important;
   display: block !important;
 }
 
+.portal_logo, .service_logo {
+  display: none !important;
+}
+
+/* 3. Form & Inputs */
 .fieldcontainer {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important;
   margin: 0 !important;
-}
-
-.searchparent {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
+  padding: 0 !important;
 }
 
 .textbox_div {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important;
-  margin-bottom: 12px !important;
+  margin-bottom: 14px !important;
+  position: relative !important;
 }
 
 .textbox {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important;
+  height: 44px !important;
   padding: 10px 14px !important;
   font-size: 14px !important;
-  border-radius: 8px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
 }
 
+.textbox:focus {
+  border-color: #E00000 !important;
+  box-shadow: 0 0 0 3px rgba(224, 0, 0, 0.12) !important;
+}
+
+/* 4. Password Field (Preserve Zoho 2-Step Transitions) */
 .getpassword {
   width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important;
   margin-top: 10px !important;
+  transition: all 0.3s ease !important;
 }
 
-.btn, .signinbtn, #nextbtn {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  border-radius: 8px !important;
-  padding: 10px 16px !important;
-  font-size: 14px !important;
-  font-weight: bold !important;
-  cursor: pointer !important;
-  margin-top: 14px !important;
-}
-
-#headtitle {
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  color: #142b45 !important;
-  margin-bottom: 14px !important;
-  display: block !important;
-  text-align: center !important;
-}
-
-.portal_logo {
+.getpassword.zeroheight {
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
   display: none !important;
 }
 
-.fed_2show, .fed_container {
+/* Show/Hide Password Eye Icon */
+.show_hide_pwd, .show_pwd {
+  position: absolute !important;
+  right: 12px !important;
+  top: 12px !important;
+  cursor: pointer !important;
+  color: #64748b !important;
+}
+
+/* 5. CAPTCHA Elements */
+#captcha_container {
+  width: 100% !important;
   max-width: 100% !important;
-  box-sizing: border-box !important;
+  margin: 14px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+#captcha_img {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 6px !important;
+}
+
+#captcha_img img {
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  height: 38px !important;
+}
+
+.captcha_reload, #captcha_refresh {
+  cursor: pointer !important;
+  color: #E00000 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+/* 6. Buttons */
+.btn, .signinbtn, #nextbtn {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 44px !important;
+  background: #E00000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  margin-top: 14px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(224, 0, 0, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn:hover, .signinbtn:hover, #nextbtn:hover {
+  background: #b80000 !important;
+  box-shadow: 0 6px 16px rgba(224, 0, 0, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn:active, .signinbtn:active, #nextbtn:active {
+  transform: translateY(0) !important;
+}
+
+/* 7. Forgot Password & OTP Options */
+.textbox_actions {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin: 10px 0 !important;
+  font-size: 12px !important;
+}
+
+#forgotpassword, .blueforgotpassword, .goToForgotPassword {
+  color: #E00000 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  transition: color 0.15s ease !important;
+}
+
+#forgotpassword:hover, .blueforgotpassword:hover {
+  color: #990000 !important;
+  text-decoration: underline !important;
+}
+
+#enableotpoption {
+  margin-top: 14px !important;
+  text-align: center !important;
+  font-size: 12px !important;
+}
+
+#enableotpoption a, #enableotpoption span {
+  color: #142b45 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+/* 8. Hide Unnecessary Bloat Sections */
+#recovery_container,
+#recoverymodeContainer,
+#recoverOption,
+#recoverybtn,
+#problemsignin,
+#backup_container,
+#backupcode_container,
+.verifyBackupCodebtn,
+#terminate_session_container,
+#terminate_web_sess,
+#terminate_mob_apps,
+#terminate_api_tok,
+#terminate_session_skip,
+#terminate_session_submit,
+#trust_device_container,
+.trustdevice,
+.trustbtn,
+.notnowbtn,
+#oneauth_container,
+.showOneAuthTerminate,
+.real_togglebtn,
+#npassword_container,
+#rpassword_container,
+#changepassword,
+.change_pwd_container,
+#emailvalidate_container,
+#emailotpverify_container,
+#captchaverify_container,
+.passphrase_container,
+#passphrase,
+.fed_2show,
+.fed_container,
+.federate_container,
+#enablemore,
+.cant_access,
+.help_link,
+.support_link,
+.footer_container,
+.footer,
+.line,
+.troubleshoot,
+.oneauth_desc {
+  display: none !important;
+}
+
+/* 9. Errors & Validation */
+.fielderror, .Errormsg, .Alert {
+  color: #e11d48 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  margin-top: 4px !important;
+  margin-bottom: 8px !important;
+  text-align: left !important;
 }
