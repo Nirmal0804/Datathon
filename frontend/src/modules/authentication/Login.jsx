@@ -282,8 +282,12 @@ export default function Login({ role, onRoleSelect, onBack, onLogin }) {
                 <div
                   id="catalyst-auth-container"
                   ref={catalystContainerRef}
-                  style={{ width: '100%', minHeight: '480px' }}
-                  className="w-full min-h-[480px] rounded-2xl bg-white border border-slate-100 overflow-visible"
+                  style={{
+                    width: '100%',
+                    height: '520px',
+                    minHeight: '520px'
+                  }}
+                  className="w-full h-[520px] min-h-[520px] rounded-2xl bg-white border border-slate-100 overflow-visible"
                 />
               </div>
             </div>
