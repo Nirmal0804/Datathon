@@ -1,0 +1,11 @@
+{
+  "command": "python3 main.py",
+  "build_path": "./",
+  "stack": "python_3_10",
+  "env_variables": {},
+  "memory": 512,
+  "scripts": {
+    "preserve": "python -m pip install --platform manylinux2014_x86_64 --target ./vendor --implementation cp --python-version 310 --only-binary=:all: --upgrade -r ./requirements.txt",
+    "predeploy": "python -m pip install --platform manylinux2014_x86_64 --target ./vendor --implementation cp --python-version 310 --only-binary=:all: --upgrade -r ./requirements.txt"
+  }
+}

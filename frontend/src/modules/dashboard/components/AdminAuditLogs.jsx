@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText, Search, ShieldAlert, CheckCircle, Clock, Shield, AlertTriangle,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import { useToast } from '../../../components/ui/Toast';
+import { getAdminAuditEvents } from '../../../services/api';
 
 // ─── Audit Data ────────────────────────────────────────────────────────────────
 const AUDIT_LOGS = [

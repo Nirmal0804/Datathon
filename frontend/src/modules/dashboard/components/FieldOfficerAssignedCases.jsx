@@ -9,16 +9,16 @@ export default function FieldOfficerAssignedCases() {
 
   return (
     <div className="space-y-6 w-full max-w-[1600px] mx-auto">
-      {/* 1. Compact Page Header Banner (80-100px) */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex items-center justify-between min-h-[88px] shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
-            <Briefcase className="w-6 h-6" />
+      {/* 1. Compact Page Header Banner */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[80px] shrink-0">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#E00000] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Briefcase className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-3">
-              <h2 className="text-xl font-black text-[#0F172A] tracking-tight">Your Assigned Cases</h2>
-              <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Your Assigned Cases</h2>
+              <span className="bg-[#E00000]/10 text-[#E00000] border border-[#E00000]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
                 {patilCases.length} Active Intakes
               </span>
             </div>

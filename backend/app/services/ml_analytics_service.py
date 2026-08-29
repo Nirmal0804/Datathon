@@ -12,13 +12,32 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import os
 from app.core.exceptions import InvalidFilterError, ModelUnavailableError
 
 
-# Safe path resolution from project root
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-_ML_ENGINE_DIR = _PROJECT_ROOT / "ml-engine"
-_OUTPUTS_DIR = _ML_ENGINE_DIR / "outputs"
+# Production-safe path resolution:
+# 1. ML_OUTPUTS_DIR environment variable
+# 2. Bundled backend/data/outputs directory
+# 3. Repository-level ml-engine/outputs directory (local dev fallback)
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+_PROJECT_ROOT = _BACKEND_DIR.parent
+
+
+def _resolve_outputs_dir() -> Path:
+    env_dir = os.environ.get("ML_OUTPUTS_DIR")
+    if env_dir and Path(env_dir).exists():
+        return Path(env_dir)
+    bundled_dir = _BACKEND_DIR / "data" / "outputs"
+    if bundled_dir.exists():
+        return bundled_dir
+    ml_engine_dir = _PROJECT_ROOT / "ml-engine" / "outputs"
+    if ml_engine_dir.exists():
+        return ml_engine_dir
+    return bundled_dir
+
+
+_OUTPUTS_DIR = _resolve_outputs_dir()
 
 
 class MLAnalyticsService:

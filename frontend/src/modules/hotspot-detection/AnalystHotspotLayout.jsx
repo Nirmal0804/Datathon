@@ -253,7 +253,6 @@ export default function AnalystHotspotLayout({ onNavigate }) {
   const activeAlerts = useMemo(() => {
     const alerts = [];
     filteredHotspots.forEach(h => {
-      const dev = h.crimeCount - h.historicalAverage;
       const expectedWeekly = h.historicalAverage ? (h.historicalAverage / 4) : 5.0;
       const currentWeekly = h.crimeCount ? (h.crimeCount / 4) : 8.0;
       const freqDeviation = ((currentWeekly - expectedWeekly) / expectedWeekly) * 100;
@@ -328,16 +327,16 @@ export default function AnalystHotspotLayout({ onNavigate }) {
     <div className="w-full mx-auto space-y-6 pb-16 px-6 sm:px-8">
       
       {/* Header */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[22px] p-5 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
-          <div className="w-12 h-12 bg-[#0B1F4D] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm">
-            <Layers className="w-6 h-6 text-[#C79A2B]" />
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[22px] p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-4 w-full lg:w-auto">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#E00000] rounded-[14px] flex items-center justify-center shrink-0 shadow-sm text-white">
+            <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">Crime Hotspot Intelligence</h1>
-              <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3] flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
+              <h1 className="text-lg sm:text-2xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Intelligence</h1>
+              <div className="px-2.5 py-0.5 rounded-full bg-[#E00000]/10 border border-[#E00000]/20 flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#E00000] uppercase tracking-widest whitespace-nowrap">AI Active</span>
               </div>
             </div>
             <p className="text-xs font-semibold text-[#64748B]">Tactical command suite for district-level risk rankings and predictive hotspot telemetry.</p>
@@ -356,21 +355,21 @@ export default function AnalystHotspotLayout({ onNavigate }) {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3.5 sm:gap-5">
         {[
-          { label: 'Total Hotspots', val: kpis.total, color: 'text-[#0B1F4D]' },
+          { label: 'Total Hotspots', val: kpis.total, color: 'text-[#0F172A]' },
           { label: 'Emerging', val: kpis.emerging, color: 'text-[#B91C1C]' },
           { label: 'Persistent', val: kpis.persistent, color: 'text-[#B45309]' },
           { label: 'Critical Risk Zones', val: kpis.critical, color: 'text-[#B91C1C]' },
-          { label: 'Avg Density Index', val: `${kpis.avgDensity} /10`, color: 'text-[#0B1F4D]' },
-          { label: 'Highest Risk District', val: kpis.highestRiskDistrict, color: 'text-[#0B1F4D]', textOnly: true }
+          { label: 'Avg Density Index', val: `${kpis.avgDensity} /10`, color: 'text-[#0F172A]' },
+          { label: 'Highest Risk District', val: kpis.highestRiskDistrict, color: 'text-[#0F172A]', textOnly: true }
         ].map((card, i) => (
-          <div key={i} className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 flex flex-col justify-between shadow-sm">
+          <div key={i} className="bg-white border border-[#E7ECF3] rounded-[18px] sm:rounded-[20px] p-3.5 sm:p-5 flex flex-col justify-between shadow-sm">
             <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">{card.label}</span>
             {card.textOnly ? (
-              <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-wide truncate mt-3">{card.val}</span>
+              <span className="text-[11px] font-bold text-[#0F172A] uppercase tracking-wide truncate mt-2 sm:mt-3">{card.val}</span>
             ) : (
-              <span className={`text-2xl font-black font-mono mt-2 ${card.color}`}>{card.val}</span>
+              <span className={`text-xl sm:text-2xl font-black font-mono mt-1.5 sm:mt-2 ${card.color}`}>{card.val}</span>
             )}
           </div>
         ))}
@@ -425,7 +424,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
                             <span className="text-xs font-bold text-[#94A3B8] uppercase">Just Now</span>
                           </div>
                           <p className="text-xs font-bold text-[#0F172A] leading-tight truncate" title={alert.title}>
-                            {alert.title.replace(/^[🚨🔥⚠️]\s*/, '')}
+                            {alert.title.replace(/^[🚨🔥⚠️]\s*/u, '')}
                           </p>
                         </div>
                       </div>

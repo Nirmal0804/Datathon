@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, Map, Network, FileText, Settings, LogOut, 
   Shield, Activity, BookOpen, BarChart2, Bell, ShieldAlert, Briefcase,
-  Users, Database
+  Users, Database, X
 } from 'lucide-react';
-import kspLogo from '../../../assets/ksp-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.png';
 
 const ANALYST_NAV_SECTIONS = [
   {
@@ -22,8 +22,8 @@ const ANALYST_NAV_SECTIONS = [
     items: [
       { id: 'analytics', name: 'Analytics Suite',   icon: Activity  },
       { id: 'reports',   name: 'Reports',            icon: BookOpen  },
-      { id: 'hotspots',  name: 'Crime Hotspot Detection', icon: ShieldAlert },
-      { id: 'correlation', name: 'Socio-economic Crime Correlation', icon: Database },
+      { id: 'hotspots',  name: 'Crime Hotspots',     icon: ShieldAlert },
+      { id: 'correlation', name: 'Socio-economic',   icon: Database },
     ],
   },
   {
@@ -67,7 +67,7 @@ const OFFICER_NAV_SECTIONS = [
       { id: 'assigned_cases', name: 'Assigned Cases',    icon: Briefcase       },
       { id: 'fir_management', name: 'FIR Management',    icon: FileText        },
       { id: 'map',            name: 'Crime Map',          icon: Map             },
-      { id: 'hotspots',       name: 'Crime Hotspot Detection', icon: ShieldAlert     },
+      { id: 'hotspots',       name: 'Crime Hotspots',     icon: ShieldAlert     },
     ],
   },
   {
@@ -84,35 +84,120 @@ const OFFICER_NAV_SECTIONS = [
   },
 ];
 
-export default function Sidebar({ onLogout, activeModule, setActiveModule, role }) {
+export default function Sidebar({ onLogout, activeModule, setActiveModule, role, onClose }) {
   const navSections = role === 'officer' 
     ? OFFICER_NAV_SECTIONS 
     : role === 'admin'
     ? ADMIN_NAV_SECTIONS
     : ANALYST_NAV_SECTIONS;
 
-  const profile = role === 'officer' 
-    ? { initials: 'PP', name: 'Inspector Patil', roleText: 'Field Officer', station: 'Cubbon Park PS' }
+  const platformSubtitle = role === 'officer'
+    ? 'FIELD OPERATIONS'
     : role === 'admin'
-    ? { initials: 'SA', name: 'Admin Gowda', roleText: 'System Administrator', station: 'State Tech HQ' }
-    : { initials: 'JD', name: 'John Doe', roleText: 'Intelligence Analyst', station: 'State Command' };
+    ? 'SYSTEM ADMINISTRATION'
+    : 'INTELLIGENCE PLATFORM';
+
+  const defaultProfile = role === 'officer'
+    ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }
+    : role === 'admin'
+    ? { initials: 'SA', name: 'Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
+    : { initials: 'JD', name: 'John Doe', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+
+  const [customProfile, setCustomProfile] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_profile');
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  });
+
+  const [avatarUrl, setAvatarUrl] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('ksp_user_avatar');
+      return saved && saved !== 'undefined' && saved !== 'null' ? saved : null;
+    } catch {
+      return null;
+    }
+  });
+
+  React.useEffect(() => {
+    const handleSync = () => {
+      try {
+        const saved = localStorage.getItem('ksp_user_profile');
+        if (saved && saved !== 'undefined' && saved !== 'null') {
+          const parsed = JSON.parse(saved);
+          setCustomProfile(parsed && typeof parsed === 'object' ? parsed : null);
+        }
+      } catch { }
+      try {
+        const savedAvatar = localStorage.getItem('ksp_user_avatar');
+        setAvatarUrl(savedAvatar && savedAvatar !== 'undefined' && savedAvatar !== 'null' ? savedAvatar : null);
+      } catch { }
+    };
+
+    window.addEventListener('ksp_profile_updated', handleSync);
+    window.addEventListener('ksp_avatar_updated', handleSync);
+    return () => {
+      window.removeEventListener('ksp_profile_updated', handleSync);
+      window.removeEventListener('ksp_avatar_updated', handleSync);
+    };
+  }, []);
+
+  const profileName = (customProfile && typeof customProfile.fullName === 'string' && customProfile.fullName.trim())
+    ? customProfile.fullName.trim()
+    : defaultProfile.name;
+  const profileRank = (customProfile && typeof customProfile.rank === 'string' && customProfile.rank.trim())
+    ? customProfile.rank.trim()
+    : defaultProfile.roleText;
+  const profileStation = (customProfile && typeof customProfile.policeStation === 'string' && customProfile.policeStation.trim())
+    ? customProfile.policeStation.trim()
+    : defaultProfile.station;
+
+  const profileInitials = profileName
+    ? profileName.split(' ').filter(Boolean).map((n) => n[0]).join('').substring(0, 2).toUpperCase() || defaultProfile.initials
+    : defaultProfile.initials;
 
   return (
-    <aside className="w-[260px] flex flex-col h-full bg-[#0B1F4D] rounded-[24px] overflow-hidden">
-      {/* Logo */}
-      <div className="p-6 flex items-center gap-3 border-b border-white/10">
-        <img src={kspLogo} alt="Karnataka Police Logo" className="h-10 w-auto object-contain shrink-0 drop-shadow-sm" />
-        <div>
-          <h2 className="text-white font-extrabold tracking-wide text-[13px] uppercase leading-tight">Karnataka Police</h2>
-          <p className="text-[10px] text-white/60 uppercase tracking-widest font-semibold mt-1">Intelligence Platform</p>
+    <aside className="w-[280px] max-w-[85vw] flex flex-col h-full bg-[#E00000] text-white rounded-r-[24px] md:rounded-[24px] overflow-hidden shadow-2xl border-r border-[#C90000]">
+      {/* Header / Logo */}
+      <div className="p-5 flex items-center justify-between gap-3 border-b border-white/20 shrink-0 bg-[#C90000]/40">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
+            <img src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-white font-extrabold tracking-tight text-xs flex items-center gap-1.5 leading-none">
+              KARNATAKA POLICE
+              <span className="text-[9px] bg-[#D49A00] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+            </h2>
+            <p className="text-[10px] text-[#F5E7C1] font-semibold uppercase tracking-wider mt-1 truncate">
+              {platformSubtitle}
+            </p>
+          </div>
         </div>
+
+        {/* Close Drawer Button on Mobile */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1"
+            aria-label="Close navigation menu"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+        )}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6 no-scrollbar" aria-label="Main navigation">
+      {/* Navigation List */}
+      <nav className="flex-1 overflow-y-auto py-5 px-3 space-y-5 no-scrollbar" aria-label="Main navigation">
         {navSections.map(section => (
           <div key={section.label}>
-            <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest px-3 mb-2">
+            <p className="text-[10px] font-bold text-[#F5E7C1] uppercase tracking-widest px-3 mb-2 opacity-95">
               {section.label}
             </p>
             <div className="space-y-1">
@@ -121,17 +206,23 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
                 return (
                   <motion.button
                     key={item.id}
-                    onClick={() => setActiveModule(item.id)}
+                    onClick={() => {
+                      setActiveModule(item.id);
+                      if (onClose) onClose();
+                    }}
                     whileTap={{ scale: 0.98 }}
-                    className={`w-full h-12 flex items-center gap-3 px-3 rounded-[16px] text-[13px] font-semibold transition-all duration-200 ease-in-out ${
+                    className={`w-full h-11 flex items-center gap-3 px-3.5 rounded-[14px] text-[13px] font-bold transition-all duration-200 ease-in-out cursor-pointer ${
                       isActive 
-                        ? 'bg-white text-[#C79A2B]' 
-                        : 'bg-transparent text-white hover:bg-white/10'
+                        ? 'bg-white text-[#E00000] shadow-md' 
+                        : 'bg-transparent text-white/90 hover:bg-white/15 hover:text-white'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#C79A2B]' : 'text-white'}`} aria-hidden="true" />
-                    <span>{item.name}</span>
+                    <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#E00000]' : 'text-white'}`} aria-hidden="true" />
+                    <span className="truncate">{item.name}</span>
+                    {isActive && (
+                      <div className="ml-auto w-2 h-2 rounded-full bg-[#D49A00] shrink-0" />
+                    )}
                   </motion.button>
                 );
               })}
@@ -140,28 +231,48 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role 
         ))}
       </nav>
 
-      {/* Bottom Vertical Action Panel */}
-      <div className="p-3.5 border-t border-white/10 space-y-2">
-        <motion.button
-          onClick={() => setActiveModule('settings')}
-          whileTap={{ scale: 0.98 }}
-          className="w-full h-10 px-3.5 rounded-[14px] text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all flex items-center gap-2.5 cursor-pointer"
-        >
-          <Settings className="w-4 h-4 text-[#C79A2B] shrink-0" />
-          <span>Settings</span>
-        </motion.button>
+      {/* Bottom User & Action Panel */}
+      <div className="p-3.5 border-t border-white/20 space-y-2.5 bg-[#C90000]/30 shrink-0">
+        {/* User Card */}
+        <div className="flex items-center gap-3 bg-white/10 border border-white/20 px-3 py-2 rounded-[14px] text-white">
+          <div className="w-8 h-8 rounded-full bg-[#D49A00] text-[#142B45] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
+            ) : (
+              profileInitials
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-bold text-white truncate leading-tight">{profileName}</p>
+            <p className="text-[10px] font-medium text-[#F5E7C1] truncate">{profileRank} • {profileStation}</p>
+          </div>
+        </div>
 
-        <motion.button
-          onClick={onLogout}
-          whileTap={{ scale: 0.98 }}
-          className="w-full h-10 px-3.5 rounded-[14px] text-xs font-bold text-rose-200 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 transition-all flex items-center gap-2.5 cursor-pointer"
-          aria-label="Secure logout"
-        >
-          <LogOut className="w-4 h-4 text-rose-300 shrink-0" />
-          <span>Logout</span>
-        </motion.button>
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-2">
+          <motion.button
+            onClick={() => {
+              setActiveModule('settings');
+              if (onClose) onClose();
+            }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-white/15 hover:bg-white/25 border border-white/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <Settings className="w-3.5 h-3.5 text-[#D49A00] shrink-0" />
+            <span>Settings</span>
+          </motion.button>
+
+          <motion.button
+            onClick={onLogout}
+            whileTap={{ scale: 0.98 }}
+            className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-[#990000] hover:bg-[#800000] border border-white/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+            aria-label="Secure logout"
+          >
+            <LogOut className="w-3.5 h-3.5 text-white shrink-0" />
+            <span>Logout</span>
+          </motion.button>
+        </div>
       </div>
     </aside>
   );
 }
-

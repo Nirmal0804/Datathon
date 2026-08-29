@@ -6,7 +6,27 @@ from pathlib import Path
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+_PROJECT_ROOT = _BACKEND_DIR.parent
+
+
+def _resolve_data_dir() -> str:
+    env_dir = os.environ.get("DATA_DIR")
+    if env_dir:
+        p = Path(env_dir)
+        if p.is_dir():
+            return str(p.resolve())
+        rel_p = _BACKEND_DIR / env_dir
+        if rel_p.is_dir():
+            return str(rel_p.resolve())
+    bundled_dir = _BACKEND_DIR / "data" / "datasets"
+    if bundled_dir.is_dir():
+        return str(bundled_dir.resolve())
+    ml_engine_dir = _PROJECT_ROOT / "ml-engine" / "datasets"
+    if ml_engine_dir.is_dir():
+        return str(ml_engine_dir.resolve())
+    return str(bundled_dir)
+
 
 _VALID_BACKENDS = ("csv", "postgres")
 
@@ -28,11 +48,15 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
     ]
+    CORS_ORIGIN_REGEX: str | None = r"^https://.*\.catalystserverless\.in$"
 
-    # Authoritative approved datasets live under ml-engine/datasets/.
-    # Override with DATA_DIR when the repository layout differs.
-    DATA_DIR: str = str(_PROJECT_ROOT / "ml-engine" / "datasets")
+    # Authoritative approved datasets live under backend/data/datasets/ or ml-engine/datasets/.
+    # Override with DATA_DIR environment variable when needed.
+    DATA_DIR: str = _resolve_data_dir()
 
     # Persistence: "csv" (transitional) or "postgres" (production)
     DATA_BACKEND: str = "csv"

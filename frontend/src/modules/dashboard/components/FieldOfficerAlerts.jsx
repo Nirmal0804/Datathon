@@ -105,16 +105,16 @@ export default function FieldOfficerAlerts() {
 
   return (
     <div className="space-y-6 w-full max-w-[1600px] mx-auto">
-      {/* 1. Compact White Page Header Banner (Matching exact application spec) */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px] shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
-            <Bell className="w-6 h-6" />
+      {/* 1. Compact Page Header Banner */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[80px] shrink-0">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#E00000] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-3">
-              <h2 className="text-xl font-black text-[#0F172A] tracking-tight">Operations Alerts Feed</h2>
-              <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Operations Alerts Feed</h2>
+              <span className="bg-[#E00000]/10 text-[#E00000] border border-[#E00000]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
                 {alertsList.length} Active Feeds
               </span>
             </div>
@@ -131,41 +131,41 @@ export default function FieldOfficerAlerts() {
       </div>
 
       {/* 2. Alert Statistics KPI Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Critical Alerts</p>
-            <h3 className="text-2xl font-black text-rose-600 tracking-tight mt-1">{kpis.critical}</h3>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Critical Alerts</p>
+            <h3 className="text-xl sm:text-2xl font-black text-rose-600 tracking-tight mt-1">{kpis.critical}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-extrabold">
             <Zap className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+        <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">High Priority</p>
-            <h3 className="text-2xl font-black text-amber-600 tracking-tight mt-1">{kpis.high}</h3>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">High Priority</p>
+            <h3 className="text-xl sm:text-2xl font-black text-amber-600 tracking-tight mt-1">{kpis.high}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 font-extrabold">
             <AlertTriangle className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+        <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Feeds</p>
-            <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">{kpis.active}</h3>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Feeds</p>
+            <h3 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight mt-1">{kpis.active}</h3>
           </div>
-          <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 flex items-center justify-center text-[#0B1F4D] font-extrabold">
+          <div className="w-10 h-10 rounded-[14px] bg-[#E00000]/10 border border-[#E00000]/20 flex items-center justify-center text-[#E00000] font-extrabold">
             <Bell className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+        <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg Response Time</p>
-            <h3 className="text-2xl font-black text-emerald-600 tracking-tight mt-1">{kpis.avgResponse}</h3>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg Response Time</p>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight mt-1">{kpis.avgResponse}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-extrabold">
             <ShieldCheck className="w-5 h-5" />
@@ -173,8 +173,8 @@ export default function FieldOfficerAlerts() {
         </div>
       </div>
 
-      {/* 3. Compact Horizontal Toolbar (~60px) */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-4 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 min-h-[60px]">
+      {/* 3. Compact Horizontal Toolbar */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-3.5 sm:p-4 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 sm:gap-4 min-h-[60px]">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -183,19 +183,19 @@ export default function FieldOfficerAlerts() {
             placeholder="Search alerts by keyword, title, description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400 font-sans"
+            className="w-full h-10 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#E00000] transition-all placeholder:text-slate-400 font-sans"
           />
         </div>
 
         {/* Dropdowns & Actions */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           {/* Severity Dropdown */}
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-[#64748B]" />
             <select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
+              className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#E00000] cursor-pointer"
             >
               <option value="all">All Severities</option>
               <option value="critical">Critical Only</option>
@@ -208,7 +208,7 @@ export default function FieldOfficerAlerts() {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
+            className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#E00000] cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -217,7 +217,7 @@ export default function FieldOfficerAlerts() {
           {/* Refresh Button */}
           <button 
             onClick={() => { setSearchQuery(''); setSelectedSeverity('all'); }} 
-            className="h-10 w-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#0B1F4D] hover:text-white transition-colors flex items-center justify-center cursor-pointer shadow-xs"
+            className="h-10 w-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#E00000] hover:text-white transition-colors flex items-center justify-center cursor-pointer shadow-xs"
             title="Reset Filters"
           >
             <RefreshCw className="w-4 h-4" />
@@ -226,10 +226,10 @@ export default function FieldOfficerAlerts() {
           {/* Export Button */}
           <button 
             onClick={exportAlertsCSV} 
-            className="h-10 px-4 rounded-[14px] bg-[#0B1F4D] text-white hover:bg-[#143275] font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+            className="h-10 px-4 rounded-[14px] bg-[#E00000] text-white hover:bg-[#C90000] font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
             title="Export Alerts Data"
           >
-            <Download className="w-4 h-4 text-[#C79A2B]" />
+            <Download className="w-4 h-4 text-[#D49A00]" />
             <span className="hidden sm:inline">Export</span>
           </button>
         </div>

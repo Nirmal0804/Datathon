@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import GraphCanvas from './components/GraphCanvas';
 import NodeInfoPanel from './components/NodeInfoPanel';
+import { getNetworkGraph, searchNetwork } from '../../services/api';
 import {
   Users, Share2, AlertTriangle, Network, ShieldAlert,
   Compass, Search, Filter, BarChart2, TrendingUp,
@@ -94,6 +95,44 @@ export default function NetworkAnalysisLayout() {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [riskFilter, setRiskFilter] = useState('All');
   const [relTypeFilter, setRelTypeFilter] = useState('All');
+
+  const [liveSearchResults, setLiveSearchResults] = useState([]);
+
+  // Fetch live network graph from backend on mount
+  useEffect(() => {
+    let isMounted = true;
+    getNetworkGraph()
+      .then((data) => {
+        if (isMounted && data?.nodes?.length) {
+          console.log('[CrimeIntel Network API]: Loaded', data.nodes.length, 'graph entities.');
+        }
+      })
+      .catch((err) => {
+        console.warn('Network graph API warning:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
+  // Perform live search when query has at least 2 characters
+  useEffect(() => {
+    let isMounted = true;
+    const cleanQ = searchQuery.trim();
+    if (cleanQ.length >= 2) {
+      searchNetwork(cleanQ)
+        .then((res) => {
+          if (isMounted && res?.results) {
+            setLiveSearchResults(res.results);
+            console.log('[CrimeIntel Network Search]: Found', res.results.length, 'results for', cleanQ);
+          }
+        })
+        .catch((err) => {
+          console.warn('Network search warning:', err);
+        });
+    } else {
+      setLiveSearchResults([]);
+    }
+    return () => { isMounted = false; };
+  }, [searchQuery]);
 
   const filteredNodes = useMemo(() => {
     return nodes.filter(n => {

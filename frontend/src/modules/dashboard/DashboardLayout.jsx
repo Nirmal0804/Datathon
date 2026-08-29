@@ -46,8 +46,15 @@ import AdminAuditLogs from './components/AdminAuditLogs';
 import AdminSystemHealth from './components/AdminSystemHealth';
 import AdminConfiguration from './components/AdminConfiguration';
 
-// ML Engine API Service
-import { getMLSummary, getMLHotspots, getMLRiskScores, getMLForecast } from '../../services/api';
+// ML Engine & Backend API Service
+import {
+  getDashboardSummary as getLiveDashboardSummary,
+  getDistricts as getLiveDistricts,
+  getMLSummary,
+  getMLHotspots,
+  getMLRiskScores,
+  getMLForecast
+} from '../../services/api';
 
 // Mock DB queries simulating APIs
 import {
@@ -100,14 +107,16 @@ export default function DashboardLayout({ onLogout, role }) {
 
   useEffect(() => {
     let isMounted = true;
-    async function loadLiveMLAnalytics() {
+    async function loadLiveBackendAndMLData() {
       setMlData((prev) => ({ ...prev, loading: true }));
       try {
-        const [summary, hotspots, riskScores, forecast] = await Promise.all([
+        const [summary, hotspots, riskScores, forecast, liveSummary, liveDistricts] = await Promise.all([
           getMLSummary().catch((err) => { console.warn('ML Summary API warning:', err); return null; }),
           getMLHotspots().catch((err) => { console.warn('ML Hotspots API warning:', err); return null; }),
           getMLRiskScores().catch((err) => { console.warn('ML RiskScores API warning:', err); return null; }),
           getMLForecast(30).catch((err) => { console.warn('ML Forecast API warning:', err); return null; }),
+          getLiveDashboardSummary().catch((err) => { console.warn('Dashboard Summary API warning:', err); return null; }),
+          getLiveDistricts().catch((err) => { console.warn('Districts API warning:', err); return null; }),
         ]);
 
         if (isMounted) {
@@ -119,9 +128,33 @@ export default function DashboardLayout({ onLogout, role }) {
             loading: false,
             error: null,
           });
-          if (summary && hotspots && riskScores && forecast) {
-            console.log('[ML Engine API Connected]:', { summary, hotspots, riskScores, forecast });
+
+          if (liveSummary) {
+            setDashboardData((prev) => ({
+              ...prev,
+              summary: {
+                totalFIRs: { value: liveSummary.total_firs ?? 5000, trend: 'up', percentage: '+4.2%' },
+                activeCases: { value: liveSummary.active_cases ?? 1765, trend: 'down', percentage: '-1.8%' },
+                closedCases: { value: (liveSummary.closed_cases ?? 284) + (liveSummary.chargesheeted_cases ?? 2469), trend: 'up', percentage: '+8.4%' },
+                totalArrests: { value: liveSummary.total_arrests ?? 2500, trend: 'up', percentage: '+6.1%' },
+              }
+            }));
           }
+
+          if (liveDistricts?.districts) {
+            const mappedDistricts = liveDistricts.districts.map(d => ({
+              district: d.district_name,
+              count: d.fir_count || 0,
+              ...d
+            })).sort((a, b) => b.count - a.count);
+
+            setDashboardData((prev) => ({
+              ...prev,
+              districts: mappedDistricts
+            }));
+          }
+
+          console.log('[CrimeIntel API Connected]: Live backend & ML data loaded.');
         }
       } catch (err) {
         if (isMounted) {
@@ -129,7 +162,7 @@ export default function DashboardLayout({ onLogout, role }) {
         }
       }
     }
-    loadLiveMLAnalytics();
+    loadLiveBackendAndMLData();
     return () => { isMounted = false; };
   }, []);
 
@@ -316,7 +349,7 @@ export default function DashboardLayout({ onLogout, role }) {
               />
             </div>
             <div className="block md:hidden">
-              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
+              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} role={role} />
             </div>
           </div>
         </header>
@@ -326,29 +359,30 @@ export default function DashboardLayout({ onLogout, role }) {
       <AnimatePresence>
         {mobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-[#0F172A]/40 z-50 md:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 z-50 md:hidden backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}
       </AnimatePresence>
 
       {/* Mobile sidebar drawer */}
-      <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-smooth md:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar
           role={role}
           onLogout={onLogout}
           activeModule={activeModule}
           setActiveModule={handleModuleChange}
+          onClose={() => setMobileMenuOpen(false)}
         />
       </div>
 
       {/* 2. SCROLLABLE MAIN CONTENT (Top padding pt-[96px] ensures content starts below fixed navbar) */}
-      <main className={`max-w-[1600px] mx-auto w-full min-h-screen p-3 ${isCompact ? 'pt-[96px]' : 'pt-3'} flex flex-col gap-3`}>
+      <main className={`max-w-[1600px] mx-auto w-full min-h-screen p-3 ${isCompact ? 'pt-[88px] sm:pt-[96px]' : 'pt-3'} flex flex-col gap-3`}>
         {/* Main Content Card Container */}
         <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#E7EAF0] shadow-[0_2px_10px_rgba(0,0,0,0.02)] min-h-[500px]">
           {!isCompact && (
             <div className="block">
-              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} />
+              <TopNavbar toggleMobileMenu={() => setMobileMenuOpen(true)} role={role} />
             </div>
           )}
 

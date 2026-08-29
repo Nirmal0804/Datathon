@@ -6,7 +6,7 @@ import vidhanSoudha from '../../assets/vidhan-soudha-exact.jpg';
 
 export default function Hero({ onLoginClick }) {
   const handleReadDocumentation = () => {
-    window.open('/crimeintel-architecture-documentation.pdf', '_blank');
+    window.open('./crimeintel-architecture-documentation.pdf', '_blank');
   };
 
   return (

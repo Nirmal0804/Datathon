@@ -1,5 +1,11 @@
 {
   "client": {
     "source": "catalyst-web-client"
-  }
+  },
+  "appsail": [
+    {
+      "name": "crimeintel-backend",
+      "source": "backend"
+    }
+  ]
 }

@@ -161,16 +161,16 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
   return (
     <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-12">
       
-      {/* 1. Compact White Page Header Banner */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px] shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0 shadow-xs">
-            <Radio className="w-6 h-6 animate-pulse" />
+      {/* 1. Compact Page Header Banner */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[80px] shrink-0">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[14px] sm:rounded-[16px] bg-[#E00000] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Radio className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
           </div>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Detection</h1>
-              <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Detection</h1>
+              <span className="bg-[#E00000]/10 text-[#E00000] border border-[#E00000]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
                 {filteredHotspots.length} Active Zones
               </span>
             </div>
@@ -191,14 +191,14 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
       ) : (
         <>
           {/* 2. White KPI Cards Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Hotspots</p>
-                <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">{kpis.total}</h3>
+                <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Hotspots</p>
+                <h3 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight mt-1">{kpis.total}</h3>
               </div>
-              <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 flex items-center justify-center text-[#0B1F4D] font-extrabold">
-                <Radio className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-[14px] bg-[#E00000]/10 border border-[#E00000]/20 flex items-center justify-center text-[#E00000] font-extrabold">
+                <ShieldAlert className="w-5 h-5" />
               </div>
             </div>
 
