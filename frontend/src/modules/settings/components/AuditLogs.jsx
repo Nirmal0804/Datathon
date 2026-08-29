@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Download, ShieldCheck, LogIn, LogOut, FilePen, Trash2, Eye, Clock } from 'lucide-react';
+import EmptyState from '../../../components/common/EmptyState';
 
 const logs = [
   { id: 1, action: 'Login', user: 'J. Doe', role: 'Analyst', module: 'Authentication', detail: 'Successful login from 192.168.1.10', time: '2026-07-26 09:14:02', type: 'auth' },
@@ -110,10 +111,11 @@ export default function AuditLogs() {
           </table>
         </div>
         {filtered.length === 0 && (
-          <div className="text-center py-12 text-[#64748B]">
-            <Search className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-            <p className="text-xs font-bold">No matching audit logs found.</p>
-          </div>
+          <EmptyState
+            type="audit"
+            onAction={() => { setSearch(''); setFilter('all'); }}
+            actionLabel="Reset Filters"
+          />
         )}
       </div>
     </div>

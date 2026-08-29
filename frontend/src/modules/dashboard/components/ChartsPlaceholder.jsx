@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart2, PieChart, Activity, Calendar, ShieldAlert } from 'lucide-react';
+import EmptyState from '../../../components/common/EmptyState';
 
 export default function ChartsPlaceholder({ trendsData, categoryData, districtData, overview = false }) {
   const [activeTab, setActiveTab] = useState('trends'); // 'trends' or 'distribution'
@@ -43,7 +44,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Daily Crime Trend SVG
   const renderDailyTrend = () => {
     const data = trends.daily || [];
-    if (data.length === 0) return <div className="h-40 flex items-center justify-center text-slate-500 font-medium">No data available</div>;
+    if (data.length === 0) return <EmptyState type="analytics" title="No Daily Trends" message="No daily trend data available." compact={true} />;
 
     const width = 500;
     const height = 160;
@@ -139,7 +140,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Monthly Crime Trend SVG
   const renderMonthlyTrend = () => {
     const data = trends.monthly || [];
-    if (data.length === 0) return <div className="h-40 flex items-center justify-center text-slate-500 font-medium">No data available</div>;
+    if (data.length === 0) return <EmptyState type="analytics" title="No Monthly Trends" message="No monthly trend data available." compact={true} />;
 
     const width = 500;
     const height = 160;
@@ -248,7 +249,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   const renderDistrictBarChart = () => {
     // Show top 6 districts from filtered list
     const topDistricts = districts.slice(0, 6);
-    if (topDistricts.length === 0) return <div className="h-40 flex items-center justify-center text-slate-500 font-medium">No data available</div>;
+    if (topDistricts.length === 0) return <EmptyState type="analytics" title="No District Data" message="No district data available." compact={true} />;
 
     const maxVal = Math.max(...topDistricts.map(d => d.count), 5);
 
@@ -294,7 +295,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Yearly Summary Bar Chart
   const renderYearlySummary = () => {
     const data = trends.yearly || [];
-    if (data.length === 0) return <div className="h-40 flex items-center justify-center text-slate-500 font-medium">No data available</div>;
+    if (data.length === 0) return <EmptyState type="analytics" title="No Yearly Trends" message="No yearly trend data available." compact={true} />;
 
     const maxVal = Math.max(...data.map(y => y.count), 5);
 

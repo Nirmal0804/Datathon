@@ -31,7 +31,17 @@ if __name__ == "__main__":
         import uvicorn
         from app.main import app
         print(f"[AppSail] Starting CrimeIntel FastAPI server on 0.0.0.0:{port}...")
-        uvicorn.run(app, host="0.0.0.0", port=port, proxy_headers=True, forwarded_allow_ips="*")
+        uvicorn.run(
+            app,
+            host="0.0.0.0",
+            port=port,
+            proxy_headers=True,
+            forwarded_allow_ips="*",
+            timeout_keep_alive=65,
+            limit_concurrency=200,
+            backlog=1024,
+            log_level="info",
+        )
     except Exception:
         err = traceback.format_exc()
         print(f"[AppSail Startup Error]:\n{err}")

@@ -8,6 +8,7 @@ import {
   Compass, Search, Filter, BarChart2, TrendingUp,
   TrendingDown, X, Activity, Link2, ChevronDown
 } from 'lucide-react';
+import EmptyState from '../../components/common/EmptyState';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -298,14 +299,26 @@ export default function NetworkAnalysisLayout() {
             </div>
 
             {/* Graph Canvas — fixed height, scroll-isolated */}
-            <GraphCanvas
-              nodes={filteredNodes}
-              edges={INITIAL_EDGES}
-              selectedNode={activeNode}
-              onSelectNode={setSelectedNode}
-              searchQuery={searchQuery}
-              onNodeDrag={handleNodeDrag}
-            />
+            {filteredNodes.length === 0 ? (
+              <div className="h-[480px] flex items-center justify-center bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
+                <EmptyState
+                  type="network"
+                  title="No Network Entities Found"
+                  message="No offenders, cases, or co-offender relationships match your active filter parameters."
+                  onAction={resetFilters}
+                  actionLabel="Reset Network Filters"
+                />
+              </div>
+            ) : (
+              <GraphCanvas
+                nodes={filteredNodes}
+                edges={INITIAL_EDGES}
+                selectedNode={activeNode}
+                onSelectNode={setSelectedNode}
+                searchQuery={searchQuery}
+                onNodeDrag={handleNodeDrag}
+              />
+            )}
 
             {/* Node Legend */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#F1F5F9]">

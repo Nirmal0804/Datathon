@@ -25,7 +25,7 @@ export default function ForgotPassword({ onBack }) {
       <header className="w-full bg-[#E00000] text-white px-4 sm:px-8 py-3.5 border-b border-[#C90000] shadow-sm relative z-30 flex items-center justify-between">
         {/* Left Branding */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
+          <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
             <LazyImage 
               src={kspLogo} 
               alt="Karnataka State Police Emblem" 

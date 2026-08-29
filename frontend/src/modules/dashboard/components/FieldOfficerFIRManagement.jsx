@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Plus, Search, X, ChevronRight, ShieldCheck, Shield, User, Clock, FolderOpen, CheckCircle2 } from 'lucide-react';
 import { MOCK_CASES } from './mockData';
 import { useToast } from '../../../components/ui/Toast';
+import EmptyState from '../../../components/common/EmptyState';
 
 const riskBadgeClass = (risk) => {
   switch (risk) {
@@ -205,9 +206,13 @@ export default function FieldOfficerFIRManagement() {
         {/* 4 & 5. Modern Horizontal FIR Cards */}
         <div className="space-y-3.5 sm:space-y-4">
           {paginatedCases.length === 0 ? (
-            <div className="p-12 text-center text-[#64748B] text-xs font-semibold bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
-              No FIR records match your filter criteria.
-            </div>
+            <EmptyState
+              type={searchQuery ? 'search' : 'filters'}
+              title="No FIR Records Found"
+              message="No precinct FIR records match your active search or filter criteria."
+              onAction={() => { setSearchQuery(''); setStatusFilter('All'); setCategoryFilter('All'); }}
+              actionLabel="Reset Filters"
+            />
           ) : (
             paginatedCases.map(c => {
               const currentStatus = caseStatuses[c.id] || c.status;

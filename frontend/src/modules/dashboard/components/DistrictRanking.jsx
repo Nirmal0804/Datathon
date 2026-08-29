@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, ShieldAlert, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Award, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import EmptyState from '../../../components/common/EmptyState';
 
 const mockTrends = [
   { trend: 'up', value: '12%' },
@@ -33,10 +34,7 @@ export default function DistrictRanking({ districtData }) {
 
       <div className="flex-1 flex flex-col justify-between">
         {topList.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-slate-500 gap-2">
-            <ShieldAlert className="w-8 h-8 opacity-20 text-[#0F172A]" />
-            <p className="text-[11px] font-bold uppercase tracking-widest">No metrics available</p>
-          </div>
+          <EmptyState type="analytics" title="No District Metrics" message="No district crime metrics found." compact={true} />
         ) : (
           topList.map((d, i) => {
             const percentage = (d.count / maxCount) * 100;

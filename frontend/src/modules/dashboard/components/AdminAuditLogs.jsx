@@ -10,6 +10,7 @@ import {
 
 import { useToast } from '../../../components/ui/Toast';
 import { getAdminAuditEvents } from '../../../services/api';
+import EmptyState from '../../../components/common/EmptyState';
 
 // ─── Audit Data ────────────────────────────────────────────────────────────────
 const AUDIT_LOGS = [
@@ -325,17 +326,12 @@ export default function AdminAuditLogs() {
               <AnimatePresence mode="popLayout">
                 {paginatedLogs.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-16 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-slate-400" />
-                        </div>
-                        <p className="text-sm font-black text-[#0F172A]">No audit logs found</p>
-                        <p className="text-xs font-semibold text-[#64748B]">Try adjusting your search or filters.</p>
-                        <button onClick={handleReset} className="mt-1 h-9 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs cursor-pointer hover:bg-[#143275] transition-colors">
-                          Reset Filters
-                        </button>
-                      </div>
+                    <td colSpan={9} className="py-8 px-4">
+                      <EmptyState
+                        type="audit"
+                        onAction={handleReset}
+                        actionLabel="Reset Filters"
+                      />
                     </td>
                   </tr>
                 ) : (

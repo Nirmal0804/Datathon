@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, AlertCircle, Info, ExternalLink } from 'lucide-react';
+import EmptyState from '../../../components/common/EmptyState';
 
 const typeStyles = {
   critical: {
@@ -54,11 +55,7 @@ export default function RecentAlerts({ data }) {
       <div className="flex-1 overflow-y-auto no-scrollbar space-y-3">
         <AnimatePresence mode="popLayout">
           {alerts.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-slate-500 text-center py-10">
-              <Info className="w-8 h-8 opacity-20 text-[#0F172A] mb-3" />
-              <p className="text-[11px] font-bold uppercase tracking-widest">No active anomalies in this scope.</p>
-              <p className="text-[10px] text-slate-400 mt-1 font-medium">Systems operational and clear.</p>
-            </div>
+            <EmptyState type="alerts" compact={true} />
           ) : (
             alerts.map((alert, i) => {
               const cfg = typeStyles[alert.type] || typeStyles.info;

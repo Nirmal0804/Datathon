@@ -131,6 +131,14 @@ async def lifespan(app: FastAPI):
         from app.database.repositories.csv.audit_repo import NoOpAuditRepository
         init_audit_repository(NoOpAuditRepository())
 
+    # Startup: Pre-warm dataset cache for instant concurrent response
+    try:
+        from app.database.dependencies import _load_repositories
+        _load_repositories()
+        _logger.info("Dataset repositories pre-warmed into memory successfully")
+    except Exception as e:
+        _logger.warning("Dataset pre-warm notice: %s", e)
+
     yield
 
     # Shutdown: PostgreSQL

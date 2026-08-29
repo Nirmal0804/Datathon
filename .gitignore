@@ -21,3 +21,4 @@ catalyst-web-client/*
 vendor
 **/vendor
 .env.production.local
+scratch/

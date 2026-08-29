@@ -6,6 +6,7 @@ import PatrolRecommendationCard from './components/PatrolRecommendationCard';
 import { MOCK_HOTSPOTS } from '../../mock/hotspotData';
 import { getMLHotspots } from '../../services/api';
 import { ShieldAlert, Radio, ShieldCheck, Activity, Zap, AlertTriangle } from 'lucide-react';
+import EmptyState from '../../components/common/EmptyState';
 
 function SkeletonDashboard() {
   return (
@@ -250,13 +251,14 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
             {/* Table Area (70% Width) */}
             <div className="w-full lg:w-[70%] space-y-4">
               {filteredHotspots.length === 0 ? (
-                <div className="p-12 text-center bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm max-w-md mx-auto">
-                  <ShieldAlert className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                  <h4 className="text-base font-black text-[#0F172A]">No hotspots match your filters</h4>
-                  <p className="text-xs font-semibold text-[#64748B] mt-1 mb-4">Try clearing date ranges or search terms.</p>
-                  <button onClick={handleResetFilters} className="h-10 px-6 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors cursor-pointer">
-                    Clear Filters
-                  </button>
+                <div className="p-8 bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm">
+                  <EmptyState
+                    type="map"
+                    title="No Hotspots Match Filters"
+                    message="No geospatial crime hotspots match your current filter parameters. Try clearing date ranges or search terms."
+                    onAction={handleResetFilters}
+                    actionLabel="Clear Filters"
+                  />
                 </div>
               ) : (
                 <HotspotTable 

@@ -43,9 +43,7 @@ export default {
         'border-subtle': '#F3F4F6',
       },
       fontFamily: {
-        heading: ["'Inter'", 'system-ui', '-apple-system', 'sans-serif'],
-        body: ["'Fira Sans'", 'system-ui', '-apple-system', 'sans-serif'],
-        sans: ["'Fira Sans'", 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {

@@ -172,11 +172,11 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
             <LazyImage src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-white font-extrabold tracking-tight text-xs flex items-center gap-1.5 leading-none">
+            <h2 className="text-white font-extrabold tracking-tight text-[13px] sm:text-sm flex items-center gap-1.5 leading-none">
               KARNATAKA POLICE
-              <span className="text-[9px] bg-[#C79A2B] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+              <span className="text-[9.5px] bg-[#C79A2B] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
             </h2>
-            <p className="text-[10px] text-white/60 font-semibold uppercase tracking-wider mt-1 truncate">
+            <p className="text-[11px] text-white/70 font-semibold uppercase tracking-wider mt-0.5 truncate">
               {platformSubtitle}
             </p>
           </div>

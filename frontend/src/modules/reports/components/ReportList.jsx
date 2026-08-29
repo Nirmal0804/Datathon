@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, BarChart2, Map, Network, Download, Eye, MoreHorizontal, Clock } from 'lucide-react';
 import { jsPDF } from 'jspdf';
+import EmptyState from '../../../components/common/EmptyState';
 
 const iconMap = {
   'Crime Summary': FileText,
@@ -145,10 +146,11 @@ export default function ReportList({ searchQuery, onSelect, selectedId, reports:
   return (
     <div className="space-y-3">
       {filtered.length === 0 && (
-        <div className="text-center py-16 text-slate-500">
-          <FileText className="w-12 h-12 mx-auto mb-4 opacity-30" />
-          <p>No reports found matching your search.</p>
-        </div>
+        <EmptyState
+          type="search"
+          title="No Reports Found"
+          message="No intelligence reports match your active search terms."
+        />
       )}
       {filtered.map((report) => {
         const Icon = iconMap[report.type] || FileText;

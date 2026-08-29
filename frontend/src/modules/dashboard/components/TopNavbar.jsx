@@ -85,13 +85,13 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
         </button>
 
         {/* Mobile Branding (Visible on < sm) */}
-        <div className="flex items-center gap-2 sm:hidden min-w-0">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-0.5 shadow-xs shrink-0 overflow-hidden">
+        <div className="flex items-center gap-2.5 sm:hidden min-w-0">
+          <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center p-0.5 shadow-xs shrink-0 overflow-hidden">
             <LazyImage src={kspLogo} alt="Karnataka Police" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-white font-extrabold text-[12px] leading-tight tracking-tight truncate">KSP INTEL</span>
-            <span className="text-[8.5px] text-[#F5E7C1] font-bold tracking-wider uppercase truncate">POLICE</span>
+            <span className="text-white font-extrabold text-sm leading-tight tracking-tight truncate">KSP INTEL</span>
+            <span className="text-[9.5px] text-[#F5E7C1] font-bold tracking-wider uppercase truncate">POLICE</span>
           </div>
         </div>
 

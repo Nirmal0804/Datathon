@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Search, Plus, ShieldCheck, X, Shield, MapPin, ChevronLeft, ChevronRight, RotateCcw, Download, Filter } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import EmptyState from '../../../components/common/EmptyState';
 
 // ─── Role badge styling ───────────────────────────────────────────────────────
 const roleBadge = (role) => {
@@ -269,20 +270,12 @@ export default function AdminUsers() {
               <AnimatePresence mode="popLayout">
                 {paginatedUsers.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-16 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
-                          <Users className="w-6 h-6 text-slate-400" />
-                        </div>
-                        <p className="text-sm font-black text-[#0F172A]">No users found</p>
-                        <p className="text-xs font-semibold text-[#64748B]">Try adjusting your search or filters.</p>
-                        <button
-                          onClick={handleResetFilters}
-                          className="mt-1 h-9 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs transition-colors cursor-pointer hover:bg-[#143275]"
-                        >
-                          Reset Filters
-                        </button>
-                      </div>
+                    <td colSpan={6} className="py-8 px-4">
+                      <EmptyState
+                        type="users"
+                        onAction={handleResetFilters}
+                        actionLabel="Reset Filters"
+                      />
                     </td>
                   </tr>
                 ) : (

@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MoreHorizontal, Download, ArrowUpDown, Search, X, Calendar, Shield, User, FileText, Clock, FolderOpen, Search as SearchIcon, CheckCircle2, ChevronDown } from 'lucide-react';
+import EmptyState from '../../../components/common/EmptyState';
 
 const riskBadge = (risk) => {
   switch (risk) {
@@ -196,8 +197,12 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
           <tbody className="divide-y divide-[#E7ECF3]/60">
             {paginatedCases.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-16 text-[#64748B] text-xs font-semibold">
-                  No cases found matching query.
+                <td colSpan="7" className="py-8 px-4">
+                  <EmptyState
+                    type={searchQuery ? 'search' : 'filters'}
+                    onAction={searchQuery ? () => setSearchQuery('') : null}
+                    actionLabel="Clear Search"
+                  />
                 </td>
               </tr>
             ) : (

@@ -57,7 +57,7 @@ export default function Navbar({ onLoginClick }) {
                 KARNATAKA POLICE
                 <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
               </h1>
-              <p className="text-[11px] text-[#F5E7C1] font-medium tracking-wide mt-0.5">Crime Analytics Platform</p>
+              <p className="text-[11px] sm:text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">Crime Analytics Platform</p>
             </div>
           </div>
 

@@ -9,6 +9,7 @@ import TimelineSlider from './components/TimelineSlider';
 import { MOCK_CASES, DISTRICTS, POLICE_STATIONS, CATEGORIES, STATUSES } from '../dashboard/components/mockData';
 import { useToast } from '../../components/ui/Toast';
 import { DISTRICT_PREDICTION_DATA } from '../../mock/districtPredictionData';
+import EmptyState from '../../components/common/EmptyState';
 
 // Command Center Loading Skeleton
 function SkeletonMapOverlay() {
@@ -531,17 +532,15 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
           {/* Empty State overlay */}
           {filteredCases.length === 0 && !isLoading && (
-            <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-white/70 backdrop-blur-[2px]">
-              <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 text-center max-w-sm shadow-xl">
-                <ShieldAlert className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                <h3 className="text-sm font-bold text-[#0F172A] mb-1">No crime records found</h3>
-                <p className="text-xs text-[#64748B] mb-4">No crime incidents match the selected filter criteria.</p>
-                <button
-                  onClick={handleResetAll}
-                  className="h-10 px-5 rounded-[999px] bg-[#0B1F4D] text-white text-xs font-bold w-full hover:bg-[#0A192F] shadow-sm cursor-pointer"
-                >
-                  Clear Filters
-                </button>
+            <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-white/75 backdrop-blur-[2px] pointer-events-auto">
+              <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 text-center max-w-sm shadow-xl">
+                <EmptyState
+                  type="map"
+                  title="No Locations to Display"
+                  message="No crime incidents or geographic coordinates match the active filter criteria."
+                  onAction={handleResetAll}
+                  actionLabel="Clear Filters"
+                />
               </div>
             </div>
           )}

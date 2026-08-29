@@ -35,11 +35,11 @@ export const ADMIN_NAV_ITEMS = [
 ];
 
 export function getRoleNavItems(role) {
-  return role === 'officer' 
-    ? OFFICER_NAV_ITEMS 
-    : role === 'admin' 
-    ? ADMIN_NAV_ITEMS 
-    : ANALYST_NAV_ITEMS;
+  return role === 'officer'
+    ? OFFICER_NAV_ITEMS
+    : role === 'admin'
+      ? ADMIN_NAV_ITEMS
+      : ANALYST_NAV_ITEMS;
 }
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
@@ -128,12 +128,12 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
           <LazyImage src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
         </div>
-        <div className="hidden xl:block">
-          <h2 className="text-white font-extrabold tracking-tight text-xs lg:text-sm flex items-center gap-1.5 leading-none">
+        <div className="hidden lg:block">
+          <h2 className="text-white font-extrabold tracking-tight text-sm lg:text-[15px] flex items-center gap-1.5 leading-none">
             KARNATAKA POLICE
-            <span className="text-[9px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
+            <span className="text-[9.5px] bg-[#D49A00] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
           </h2>
-          <p className="text-[10px] text-[#F5E7C1] font-medium tracking-wide mt-0.5">{platformSubtitle}</p>
+          <p className="text-[11px] text-[#F5E7C1] font-bold tracking-wider uppercase mt-0.5 leading-none">{platformSubtitle}</p>
         </div>
       </div>
 
