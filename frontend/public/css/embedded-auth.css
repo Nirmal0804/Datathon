@@ -152,7 +152,7 @@ html, body {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
-/* 6. Make Password Field Visible Simultaneously */
+/* 6. Password Field Container */
 .getpassword, .getpassword.zeroheight {
   width: 100% !important;
   max-width: 100% !important;
@@ -185,15 +185,17 @@ html, body {
   background-position: center !important;
 }
 
-/* 7. Forgot Password Link */
-.textbox_actions, #enableforgot {
+/* 7. Primary Forgot Password Link (Below Password Field Only) */
+#enableforgot {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
   margin: 6px 0 12px 0 !important;
 }
 
-#forgotpassword, .blueforgotpassword, .goToForgotPassword {
+#enableforgot #forgotpassword,
+#enableforgot .blueforgotpassword,
+#enableforgot .goToForgotPassword {
   color: #2563eb !important;
   font-size: 12px !important;
   font-weight: 600 !important;
@@ -202,27 +204,33 @@ html, body {
   display: inline-block !important;
 }
 
-#forgotpassword a, .goToForgotPassword a {
+#enableforgot #forgotpassword a,
+#enableforgot .goToForgotPassword a {
   color: #2563eb !important;
   text-decoration: none !important;
 }
 
-#forgotpassword:hover, #forgotpassword a:hover {
+#enableforgot #forgotpassword:hover,
+#enableforgot #forgotpassword a:hover {
   text-decoration: underline !important;
 }
 
-/* 8. Enter CAPTCHA Row */
+/* 8. CAPTCHA Container (Display Managed Naturally by Zoho IAM) */
 #captcha_container {
   width: 100% !important;
   max-width: 100% !important;
   margin-bottom: 16px !important;
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
   box-sizing: border-box !important;
 }
 
-#captcha_container::before {
+/* Only style CAPTCHA elements when Zoho IAM makes it active */
+#captcha_container:not([style*="display: none"]):not([style*="display:none"]) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+#captcha_container:not([style*="display: none"]):not([style*="display:none"])::before {
   content: "Enter CAPTCHA" !important;
   display: block !important;
   width: 100% !important;
@@ -342,7 +350,8 @@ html, body {
   letter-spacing: 0.05em !important;
 }
 
-#enableotpoption a, #enableotpoption span, #signin_with_otp {
+#enableotpoption #signin_with_otp,
+#enableotpoption a#signin_with_otp {
   width: 100% !important;
   height: 42px !important;
   background: #ffffff !important;
@@ -361,7 +370,8 @@ html, body {
 }
 
 /* Add Shield Icon to OTP Button */
-#enableotpoption a::before {
+#enableotpoption #signin_with_otp::before,
+#enableotpoption a#signin_with_otp::before {
   content: "" !important;
   display: inline-block !important;
   width: 16px !important;
@@ -371,10 +381,23 @@ html, body {
   background-position: center !important;
 }
 
-#enableotpoption a:hover, #enableotpoption span:hover {
+#enableotpoption #signin_with_otp:hover,
+#enableotpoption a#signin_with_otp:hover {
   background: #f0f7ff !important;
   border-color: #93c5fd !important;
   color: #1d4ed8 !important;
+}
+
+/* HIDE the duplicate Forgot Password link inside/below the OTP container */
+#enableotpoption .blueforgotpassword,
+#enableotpoption .goToForgotPassword,
+#enableotpoption #forgotpassword,
+#enableotpoption a:not(#signin_with_otp) {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* 11. Hide All Unnecessary Native IAM Bloat Panels */
