@@ -22,38 +22,40 @@ export default {
 
         // Core backgrounds
         background: '#020617',   // slate-950
-        surface:    '#0f172a',   // slate-900
+        surface: '#0f172a',   // slate-900
         'surface-2': '#1e293b', // slate-800
         'surface-3': '#334155', // slate-700
         // Brand
-        primary:       '#153E75', // KSP Primary Navy
-        'primary-hover':'#0F2D56',
-        'primary-muted':'#1E4B8A',
+        primary: '#153E75', // KSP Primary Navy
+        'primary-hover': '#0F2D56',
+        'primary-muted': '#1E4B8A',
         // Semantic
-        success:  '#2E8B57',
-        warning:  '#C79A2B',
-        danger:   '#C0392B',
-        info:     '#2B5FB8',
+        success: '#2E8B57',
+        warning: '#C79A2B',
+        danger: '#C0392B',
+        info: '#2B5FB8',
         // Text
-        'text-primary':   '#111827',
+        'text-primary': '#111827',
         'text-secondary': '#6B7280',
-        'text-muted':     '#9CA3AF',
+        'text-muted': '#9CA3AF',
         // Borders
-        border:       '#E6E8EC',
+        border: '#E6E8EC',
         'border-subtle': '#F3F4F6',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ["'Sora'", 'system-ui', '-apple-system', 'sans-serif'],
+        body: ["'Heebo'", 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ["'Heebo'", 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {
         '2xs': ['0.625rem', { lineHeight: '0.875rem' }],
       },
       boxShadow: {
-        'card':   '0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)',
+        'card': '0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)',
         'card-hover': '0 4px 16px rgba(0,0,0,0.5)',
         'glow-primary': '0 0 20px rgba(79,70,229,0.25)',
-        'glow-danger':  '0 0 20px rgba(239,68,68,0.25)',
+        'glow-danger': '0 0 20px rgba(239,68,68,0.25)',
         'glow-success': '0 0 20px rgba(16,185,129,0.25)',
         'inset-top': 'inset 0 1px 0 rgba(255,255,255,0.05)',
       },
@@ -73,15 +75,15 @@ export default {
         },
         fadeIn: {
           from: { opacity: '0' },
-          to:   { opacity: '1' },
+          to: { opacity: '1' },
         },
         slideUp: {
           from: { opacity: '0', transform: 'translateY(8px)' },
-          to:   { opacity: '1', transform: 'translateY(0)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
         pulseSoft: {
           '0%, 100%': { opacity: '1' },
-          '50%':      { opacity: '0.5' },
+          '50%': { opacity: '0.5' },
         },
       },
       transitionTimingFunction: {
