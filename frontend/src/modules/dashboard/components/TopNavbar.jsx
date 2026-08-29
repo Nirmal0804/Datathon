@@ -2,7 +2,8 @@ import React from 'react';
 import { Search, Bell, Menu, Plus, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
-import kspLogo from '../../../assets/ksp-official-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 
 export default function TopNavbar({ toggleMobileMenu, role }) {
   const { unreadCount, togglePanel } = useNotification();
@@ -85,8 +86,8 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
 
         {/* Mobile Branding (Visible on < sm) */}
         <div className="flex items-center gap-2 sm:hidden min-w-0">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-0.5 shadow-xs shrink-0">
-            <img src={kspLogo} alt="Karnataka Police" className="h-full w-auto object-contain" />
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-0.5 shadow-xs shrink-0 overflow-hidden">
+            <LazyImage src={kspLogo} alt="Karnataka Police" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-white font-extrabold text-[12px] leading-tight tracking-tight truncate">KSP INTEL</span>
@@ -99,7 +100,7 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
           <div className="relative">
             <div className="w-8 h-8 rounded-full bg-[#D49A00] text-[#142B45] font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
               {avatarUrl ? (
-                <img src={avatarUrl} alt="Officer Avatar" className="w-full h-full object-cover" />
+                <LazyImage src={avatarUrl} alt="Officer Avatar" className="w-full h-full object-cover" containerClassName="w-full h-full" />
               ) : (
                 profileInitials
               )}
@@ -119,10 +120,14 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="hidden sm:flex items-center justify-center gap-1.5 bg-[#D49A00] hover:bg-[#B88600] text-[#142B45] px-4 h-[38px] sm:h-[42px] rounded-[14px] text-xs font-extrabold shadow-sm transition-colors duration-200 ease-in-out cursor-pointer"
+          onClick={() => {
+            const el = document.getElementById('field-officer-fir-mgmt');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-[#D49A00] hover:bg-[#b88500] text-[#142B45] text-xs font-extrabold rounded-[14px] shadow-xs hover:shadow transition-all duration-200 ease-in-out cursor-pointer"
         >
-          <Plus className="w-4 h-4 text-[#142B45]" />
-          <span>New Report</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>Quick FIR</span>
         </motion.button>
 
         {/* Notifications */}
@@ -156,7 +161,7 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
         <div className="flex items-center gap-2 sm:hidden px-1.5 py-1 bg-white/10 border border-white/20 rounded-full">
           <div className="w-7 h-7 rounded-full bg-[#D49A00] text-[#142B45] flex items-center justify-center font-extrabold text-[10.5px] shrink-0 overflow-hidden">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              <LazyImage src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" containerClassName="w-full h-full" />
             ) : (
               profileInitials
             )}
@@ -170,7 +175,7 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
         >
           <div className="w-7 h-7 rounded-[10px] bg-[#D49A00] text-[#142B45] flex items-center justify-center font-extrabold text-[11px] shrink-0 select-none overflow-hidden">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              <LazyImage src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" containerClassName="w-full h-full" />
             ) : (
               profileInitials
             )}

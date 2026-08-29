@@ -5,7 +5,8 @@ import {
   Shield, Activity, BookOpen, BarChart2, Bell, ShieldAlert, Briefcase,
   Users, Database, X
 } from 'lucide-react';
-import kspLogo from '../../../assets/ksp-official-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 
 const ANALYST_NAV_SECTIONS = [
   {
@@ -167,8 +168,8 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
       {/* Header / Logo */}
       <div className="p-5 flex items-center justify-between gap-3 border-b border-white/10 shrink-0 bg-[#0A192F]/60">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
-            <img src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" />
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0 overflow-hidden">
+            <LazyImage src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
           </div>
           <div className="min-w-0">
             <h2 className="text-white font-extrabold tracking-tight text-xs flex items-center gap-1.5 leading-none">
@@ -185,15 +186,15 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
         {onClose && (
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1"
-            aria-label="Close navigation menu"
+            className="md:hidden w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            aria-label="Close sidebar"
           >
-            <X className="w-4 h-4 text-white" />
+            <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      {/* Navigation List */}
+      {/* Navigation list */}
       <nav className="flex-1 overflow-y-auto py-5 px-3 space-y-5 no-scrollbar" aria-label="Main navigation">
         {navSections.map(section => (
           <div key={section.label}>
@@ -237,7 +238,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
         <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-2 rounded-[14px] text-white">
           <div className="w-8 h-8 rounded-full bg-[#C79A2B] text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
             {avatarUrl ? (
-              <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
+              <LazyImage src={avatarUrl} alt={profileName} className="w-full h-full object-cover" containerClassName="w-full h-full" />
             ) : (
               profileInitials
             )}

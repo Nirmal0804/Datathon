@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, User, Settings, Lock, Eye, EyeOff, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import kspLogo from '../../assets/ksp-official-logo.png';
+import kspLogo from '../../assets/ksp-official-logo.webp';
+import LazyImage from '../../components/ui/LazyImage';
 import { useToast } from '../../components/ui/Toast';
 
 const roles = [
@@ -139,11 +140,13 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       <header className="w-full bg-[#E00000] text-white px-4 sm:px-8 py-3.5 border-b border-[#C90000] shadow-sm relative z-30 flex items-center justify-between">
         {/* Left Branding */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
-            <img
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
+            <LazyImage
               src={kspLogo}
               alt="Karnataka State Police Emblem"
               className="h-full w-auto object-contain"
+              containerClassName="w-full h-full"
+              loading="eager"
             />
           </div>
           <div>
@@ -180,11 +183,15 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
           className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-200/80 w-full max-w-[460px] relative z-20 my-auto"
         >
           {/* Card Official Logo */}
-          <img
-            src={kspLogo}
-            alt="Karnataka State Police Emblem"
-            className="h-16 w-auto object-contain mx-auto mb-3 drop-shadow-xs"
-          />
+          <div className="h-16 w-16 mx-auto mb-3 overflow-hidden flex items-center justify-center">
+            <LazyImage
+              src={kspLogo}
+              alt="Karnataka State Police Emblem"
+              className="h-16 w-auto object-contain drop-shadow-xs"
+              containerClassName="w-full h-full"
+              loading="eager"
+            />
+          </div>
 
           {/* Card Header */}
           <h2 className="text-2xl font-extrabold text-[#142B45] text-center mb-1 tracking-tight">

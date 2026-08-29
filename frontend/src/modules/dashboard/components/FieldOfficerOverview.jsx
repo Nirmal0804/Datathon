@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import { MOCK_CASES, MOCK_ALERTS } from './mockData';
 import { useToast } from '../../../components/ui/Toast';
-import kspBadge from '../../../assets/ksp-badge.png';
+import kspBadge from '../../../assets/ksp-badge.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
 
 // MiniMapCard removed to prevent duplication. Geographic details handled in Crime Map.
@@ -233,7 +234,15 @@ export default function FieldOfficerOverview({ onNavigate }) {
         {/* Left Section */}
         <div className="flex items-center gap-3.5 sm:gap-5">
           {/* Karnataka Police Official Badge */}
-          <img src={kspBadge} alt="Karnataka Police Badge" className="h-11 sm:h-[60px] w-auto object-contain shrink-0 drop-shadow-sm" />
+          <div className="h-11 sm:h-[60px] w-10 sm:w-[50px] shrink-0 overflow-hidden flex items-center justify-center">
+            <LazyImage
+              src={kspBadge}
+              alt="Karnataka Police Badge"
+              className="h-full w-auto object-contain drop-shadow-sm"
+              containerClassName="w-full h-full"
+              loading="eager"
+            />
+          </div>
           <div className="flex flex-col justify-center">
             <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
               Field Officer Operations

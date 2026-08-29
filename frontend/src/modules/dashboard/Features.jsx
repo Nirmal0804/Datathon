@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, BrainCircuit, Network, BellRing, PieChart, FileText, ShieldCheck } from 'lucide-react';
-import featuresBg from '../../assets/features-bg.png';
+import featuresBg from '../../assets/features-bg.webp';
 
 // Exact side illustration icons extracted from reference design
 const GlobeSideIcon = ({ color }) => (

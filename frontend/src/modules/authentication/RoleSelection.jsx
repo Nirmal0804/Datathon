@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Shield, User, ShieldAlert, ChevronRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import kspLogo from '../../assets/ksp-logo.jpg';
+import kspLogo from '../../assets/ksp-official-logo.webp';
+import LazyImage from '../../components/ui/LazyImage';
 
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User, desc: 'Access station-level reports and active cases.' },
@@ -40,11 +41,15 @@ export default function RoleSelection({ onSelect, onBack }) {
         {/* Header with Official Karnataka Police Logo */}
         <div className="text-center mb-10 sm:mb-12">
           <div className="mb-6 flex justify-center">
-            <img 
-              src={kspLogo} 
-              alt="Karnataka State Police Emblem" 
-              className="h-20 sm:h-24 w-auto object-contain"
-            />
+            <div className="h-20 sm:h-24 w-20 sm:w-24 overflow-hidden flex items-center justify-center">
+              <LazyImage 
+                src={kspLogo} 
+                alt="Karnataka State Police Emblem" 
+                className="h-20 sm:h-24 w-auto object-contain"
+                containerClassName="w-full h-full"
+                loading="eager"
+              />
+            </div>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight mb-2">Select Access Level</h1>
           <p className="text-[#6B7280] text-sm sm:text-base font-normal max-w-md mx-auto">Identify your operational role to proceed securely.</p>

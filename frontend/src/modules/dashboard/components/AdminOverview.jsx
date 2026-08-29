@@ -5,7 +5,8 @@ import {
   RefreshCw, CheckCircle, Clock, AlertTriangle, Play, Check, Trash2, Globe
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
-import kspBadge from '../../../assets/ksp-badge.png';
+import kspBadge from '../../../assets/ksp-badge.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
 
 export default function AdminOverview({ onNavigate }) {
@@ -70,7 +71,15 @@ export default function AdminOverview({ onNavigate }) {
         {/* Left Section */}
         <div className="flex items-center gap-5">
           {/* Karnataka Police Official Badge */}
-          <img src={kspBadge} alt="Karnataka Police Badge" className="h-[60px] w-auto object-contain shrink-0 drop-shadow-sm" />
+          <div className="h-[60px] w-[50px] shrink-0 overflow-hidden flex items-center justify-center">
+            <LazyImage
+              src={kspBadge}
+              alt="Karnataka Police Badge"
+              className="h-[60px] w-auto object-contain drop-shadow-sm"
+              containerClassName="w-full h-full"
+              loading="eager"
+            />
+          </div>
           <div className="flex flex-col justify-center">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
               System Administration

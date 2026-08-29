@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, FileText } from 'lucide-react';
-import kspLogo from '../../assets/ksp-official-logo.png';
-import vidhanSoudha from '../../assets/vidhan-soudha-exact.jpg';
+import kspLogo from '../../assets/ksp-official-logo.webp';
+import vidhanSoudha from '../../assets/vidhan-soudha-exact.webp';
 
 export default function Hero({ onLoginClick }) {
   const handleReadDocumentation = () => {

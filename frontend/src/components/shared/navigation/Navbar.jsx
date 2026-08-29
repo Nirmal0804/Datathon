@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import kspLogo from '../../../assets/ksp-official-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.webp';
+import LazyImage from '../../ui/LazyImage';
 
 const NAV_LINKS = [
   { id: 'home', label: 'Home' },
@@ -42,11 +43,13 @@ export default function Navbar({ onLoginClick }) {
         <div className="flex justify-between items-center">
           {/* Logo Brand */}
           <div className="-ml-1 sm:-ml-2 lg:-ml-3 flex items-center gap-3 cursor-pointer group" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveSection('home'); }}>
-            <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0 transition-transform duration-200 group-hover:scale-[1.02]">
-              <img
+            <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0 transition-transform duration-200 group-hover:scale-[1.02] overflow-hidden">
+              <LazyImage
                 src={kspLogo}
                 alt="Karnataka State Police Emblem"
                 className="h-full w-auto object-contain"
+                containerClassName="w-full h-full"
+                loading="eager"
               />
             </div>
             <div>

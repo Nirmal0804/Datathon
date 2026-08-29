@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Wifi, RefreshCw } from 'lucide-react';
-import kspBadge from '../../../assets/ksp-badge.png';
+import kspBadge from '../../../assets/ksp-badge.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 
 export default function DashboardHeader({ compact = false }) {
   const [time, setTime] = useState(new Date());
@@ -25,7 +26,15 @@ export default function DashboardHeader({ compact = false }) {
       {/* Left Section */}
       <div className="flex items-center gap-3.5 sm:gap-5">
         {/* Karnataka Police Official Badge */}
-        <img src={kspBadge} alt="Karnataka Police Badge" className="h-11 sm:h-[60px] w-auto object-contain shrink-0 drop-shadow-sm" />
+        <div className="h-11 sm:h-[60px] w-10 sm:w-[50px] shrink-0 overflow-hidden flex items-center justify-center">
+          <LazyImage
+            src={kspBadge}
+            alt="Karnataka Police Badge"
+            className="h-full w-auto object-contain drop-shadow-sm"
+            containerClassName="w-full h-full"
+            loading="eager"
+          />
+        </div>
         <div className="flex flex-col justify-center">
           <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
             Crime Intelligence Dashboard

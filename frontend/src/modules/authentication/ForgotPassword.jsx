@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Shield, Mail, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-import kspLogo from '../../assets/ksp-official-logo.png';
+import kspLogo from '../../assets/ksp-official-logo.webp';
+import LazyImage from '../../components/ui/LazyImage';
 
 export default function ForgotPassword({ onBack }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,11 +25,13 @@ export default function ForgotPassword({ onBack }) {
       <header className="w-full bg-[#E00000] text-white px-4 sm:px-8 py-3.5 border-b border-[#C90000] shadow-sm relative z-30 flex items-center justify-between">
         {/* Left Branding */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
-            <img 
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
+            <LazyImage 
               src={kspLogo} 
               alt="Karnataka State Police Emblem" 
               className="h-full w-auto object-contain" 
+              containerClassName="w-full h-full"
+              loading="eager"
             />
           </div>
           <div>

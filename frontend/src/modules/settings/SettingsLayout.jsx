@@ -6,6 +6,7 @@ import {
   Clock, Check, ChevronRight, Sliders, Key
 } from 'lucide-react';
 import { useToast } from '../../components/ui/Toast';
+import LazyImage from '../../components/ui/LazyImage';
 import AuditLogs from './components/AuditLogs';
 
 // ─── Initial State Helpers ───────────────────────────────────────────────────
@@ -531,7 +532,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                 <div className="relative group shrink-0">
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0B1F4D] text-white font-black text-xl sm:text-2xl border-4 border-[#E7ECF3] flex items-center justify-center overflow-hidden shadow-md">
                     {profile?.avatarUrl ? (
-                      <img src={profile.avatarUrl} alt={profile?.fullName || 'User Avatar'} className="w-full h-full object-cover" />
+                      <LazyImage src={profile.avatarUrl} alt={profile?.fullName || 'User Avatar'} className="w-full h-full object-cover" containerClassName="w-full h-full" />
                     ) : (
                       <span>{(profile?.fullName || 'User Name').split(' ').filter(Boolean).map((n) => n[0]).join('').substring(0, 2).toUpperCase()}</span>
                     )}

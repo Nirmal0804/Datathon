@@ -296,6 +296,10 @@
   .glow-danger {
     animation: glowDanger 2s ease-in-out infinite;
   }
+
+  .animate-shimmer {
+    animation: shimmer 1.6s infinite linear;
+  }
 }
 
 /* ── Keyframes (outside @layer so they're always available) ── */

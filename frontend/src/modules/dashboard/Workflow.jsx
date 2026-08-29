@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Database, BrainCircuit, TrendingUp, Target, FileText, ArrowRight } from 'lucide-react';
-import workflowBg from '../../assets/workflow-bg.png';
+import workflowBg from '../../assets/workflow-bg.webp';
 
 const steps = [
   { 

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Shield, LogOut, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
-import kspLogo from '../../../assets/ksp-official-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.webp';
+import LazyImage from '../../../components/ui/LazyImage';
 
 export const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
@@ -124,8 +125,8 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
     <nav className="h-[72px] bg-[#E00000] rounded-[20px] flex items-center justify-between px-5 shrink-0 shadow-md border border-[#C90000] w-full text-white">
       {/* Left Section: Branding */}
       <div className="flex items-center gap-3 pr-4 border-r border-white/20 shrink-0 h-[42px]">
-        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
-          <img src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" />
+        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
+          <LazyImage src={kspLogo} alt="Karnataka Police Logo" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
         </div>
         <div className="hidden xl:block">
           <h2 className="text-white font-extrabold tracking-tight text-xs lg:text-sm flex items-center gap-1.5 leading-none">
@@ -168,7 +169,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
           <div className="relative">
             <div className="w-7 h-7 rounded-full bg-[#D49A00] text-[#142B45] font-extrabold text-[11px] flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={profileName} className="w-full h-full object-cover" />
+                <LazyImage src={avatarUrl} alt={profileName} className="w-full h-full object-cover" containerClassName="w-full h-full" />
               ) : (
                 profileInitials
               )}

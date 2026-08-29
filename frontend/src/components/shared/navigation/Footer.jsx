@@ -3,7 +3,8 @@ import {
   Shield, ShieldCheck, Mail, ChevronRight,
   Headphones, Lock, HelpCircle, Globe, Share2
 } from 'lucide-react';
-import kspLogo from '../../../assets/ksp-official-logo.png';
+import kspLogo from '../../../assets/ksp-official-logo.webp';
+import LazyImage from '../../ui/LazyImage';
 import { getRoleNavItems } from '../../../modules/dashboard/components/AnalystTopNav';
 
 export default function Footer({ onLoginClick, rounded = false, role = null, activeModule = null, onNavigate = null }) {
@@ -23,11 +24,13 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
           {/* 1. BRAND INFORMATION — LEFT (lg:col-span-4) */}
           <div className="lg:col-span-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0">
-                <img
+              <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-xs shrink-0 overflow-hidden">
+                <LazyImage
                   src={kspLogo}
                   alt="Karnataka State Police Emblem"
                   className="h-full w-auto object-contain"
+                  containerClassName="w-full h-full"
+                  loading="lazy"
                 />
               </div>
               <div>

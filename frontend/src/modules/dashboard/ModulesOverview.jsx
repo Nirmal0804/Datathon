@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Landmark, Network, TrendingUp, MoreHorizontal, ArrowRight } from 'lucide-react';
-import workflowBg from '../../assets/workflow-bg.png';
+import workflowBg from '../../assets/workflow-bg.webp';
 
 const modules = [
   { 
