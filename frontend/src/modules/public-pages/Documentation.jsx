@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { BookOpen, FileText, Activity, Shield, Database, Search } from 'lucide-react';
+import { BookOpen, FileText, Activity, Shield, Database, Search, Download } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
 import { useTranslation } from '../../i18n';
+import { downloadArchitectureDocumentation } from '../../utils/documentationPdf';
 
 export default function Documentation({ onNavigate, onLoginClick, role = null }) {
   const { t } = useTranslation();
@@ -122,24 +123,33 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
     >
       <div className="space-y-8">
         
-        {/* Search Toolbar */}
-        <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 sm:p-5 shadow-xs flex items-center gap-3">
-          <Search className="w-4 h-4 text-[#64748B] shrink-0" />
-          <input
-            type="text"
-            placeholder={t('public.docSearchPlaceholder', 'Search documentation guides, operational modules, or analytics topics...')}
-            value={filterQuery}
-            onChange={(e) => setFilterQuery(e.target.value)}
-            className="w-full bg-transparent text-xs sm:text-sm font-semibold text-[#0F172A] focus:outline-none placeholder:text-slate-400"
-          />
-          {filterQuery && (
-            <button
-              onClick={() => setFilterQuery('')}
-              className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-1 bg-slate-100 rounded-lg cursor-pointer"
-            >
-              {t('common.clear', 'Clear')}
-            </button>
-          )}
+        {/* Search & Action Toolbar */}
+        <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-3.5 sm:p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 flex-1 bg-[#F8F9FB] border border-[#E7ECF3] px-3.5 py-2 rounded-xl">
+            <Search className="w-4 h-4 text-[#64748B] shrink-0" />
+            <input
+              type="text"
+              placeholder={t('public.docSearchPlaceholder', 'Search documentation guides, operational modules, or analytics topics...')}
+              value={filterQuery}
+              onChange={(e) => setFilterQuery(e.target.value)}
+              className="w-full bg-transparent text-xs sm:text-sm font-semibold text-[#0F172A] focus:outline-none placeholder:text-slate-400"
+            />
+            {filterQuery && (
+              <button
+                onClick={() => setFilterQuery('')}
+                className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-0.5 bg-slate-200/70 rounded-md cursor-pointer"
+              >
+                {t('common.clear', 'Clear')}
+              </button>
+            )}
+          </div>
+          <button
+            onClick={() => downloadArchitectureDocumentation('KSP_Platform_Architecture_Documentation.pdf')}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0B1F4D] hover:bg-[#0B1F4D]/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs shrink-0 cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
+            <span>{t('reports.exportPDF', 'Download PDF')}</span>
+          </button>
         </div>
 
         {/* Documentation Sections */}

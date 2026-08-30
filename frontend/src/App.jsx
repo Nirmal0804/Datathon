@@ -357,10 +357,13 @@ function AppContent() {
                 role={selectedRole}
               />
               <main>
-                <Hero onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth} />
+                <Hero 
+                  onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth} 
+                  onNavigate={navigateTo}
+                />
                 <Stats />
-                <Features />
-                <Workflow />
+                <Features onNavigate={navigateTo} />
+                <Workflow onNavigate={navigateTo} />
                 <ModulesOverview />
                 <About />
               </main>
