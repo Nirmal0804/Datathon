@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, FileText, Target, Bell } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
 const metricItems = [
   {
@@ -8,7 +9,9 @@ const metricItems = [
     value: '250+',
     valueColor: 'text-[#E00000]',
     title: 'POLICE STATIONS',
+    titleKey: 'home.statsPolicStations',
     subtitle: 'MONITORED',
+    subtitleKey: 'home.statsMonitored',
     icon: ShieldCheck,
     iconBg: 'bg-[#FFF1F1] text-[#E00000]',
   },
@@ -17,7 +20,9 @@ const metricItems = [
     value: '14,235+',
     valueColor: 'text-[#D49A00]',
     title: 'ACTIVE CASES',
+    titleKey: 'home.statsActiveCases',
     subtitle: 'RECORDED',
+    subtitleKey: 'home.statsRecorded',
     icon: FileText,
     iconBg: 'bg-[#F5E7C1]/50 text-[#D49A00]',
   },
@@ -26,7 +31,9 @@ const metricItems = [
     value: '49',
     valueColor: 'text-[#E00000]',
     title: 'HOTSPOTS',
+    titleKey: 'home.statsHotspots',
     subtitle: 'DETECTED',
+    subtitleKey: 'home.statsDetected',
     icon: Target,
     iconBg: 'bg-[#FFF1F1] text-[#E00000]',
   },
@@ -35,13 +42,17 @@ const metricItems = [
     value: '07',
     valueColor: 'text-[#E00000]',
     title: 'ACTIVE ALERTS',
+    titleKey: 'home.statsActiveAlerts',
     subtitle: 'HIGH PRIORITY',
+    subtitleKey: 'home.statsHighPriority',
     icon: Bell,
     iconBg: 'bg-[#FFF1F1] text-[#E00000]',
   },
 ];
 
 export default function Stats() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 lg:-mt-10 pt-2 pb-12">
       <motion.div 
@@ -67,10 +78,10 @@ export default function Stats() {
                     {item.value}
                   </div>
                   <div className="text-xs font-extrabold text-[#142B45] tracking-wider uppercase mt-0.5">
-                    {item.title}
+                    {t(item.titleKey, item.title)}
                   </div>
                   <div className="text-[10px] font-bold text-slate-400 tracking-wider uppercase mt-0.5">
-                    {item.subtitle}
+                    {t(item.subtitleKey, item.subtitle)}
                   </div>
                 </div>
               </div>

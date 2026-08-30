@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, Code2, Zap, Database, MapPin, BrainCircuit } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
 const teamMembers = [
   'Nirmal P',
@@ -18,6 +19,8 @@ const technologies = [
 ];
 
 export default function About() {
+  const { t } = useTranslation();
+
   return (
     <section id="about" className="py-20 sm:py-24 md:py-28 bg-white border-y border-[#E8EEF5] relative overflow-hidden">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -25,12 +28,12 @@ export default function About() {
         {/* Pill Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF1F1] border border-[#E00000]/20 text-[#E00000] text-xs font-extrabold uppercase tracking-wider mb-4 shadow-2xs">
           <span className="w-2 h-2 rounded-full bg-[#E00000] animate-pulse" />
-          ABOUT THE PROJECT
+          {t('home.aboutBadge', 'ABOUT THE PROJECT')}
         </div>
 
         {/* Main Heading */}
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#142B45] mb-3 tracking-tight leading-[1.15]">
-          Built for the Karnataka Police Datathon
+          {t('home.aboutTitle', 'Built for the Karnataka Police Datathon')}
         </h2>
 
         {/* Red + Gold Accent Underline */}
@@ -41,7 +44,7 @@ export default function About() {
 
         {/* Description */}
         <p className="text-[#142B45]/75 text-base sm:text-lg leading-relaxed mb-8 font-normal">
-          An AI-driven crime analytics platform designed to transform police data into actionable intelligence. The platform combines geospatial analysis, predictive modeling, and real-time insights to support informed decision-making and strengthen law enforcement operations.
+          {t('home.aboutDesc', 'An AI-driven crime analytics platform designed to transform police data into actionable intelligence. The platform combines geospatial analysis, predictive modeling, and real-time insights to support informed decision-making and strengthen law enforcement operations.')}
         </p>
 
         <div className="space-y-6 pt-6 border-t border-[#E8EEF5] text-left">
@@ -49,7 +52,7 @@ export default function About() {
           {/* BUILT BY */}
           <div className="text-center">
             <span className="text-[11px] font-extrabold text-[#142B45]/50 tracking-widest uppercase block mb-1">
-              BUILT BY
+              {t('home.aboutBuiltBy', 'BUILT BY')}
             </span>
             <span className="text-xl font-extrabold text-[#142B45]">
               Tech Fortune
@@ -59,7 +62,7 @@ export default function About() {
           {/* TEAM MEMBERS */}
           <div className="text-center">
             <span className="text-[11px] font-extrabold text-[#142B45]/50 tracking-widest uppercase block mb-3">
-              TEAM MEMBERS
+              {t('home.aboutTeamMembers', 'TEAM MEMBERS')}
             </span>
             <div className="flex flex-wrap justify-center gap-2.5">
               {teamMembers.map((member) => (
@@ -77,7 +80,7 @@ export default function About() {
           {/* TECHNOLOGIES USED */}
           <div className="text-center">
             <span className="text-[11px] font-extrabold text-[#142B45]/50 tracking-widest uppercase block mb-3">
-              TECHNOLOGIES USED
+              {t('home.aboutTechUsed', 'TECHNOLOGIES USED')}
             </span>
             <div className="flex flex-wrap justify-center gap-2.5">
               {technologies.map((tech) => {

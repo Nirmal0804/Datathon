@@ -7,9 +7,9 @@ import { useToast } from '../../components/ui/Toast';
 import { useTranslation } from '../../i18n';
 
 const roles = [
-  { id: 'officer', name: 'Field Officer', icon: User },
-  { id: 'analyst', name: 'Intelligence Analyst', icon: Shield },
-  { id: 'admin', name: 'System Administrator', icon: Settings }
+  { id: 'officer', nameKey: 'auth.roleFieldOfficer', name: 'Field Officer', icon: User },
+  { id: 'analyst', nameKey: 'auth.roleAnalyst', name: 'Intelligence Analyst', icon: Shield },
+  { id: 'admin', nameKey: 'auth.roleAdmin', name: 'System Administrator', icon: Settings }
 ];
 
 export const ROLE_CREDENTIALS = {
@@ -72,18 +72,18 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     e.preventDefault();
     if (!selectedRole) {
       addToast({
-        title: t('auth.selectAccessLevel', 'Access Level Required'),
-        message: t('auth.selectAccessLevel', 'Please select an access level before logging in.'),
+        title: t('auth.accessLevelRequired', 'Access Level Required'),
+        message: t('auth.accessLevelRequiredMsg', 'Please select an access level before logging in.'),
         type: 'warning',
       });
       return;
     }
 
     if (!email || email.trim() === '') {
-      const msg = t('fir.formValidation', 'Please enter your official email address.');
+      const msg = t('auth.emailRequiredMsg', 'Please enter your official email address.');
       setErrorMessage(msg);
       addToast({
-        title: t('auth.email', 'Email Required'),
+        title: t('auth.emailRequired', 'Email Required'),
         message: msg,
         type: 'warning',
       });
@@ -91,10 +91,10 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     }
 
     if (!password || password.trim() === '') {
-      const msg = t('fir.formValidation', 'Please enter your password.');
+      const msg = t('auth.passwordRequiredMsg', 'Please enter your password.');
       setErrorMessage(msg);
       addToast({
-        title: t('auth.password', 'Password Required'),
+        title: t('auth.passwordRequired', 'Password Required'),
         message: msg,
         type: 'warning',
       });
@@ -106,10 +106,10 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     const normalizedExpectedEmail = expected.email.toLowerCase();
 
     if (normalizedEnteredEmail !== normalizedExpectedEmail || password !== expected.password) {
-      const errorMsg = t('common.unauthorizedDesc', 'Invalid credentials. Please verify your official email and password for the selected access level.');
+      const errorMsg = t('auth.authDeniedMsg', 'Invalid credentials. Please verify your official email and password for the selected access level.');
       setErrorMessage(errorMsg);
       addToast({
-        title: t('common.unauthorized', 'Authentication Denied'),
+        title: t('auth.authDenied', 'Authentication Denied'),
         message: errorMsg,
         type: 'error',
       });
@@ -122,7 +122,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     setTimeout(() => {
       setIsLoading(false);
       addToast({
-        title: t('common.success', 'Authentication Successful'),
+        title: t('auth.authSuccess', 'Authentication Successful'),
         message: `Welcome back, ${expected.name} (${expected.badge}).`,
         type: 'success',
       });
@@ -202,7 +202,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             {t('auth.signIn', 'Secure Portal Login')}
           </h2>
           <p className="text-xs text-slate-500 text-center mb-7 font-medium">
-            {t('auth.portalName', 'Select your access level and enter credentials to authenticate.')}
+            {t('auth.portalSubtitle', 'Select your access level and enter credentials to authenticate.')}
           </p>
 
           {/* Access Level Selector Label */}
@@ -266,7 +266,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('auth.email', 'Select access level to autofill')}
+                  placeholder={t('auth.emailPlaceholder', 'Select access level to autofill')}
                   className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs font-medium"
                 />
               </div>
@@ -292,7 +292,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t('auth.password', 'Enter password')}
+                  placeholder={t('auth.passwordPlaceholder', 'Enter password')}
                   className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
                 />
                 <button

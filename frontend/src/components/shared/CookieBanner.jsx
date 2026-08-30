@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Cookie, Settings, Check, X, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '../../i18n';
 
 const STORAGE_KEY = 'ksp_cookie_consent';
 
 export default function CookieBanner() {
+  const { t } = useTranslation();
   const [hasDecided, setHasDecided] = useState(true); // Default true to avoid SSR/hydration flash
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
@@ -90,13 +92,13 @@ export default function CookieBanner() {
                 </div>
                 <div className="text-left">
                   <h3 className="text-sm font-extrabold text-[#0F172A] flex items-center gap-2 leading-snug">
-                    Cookie & Storage Notice
+                    {t('modals.cookieNoticeTitle', 'Cookie & Storage Notice')}
                     <span className="text-[10px] bg-[#D49A00]/15 text-[#9A6F00] border border-[#D49A00]/30 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
-                      Secure
+                      {t('modals.cookieNoticeSecure', 'Secure')}
                     </span>
                   </h3>
                   <p className="text-xs text-slate-600 font-normal leading-relaxed mt-1 max-w-2xl">
-                    Karnataka Police Intelligence Platform uses essential local storage to maintain your operational session and security authentication. Optional preference storage saves station filters and GIS map positions. No commercial ad trackers are deployed.
+                    {t('modals.cookieNoticeDesc', 'Karnataka Police Intelligence Platform uses essential local storage to maintain your operational session and security authentication. Optional preference storage saves station filters and GIS map positions. No commercial ad trackers are deployed.')}
                   </p>
                 </div>
               </div>
@@ -109,7 +111,7 @@ export default function CookieBanner() {
                   className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-[#E00000] hover:bg-red-50/50 border border-slate-200 transition-colors cursor-pointer flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D49A00]"
                 >
                   <Settings className="w-3.5 h-3.5" />
-                  Cookie Settings
+                  {t('modals.cookieSettings', 'Cookie Settings')}
                 </button>
 
                 <button
@@ -117,7 +119,7 @@ export default function CookieBanner() {
                   onClick={handleRejectNonEssential}
                   className="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D49A00]"
                 >
-                  Reject Non-Essential
+                  {t('modals.cookieRejectNonEssential', 'Reject Non-Essential')}
                 </button>
 
                 <button
@@ -126,7 +128,7 @@ export default function CookieBanner() {
                   className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#E00000] hover:bg-[#C90000] shadow-sm transition-colors cursor-pointer flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D49A00]"
                 >
                   <Check className="w-3.5 h-3.5 text-[#F5E7C1]" />
-                  Accept All
+                  {t('modals.cookieAcceptAll', 'Accept All')}
                 </button>
               </div>
             </div>
@@ -166,7 +168,7 @@ export default function CookieBanner() {
                   </div>
                   <div>
                     <h2 id="cookie-settings-title" className="text-base font-extrabold text-[#0F172A]">
-                      Cookie & Storage Preferences
+                      {t('modals.cookiePrefsTitle', 'Cookie & Storage Preferences')}
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Karnataka Police Intelligence Platform</p>
                   </div>
@@ -187,9 +189,9 @@ export default function CookieBanner() {
                 <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70">
                   <div className="flex items-center justify-between gap-3 mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#0F172A]">Essential Cookies & Storage</span>
+                      <span className="text-sm font-bold text-[#0F172A]">{t('modals.cookieEssentialTitle', 'Essential Cookies & Storage')}</span>
                       <span className="text-[10px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        Always Active
+                        {t('modals.cookieEssentialAlwaysActive', 'Always Active')}
                       </span>
                     </div>
                     {/* Locked Toggle */}
@@ -198,7 +200,7 @@ export default function CookieBanner() {
                     </div>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Required for basic platform security, maintaining active analyst authentication tokens, and user role navigation state across session lifecycles. These cannot be disabled.
+                    {t('modals.cookieEssentialDesc', 'Required for basic platform security, maintaining active analyst authentication tokens, and user role navigation state across session lifecycles. These cannot be disabled.')}
                   </p>
                 </div>
 
@@ -206,9 +208,9 @@ export default function CookieBanner() {
                 <div className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#D49A00]/40 transition-colors">
                   <div className="flex items-center justify-between gap-3 mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#0F172A]">Preference & Layout Storage</span>
+                      <span className="text-sm font-bold text-[#0F172A]">{t('modals.cookiePreferenceTitle', 'Preference & Layout Storage')}</span>
                       <span className="text-[10px] bg-[#D49A00]/15 text-[#9A6F00] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        Optional
+                        {t('modals.cookiePreferenceOptional', 'Optional')}
                       </span>
                     </div>
                     {/* Interactive Toggle */}
@@ -225,7 +227,7 @@ export default function CookieBanner() {
                     </button>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Stores custom officer profile avatars, station/district filter selections, and GIS crime map coordinates so you do not lose your viewport context when switching tabs.
+                    {t('modals.cookiePreferenceDesc', 'Stores custom officer profile avatars, station/district filter selections, and GIS crime map coordinates so you do not lose your viewport context when switching tabs.')}
                   </p>
                 </div>
 
@@ -233,9 +235,9 @@ export default function CookieBanner() {
                 <div className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#D49A00]/40 transition-colors">
                   <div className="flex items-center justify-between gap-3 mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#0F172A]">Internal Diagnostics & Performance</span>
+                      <span className="text-sm font-bold text-[#0F172A]">{t('modals.cookieAnalyticsTitle', 'Internal Diagnostics & Performance')}</span>
                       <span className="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        Optional
+                        {t('modals.cookiePreferenceOptional', 'Optional')}
                       </span>
                     </div>
                     {/* Interactive Toggle */}
@@ -252,13 +254,13 @@ export default function CookieBanner() {
                     </button>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Collects anonymous, aggregated internal system latency and query duration statistics to optimize machine learning workload response times. No commercial analytics or third-party trackers are utilized.
+                    {t('modals.cookieAnalyticsDesc', 'Collects anonymous, aggregated internal system latency and query duration statistics to optimize machine learning workload response times. No commercial analytics or third-party trackers are utilized.')}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                   <Info className="w-4 h-4 shrink-0 text-slate-400" />
-                  <span>Preferences can be adjusted at any time in system settings.</span>
+                  <span>{t('modals.cookieAdjustNote', 'Preferences can be adjusted at any time in system settings.')}</span>
                 </div>
               </div>
 
@@ -269,7 +271,7 @@ export default function CookieBanner() {
                   onClick={handleRejectNonEssential}
                   className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                 >
-                  Reject Non-Essential
+                  {t('modals.cookieRejectNonEssential', 'Reject Non-Essential')}
                 </button>
 
                 <div className="flex items-center gap-2">
@@ -278,7 +280,7 @@ export default function CookieBanner() {
                     onClick={handleAcceptAll}
                     className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
                   >
-                    Accept All
+                    {t('modals.cookieAcceptAll', 'Accept All')}
                   </button>
 
                   <button
@@ -286,7 +288,7 @@ export default function CookieBanner() {
                     onClick={handleSaveCustom}
                     className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#E00000] hover:bg-[#C90000] transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D49A00]"
                   >
-                    Save Preferences
+                    {t('modals.saveCookiePreferences', 'Save Preferences')}
                   </button>
                 </div>
               </div>

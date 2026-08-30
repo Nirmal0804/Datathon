@@ -86,7 +86,7 @@ export default function ForgotPassword({ onBack }) {
           </div>
           
           <h1 className="text-2xl font-extrabold text-[#142B45] text-center mb-1 tracking-tight">
-            {t('settings.changePassword', 'Reset Credentials')}
+            {t('auth.resetTitle', 'Reset Credentials')}
           </h1>
           <p className="text-xs text-slate-500 text-center mb-6 font-medium">
             {t('auth.resetInstructions', 'Enter your official KSP email to receive reset instructions.')}
@@ -99,9 +99,9 @@ export default function ForgotPassword({ onBack }) {
               className="text-center p-6 bg-emerald-50 border border-emerald-200 rounded-2xl mt-4"
             >
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
-              <h3 className="text-emerald-800 font-bold mb-1">{t('public.messageSent', 'Reset Link Dispatched')}</h3>
+              <h3 className="text-emerald-800 font-bold mb-1">{t('auth.resetSuccessTitle', 'Reset Link Dispatched')}</h3>
               <p className="text-xs text-emerald-700 font-medium">
-                {t('auth.resetInstructions', 'Please check your official email for further instructions.')}
+                {t('auth.resetSuccessMsg', 'Please check your official email for further instructions.')}
               </p>
             </motion.div>
           ) : (
@@ -118,7 +118,7 @@ export default function ForgotPassword({ onBack }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
-                    placeholder="officer.ksp@karnataka.gov.in"
+                    placeholder={t('auth.resetEmailPlaceholder', 'officer.ksp@karnataka.gov.in')}
                   />
                 </div>
               </div>

@@ -2,39 +2,50 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Database, BrainCircuit, TrendingUp, Target, FileText, ArrowRight } from 'lucide-react';
 import workflowBg from '../../assets/workflow-bg.webp';
+import { useTranslation } from '../../i18n';
 
 const steps = [
   { 
     id: '01', 
     title: 'Data Ingestion', 
+    titleKey: 'home.workflowStep1Title',
     desc: 'Securely import records from police stations.',
+    descKey: 'home.workflowStep1Desc',
     icon: Database,
     accent: 'red',
   },
   { 
     id: '02', 
     title: 'AI Processing', 
+    titleKey: 'home.workflowStep2Title',
     desc: 'Clean, normalize, and run predictive ML models.',
+    descKey: 'home.workflowStep2Desc',
     icon: BrainCircuit,
     accent: 'gold',
   },
   { 
     id: '03', 
     title: 'Visualization', 
+    titleKey: 'home.workflowStep3Title',
     desc: 'Render hotspots and networks on interactive maps.',
+    descKey: 'home.workflowStep3Desc',
     icon: TrendingUp,
     accent: 'gold',
   },
   { 
     id: '04', 
     title: 'Action', 
+    titleKey: 'home.workflowStep4Title',
     desc: 'Deploy resources based on actionable intelligence.',
+    descKey: 'home.workflowStep4Desc',
     icon: Target,
     accent: 'red',
   },
 ];
 
 export default function Workflow() {
+  const { t } = useTranslation();
+
   return (
     <section 
       id="workflow" 
@@ -49,12 +60,12 @@ export default function Workflow() {
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF1F1] border border-[#E00000]/20 text-[#E00000] text-xs font-extrabold uppercase tracking-wider mb-5 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#E00000] animate-pulse" />
-              Operational Flow
+              {t('home.workflowBadge', 'Operational Flow')}
             </div>
 
             {/* Main Heading */}
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#142B45] mb-3 tracking-tight leading-[1.15]">
-              Intelligence Lifecycle
+              {t('home.workflowTitle', 'Intelligence Lifecycle')}
             </h2>
 
             {/* Red + Gold Accent Underline */}
@@ -65,7 +76,7 @@ export default function Workflow() {
 
             {/* Description */}
             <p className="text-[#142B45]/75 text-base sm:text-lg mb-8 font-normal leading-relaxed text-balance">
-              From raw FIR data to strategic deployment, the platform streamlines the entire operational workflow securely.
+              {t('home.workflowDesc', 'From raw FIR data to strategic deployment, the platform streamlines the entire operational workflow securely.')}
             </p>
 
             {/* Read Architecture Docs Button */}
@@ -76,7 +87,7 @@ export default function Workflow() {
               className="inline-flex items-center gap-2.5 px-6 py-3.5 text-sm font-semibold text-[#142B45] bg-white hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 border border-[#E8EEF5] hover:border-[#E00000]/30 shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#E00000]" />
-              Read Architecture Docs
+              {t('home.workflowReadDocs', 'Read Architecture Docs')}
               <ArrowRight className="w-4 h-4 text-[#142B45]/60" />
             </a>
           </div>
@@ -143,7 +154,7 @@ export default function Workflow() {
 
                       {/* Step Title */}
                       <h3 className="text-xl font-bold text-[#142B45] mb-1.5">
-                        {step.title}
+                        {t(step.titleKey, step.title)}
                       </h3>
 
                       {/* Short Accent Line under Title */}
@@ -151,7 +162,7 @@ export default function Workflow() {
 
                       {/* Step Description */}
                       <p className="text-[#142B45]/75 text-sm leading-relaxed">
-                        {step.desc}
+                        {t(step.descKey, step.desc)}
                       </p>
                     </div>
                   </motion.div>

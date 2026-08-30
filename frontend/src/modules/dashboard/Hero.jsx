@@ -3,8 +3,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, FileText } from 'lucide-react';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import vidhanSoudha from '../../assets/vidhan-soudha-exact.webp';
+import { useTranslation } from '../../i18n';
 
 export default function Hero({ onLoginClick }) {
+  const { t } = useTranslation();
+
   const handleReadDocumentation = () => {
     window.open('./crimeintel-architecture-documentation.pdf', '_blank');
   };
@@ -33,7 +36,7 @@ export default function Hero({ onLoginClick }) {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300 bg-white/90 text-slate-800 text-xs font-bold shadow-sm mb-6"
           >
             <ShieldCheck className="w-4 h-4 text-[#142B45]" />
-            <span className="tracking-wider uppercase">STATE INTELLIGENCE NETWORK</span>
+            <span className="tracking-wider uppercase">{t('home.heroBadge', 'STATE INTELLIGENCE NETWORK')}</span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#E00000] ml-0.5 animate-pulse" />
           </motion.div>
 
@@ -44,8 +47,8 @@ export default function Hero({ onLoginClick }) {
             transition={{ duration: 0.35, delay: 0.08, ease: "easeOut" }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] mb-2"
           >
-            <span className="text-[#142B45] block">Predict. Prevent.</span>
-            <span className="text-[#D49A00] block mt-1">Protect Karnataka.</span>
+            <span className="text-[#142B45] block">{t('home.heroTitle1', 'Predict. Prevent.')}</span>
+            <span className="text-[#D49A00] block mt-1">{t('home.heroTitle2', 'Protect Karnataka.')}</span>
           </motion.h1>
 
           {/* Red Underline */}
@@ -63,7 +66,7 @@ export default function Hero({ onLoginClick }) {
             transition={{ duration: 0.35, delay: 0.18, ease: "easeOut" }}
             className="text-base sm:text-lg text-[#142B45]/80 max-w-xl font-normal leading-relaxed mb-8"
           >
-            An AI-driven crime analytics and visualization platform providing real-time intelligence, geospatial mapping, and predictive modeling for law enforcement.
+            {t('home.heroDesc', 'An AI-driven crime analytics and visualization platform providing real-time intelligence, geospatial mapping, and predictive modeling for law enforcement.')}
           </motion.p>
 
           {/* Buttons on same row */}
@@ -77,7 +80,7 @@ export default function Hero({ onLoginClick }) {
               onClick={onLoginClick} 
               className="px-6 py-3.5 text-sm font-semibold text-white bg-[#E00000] hover:bg-[#C90000] rounded-xl transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2 active:translate-y-0 cursor-pointer"
             >
-              Access Dashboard
+              {t('home.heroCta', 'Access Dashboard')}
               <ArrowRight className="w-4 h-4" />
             </button>
             <button 
@@ -85,7 +88,7 @@ export default function Hero({ onLoginClick }) {
               className="px-6 py-3.5 text-sm font-semibold text-[#E00000] bg-white border border-[#E00000] hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 flex items-center gap-2 active:translate-y-0 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#E00000]" />
-              Read Documentation
+              {t('home.heroReadDocs', 'Read Documentation')}
             </button>
           </motion.div>
         </div>

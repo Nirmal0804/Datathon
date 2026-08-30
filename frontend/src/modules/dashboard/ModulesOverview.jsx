@@ -2,39 +2,50 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Landmark, Network, TrendingUp, MoreHorizontal, ArrowRight } from 'lucide-react';
 import workflowBg from '../../assets/workflow-bg.webp';
+import { useTranslation } from '../../i18n';
 
 const modules = [
   { 
     name: 'Karnataka Crime Map', 
+    nameKey: 'home.module1Name',
     code: 'MOD-01', 
     desc: 'Geospatial visualization of crime incidents across 31 districts.',
+    descKey: 'home.module1Desc',
     icon: MapPin,
     accent: 'red',
   },
   { 
     name: 'District Intelligence', 
+    nameKey: 'home.module2Name',
     code: 'MOD-02', 
     desc: 'Drill-down analytics for specific police jurisdictions and stations.',
+    descKey: 'home.module2Desc',
     icon: Landmark,
     accent: 'gold',
   },
   { 
     name: 'Network Analysis', 
+    nameKey: 'home.module3Name',
     code: 'MOD-03', 
     desc: 'Graph-based relationship mapping of syndicates.',
+    descKey: 'home.module3Desc',
     icon: Network,
     accent: 'gold',
   },
   { 
     name: 'Predictive Analytics', 
+    nameKey: 'home.module4Name',
     code: 'MOD-04', 
     desc: 'Future trend forecasting using historical case data.',
+    descKey: 'home.module4Desc',
     icon: TrendingUp,
     accent: 'red',
   },
 ];
 
 export default function ModulesOverview() {
+  const { t } = useTranslation();
+
   return (
     <section 
       id="modules" 
@@ -48,23 +59,23 @@ export default function ModulesOverview() {
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF1F1] border border-[#E00000]/20 text-[#E00000] text-xs font-extrabold uppercase tracking-wider mb-4 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#E00000] animate-pulse" />
-              System Architecture
+              {t('home.modulesBadge', 'System Architecture')}
             </div>
 
             {/* Main Heading */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#142B45] mb-3 tracking-tight">
-              Integrated Modules
+              {t('home.modulesTitle', 'Integrated Modules')}
             </h2>
 
             {/* Description */}
             <p className="text-[#142B45]/75 text-base sm:text-lg max-w-2xl font-normal leading-relaxed text-balance">
-              A modular architecture designed for specific operational requirements, from state-level monitoring to station-level execution.
+              {t('home.modulesDesc', 'A modular architecture designed for specific operational requirements, from state-level monitoring to station-level execution.')}
             </p>
           </div>
 
           {/* Action Link */}
           <button className="text-[#E00000] hover:text-[#C90000] font-bold text-sm mt-4 md:mt-0 flex items-center gap-1.5 transition-colors duration-200 group cursor-pointer shrink-0">
-            View All Modules <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+            {t('home.modulesViewAll', 'View All Modules')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </button>
         </div>
 
@@ -111,7 +122,7 @@ export default function ModulesOverview() {
 
                   {/* Module Title */}
                   <h3 className="text-lg sm:text-xl font-bold text-[#142B45] mb-1 leading-snug group-hover:text-[#E00000] transition-colors duration-200">
-                    {mod.name}
+                    {t(mod.nameKey, mod.name)}
                   </h3>
 
                   {/* Accent Line under Title */}
@@ -119,7 +130,7 @@ export default function ModulesOverview() {
 
                   {/* Module Description */}
                   <p className="text-[#142B45]/75 text-xs sm:text-sm leading-relaxed">
-                    {mod.desc}
+                    {t(mod.descKey, mod.desc)}
                   </p>
                 </div>
               </motion.div>

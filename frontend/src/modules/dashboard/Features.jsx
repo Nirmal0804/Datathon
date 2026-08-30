@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { MapPin, BrainCircuit, Network, BellRing, PieChart, FileText, ShieldCheck } from 'lucide-react';
 import featuresBg from '../../assets/features-bg.webp';
 
+import { useTranslation } from '../../i18n';
+
 // Exact side illustration icons extracted from reference design
 const GlobeSideIcon = ({ color }) => (
   <svg className="w-11 h-11 shrink-0" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5">
@@ -81,7 +83,9 @@ const features = [
   {
     number: '01',
     name: 'Geospatial Intelligence',
+    nameKey: 'home.feature1Name',
     description: 'Interactive heatmaps and boundary overlays for district-wise crime tracking across Karnataka.',
+    descKey: 'home.feature1Desc',
     icon: MapPin,
     sideIcon: GlobeSideIcon,
     accent: 'red',
@@ -89,7 +93,9 @@ const features = [
   {
     number: '02',
     name: 'Predictive AI Scoring',
+    nameKey: 'home.feature2Name',
     description: 'Machine learning algorithms to predict crime trends and assign risk scores to sensitive regions.',
+    descKey: 'home.feature2Desc',
     icon: BrainCircuit,
     sideIcon: TrendSideIcon,
     accent: 'gold',
@@ -97,7 +103,9 @@ const features = [
   {
     number: '03',
     name: 'Criminal Network Analysis',
+    nameKey: 'home.feature3Name',
     description: 'Graph-based relationship mapping to identify syndicates and repeat offenders automatically.',
+    descKey: 'home.feature3Desc',
     icon: Network,
     sideIcon: NetworkSideIcon,
     accent: 'red',
@@ -105,7 +113,9 @@ const features = [
   {
     number: '04',
     name: 'Real-time Threat Alerts',
+    nameKey: 'home.feature4Name',
     description: 'Automated push notifications and SMS alerts when anomalous patterns are detected.',
+    descKey: 'home.feature4Desc',
     icon: BellRing,
     sideIcon: SirenSideIcon,
     accent: 'red',
@@ -113,7 +123,9 @@ const features = [
   {
     number: '05',
     name: 'Dynamic Dashboards',
+    nameKey: 'home.feature5Name',
     description: 'Customizable KPI cards and drill-down analytics for state-level and station-level reporting.',
+    descKey: 'home.feature5Desc',
     icon: PieChart,
     sideIcon: DashboardSideIcon,
     accent: 'gold',
@@ -121,7 +133,9 @@ const features = [
   {
     number: '06',
     name: 'Automated Reporting',
+    nameKey: 'home.feature6Name',
     description: 'Generate compliance-ready PDF and Excel reports with a single click for daily briefings.',
+    descKey: 'home.feature6Desc',
     icon: FileText,
     sideIcon: ReportSideIcon,
     accent: 'gold',
@@ -129,6 +143,8 @@ const features = [
 ];
 
 export default function Features() {
+  const { t } = useTranslation();
+
   return (
     <section 
       id="features" 
@@ -141,13 +157,13 @@ export default function Features() {
           {/* Eyebrow Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FFF1F1] border border-[#E00000]/20 text-[#E00000] text-xs font-bold shadow-2xs mb-4">
             <ShieldCheck className="w-4 h-4 text-[#E00000]" />
-            <span className="tracking-wider uppercase">STATE INTELLIGENCE NETWORK</span>
+            <span className="tracking-wider uppercase">{t('home.featuresBadge', 'STATE INTELLIGENCE NETWORK')}</span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#E00000] ml-0.5 animate-pulse" />
           </div>
 
           {/* Main Heading */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#142B45] tracking-tight mb-3">
-            Core Platform Capabilities
+            {t('home.featuresTitle', 'Core Platform Capabilities')}
           </h2>
 
           {/* Short Red + Gold Underline */}
@@ -158,7 +174,7 @@ export default function Features() {
 
           {/* Subtitle */}
           <p className="text-[#142B45]/75 text-base sm:text-lg font-normal leading-relaxed max-w-2xl mx-auto">
-            Operational intelligence built for modern law enforcement.
+            {t('home.featuresSubtitle', 'Operational intelligence built for modern law enforcement.')}
           </p>
         </div>
 
@@ -200,7 +216,7 @@ export default function Features() {
 
                   {/* Feature Title */}
                   <h3 className="text-lg font-bold text-[#142B45] mb-2 group-hover:text-[#E00000] transition-colors duration-200">
-                    {feature.name}
+                    {t(feature.nameKey, feature.name)}
                   </h3>
 
                   {/* Short Colored Underline below Title */}
@@ -209,7 +225,7 @@ export default function Features() {
                   {/* Feature Description + Vertical Dashed Separator Line + Side Icon */}
                   <div className="flex items-start justify-between gap-4 mt-2">
                     <p className="text-[#142B45]/75 text-xs sm:text-sm leading-relaxed flex-1">
-                      {feature.description}
+                      {t(feature.descKey, feature.description)}
                     </p>
 
                     {/* Vertical dashed line + Side Icon extracted from reference mockup */}
