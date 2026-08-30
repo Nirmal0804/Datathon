@@ -23,6 +23,66 @@ DEPLOYMENT LINK:https://crime-intel-tosumotv.onslate.in
 
 ---
 
+## ⭐ Refined Prototype Phase — Upgrades & Enhancements
+
+During the Refined Prototype Phase, CrimeIntel was enhanced beyond its initial functional prototype to improve deployment readiness, usability, accessibility, localization, privacy transparency, role-specific workflows, performance, and operational validation.
+
+### 🎨 UI/UX Refinement
+- More polished professional interface with consistent visual hierarchy.
+- Improved loading states, including skeleton/loading placeholders for perceived performance.
+- Refined role-specific dashboards with better empty states.
+- Enhanced navbar and footer structure.
+- Back-to-top functionality and desktop-focused experience optimization.
+- Consistent red/yellow/Karnataka Police visual identity.
+- Professional settings/preferences experience.
+- Added Resources and Support sections for better content presentation.
+
+### 🌐 Language & Accessibility
+- Multilingual interface supporting English (UK/IN) and Kannada (ಕನ್ನಡ).
+- Application UI localization for Kannada, including navigation, role-specific dashboards, forms, and messages.
+- Language preference is available through Settings and persists across sessions.
+- *(Note: Localization primarily targets user-facing interface content; actual identifiers and backend data remain unchanged.)*
+
+### ⚙️ User Preferences
+- **Theme:** Light/Dark mode.
+- **Formats:** Date format and Time format preferences.
+- **Landing:** Default dashboard landing preference.
+- **Language:** UI language preference.
+These preferences persist to provide a tailored user experience.
+
+### 🔐 Privacy, Consent & Security UX
+- **Cookie Consent:** Added a professional cookie consent banner for transparent data handling.
+- **Privacy Policy & Terms of Service:** Added dedicated pages for transparency and user trust.
+- **Security Guidelines:** Added a Security Guidelines page to communicate privacy-oriented UX.
+- **Support:** Added a Contact Support experience with user-facing submission confirmation.
+
+### 👥 Role-Based Experience Refinement
+- Refined role-specific navigation and dashboards for **Field Officer**, **Intelligent Analyst**, and **Administrator**.
+- Tailored Field Officer and Intelligent Analyst workflows.
+- Role-specific Kannada localization and RBAC-preserving navigation.
+
+### ☁️ Zoho Catalyst Deployment
+- Moved from a development-only environment toward a deployed application.
+- **Zoho Catalyst AppSail:** FastAPI/Python backend runs as an AppSail service. The production API is accessible through Catalyst's AppSail infrastructure, which provides managed deployment/runtime infrastructure.
+- **Catalyst CLI:** Used for deployment and project management.
+
+### 💾 Caching & Backend Optimization
+- **Catalyst Cache Evaluation:** Catalyst Cache was evaluated as part of the refinement phase. The project investigated integrating Catalyst's managed Cache service with the AppSail backend. During validation, the AppSail runtime authentication model prevented the intended direct BaaS Cache integration without additional supported credentials/configuration.
+- **In-Memory TTL Cache:** To maintain reliability and avoid introducing authentication/security risks, the final deployed application uses a thread-safe in-memory TTL response cache for appropriate read-heavy endpoints (Dashboard, Districts, Stations, Analytics, Intelligence Map). This provides caching benefits and reduces repeated computation without affecting application reliability.
+- **Server Optimization:** Uvicorn/ASGI deployment optimized with stateless request handling, health/readiness endpoints, and cache initialization.
+
+### 🚀 Scalability & Concurrency
+- Validated concurrency: The deployed AppSail backend was tested with 10 concurrent simulated users.
+- Validation achieved 100% success across tested endpoints, including Health, Readiness, Districts, District Intelligence, Analytics Summary, Forecast, and mixed endpoint traffic.
+
+### 🧪 Testing & Validation
+- Backend test suite passed during refinement.
+- Cache, Dashboard API, District API, Station API, and Intelligence Map API tests passed.
+- Concurrency testing performed against deployed AppSail.
+- 10 concurrent-user scenario achieved 100% success across tested endpoints.
+
+---
+
 ## 📑 Table of Contents
 
 1. [Problem Statement](#1--problem-statement)
@@ -64,29 +124,17 @@ Law-enforcement agencies generate large volumes of information across FIRs, dist
 CrimeIntel follows an API-first architecture. The React frontend consumes secured FastAPI services. Supabase provides authentication and hosted PostgreSQL infrastructure, while Zoho Catalyst is used for application deployment.
 
 ```text
-Crime / FIR Data
-       |
-       v
-Validation & Ingestion
-       |
-       v
-Supabase PostgreSQL
-       |
-       v
-FastAPI Service & Security Layer
-       |
-       +---------------+----------------+
-       |               |                |
-       v               v                v
-Crime Analytics   GIS Intelligence  Network Analysis
-       |               |                |
-       +---------------+----------------+
-                       |
-                       v
-              React Intelligence UI
-                       |
-                       v
-          Law-Enforcement Decision Support
+User
+  ↓
+CrimeIntel Frontend
+  ↓
+Zoho Catalyst / AppSail
+  ↓
+FastAPI Backend
+  ↓
+Data + Analytics + ML
+  ↓
+Crime Intelligence Response
 ```
 
 ---
@@ -152,7 +200,7 @@ Provides bounded operational CSV export, interactive visualizations, and analyti
 |        Session + JWT              Production Persistence       |
 +----------------------------------------------------------------+
 
-                Deployment Platform: Zoho Catalyst
+                Deployment Platform: Zoho Catalyst AppSail
 ```
 
 Architecture principles include API-first separation, repository abstraction, backend-enforced authentication, privacy-aware responses, evidence-based analytics, and an extensible ML/GIS integration layer.
@@ -165,16 +213,16 @@ Architecture principles include API-first separation, repository abstraction, ba
 |-------|--------------|
 | **Frontend** | React 19, Vite, JavaScript/JSX, Tailwind CSS |
 | **Visualization** | Interactive charts, Leaflet |
-| **Backend** | Python, FastAPI, Pydantic |
+| **Backend** | Python, FastAPI, Uvicorn, Pydantic |
 | **Database** | PostgreSQL hosted on Supabase |
 | **Authentication** | Supabase Auth, JWT |
 | **Data Access** | Repository pattern with PostgreSQL and CSV adapters |
-| **Analytics** | Python analytics and ML integration layer |
+| **Analytics/ML** | Python, Pandas, NumPy, Scikit-learn, XGBoost, DBSCAN |
 | **GIS** | Leaflet, coordinate-based spatial visualization, GeoJSON-ready architecture |
 | **Network Intelligence** | FIR-person relationship graph analysis |
 | **Testing** | Pytest |
 | **Version Control** | Git, GitHub |
-| **Deployment** | Zoho Catalyst |
+| **Cloud/Deployment**| Zoho Catalyst, AppSail, Catalyst CLI |
 
 ---
 
@@ -438,7 +486,8 @@ For exact query parameters and response contracts, refer to the API contract und
 
 The automated backend test suite (734 tests) covers authentication and JWT security, RBAC authorization, audit write + read API, rate limiting, dashboard services, crime-map APIs, intelligence analytics, district intelligence, stations, network analysis, health probes, error handling, repositories, ingestion, audit logging, and privacy/PII behavior.
 
-Reliability measures include PostgreSQL connection pooling and timeouts, bounded exports, bounded graph construction, centralized error responses, deterministic repository-backed tests, and health/liveness/readiness probes. Continuous integration runs the full suite on every branch via `.github/workflows/backend-ci.yml`.
+Reliability measures include PostgreSQL connection pooling and timeouts, bounded exports, bounded graph construction, centralized error responses, deterministic repository-backed tests, and health/liveness/readiness probes. Continuous integration runs the full suite on every branch via `.github/workflows/backend-ci.yml`. 
+During the refinement phase, cache tests, concurrency testing, and individual module API tests passed successfully. The 10 concurrent-user scenario achieved 100% success across tested endpoints.
 
 ---
 
@@ -463,7 +512,7 @@ Browser ---> | React Web Application |
        Supabase Auth        Supabase PostgreSQL
 ```
 
-The React/Vite production build is hosted as the web application, while the FastAPI backend can run through Catalyst AppSail. Supabase remains responsible for authentication and PostgreSQL persistence.
+The React/Vite production build is hosted as the web application, while the FastAPI backend runs through Catalyst AppSail. Supabase remains responsible for authentication and PostgreSQL persistence.
 
 Production deployment must configure the final frontend origin in CORS and supply production environment variables securely.
 
