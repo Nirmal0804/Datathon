@@ -40,8 +40,8 @@ export default function FieldOfficerAssignedCases() {
       <CrimeTablePlaceholder 
         data={patilCases} 
         itemsPerPage={10} 
-        title={t('cases.title', 'Assigned Case Roster')} 
-        subtitle={t('cases.subtitle', 'Real-time case intakes assigned to your precinct')} 
+        title={t('cases.assignedCasesRoster', 'Assigned Case Roster')} 
+        subtitle={t('cases.assignedCasesRosterSubtitle', 'Real-time case intakes assigned to your precinct')} 
       />
     </div>
   );

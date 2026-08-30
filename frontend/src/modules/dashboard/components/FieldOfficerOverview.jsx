@@ -202,6 +202,29 @@ export default function FieldOfficerOverview({ onNavigate }) {
     }
   };
 
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'Active': return t('cases.statusActive', 'Active');
+      case 'Investigating': return t('cases.statusInvestigating', 'Investigating');
+      case 'Under Review': return t('cases.statusUnderReview', 'Under Review');
+      case 'Closed': return t('cases.statusClosed', 'Closed');
+      case 'Open': return t('cases.statusOpen', 'Open');
+      default: return status;
+    }
+  };
+
   const getAlertTitle = (alert) => {
     switch (alert.title) {
       case 'Cybercrime Surge': return t('alerts.cybercrimeSurgeTitle', 'Cybercrime Surge');
@@ -403,7 +426,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                       }}
                     >
                       <td className="py-3.5 px-4 font-mono font-bold text-police-navy">{c.id}</td>
-                      <td className="py-3.5 px-4 text-[#334155] font-medium">{c.category}</td>
+                      <td className="py-3.5 px-4 text-[#334155] font-medium">{getCategoryLabel(c.category)}</td>
                       <td className="py-3.5 px-4 text-[#64748B]">{c.date}</td>
                       <td className="py-3.5 px-4">
                         <span className={`badge ${
@@ -417,7 +440,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                           <span className={`w-2 h-2 rounded-full ${
                             c.status === 'Closed' ? 'bg-[#94A3B8]' : 'bg-emerald-500 glow-success'
                           }`} />
-                          {c.status === 'Active' ? t('cases.statusActive', 'Active') : c.status === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : c.status === 'Closed' ? t('cases.statusClosed', 'Closed') : c.status}
+                          {getStatusLabel(c.status)}
                         </span>
                       </td>
                     </tr>

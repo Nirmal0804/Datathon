@@ -47,6 +47,29 @@ export default function FieldOfficerFIRManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'Active': return t('cases.statusActive', 'Active');
+      case 'Investigating': return t('cases.statusInvestigating', 'Investigating');
+      case 'Under Review': return t('cases.statusUnderReview', 'Under Review');
+      case 'Closed': return t('cases.statusClosed', 'Closed');
+      case 'Open': return t('cases.statusOpen', 'Open');
+      default: return status;
+    }
+  };
+
   const handleCaseAction = (e, rowId, action) => {
     if (e) e.stopPropagation();
     const statusMap = { open: 'Active', investigate: 'Investigating', close: 'Closed' };
@@ -232,7 +255,7 @@ export default function FieldOfficerFIRManagement() {
                       {c.id}
                     </span>
                     <div>
-                      <h4 className="font-extrabold text-[#0F172A] text-sm tracking-tight group-hover:text-[#0B1F4D] transition-colors">{c.category}</h4>
+                      <h4 className="font-extrabold text-[#0F172A] text-sm tracking-tight group-hover:text-[#0B1F4D] transition-colors">{getCategoryLabel(c.category)}</h4>
                       <div className="flex items-center gap-2 sm:gap-3 text-xs text-[#64748B] font-semibold mt-0.5">
                         <span>{c.policeStation}</span>
                         <span>•</span>
@@ -248,7 +271,7 @@ export default function FieldOfficerFIRManagement() {
                     </span>
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs ${statusBadgeClass(currentStatus)}`}>
                       <span className={`w-2 h-2 rounded-full ${statusDotClass(currentStatus)}`} />
-                      {currentStatus === 'Active' ? t('cases.statusActive', 'Active') : currentStatus === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : currentStatus === 'Closed' ? t('cases.statusClosed', 'Closed') : currentStatus}
+                      {getStatusLabel(currentStatus)}
                     </span>
                     <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 group-hover:text-[#0B1F4D] transition-all ml-1" />
                   </div>
@@ -453,7 +476,7 @@ export default function FieldOfficerFIRManagement() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.classification', 'Classification')}</span>
-                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.category}</span>
+                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{getCategoryLabel(selectedCase.category)}</span>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.jurisdiction', 'Jurisdiction')}</span>
@@ -471,7 +494,7 @@ export default function FieldOfficerFIRManagement() {
                       </span>
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-extrabold text-[10px] ${statusBadgeClass(caseStatuses[selectedCase.id] || selectedCase.status)}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${statusDotClass(caseStatuses[selectedCase.id] || selectedCase.status)}`} />
-                        {(caseStatuses[selectedCase.id] || selectedCase.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[selectedCase.id] || selectedCase.status)}
+                        {getStatusLabel(caseStatuses[selectedCase.id] || selectedCase.status)}
                       </span>
                     </div>
                   </div>
