@@ -1,6 +1,7 @@
 import React from 'react';
 import { Key, LayoutDashboard, Database, ShieldAlert, ArrowRight, Mail } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const SUPPORT_CATEGORIES = [
   {
@@ -38,11 +39,13 @@ const SUPPORT_CATEGORIES = [
 ];
 
 export default function SupportLanding({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
+
   return (
     <InfoPageLayout
-      title="Support Center"
-      category="Support"
-      description="Get assistance with account access, operational workflows, intelligence data verification, and platform technical support."
+      title={t('nav.support', 'Support Center')}
+      category={t('nav.support', 'Support')}
+      description={t('public.contactSupportSubtitle', 'Get assistance with account access, operational workflows, intelligence data verification, and platform technical support.')}
       activeRoute="/support"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}

@@ -3,8 +3,10 @@ import { Shield, Mail, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import LazyImage from '../../components/ui/LazyImage';
+import { useTranslation } from '../../i18n';
 
 export default function ForgotPassword({ onBack }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [email, setEmail] = useState('');
@@ -36,11 +38,11 @@ export default function ForgotPassword({ onBack }) {
           </div>
           <div>
             <span className="text-white font-extrabold tracking-tight text-base sm:text-lg flex items-center gap-1.5 leading-none">
-              KARNATAKA POLICE
+              {t('auth.kspTitle', 'KARNATAKA POLICE')}
               <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
             </span>
             <p className="text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">
-              Crime Analytics Platform
+              {t('auth.portalName', 'Crime Analytics Platform')}
             </p>
           </div>
         </div>
@@ -52,7 +54,7 @@ export default function ForgotPassword({ onBack }) {
             className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#F5E7C1] transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-white/10"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Login
+            {t('auth.backToLogin', 'Back to Login')}
           </button>
         )}
       </header>
@@ -74,7 +76,7 @@ export default function ForgotPassword({ onBack }) {
               className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E00000] hover:underline mb-6 cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              Back to Login
+              {t('auth.backToLogin', 'Back to Login')}
             </button>
           )}
 
@@ -84,10 +86,10 @@ export default function ForgotPassword({ onBack }) {
           </div>
           
           <h1 className="text-2xl font-extrabold text-[#142B45] text-center mb-1 tracking-tight">
-            Reset Credentials
+            {t('settings.changePassword', 'Reset Credentials')}
           </h1>
           <p className="text-xs text-slate-500 text-center mb-6 font-medium">
-            Enter your official ID to receive a secure reset link.
+            {t('auth.resetInstructions', 'Enter your official KSP email to receive reset instructions.')}
           </p>
 
           {isSent ? (
@@ -97,16 +99,16 @@ export default function ForgotPassword({ onBack }) {
               className="text-center p-6 bg-emerald-50 border border-emerald-200 rounded-2xl mt-4"
             >
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
-              <h3 className="text-emerald-800 font-bold mb-1">Reset Link Dispatched</h3>
+              <h3 className="text-emerald-800 font-bold mb-1">{t('public.messageSent', 'Reset Link Dispatched')}</h3>
               <p className="text-xs text-emerald-700 font-medium">
-                Please check your official email for further instructions.
+                {t('auth.resetInstructions', 'Please check your official email for further instructions.')}
               </p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-[#142B45] mb-1.5">
-                  Official ID / Email
+                  {t('auth.email', 'Official ID / Email')}
                 </label>
                 <div className="relative flex items-center">
                   <Mail className="absolute left-4 h-4 w-4 text-slate-400" />
@@ -126,7 +128,7 @@ export default function ForgotPassword({ onBack }) {
                 disabled={isLoading}
                 className="w-full py-3.5 bg-[#E00000] hover:bg-[#C90000] text-white font-bold text-sm rounded-full transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex justify-center items-center cursor-pointer mt-2"
               >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Request Reset Link'}
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.sendResetLink', 'Request Reset Link')}
               </button>
             </form>
           )}

@@ -10,10 +10,12 @@ import { useToast } from '../../../components/ui/Toast';
 import kspBadge from '../../../assets/ksp-badge.webp';
 import LazyImage from '../../../components/ui/LazyImage';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
+import { useTranslation } from '../../../i18n';
 
 // MiniMapCard removed to prevent duplication. Geographic details handled in Crime Map.
 
 export default function FieldOfficerOverview({ onNavigate }) {
+  const { t } = useTranslation();
   const toast = useToast();
 
   // Local state for Field Officer cases
@@ -245,10 +247,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
           </div>
           <div className="flex flex-col justify-center">
             <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
-              Field Officer Operations
+              {t('nav.fieldOverview', 'Field Officer Operations')}
             </h1>
             <p className="text-xs sm:text-sm font-normal text-[#64748B] mt-0.5 sm:mt-1 leading-normal">
-              Assigned cases dashboard, FIR registry utilities, and precinct alerts feed.
+              {t('cases.title', 'Assigned cases dashboard, FIR registry utilities, and precinct alerts feed.')}
             </p>
           </div>
         </div>
@@ -257,7 +259,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2 bg-[#F8F9FB] px-3 sm:px-4 h-8 sm:h-10 rounded-[14px] sm:rounded-[16px] border border-[#E5E7EB] shadow-sm cursor-default">
             <Clock className="w-4 h-4 text-[#C79A2B]" />
-            <span className="text-[11px] sm:text-xs font-bold text-[#0F172A]">Active Shift: 14:00 - 22:00</span>
+            <span className="text-[11px] sm:text-xs font-bold text-[#0F172A]">
+              {t('common.status', 'Active Shift')}: 14:00 - 22:00
+            </span>
           </div>
         </div>
       </div>
@@ -265,10 +269,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
       {/* Field Officer KPIs (Spacious Minimal Proportions) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {[
-          { title: 'Active Station FIRs', value: activeFIRs, note: 'Station total', icon: FileText, type: 'info' },
-          { title: 'Cases Assigned to You', value: casesAssigned, note: 'Inspector Patil roster', icon: User, type: 'info' },
-          { title: 'Pending Investigations', value: pendingCases, note: 'Requires inquiry logs', icon: Activity, type: 'warning' },
-          { title: 'Today Precinct Logs', value: todayIncidents, note: 'Last 24 hours', icon: ShieldCheck, type: 'success' }
+          { title: t('cases.activeFIRs', 'Active Station FIRs'), value: activeFIRs, note: t('dashboard.totalFirs', 'Station total'), icon: FileText, type: 'info' },
+          { title: t('cases.casesAssigned', 'Cases Assigned to You'), value: casesAssigned, note: t('cases.myCases', 'Inspector Patil roster'), icon: User, type: 'info' },
+          { title: t('cases.pendingCases', 'Pending Investigations'), value: pendingCases, note: t('common.status', 'Requires inquiry logs'), icon: Activity, type: 'warning' },
+          { title: t('cases.todayIncidents', 'Today Precinct Logs'), value: todayIncidents, note: t('dashboard.daily', 'Last 24 hours'), icon: ShieldCheck, type: 'success' }
         ].map((card, i) => (
           <GlobalKPICard
             key={i}
@@ -290,14 +294,18 @@ export default function FieldOfficerOverview({ onNavigate }) {
           <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
-                <h3 className="text-base font-bold text-[#0F172A]">Your Assigned Cases</h3>
-                <p className="text-xs text-[#64748B] mt-0.5">Assigned to Inspector Patil. Select a row to update status.</p>
+                <h3 className="text-base font-bold text-[#0F172A]">
+                  {t('cases.myCases', 'Your Assigned Cases')}
+                </h3>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  {t('cases.title', 'Assigned to Inspector Patil. Select a row to update status.')}
+                </p>
               </div>
               <button
                 onClick={() => onNavigate('assigned_cases')}
-                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0"
+                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0 cursor-pointer"
               >
-                View Roster &rarr;
+                {t('cases.viewAllCases', 'View Roster')} &rarr;
               </button>
             </div>
 
@@ -305,11 +313,11 @@ export default function FieldOfficerOverview({ onNavigate }) {
               <table className="w-full text-left" aria-label="Assigned cases log">
                 <thead>
                   <tr className="border-b border-[#E7EAF0] text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
-                    <th className="py-3 px-4">FIR ID</th>
-                    <th className="py-3 px-4">Classification</th>
-                    <th className="py-3 px-4">Date Logged</th>
-                    <th className="py-3 px-4">Risk</th>
-                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">{t('cases.firId', 'FIR ID')}</th>
+                    <th className="py-3 px-4">{t('cases.crimeType', 'Classification')}</th>
+                    <th className="py-3 px-4">{t('cases.dateReported', 'Date Logged')}</th>
+                    <th className="py-3 px-4">{t('cases.priority', 'Risk')}</th>
+                    <th className="py-3 px-4">{t('common.status', 'Status')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -329,7 +337,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                         <span className={`badge ${
                           c.risk === 'Critical' ? 'badge-critical' : c.risk === 'High' ? 'badge-high' : 'badge-medium'
                         } py-0.5 px-2 text-[10px]`}>
-                          {c.risk}
+                          {c.risk === 'Critical' ? t('common.critical', 'Critical') : c.risk === 'High' ? t('common.high', 'High') : t('common.medium', 'Medium')}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-[#334155] font-bold">
@@ -337,7 +345,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                           <span className={`w-2 h-2 rounded-full ${
                             c.status === 'Closed' ? 'bg-[#94A3B8]' : 'bg-emerald-500 glow-success'
                           }`} />
-                          {c.status}
+                          {c.status === 'Active' ? t('cases.statusActive', 'Active') : c.status === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : c.status === 'Closed' ? t('cases.statusClosed', 'Closed') : c.status}
                         </span>
                       </td>
                     </tr>
@@ -352,8 +360,12 @@ export default function FieldOfficerOverview({ onNavigate }) {
         <div className="lg:col-span-1">
           <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
             <div className="border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
-              <h3 className="text-base font-bold text-[#0F172A]">Operations Utility Tool</h3>
-              <p className="text-xs text-[#64748B] mt-0.5">Quick station-level actions.</p>
+              <h3 className="text-base font-bold text-[#0F172A]">
+                {t('cases.quickActions', 'Operations Utility Tool')}
+              </h3>
+              <p className="text-xs text-[#64748B] mt-0.5">
+                {t('cases.title', 'Quick station-level actions.')}
+              </p>
             </div>
             
             <div className="grid grid-cols-2 gap-4 flex-1 pt-1">
@@ -364,7 +376,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 <div className="p-2.5 rounded-full bg-police-blue/10 group-hover:bg-police-gold/10 transition-colors">
                   <Plus className="w-6 h-6 text-police-blue group-hover:text-police-gold transition-colors" />
                 </div>
-                <span className="text-xs font-bold text-[#0F172A]">Register FIR</span>
+                <span className="text-xs font-bold text-[#0F172A]">{t('fir.registerFIR', 'Register FIR')}</span>
               </button>
               
               <button 
@@ -373,7 +385,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     setStatusForm({ caseId: patilCases[0].id, status: 'Investigating' });
                     setActiveModal('status');
                   } else {
-                    toast.info('No Cases', 'You have no assigned cases to update.');
+                    toast.info(t('common.noRecordsFound', 'No Cases'), t('cases.noAssignedCases', 'You have no assigned cases to update.'));
                   }
                 }}
                 className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
@@ -381,7 +393,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 <div className="p-2.5 rounded-full bg-police-navy/10 group-hover:bg-police-gold/10 transition-colors">
                   <RefreshCw className="w-6 h-6 text-police-navy group-hover:text-police-gold transition-colors" />
                 </div>
-                <span className="text-xs font-bold text-[#0F172A]">Update Status</span>
+                <span className="text-xs font-bold text-[#0F172A]">{t('cases.updateStatus', 'Update Status')}</span>
               </button>
 
               <button 
@@ -390,7 +402,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     setEvidenceForm({ caseId: patilCases[0].id, fileName: '', fileType: 'Document' });
                     setActiveModal('evidence');
                   } else {
-                    toast.info('No Cases', 'You have no assigned cases to link files.');
+                    toast.info(t('common.noRecordsFound', 'No Cases'), t('cases.noAssignedCases', 'You have no assigned cases to link files.'));
                   }
                 }}
                 className="flex flex-col items-center justify-center p-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8F9FB] hover:border-police-gold hover:bg-white hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md transition-all duration-200 text-center gap-3 group cursor-pointer"
@@ -398,7 +410,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 <div className="p-2.5 rounded-full bg-emerald-500/10 group-hover:bg-police-gold/10 transition-colors">
                   <Upload className="w-6 h-6 text-emerald-600 group-hover:text-police-gold transition-colors" />
                 </div>
-                <span className="text-xs font-bold text-[#0F172A]">Link Evidence</span>
+                <span className="text-xs font-bold text-[#0F172A]">{t('cases.uploadEvidence', 'Link Evidence')}</span>
               </button>
 
               <button 
@@ -408,7 +420,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 <div className="p-2.5 rounded-full bg-indigo-500/10 group-hover:bg-police-gold/10 transition-colors">
                   <Eye className="w-6 h-6 text-indigo-600 group-hover:text-police-gold transition-colors" />
                 </div>
-                <span className="text-xs font-bold text-[#0F172A]">View Cases</span>
+                <span className="text-xs font-bold text-[#0F172A]">{t('cases.viewAllCases', 'View Cases')}</span>
               </button>
             </div>
           </div>
@@ -422,12 +434,16 @@ export default function FieldOfficerOverview({ onNavigate }) {
           <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px]">
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
-                <h3 className="text-base font-bold text-[#0F172A]">Recent Precinct Activity</h3>
-                <p className="text-xs text-[#64748B] mt-0.5 font-sans">Precinct activity logs and notifications feed.</p>
+                <h3 className="text-base font-bold text-[#0F172A]">
+                  {t('dashboard.recentAlerts', 'Recent Precinct Activity')}
+                </h3>
+                <p className="text-xs text-[#64748B] mt-0.5 font-sans">
+                  {t('dashboard.alertsSubtitle', 'Precinct activity logs and notifications feed.')}
+                </p>
               </div>
               <span className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-soft" />
-                Active Feed
+                {t('admin.active', 'Active Feed')}
               </span>
             </div>
 
@@ -468,13 +484,15 @@ export default function FieldOfficerOverview({ onNavigate }) {
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-police-alert" />
-                <h3 className="text-base font-bold text-[#0F172A]">Local Precinct BOLO</h3>
+                <h3 className="text-base font-bold text-[#0F172A]">
+                  {t('dashboard.recentAlerts', 'Local Precinct BOLO')}
+                </h3>
               </div>
               <button
                 onClick={() => onNavigate('alerts')}
-                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0"
+                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0 cursor-pointer"
               >
-                View Feed &rarr;
+                {t('dashboard.viewAll', 'View Feed')} &rarr;
               </button>
             </div>
 
@@ -486,7 +504,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="badge badge-critical py-0.5 px-2 text-[10px] font-bold uppercase">BOLO</span>
+                      <span className="badge badge-critical py-0.5 px-2 text-[10px] font-bold uppercase">{t('common.critical', 'BOLO')}</span>
                       <span className="text-[10px] text-rose-500 font-mono font-semibold">{alert.time}</span>
                     </div>
                     <p className="font-bold text-[#0F172A] mt-1.5 truncate leading-tight">{alert.title}</p>
@@ -515,16 +533,18 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-police-blue/10">
                     <Plus className="w-5 h-5 text-police-blue" />
                   </div>
-                  Log New Incident Report (FIR)
+                  {t('fir.registerFIR', 'Log New Incident Report (FIR)')}
                 </h3>
-                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm">
+                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Crime Category</label>
+                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                      {t('fir.category', 'Crime Category')}
+                    </label>
                     <select 
                       value={firForm.category} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, category: e.target.value }))}
@@ -539,27 +559,33 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     </select>
                   </div>
                   <div>
-                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">AI Risk Estimate</label>
+                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                      {t('cases.priority', 'AI Risk Estimate')}
+                    </label>
                     <select 
                       value={firForm.risk} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, risk: e.target.value }))}
                       className="select text-sm h-10 w-full"
                     >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Critical">Critical</option>
+                      <option value="Low">{t('common.low', 'Low')}</option>
+                      <option value="Medium">{t('common.medium', 'Medium')}</option>
+                      <option value="High">{t('common.high', 'High')}</option>
+                      <option value="Critical">{t('common.critical', 'Critical')}</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Jurisdiction Station</label>
+                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                      {t('common.station', 'Jurisdiction Station')}
+                    </label>
                     <input type="text" disabled className="input text-sm h-10 w-full opacity-70 bg-[#F8F9FB]" value={firForm.policeStation} />
                   </div>
                   <div>
-                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Penal Section Code</label>
+                    <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                      {t('fir.penalCode', 'Penal Section Code')}
+                    </label>
                     <input 
                       type="text" 
                       className="input text-sm h-10 w-full" 
@@ -570,11 +596,13 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 </div>
 
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Complainant / Witness Name</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('fir.complainantName', 'Complainant / Witness Name')}
+                  </label>
                   <input 
                     type="text" 
                     required 
-                    placeholder="Enter full name"
+                    placeholder={t('fir.complainantName', 'Enter full name')}
                     className="input text-sm h-10 w-full"
                     value={firForm.complainant}
                     onChange={(e) => setFirForm(prev => ({ ...prev, complainant: e.target.value }))}
@@ -582,11 +610,13 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 </div>
 
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Briefing Narrative</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('fir.incidentNarrative', 'Briefing Narrative')}
+                  </label>
                   <textarea 
                     required 
                     rows="3" 
-                    placeholder="Describe incident in detail..."
+                    placeholder={t('fir.incidentNarrative', 'Describe incident in detail...')}
                     className="input text-sm pt-2 w-full"
                     value={firForm.description}
                     onChange={(e) => setFirForm(prev => ({ ...prev, description: e.target.value }))}
@@ -594,8 +624,8 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 </div>
               </div>
               <div className="px-6 py-5 bg-[#F8F9FB] border-t border-[#E7EAF0] flex justify-end gap-3">
-                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2">Cancel</button>
-                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue">Submit FIR</button>
+                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2 cursor-pointer">{t('common.cancel', 'Cancel')}</button>
+                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue cursor-pointer">{t('fir.submitFIR', 'Submit FIR')}</button>
               </div>
             </motion.form>
           </div>
@@ -615,15 +645,17 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-police-navy/10">
                     <RefreshCw className="w-5 h-5 text-police-navy" />
                   </div>
-                  Update Investigation Status
+                  {t('cases.updateStatus', 'Update Investigation Status')}
                 </h3>
-                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm">
+                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="p-6 space-y-5">
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Select Assigned Case</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('cases.assignedOfficer', 'Select Assigned Case')}
+                  </label>
                   <select 
                     value={statusForm.caseId} 
                     onChange={(e) => setStatusForm(prev => ({ ...prev, caseId: e.target.value }))}
@@ -635,22 +667,24 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   </select>
                 </div>
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Operational Investigation Status</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('common.status', 'Operational Investigation Status')}
+                  </label>
                   <select 
                     value={statusForm.status} 
                     onChange={(e) => setStatusForm(prev => ({ ...prev, status: e.target.value }))}
                     className="select text-sm h-10 w-full"
                   >
-                    <option value="Active">Active (In Roster)</option>
-                    <option value="Investigating">Investigating (Active Inquiry)</option>
-                    <option value="Under Review">Under Review (Report Pending)</option>
-                    <option value="Closed">Closed (Charge Sheet Filed)</option>
+                    <option value="Active">{t('cases.statusActive', 'Active (In Roster)')}</option>
+                    <option value="Investigating">{t('cases.statusInvestigating', 'Investigating (Active Inquiry)')}</option>
+                    <option value="Under Review">{t('cases.statusInvestigating', 'Under Review (Report Pending)')}</option>
+                    <option value="Closed">{t('cases.statusClosed', 'Closed (Charge Sheet Filed)')}</option>
                   </select>
                 </div>
               </div>
               <div className="px-6 py-5 bg-[#F8F9FB] border-t border-[#E7EAF0] flex justify-end gap-3">
-                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2">Cancel</button>
-                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue">Save Status</button>
+                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2 cursor-pointer">{t('common.cancel', 'Cancel')}</button>
+                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue cursor-pointer">{t('common.save', 'Save Status')}</button>
               </div>
             </motion.form>
           </div>
@@ -670,15 +704,17 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-emerald-500/10">
                     <Upload className="w-5 h-5 text-emerald-600" />
                   </div>
-                  Link Case Evidence File
+                  {t('cases.uploadEvidence', 'Link Case Evidence File')}
                 </h3>
-                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm">
+                <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="p-6 space-y-5">
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Target Case</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('cases.assignedOfficer', 'Target Case')}
+                  </label>
                   <select 
                     value={evidenceForm.caseId} 
                     onChange={(e) => setEvidenceForm(prev => ({ ...prev, caseId: e.target.value }))}
@@ -690,7 +726,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   </select>
                 </div>
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Evidence File Classification</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('fir.category', 'Evidence File Classification')}
+                  </label>
                   <select 
                     value={evidenceForm.fileType} 
                     onChange={(e) => setEvidenceForm(prev => ({ ...prev, fileType: e.target.value }))}
@@ -703,7 +741,9 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   </select>
                 </div>
                 <div>
-                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">Evidence Identifier Name</label>
+                  <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
+                    {t('common.details', 'Evidence Identifier Name')}
+                  </label>
                   <input 
                     type="text" 
                     required 
@@ -715,8 +755,8 @@ export default function FieldOfficerOverview({ onNavigate }) {
                 </div>
               </div>
               <div className="px-6 py-5 bg-[#F8F9FB] border-t border-[#E7EAF0] flex justify-end gap-3">
-                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2">Cancel</button>
-                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue">Upload File</button>
+                <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2 cursor-pointer">{t('common.cancel', 'Cancel')}</button>
+                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue cursor-pointer">{t('cases.uploadEvidence', 'Upload File')}</button>
               </div>
             </motion.form>
           </div>

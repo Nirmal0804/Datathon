@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart2, PieChart, Activity, Calendar, ShieldAlert } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
+import { useTranslation } from '../../../i18n';
 
 export default function ChartsPlaceholder({ trendsData, categoryData, districtData, overview = false }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('trends'); // 'trends' or 'distribution'
 
   // Safety checks
@@ -44,7 +46,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Daily Crime Trend SVG
   const renderDailyTrend = () => {
     const data = trends.daily || [];
-    if (data.length === 0) return <EmptyState type="analytics" title="No Daily Trends" message="No daily trend data available." compact={true} />;
+    if (data.length === 0) return <EmptyState type="analytics" title={t('dashboard.noDailyTrends', 'No Daily Trends')} message={t('dashboard.noDailyTrendsDesc', 'No daily trend data available.')} compact={true} />;
 
     const width = 500;
     const height = 160;
@@ -345,7 +347,9 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
           <div className="p-2 rounded-xl bg-[#0F172A]/5 text-[#0F172A]">
             <Activity className="w-4 h-4" />
           </div>
-          <h3 className="text-lg font-extrabold text-[#0F172A] tracking-tight">Temporal Forecasting & Trends</h3>
+          <h3 className="text-lg font-extrabold text-[#0F172A] tracking-tight">
+            {t('analytics.timeSeriesTitle', 'Temporal Forecasting & Trends')}
+          </h3>
         </div>
         <div className="flex-1 flex flex-col md:flex-row gap-8 lg:gap-12 min-h-0">
           <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -368,21 +372,23 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
             <div className="p-2 rounded-xl bg-[#0F172A]/5 text-[#0F172A]">
               <Activity className="w-4 h-4" />
             </div>
-            <h3 className="text-[15px] font-extrabold text-[#0F172A] tracking-tight">Incident Forecasting & Trends</h3>
+            <h3 className="text-[15px] font-extrabold text-[#0F172A] tracking-tight">
+              {t('analytics.timeSeriesTitle', 'Incident Forecasting & Trends')}
+            </h3>
           </div>
           {/* Tabs */}
           <div className="flex gap-1.5 p-1 bg-[#F7F8FA] border border-[#E7EAF0] rounded-xl">
             <button
               onClick={() => setActiveTab('trends')}
-              className={`px-4 py-1.5 text-[11px] font-bold rounded-lg transition-colors ${activeTab === 'trends' ? 'bg-[#0F172A] text-white shadow-sm' : 'text-slate-500 hover:text-[#0F172A]'}`}
+              className={`px-4 py-1.5 text-[11px] font-bold rounded-lg transition-colors cursor-pointer ${activeTab === 'trends' ? 'bg-[#0F172A] text-white shadow-sm' : 'text-slate-500 hover:text-[#0F172A]'}`}
             >
-              Temporal Analysis
+              {t('dashboard.monthlyTrend', 'Temporal Analysis')}
             </button>
             <button
               onClick={() => setActiveTab('distribution')}
-              className={`px-4 py-1.5 text-[11px] font-bold rounded-lg transition-colors ${activeTab === 'distribution' ? 'bg-[#0F172A] text-white shadow-sm' : 'text-slate-500 hover:text-[#0F172A]'}`}
+              className={`px-4 py-1.5 text-[11px] font-bold rounded-lg transition-colors cursor-pointer ${activeTab === 'distribution' ? 'bg-[#0F172A] text-white shadow-sm' : 'text-slate-500 hover:text-[#0F172A]'}`}
             >
-              Category Distribution
+              {t('dashboard.categoryDistribution', 'Category Distribution')}
             </button>
           </div>
         </div>
@@ -397,7 +403,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
             {/* Donut SVG */}
             <div className="relative w-48 h-48 shrink-0 flex items-center justify-center">
               {totalCategoryCases === 0 ? (
-                <div className="text-center text-slate-500 text-xs">No Cases</div>
+                <div className="text-center text-slate-500 text-xs">{t('common.noRecordsFound', 'No Cases')}</div>
               ) : (
                 <>
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 42 42">
@@ -422,7 +428,9 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
                   </svg>
                   <div className="absolute flex flex-col items-center">
                     <span className="text-2xl font-extrabold text-[#0F172A]">{totalCategoryCases}</span>
-                    <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Total FIRs</span>
+                    <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">
+                      {t('dashboard.totalFirs', 'Total FIRs')}
+                    </span>
                   </div>
                 </>
               )}
@@ -453,7 +461,9 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
           <div className="p-2 rounded-xl bg-[#0F172A]/5 text-[#0F172A]">
             <BarChart2 className="w-4 h-4" />
           </div>
-          <h3 className="text-[15px] font-extrabold text-[#0F172A] tracking-tight">Jurisdiction & Timeline</h3>
+          <h3 className="text-[15px] font-extrabold text-[#0F172A] tracking-tight">
+            {t('district.jurisdiction', 'Jurisdiction & Timeline')}
+          </h3>
         </div>
 
         <div className="flex-1 flex flex-col gap-8">

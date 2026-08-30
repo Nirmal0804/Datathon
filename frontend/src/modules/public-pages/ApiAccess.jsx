@@ -2,6 +2,7 @@ import React from 'react';
 import { Key, ExternalLink } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
 import { API_BASE_URL, API_ROOT_URL } from '../../services/api';
+import { useTranslation } from '../../i18n';
 
 const ENDPOINT_GROUPS = [
   {
@@ -38,32 +39,34 @@ const ENDPOINT_GROUPS = [
     prefix: '/map/field & /map/intelligence',
     tag: 'Geospatial Telemetry',
     method: 'GET',
-    desc: 'Fetch coordinate-mapped incident locations, hotspot radius polygons, and regional boundaries for GIS rendering.',
+    desc: 'Stream unified GeoJSON features for incident clustering, CCTV coverage grids, and patrol beat boundaries.',
   },
   {
-    prefix: '/network',
-    tag: 'Criminal Relationship Graph',
-    method: 'GET',
-    desc: 'Fetch sociocentric co-offender network nodes, cross-district syndicate edges, and query entity associations (/network/search).',
+    prefix: '/reports',
+    tag: 'Reports & Export Engine',
+    method: 'GET / POST',
+    desc: 'Generate, query, and export structured intelligence dossiers in statutory PDF/CSV formats.',
   },
   {
     prefix: '/admin',
-    tag: 'System Administration',
-    method: 'GET / POST / PUT',
-    desc: 'Manage personnel rosters (/admin/users), configure RBAC role scopes (/admin/roles), and query system audit event logs (/admin/audit).',
+    tag: 'Administrative Suite',
+    method: 'GET / POST',
+    desc: 'Manage officer rosters, inspect immutable security audit event streams, and review system component health.',
   },
 ];
 
 export default function ApiAccess({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
+
   const openApiDocs = () => {
     window.open(`${API_ROOT_URL}/docs`, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <InfoPageLayout
-      title="API Access"
-      category="Resources"
-      description="Programmatic integration and RESTful API access guidelines for the CrimeIntel platform."
+      title={t('public.apiAccessTitle', 'API & Developer Access')}
+      category={t('nav.resources', 'Resources')}
+      description={t('public.apiAccessSubtitle', 'Developer reference for integrating with the CrimeIntel backend REST services and consuming analytical endpoints.')}
       activeRoute="/api-access"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}

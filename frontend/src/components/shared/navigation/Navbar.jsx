@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../ui/LazyImage';
+import { useTranslation } from '../../../i18n';
 
 const NAV_LINKS = [
-  { id: 'home', label: 'Home' },
-  { id: 'features', label: 'Features' },
-  { id: 'workflow', label: 'Workflow' },
-  { id: 'modules', label: 'Modules' },
-  { id: 'about', label: 'About' },
+  { id: 'home', key: 'nav.home', label: 'Home' },
+  { id: 'features', key: 'nav.features', label: 'Features' },
+  { id: 'workflow', key: 'nav.workflow', label: 'Workflow' },
+  { id: 'modules', key: 'nav.modules', label: 'Modules' },
+  { id: 'about', key: 'nav.about', label: 'About' },
 ];
 
 export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
+  const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -64,7 +66,7 @@ export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
                 KARNATAKA POLICE
                 <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
               </h1>
-              <p className="text-[11px] sm:text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">Crime Analytics Platform</p>
+              <p className="text-[11px] sm:text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">{t('auth.portalName', 'Crime Analytics Platform')}</p>
             </div>
           </div>
 
@@ -84,7 +86,7 @@ export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
                     isActive ? 'font-bold text-white' : 'font-semibold text-white/80 hover:text-white'
                   }`}
                 >
-                  {link.label}
+                  {t(link.key, link.label)}
                   {isActive && (
                     <span className="absolute -bottom-1.5 left-0 w-full h-[3px] bg-[#D49A00] rounded-full transition-all duration-300" />
                   )}
@@ -95,7 +97,7 @@ export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
               onClick={onLoginClick}
               className="px-5 py-2 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ml-2"
             >
-              {role ? 'Dashboard' : 'Login Portal'}
+              {role ? t('public.dashboard', 'Dashboard') : t('nav.loginPortal', 'Login Portal')}
             </button>
           </div>
 
@@ -116,14 +118,14 @@ export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
               }`}
               onClick={() => { setIsOpen(false); setActiveSection(link.id); }}
             >
-              {link.label}
+              {t(link.key, link.label)}
             </a>
           ))}
           <button
             onClick={() => { setIsOpen(false); onLoginClick(); }}
             className="w-full px-5 py-2.5 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-colors shadow-sm cursor-pointer"
           >
-            {role ? 'Dashboard' : 'Login Portal'}
+            {role ? t('public.dashboard', 'Dashboard') : t('nav.loginPortal', 'Login Portal')}
           </button>
         </div>
       )}

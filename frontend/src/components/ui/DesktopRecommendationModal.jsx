@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Monitor, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '../../i18n';
 
 const STORAGE_KEY = 'crimeintel_desktop_notice_dismissed';
 const BREAKPOINT = 1024; // Mobile and tablet screens below 1024px
 
 export default function DesktopRecommendationModal() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const checkViewport = useCallback(() => {
@@ -93,7 +95,7 @@ export default function DesktopRecommendationModal() {
             <button
               type="button"
               onClick={handleDismiss}
-              aria-label="Close"
+              aria-label={t('common.close', 'Close')}
               className="absolute top-4 right-4 w-8 h-8 rounded-full text-[#94A3B8] hover:text-[#E00000] hover:bg-[#FFF1F1] flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -106,12 +108,12 @@ export default function DesktopRecommendationModal() {
 
             {/* Title */}
             <h2 id="desktop-modal-title" className="text-lg sm:text-xl font-extrabold text-[#0F172A] tracking-tight">
-              Better on Desktop
+              {t('modals.desktopNoticeTitle', 'Better on Desktop')}
             </h2>
 
             {/* Supporting Message */}
             <p id="desktop-modal-desc" className="text-xs sm:text-sm text-[#64748B] leading-relaxed mt-2.5 max-w-sm mx-auto font-normal">
-              CrimeIntel is currently optimized for desktop and larger screens for the best experience. For the full interface and analytics experience, we recommend using a desktop or laptop.
+              {t('modals.desktopNoticeDesc', 'CrimeIntel is currently optimized for desktop and larger screens for the best experience. For the full interface and analytics experience, we recommend using a desktop or laptop.')}
             </p>
 
             {/* Primary Action Button — Red Theme */}
@@ -121,7 +123,7 @@ export default function DesktopRecommendationModal() {
                 onClick={handleDismiss}
                 className="w-full sm:w-auto px-8 py-2.5 rounded-xl bg-[#E00000] hover:bg-[#C90000] active:bg-[#B30000] text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E00000] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
-                Continue Anyway
+                {t('modals.continueAnyway', 'Continue Anyway')}
               </button>
             </div>
           </motion.div>

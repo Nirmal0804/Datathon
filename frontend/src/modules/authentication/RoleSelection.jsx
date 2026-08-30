@@ -3,15 +3,17 @@ import { Shield, User, ShieldAlert, ChevronRight, ArrowLeft, CheckCircle2 } from
 import { motion } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import LazyImage from '../../components/ui/LazyImage';
-
-const roles = [
-  { id: 'officer', name: 'Field Officer', icon: User, desc: 'Access station-level reports and active cases.' },
-  { id: 'analyst', name: 'Intelligence Analyst', icon: Shield, desc: 'Access predictive models and network graphs.' },
-  { id: 'admin', name: 'System Administrator', icon: ShieldAlert, desc: 'Manage users, roles, and system configurations.' }
-];
+import { useTranslation } from '../../i18n';
 
 export default function RoleSelection({ onSelect, onBack }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(null);
+
+  const roles = [
+    { id: 'officer', nameKey: 'auth.roleFieldOfficer', defaultName: 'Field Officer', icon: User, desc: 'Access station-level reports and active cases.' },
+    { id: 'analyst', nameKey: 'auth.roleAnalyst', defaultName: 'Intelligence Analyst', icon: Shield, desc: 'Access predictive models and network graphs.' },
+    { id: 'admin', nameKey: 'auth.roleAdmin', defaultName: 'System Administrator', icon: ShieldAlert, desc: 'Manage users, roles, and system configurations.' }
+  ];
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden font-sans text-[#111827] selection:bg-[#153E75]/10 selection:text-[#153E75]">
@@ -26,7 +28,7 @@ export default function RoleSelection({ onSelect, onBack }) {
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#4B5563] hover:text-[#153E75] transition-colors duration-200 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-            Back to Home
+            {t('auth.backToHome', 'Back to Home')}
           </button>
         </div>
       )}
@@ -45,14 +47,18 @@ export default function RoleSelection({ onSelect, onBack }) {
               <LazyImage 
                 src={kspLogo} 
                 alt="Karnataka State Police Emblem" 
-                className="h-20 sm:h-24 w-auto object-contain"
+                className="h-20 sm:h-24 w-auto object-contain" 
                 containerClassName="w-full h-full"
                 loading="eager"
               />
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight mb-2">Select Access Level</h1>
-          <p className="text-[#6B7280] text-sm sm:text-base font-normal max-w-md mx-auto">Identify your operational role to proceed securely.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight mb-2">
+            {t('auth.selectAccessLevel', 'Select Access Level')}
+          </h1>
+          <p className="text-[#6B7280] text-sm sm:text-base font-normal max-w-md mx-auto">
+            {t('auth.portalName', 'Identify your operational role to proceed securely.')}
+          </p>
         </div>
 
         {/* Role Cards Grid */}
@@ -82,13 +88,13 @@ export default function RoleSelection({ onSelect, onBack }) {
                       <CheckCircle2 className="w-5 h-5 text-[#153E75]" />
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-[#111827] mb-2">{role.name}</h3>
+                  <h3 className="text-lg font-bold text-[#111827] mb-2">{t(role.nameKey, role.defaultName)}</h3>
                   <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed">{role.desc}</p>
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-[#E6E8EC]/60 flex items-center justify-between text-xs font-semibold">
                   <span className={isSelected ? 'text-[#153E75]' : 'text-[#6B7280] group-hover:text-[#111827]'}>
-                    {isSelected ? 'Selected' : 'Click to select'}
+                    {isSelected ? t('common.active', 'Selected') : t('common.view', 'Click to select')}
                   </span>
                   <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${
                     isSelected ? 'text-[#153E75] translate-x-0.5' : 'text-[#9CA3AF] group-hover:translate-x-0.5 group-hover:text-[#153E75]'
@@ -105,7 +111,7 @@ export default function RoleSelection({ onSelect, onBack }) {
           disabled={!selected}
           className="w-full py-4 bg-[#153E75] hover:bg-[#0F2D56] disabled:bg-[#E6E8EC] disabled:text-[#9CA3AF] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(21,62,117,0.2)] hover:shadow-[0_6px_20px_rgba(21,62,117,0.3)] hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none text-sm sm:text-base"
         >
-          Continue to Login
+          {t('auth.loginButton', 'Continue to Login')}
           <ChevronRight className="w-4 h-4" />
         </button>
       </motion.div>

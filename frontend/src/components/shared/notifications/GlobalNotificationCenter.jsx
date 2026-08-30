@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, BellOff, Settings, CheckCheck, Trash2, Bell, ShieldAlert, Activity } from 'lucide-react';
 import { useNotification } from '../../../context/NotificationContext';
 import NotificationCard from './NotificationCard';
+import { useTranslation } from '../../../i18n';
 
 export default function GlobalNotificationCenter() {
+  const { t } = useTranslation();
   const { 
     notifications, 
     isPanelOpen, 
@@ -18,7 +20,13 @@ export default function GlobalNotificationCenter() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSettings, setShowSettings] = useState(false);
 
-  const tabs = ['All', 'Unread', 'Alerts', 'Tasks', 'System'];
+  const tabs = [
+    { id: 'All', label: t('notifications.all', 'All') },
+    { id: 'Unread', label: t('notifications.unread', 'Unread') },
+    { id: 'Alerts', label: t('notifications.alerts', 'Alerts') },
+    { id: 'Tasks', label: t('notifications.tasks', 'Tasks') },
+    { id: 'System', label: t('notifications.system', 'System') },
+  ];
 
   // Filter logic
   const filteredNotifications = notifications.filter(n => {
@@ -53,7 +61,7 @@ export default function GlobalNotificationCenter() {
             className="fixed inset-0 bg-slate-900/10 z-[99990]"
           />
 
-          {/* Slide-out Panel (Even alignment matching Top Navbar top-3, h-[72px], right-3, bottom-3, and rounded-[20px]) */}
+          {/* Slide-out Panel */}
           <motion.div
             initial={{ x: '100%', opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
@@ -73,7 +81,7 @@ export default function GlobalNotificationCenter() {
                   )}
                 </div>
                 <h2 className="text-base font-black tracking-wide text-white">
-                  {showSettings ? 'Notification Preferences' : 'Intelligence Feed'}
+                  {showSettings ? t('settings.notificationsTab', 'Notification Preferences') : t('notifications.title', 'Intelligence Feed')}
                 </h2>
               </div>
               
@@ -82,7 +90,7 @@ export default function GlobalNotificationCenter() {
                   <button 
                     onClick={() => setShowSettings(true)}
                     className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
-                    aria-label="Settings"
+                    aria-label={t('nav.settings', 'Settings')}
                   >
                     <Settings className="w-4 h-4" />
                   </button>
@@ -92,13 +100,13 @@ export default function GlobalNotificationCenter() {
                     onClick={() => setShowSettings(false)}
                     className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-full transition-colors"
                   >
-                    Done
+                    {t('common.close', 'Done')}
                   </button>
                 )}
                 <button 
                   onClick={closePanel}
                   className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
-                  aria-label="Close panel"
+                  aria-label={t('common.close', 'Close panel')}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -114,7 +122,7 @@ export default function GlobalNotificationCenter() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
                       type="text"
-                      placeholder="Search notifications..."
+                      placeholder={t('dashboard.searchPlaceholder', 'Search notifications...')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-[#E7ECF3] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] shadow-sm font-medium placeholder:text-slate-400"
@@ -125,15 +133,15 @@ export default function GlobalNotificationCenter() {
                     <div className="flex gap-1 overflow-x-auto no-scrollbar pb-1">
                       {tabs.map(tab => (
                         <button
-                          key={tab}
-                          onClick={() => setActiveTab(tab)}
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
                           className={`px-3 py-1 rounded-full text-[11px] font-bold transition-colors whitespace-nowrap cursor-pointer ${
-                            activeTab === tab 
+                            activeTab === tab.id 
                             ? 'bg-[#E00000] text-white shadow-sm' 
                             : 'bg-white border border-[#E7ECF3] text-slate-500 hover:text-[#E00000]'
                           }`}
                         >
-                          {tab}
+                          {tab.label}
                         </button>
                       ))}
                     </div>
@@ -147,13 +155,13 @@ export default function GlobalNotificationCenter() {
                       onClick={markAllAsRead}
                       className="flex items-center gap-1.5 text-[#E00000] hover:text-[#C90000] transition-colors cursor-pointer"
                     >
-                      <CheckCheck className="w-3.5 h-3.5" /> Mark All Read
+                      <CheckCheck className="w-3.5 h-3.5" /> {t('notifications.markAllRead', 'Mark All Read')}
                     </button>
                     <button 
                       onClick={clearRead}
                       className="flex items-center gap-1.5 text-slate-500 hover:text-rose-600 transition-colors"
                     >
-                      <Trash2 className="w-3.5 h-3.5" /> Clear Read
+                      <Trash2 className="w-3.5 h-3.5" /> {t('notifications.clearRead', 'Clear Read')}
                     </button>
                   </div>
                 )}
@@ -170,12 +178,12 @@ export default function GlobalNotificationCenter() {
                         {searchQuery ? <Search className="w-6 h-6 text-slate-400" /> : <BellOff className="w-6 h-6 text-slate-400" />}
                       </div>
                       <h3 className="text-sm font-black text-[#0F172A] mb-1">
-                        {searchQuery ? 'No Results Found' : 'You\'re All Caught Up'}
+                        {searchQuery ? t('common.noRecords', 'No Results Found') : t('notifications.noNotifications', 'You\'re All Caught Up')}
                       </h3>
                       <p className="text-xs text-slate-500 font-medium">
                         {searchQuery 
-                          ? 'Try adjusting your search terms or filters.' 
-                          : 'There are no new notifications in this category.'}
+                          ? t('common.noRecordsDesc', 'Try adjusting your search terms or filters.') 
+                          : t('notifications.noNotificationsDesc', 'There are no new notifications in this category.')}
                       </p>
                     </div>
                   )}
@@ -186,7 +194,7 @@ export default function GlobalNotificationCenter() {
               <div className="flex-1 overflow-y-auto bg-[#F8F9FB] p-6 space-y-6">
                 <div>
                   <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-[#C79A2B]" /> Alert Categories
+                    <ShieldAlert className="w-4 h-4 text-[#C79A2B]" /> {t('settings.notificationsTab', 'Alert Categories')}
                   </h3>
                   <div className="space-y-3 bg-white p-4 rounded-[16px] border border-[#E7ECF3] shadow-sm">
                     {['Crime Hotspot Alerts', 'AI Predictions', 'Task Assignments', 'System Health'].map((item, i) => (
@@ -200,7 +208,7 @@ export default function GlobalNotificationCenter() {
 
                 <div>
                   <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-[#C79A2B]" /> Delivery Channels
+                    <Activity className="w-4 h-4 text-[#C79A2B]" /> {t('settings.governance', 'Delivery Channels')}
                   </h3>
                   <div className="space-y-3 bg-white p-4 rounded-[16px] border border-[#E7ECF3] shadow-sm">
                     {['Push Notifications', 'Email Digest', 'SMS Alerts (Critical Only)'].map((item, i) => (

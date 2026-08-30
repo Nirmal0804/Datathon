@@ -10,6 +10,7 @@ import { MOCK_CASES, DISTRICTS, POLICE_STATIONS, CATEGORIES, STATUSES } from '..
 import { useToast } from '../../components/ui/Toast';
 import { DISTRICT_PREDICTION_DATA } from '../../mock/districtPredictionData';
 import EmptyState from '../../components/common/EmptyState';
+import { useTranslation } from '../../i18n';
 
 // Command Center Loading Skeleton
 function SkeletonMapOverlay() {
@@ -29,6 +30,7 @@ function SkeletonMapOverlay() {
 }
 
 export default function CrimeMapLayout({ role = 'analyst' }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const isAnalyst = role === 'analyst';
 
@@ -365,7 +367,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search FIR, category, station..."
+              placeholder={t('dashboard.searchPlaceholder', 'Search FIR, category, station...')}
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full h-11 pl-10 pr-9 text-xs bg-[#F8F9FB] border border-[#D9E2EC] rounded-full focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] text-[#0F172A] font-medium shadow-sm transition-all"
@@ -414,7 +416,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             onChange={(e) => handleFilterChange('district', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
           >
-            <option value="All">All Districts</option>
+            <option value="All">{t('dashboard.allDistricts', 'All Districts')}</option>
             {DISTRICTS.map(d => (
               <option key={d} value={d}>{d}</option>
             ))}
@@ -427,7 +429,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
           >
             {availableStations.map(station => (
-              <option key={station} value={station}>{station}</option>
+              <option key={station} value={station}>{station === 'All' ? t('dashboard.allStations', 'All Police Stations') : station}</option>
             ))}
           </select>
 
@@ -437,7 +439,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             onChange={(e) => handleFilterChange('category', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
           >
-            <option value="All">All Categories</option>
+            <option value="All">{t('dashboard.allCategories', 'All Categories')}</option>
             {CATEGORIES.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
@@ -449,11 +451,11 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             onChange={(e) => handleFilterChange('severity', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
           >
-            <option value="All">All Severities</option>
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
+            <option value="All">{t('dashboard.allSeverities', 'All Severities')}</option>
+            <option value="Critical">{t('common.critical', 'Critical')}</option>
+            <option value="High">{t('common.high', 'High')}</option>
+            <option value="Medium">{t('common.medium', 'Medium')}</option>
+            <option value="Low">{t('common.low', 'Low')}</option>
           </select>
 
           {/* Date Range Inputs */}
@@ -480,18 +482,18 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           <button
             onClick={handleResetAll}
             className="h-11 px-4 rounded-[999px] bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] text-[#0F172A] font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
-            title="Reset Filters"
+            title={t('dashboard.clearFilters', 'Reset Filters')}
           >
             <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Reset</span>
+            <span>{t('dashboard.clearFilters', 'Reset')}</span>
           </button>
 
           <button
             onClick={handleExportSnapshot}
-            className="h-11 px-5 rounded-[999px] bg-[#0B1F4D] text-white hover:bg-[#0A192F] font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-2"
+            className="h-11 px-4 rounded-[999px] bg-[#0B1F4D] hover:bg-[#143275] text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <Download className="w-4 h-4 text-white" />
-            <span>Export Snapshot</span>
+            <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
+            <span>{t('reports.exportPNG', 'Export Snapshot')}</span>
           </button>
         </div>
       </div>

@@ -1,13 +1,16 @@
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 export default function TermsOfService({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
+
   return (
     <InfoPageLayout
-      title="Terms of Service"
-      category="Resources"
-      description="Guidelines, usage policies, and operational conditions governing authorized access to the CrimeIntel intelligence and analytics ecosystem."
+      title={t('public.termsTitle', 'Terms of Service')}
+      category={t('nav.resources', 'Resources')}
+      description={t('public.termsSubtitle', 'Guidelines, usage policies, and operational conditions governing authorized access to the CrimeIntel intelligence and analytics ecosystem.')}
       lastUpdated="August 2026"
       activeRoute="/terms"
       onNavigate={onNavigate}

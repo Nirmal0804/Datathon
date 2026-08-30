@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Search, RefreshCw, Download, ChevronRight, Zap, AlertTriangle, Info, ShieldCheck, Filter } from 'lucide-react';
 import { MOCK_ALERTS } from './mockData';
+import { useTranslation } from '../../../i18n';
 
 const severityStripColor = (type) => {
   switch (type) {
@@ -21,31 +22,32 @@ const severityBadgeClass = (type) => {
   }
 };
 
-const severityLabel = (type) => {
-  switch (type) {
-    case 'critical': return 'CRITICAL';
-    case 'warning':  return 'HIGH';
-    case 'info':     return 'MEDIUM';
-    default:         return 'NORMAL';
-  }
-};
-
-const severityIcon = (type) => {
-  switch (type) {
-    case 'critical': return <Zap className="w-5 h-5 text-rose-600" />;
-    case 'warning':  return <AlertTriangle className="w-5 h-5 text-amber-600" />;
-    case 'info':     return <Info className="w-5 h-5 text-sky-600" />;
-    default:         return <Bell className="w-5 h-5 text-emerald-600" />;
-  }
-};
-
 export default function FieldOfficerAlerts() {
+  const { t } = useTranslation();
   const [alertsList] = useState(MOCK_ALERTS || []);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [sortOrder, setSortOrder] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const severityLabel = (type) => {
+    switch (type) {
+      case 'critical': return t('common.critical', 'CRITICAL');
+      case 'warning':  return t('common.high', 'HIGH');
+      case 'info':     return t('common.medium', 'MEDIUM');
+      default:         return t('common.low', 'NORMAL');
+    }
+  };
+
+  const severityIcon = (type) => {
+    switch (type) {
+      case 'critical': return <Zap className="w-5 h-5 text-rose-600" />;
+      case 'warning':  return <AlertTriangle className="w-5 h-5 text-amber-600" />;
+      case 'info':     return <Info className="w-5 h-5 text-sky-600" />;
+      default:         return <Bell className="w-5 h-5 text-emerald-600" />;
+    }
+  };
 
   // Compute KPI Stats
   const kpis = useMemo(() => {
@@ -113,20 +115,22 @@ export default function FieldOfficerAlerts() {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Operations Alerts Feed</h2>
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">
+                {t('dashboard.recentAlerts', 'Operations Alerts Feed')}
+              </h2>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                {alertsList.length} Active Feeds
+                {alertsList.length} {t('admin.active', 'Active Feeds')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Precinct bulletins, automated anomaly streams, and local BOLOs.
+              {t('dashboard.alertsSubtitle', 'Precinct bulletins, automated anomaly streams, and local BOLOs.')}
             </p>
           </div>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>Duty Status: Active On-Field</span>
+          <span>{t('common.status', 'Duty Status')}: {t('admin.active', 'Active On-Field')}</span>
         </div>
       </div>
 
@@ -134,7 +138,7 @@ export default function FieldOfficerAlerts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Critical Alerts</p>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('common.critical', 'Critical Alerts')}</p>
             <h3 className="text-xl sm:text-2xl font-black text-rose-600 tracking-tight mt-1">{kpis.critical}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-extrabold">
@@ -144,7 +148,7 @@ export default function FieldOfficerAlerts() {
 
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">High Priority</p>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('common.high', 'High Priority')}</p>
             <h3 className="text-xl sm:text-2xl font-black text-amber-600 tracking-tight mt-1">{kpis.high}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 font-extrabold">
@@ -154,7 +158,7 @@ export default function FieldOfficerAlerts() {
 
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Feeds</p>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('admin.active', 'Active Feeds')}</p>
             <h3 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight mt-1">{kpis.active}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/10 border border-[#0B1F4D]/20 flex items-center justify-center text-[#0B1F4D] font-extrabold">
@@ -164,7 +168,7 @@ export default function FieldOfficerAlerts() {
 
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg Response Time</p>
+            <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('reports.generationTime', 'Avg Response Time')}</p>
             <h3 className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight mt-1">{kpis.avgResponse}</h3>
           </div>
           <div className="w-10 h-10 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-extrabold">
@@ -180,7 +184,7 @@ export default function FieldOfficerAlerts() {
           <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search alerts by keyword, title, description..."
+            placeholder={t('dashboard.searchPlaceholder', 'Search alerts by keyword, title, description...')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full h-10 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400 font-sans"
@@ -197,10 +201,10 @@ export default function FieldOfficerAlerts() {
               onChange={(e) => setSelectedSeverity(e.target.value)}
               className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
             >
-              <option value="all">All Severities</option>
-              <option value="critical">Critical Only</option>
-              <option value="warning">High Priority</option>
-              <option value="info">Medium / Low</option>
+              <option value="all">{t('cases.allPriorities', 'All Severities')}</option>
+              <option value="critical">{t('common.critical', 'Critical Only')}</option>
+              <option value="warning">{t('common.high', 'High Priority')}</option>
+              <option value="info">{t('common.medium', 'Medium / Low')}</option>
             </select>
           </div>
 
@@ -210,15 +214,15 @@ export default function FieldOfficerAlerts() {
             onChange={(e) => setSortOrder(e.target.value)}
             className="h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D] cursor-pointer"
           >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
+            <option value="newest">{t('cases.dateReported', 'Newest First')}</option>
+            <option value="oldest">{t('cases.dateReported', 'Oldest First')}</option>
           </select>
 
           {/* Refresh Button */}
           <button 
             onClick={() => { setSearchQuery(''); setSelectedSeverity('all'); }} 
             className="h-10 w-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#0B1F4D] hover:text-white transition-colors flex items-center justify-center cursor-pointer shadow-xs"
-            title="Reset Filters"
+            title={t('dashboard.resetFilters', 'Reset Filters')}
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -227,10 +231,10 @@ export default function FieldOfficerAlerts() {
           <button 
             onClick={exportAlertsCSV} 
             className="h-10 px-4 rounded-[14px] bg-[#0B1F4D] text-white hover:bg-[#143275] font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
-            title="Export Alerts Data"
+            title={t('reports.exportCSV', 'Export Alerts Data')}
           >
             <Download className="w-4 h-4 text-[#C79A2B]" />
-            <span className="hidden sm:inline">Export</span>
+            <span className="hidden sm:inline">{t('reports.exportCSV', 'Export')}</span>
           </button>
         </div>
       </div>
@@ -238,15 +242,19 @@ export default function FieldOfficerAlerts() {
       {/* 4 & 5. Intelligence Feed: Modern Horizontal Alert Rows (~90px height) */}
       <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 sm:p-8 shadow-sm space-y-4">
         <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4">
-          <h3 className="text-base font-black text-[#0F172A] tracking-tight">Live Intelligence Stream</h3>
-          <span className="text-xs font-semibold text-[#64748B]">Showing {paginatedAlerts.length} of {filteredAlerts.length} feeds</span>
+          <h3 className="text-base font-black text-[#0F172A] tracking-tight">
+            {t('dashboard.recentAlerts', 'Live Intelligence Stream')}
+          </h3>
+          <span className="text-xs font-semibold text-[#64748B]">
+            {t('cases.showing', 'Showing')} {paginatedAlerts.length} {t('dashboard.records', 'of')} {filteredAlerts.length}
+          </span>
         </div>
 
         <div className="space-y-3">
           <AnimatePresence mode="popLayout">
             {paginatedAlerts.length === 0 ? (
               <div className="p-12 text-center text-[#64748B] text-xs font-semibold bg-[#F8F9FB] rounded-[20px] border border-[#E7ECF3]">
-                No operations alerts match your filter criteria.
+                {t('dashboard.noAlertsFound', 'No operations alerts match your filter criteria.')}
               </div>
             ) : (
               paginatedAlerts.map((alert, i) => (
@@ -286,7 +294,7 @@ export default function FieldOfficerAlerts() {
 
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-extrabold text-[10px] tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      OPEN
+                      {t('cases.statusActive', 'OPEN')}
                     </span>
 
                     <ChevronRight className="w-5 h-5 text-slate-400 ml-1" />
@@ -300,7 +308,7 @@ export default function FieldOfficerAlerts() {
         {/* 6. Clean Pagination Footer */}
         <div className="flex items-center justify-between px-2 pt-4 border-t border-[#E7ECF3]">
           <p className="text-xs font-semibold text-[#64748B]">
-            Showing <span className="font-extrabold text-[#0F172A]">{filteredAlerts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, filteredAlerts.length)}</span> of <span className="font-extrabold text-[#0F172A]">{filteredAlerts.length}</span> alerts
+            {t('cases.showing', 'Showing')} <span className="font-extrabold text-[#0F172A]">{filteredAlerts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> {t('cases.showingTo', 'to')} <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, filteredAlerts.length)}</span> {t('cases.showingOf', 'of')} <span className="font-extrabold text-[#0F172A]">{filteredAlerts.length}</span> {t('dashboard.records', 'alerts')}
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -308,17 +316,17 @@ export default function FieldOfficerAlerts() {
               disabled={currentPage === 1}
               className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
             >
-              Previous
+              {t('cases.previous', 'Previous')}
             </button>
             <div className="px-3 text-xs font-bold text-[#0F172A]">
-              Page {currentPage} of {totalPages}
+              {t('cases.page', 'Page')} {currentPage} {t('cases.showingOf', 'of')} {totalPages}
             </div>
             <button
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
               className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
             >
-              Next
+              {t('cases.next', 'Next')}
             </button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Search, Plus, ShieldCheck, X, Shield, MapPin, ChevronLeft, ChevronRight, RotateCcw, Download, Filter } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 import EmptyState from '../../../components/common/EmptyState';
+import { useTranslation } from '../../../i18n';
 
 // ─── Role badge styling ───────────────────────────────────────────────────────
 const roleBadge = (role) => {
@@ -34,6 +35,7 @@ const STATUSES = ['All', 'Active', 'Suspended'];
 const ITEMS_PER_PAGE = 6;
 
 export default function AdminUsers() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [searchQuery, setSearchQuery]   = useState('');
   const [roleFilter, setRoleFilter]     = useState('All');
@@ -164,13 +166,13 @@ export default function AdminUsers() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">System User Management</h1>
+              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">{t('admin.userManagement', 'System User Management')}</h1>
               <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-0.5 rounded-full font-extrabold text-xs">
-                {usersList.length} Accounts
+                {usersList.length} {t('admin.users', 'Accounts')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Control active operational credentials and station accounts.
+              {t('admin.overviewSubtitle', 'Control active operational credentials and station accounts.')}
             </p>
           </div>
         </div>
@@ -180,7 +182,7 @@ export default function AdminUsers() {
           className="h-10 px-5 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4 text-[#C79A2B]" />
-          <span>Add System User</span>
+          <span>{t('admin.addUser', 'Add System User')}</span>
         </button>
       </div>
 
@@ -191,7 +193,7 @@ export default function AdminUsers() {
           <Search className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search users by name, role, or station..."
+            placeholder={t('dashboard.searchPlaceholder', 'Search users by name, role, or station...')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full h-9 pl-9 pr-3 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400"
@@ -201,7 +203,10 @@ export default function AdminUsers() {
         {/* Role filter */}
         <div className="relative">
           <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className={selectBase}>
-            {ROLES.map(r => <option key={r} value={r}>{r === 'All' ? 'All Roles' : r}</option>)}
+            <option value="All">{t('cases.allCategories', 'All Roles')}</option>
+            <option value="Field Officer">{t('auth.roleFieldOfficer', 'Field Officer')}</option>
+            <option value="Intelligence Analyst">{t('auth.roleAnalyst', 'Intelligence Analyst')}</option>
+            <option value="Administrator">{t('auth.roleAdmin', 'Administrator')}</option>
           </select>
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             <svg className="w-3.5 h-3.5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,7 +218,9 @@ export default function AdminUsers() {
         {/* Status filter */}
         <div className="relative">
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={selectBase}>
-            {STATUSES.map(s => <option key={s} value={s}>{s === 'All' ? 'All Statuses' : s}</option>)}
+            <option value="All">{t('cases.allStatuses', 'All Statuses')}</option>
+            <option value="Active">{t('admin.active', 'Active')}</option>
+            <option value="Suspended">{t('admin.suspended', 'Suspended')}</option>
           </select>
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             <svg className="w-3.5 h-3.5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +232,7 @@ export default function AdminUsers() {
         {/* Reset */}
         <button
           onClick={handleResetFilters}
-          title="Reset filters"
+          title={t('dashboard.resetFilters', 'Reset filters')}
           className="h-9 w-9 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] hover:bg-[#0B1F4D] hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -234,11 +241,11 @@ export default function AdminUsers() {
         {/* Export Users */}
         <button
           onClick={handleExportUsersCSV}
-          title="Export user accounts as CSV"
+          title={t('reports.exportCSV', 'Export user accounts as CSV')}
           className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-extrabold text-xs flex items-center gap-1.5 hover:bg-[#143275] transition-colors cursor-pointer shrink-0"
         >
           <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
-          <span>Export Users</span>
+          <span>{t('reports.exportCSV', 'Export Users')}</span>
         </button>
       </div>
 
@@ -247,9 +254,9 @@ export default function AdminUsers() {
 
         {/* Grid Header */}
         <div className="px-6 py-4 border-b border-[#E7ECF3] bg-[#F8F9FB] flex items-center justify-between">
-          <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Registered Accounts</h3>
+          <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('admin.userManagement', 'Registered Accounts')}</h3>
           <span className="text-xs font-semibold text-[#64748B]">
-            {filteredUsers.length} result{filteredUsers.length !== 1 ? 's' : ''} found
+            {filteredUsers.length} {t('dashboard.records', 'records found')}
           </span>
         </div>
 
@@ -258,12 +265,12 @@ export default function AdminUsers() {
           <table className="w-full text-left border-collapse" aria-label="System users table">
             <thead>
               <tr className="border-b border-[#E7ECF3] bg-[#F8F9FB]">
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">User</th>
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">Role</th>
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">Assigned Unit</th>
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">Email</th>
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">Status</th>
-                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider text-right">Actions</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('admin.users', 'User')}</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('admin.roles', 'Role')}</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('common.station', 'Assigned Unit')}</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('settings.email', 'Email')}</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('common.status', 'Status')}</th>
+                <th className="py-3.5 px-6 text-xs font-black text-[#0F172A] uppercase tracking-wider text-right">{t('common.actions', 'Actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E7ECF3]/60">
@@ -274,7 +281,7 @@ export default function AdminUsers() {
                       <EmptyState
                         type="users"
                         onAction={handleResetFilters}
-                        actionLabel="Reset Filters"
+                        actionLabel={t('dashboard.resetFilters', 'Reset Filters')}
                       />
                     </td>
                   </tr>
@@ -310,7 +317,7 @@ export default function AdminUsers() {
                         <td className="px-6 py-3.5 align-middle">
                           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${badge.cls}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} />
-                            {user.role}
+                            {user.role === 'Field Officer' ? t('auth.roleFieldOfficer', 'Field Officer') : user.role === 'Intelligence Analyst' ? t('auth.roleAnalyst', 'Intelligence Analyst') : t('auth.roleAdmin', 'Administrator')}
                           </span>
                         </td>
 
@@ -335,7 +342,7 @@ export default function AdminUsers() {
                               : 'bg-rose-50 text-rose-700 border border-rose-200'
                           }`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${user.active ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
-                            {user.active ? 'Active' : 'Suspended'}
+                            {user.active ? t('admin.active', 'Active') : t('admin.suspended', 'Suspended')}
                           </span>
                         </td>
 
@@ -349,7 +356,7 @@ export default function AdminUsers() {
                                 : 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
                             }`}
                           >
-                            {user.active ? 'Suspend' : 'Activate'}
+                            {user.active ? t('admin.suspend', 'Suspend') : t('admin.activate', 'Activate')}
                           </button>
                         </td>
                       </motion.tr>
@@ -365,7 +372,7 @@ export default function AdminUsers() {
         {filteredUsers.length > 0 && (
           <div className="px-6 py-4 border-t border-[#E7ECF3] flex items-center justify-between bg-[#F8F9FB]">
             <p className="text-xs font-semibold text-[#64748B]">
-              Showing{' '}
+              {t('cases.showing', 'Showing')}{' '}
               <span className="font-extrabold text-[#0F172A]">
                 {(currentPage - 1) * ITEMS_PER_PAGE + 1}
               </span>{' '}
@@ -373,8 +380,8 @@ export default function AdminUsers() {
               <span className="font-extrabold text-[#0F172A]">
                 {Math.min(currentPage * ITEMS_PER_PAGE, filteredUsers.length)}
               </span>{' '}
-              of{' '}
-              <span className="font-extrabold text-[#0F172A]">{filteredUsers.length}</span> users
+              {t('cases.showingOf', 'of')}{' '}
+              <span className="font-extrabold text-[#0F172A]">{filteredUsers.length}</span> {t('admin.users', 'users')}
             </p>
 
             <div className="flex items-center gap-2">
@@ -443,7 +450,7 @@ export default function AdminUsers() {
                   <div className="w-8 h-8 rounded-[10px] bg-white/10 flex items-center justify-center">
                     <Plus className="w-4 h-4 text-[#C79A2B]" />
                   </div>
-                  <h3 className="text-base font-black text-white">Register System Account</h3>
+                  <h3 className="text-base font-black text-white">{t('admin.addUser', 'Register System Account')}</h3>
                 </div>
                 <button
                   type="button"
@@ -457,10 +464,10 @@ export default function AdminUsers() {
               {/* Modal Body */}
               <div className="p-7 space-y-5 overflow-y-auto flex-1 min-h-0">
                 {[
-                  { label: 'Username (Unique handle)', key: 'username', type: 'text', placeholder: 'e.g. patil_cp' },
-                  { label: 'Full Name', key: 'name', type: 'text', placeholder: 'e.g. Inspector Patil' },
-                  { label: 'Official Email Address', key: 'email', type: 'email', placeholder: 'e.g. name@ksp.gov.in' },
-                  { label: 'Precinct / Hub Station', key: 'station', type: 'text', placeholder: 'e.g. Cubbon Park PS' },
+                  { label: t('auth.username', 'Username (Unique handle)'), key: 'username', type: 'text', placeholder: 'e.g. patil_cp' },
+                  { label: t('settings.fullName', 'Full Name'), key: 'name', type: 'text', placeholder: 'e.g. Inspector Patil' },
+                  { label: t('settings.email', 'Official Email Address'), key: 'email', type: 'email', placeholder: 'e.g. name@ksp.gov.in' },
+                  { label: t('common.station', 'Precinct / Hub Station'), key: 'station', type: 'text', placeholder: 'e.g. Cubbon Park PS' },
                 ].map(({ label, key, type, placeholder }) => (
                   <div key={key}>
                     <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider mb-1.5">{label}</label>
@@ -476,16 +483,16 @@ export default function AdminUsers() {
                 ))}
 
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider mb-1.5">Roster Role</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider mb-1.5">{t('admin.roles', 'Roster Role')}</label>
                   <div className="relative">
                     <select
                       value={newUser.role}
                       onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value }))}
                       className="w-full h-10 px-4 pr-9 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all cursor-pointer appearance-none"
                     >
-                      <option value="Field Officer">Field Officer</option>
-                      <option value="Intelligence Analyst">Intelligence Analyst</option>
-                      <option value="Administrator">Administrator</option>
+                      <option value="Field Officer">{t('auth.roleFieldOfficer', 'Field Officer')}</option>
+                      <option value="Intelligence Analyst">{t('auth.roleAnalyst', 'Intelligence Analyst')}</option>
+                      <option value="Administrator">{t('auth.roleAdmin', 'Administrator')}</option>
                     </select>
                     <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
                       <svg className="w-3.5 h-3.5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -503,14 +510,14 @@ export default function AdminUsers() {
                   onClick={() => setAddUserModal(false)}
                   className="h-10 px-5 rounded-full bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t('common.cancel', 'Cancel')}
                 </button>
                 <button
                   type="submit"
                   className="h-10 px-6 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs transition-colors cursor-pointer flex items-center gap-2"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-[#C79A2B]" />
-                  Create Account
+                  {t('admin.addUser', 'Create Account')}
                 </button>
               </div>
             </motion.form>

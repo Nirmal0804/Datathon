@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { User, Camera, Save, Badge } from 'lucide-react';
+import { useTranslation } from '../../../../i18n';
 
 export default function ProfileSettings() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     name: 'John Doe',
     badge: 'KSP-2019-4821',
@@ -16,7 +18,7 @@ export default function ProfileSettings() {
     <div className="space-y-6">
       {/* Avatar */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h3 className="text-base font-semibold text-white mb-5">Personal Identity</h3>
+        <h3 className="text-base font-semibold text-white mb-5">{t('settings.profile', 'Personal Identity')}</h3>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <div className="relative group">
             <div className="w-20 h-20 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center text-2xl font-bold text-white">
@@ -32,7 +34,7 @@ export default function ProfileSettings() {
               <Badge className="w-4 h-4" /> {form.badge} • {form.rank}
             </p>
             <button className="mt-3 text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-slate-300 transition-colors">
-              Upload Photo
+              {t('settings.profile', 'Upload Photo')}
             </button>
           </div>
         </div>
@@ -40,16 +42,16 @@ export default function ProfileSettings() {
 
       {/* Details Form */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h3 className="text-base font-semibold text-white mb-5">Profile Details</h3>
+        <h3 className="text-base font-semibold text-white mb-5">{t('settings.profile', 'Profile Details')}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {[
-            { label: 'Full Name', key: 'name' },
-            { label: 'Badge Number', key: 'badge' },
-            { label: 'Rank / Designation', key: 'rank' },
-            { label: 'Official Email', key: 'email' },
-            { label: 'Contact Number', key: 'phone' },
-            { label: 'Assigned District', key: 'district' },
-            { label: 'Department', key: 'department' },
+            { label: t('settings.name', 'Full Name'), key: 'name' },
+            { label: t('settings.badgeNumber', 'Badge Number'), key: 'badge' },
+            { label: t('settings.role', 'Rank / Designation'), key: 'rank' },
+            { label: t('settings.email', 'Official Email'), key: 'email' },
+            { label: t('settings.phone', 'Contact Number'), key: 'phone' },
+            { label: t('settings.district', 'Assigned District'), key: 'district' },
+            { label: t('settings.role', 'Department'), key: 'department' },
           ].map(field => (
             <div key={field.key} className={field.key === 'department' ? 'sm:col-span-2' : ''}>
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{field.label}</label>
@@ -63,8 +65,8 @@ export default function ProfileSettings() {
           ))}
         </div>
         <div className="flex justify-end mt-6 pt-4 border-t border-slate-800">
-          <button className="flex items-center gap-2 px-5 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors">
-            <Save className="w-4 h-4" /> Save Changes
+          <button className="flex items-center gap-2 px-5 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors cursor-pointer">
+            <Save className="w-4 h-4" /> {t('settings.saveChanges', 'Save Changes')}
           </button>
         </div>
       </div>

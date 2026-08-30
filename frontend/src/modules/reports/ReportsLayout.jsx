@@ -3,6 +3,7 @@ import ReportList, { INITIAL_REPORTS, downloadReportFile } from "./components/Re
 import ReportPreview from "./components/ReportPreview";
 import { useToast } from "../../components/ui/Toast";
 import { useDateTimeFormatter } from "../../utils/dateTime";
+import { useTranslation } from "../../i18n";
 import {
   Plus, History, FileText, BarChart2, Clock, Activity,
   Search, Filter, Calendar, Download, ChevronDown,
@@ -119,13 +120,14 @@ function GenerateModal({ onClose, onGenerate }) {
 }
 
 export default function ReportsLayout({ role = "analyst" }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const { formatDate } = useDateTimeFormatter();
-  const [searchQuery, setSearchQuery]     = useState("");
   const [reportsList, setReportsList]     = useState(INITIAL_REPORTS);
-  const [selectedReport, setSelectedReport] = useState(INITIAL_REPORTS[0] || null);
-  const [showHistory, setShowHistory]     = useState(false);
+  const [selectedReport, setSelectedReport] = useState(INITIAL_REPORTS[0]);
   const [showModal, setShowModal]         = useState(false);
+  const [showHistory, setShowHistory]     = useState(false);
+  const [searchQuery, setSearchQuery]     = useState("");
   const [filterType, setFilterType]       = useState("All");
   const [filterStatus, setFilterStatus]   = useState("All");
 
@@ -172,24 +174,24 @@ export default function ReportsLayout({ role = "analyst" }) {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">Reports Center</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">{t('nav.reports', 'Reports Center')}</h1>
               <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3]">
-                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">{t('admin.active', 'AI Active')}</span>
               </div>
             </div>
-            <p className="text-xs font-semibold text-[#64748B]">Generate, preview, and export intelligence reports.</p>
+            <p className="text-xs font-semibold text-[#64748B]">{t('reports.subtitle', 'Generate, preview, and export intelligence reports.')}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-semibold bg-[#F8F9FB] border border-[#E7ECF3] px-3 py-2 rounded-[12px]">
             <Clock className="w-3.5 h-3.5" />
-            <span>Last updated: {formatDate(new Date())}</span>
+            <span>{t('common.date', 'Last updated')}: {formatDate(new Date())}</span>
           </div>
-          <button onClick={() => setShowHistory(!showHistory)} className={`flex items-center gap-2 px-4 py-2 rounded-[12px] text-xs font-bold uppercase tracking-wider border transition-colors ${showHistory ? "bg-[#0B1F4D] text-white border-[#0B1F4D]" : "bg-[#F8F9FB] text-[#0B1F4D] border-[#E7ECF3] hover:bg-[#F1F5F9]"}`}>
-            <History className="w-3.5 h-3.5" /> Activity Log
+          <button onClick={() => setShowHistory(!showHistory)} className={`flex items-center gap-2 px-4 py-2 rounded-[12px] text-xs font-bold uppercase tracking-wider border transition-colors cursor-pointer ${showHistory ? "bg-[#0B1F4D] text-white border-[#0B1F4D]" : "bg-[#F8F9FB] text-[#0B1F4D] border-[#E7ECF3] hover:bg-[#F1F5F9]"}`}>
+            <History className="w-3.5 h-3.5" /> {t('admin.auditLogs', 'Activity Log')}
           </button>
-          <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 bg-[#0B1F4D] hover:bg-[#0B1F4D]/90 text-white rounded-[12px] text-xs font-bold uppercase tracking-wider transition-colors shadow-sm">
-            <Plus className="w-3.5 h-3.5 text-[#C79A2B]" /> Generate New Report
+          <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 bg-[#0B1F4D] hover:bg-[#0B1F4D]/90 text-white rounded-[12px] text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer">
+            <Plus className="w-3.5 h-3.5 text-[#C79A2B]" /> {t('reports.generateReport', 'Generate New Report')}
           </button>
         </div>
       </div>
@@ -197,10 +199,10 @@ export default function ReportsLayout({ role = "analyst" }) {
       {/* KPI Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { icon: FileText,    label: "Total Reports",  val: kpis.total,      badge: "All time",    badgeColor: "bg-[#0B1F4D]/5 text-[#0B1F4D]",  valColor: "text-[#0B1F4D]" },
-          { icon: CheckCircle2,label: "Ready to Export",val: kpis.ready,      badge: "Available",   badgeColor: "bg-emerald-50 text-emerald-700",   valColor: "text-emerald-600" },
-          { icon: Loader2,     label: "Processing",     val: kpis.processing, badge: "In progress", badgeColor: "bg-blue-50 text-blue-700",         valColor: "text-blue-600" },
-          { icon: HardDrive,   label: "Storage Used",   val: kpis.storage,    badge: "Secure vault",badgeColor: "bg-[#C79A2B]/10 text-[#B45309]",  valColor: "text-[#0B1F4D]" },
+          { icon: FileText,    label: t('reports.totalReports', 'Total Reports'),  val: kpis.total,      badge: "All time",    badgeColor: "bg-[#0B1F4D]/5 text-[#0B1F4D]",  valColor: "text-[#0B1F4D]" },
+          { icon: CheckCircle2,label: t('reports.readyToExport', 'Ready to Export'),val: kpis.ready,      badge: "Available",   badgeColor: "bg-emerald-50 text-emerald-700",   valColor: "text-emerald-600" },
+          { icon: Loader2,     label: t('reports.processing', 'Processing'),     val: kpis.processing, badge: "In progress", badgeColor: "bg-blue-50 text-blue-700",         valColor: "text-blue-600" },
+          { icon: HardDrive,   label: t('admin.diskUsage', 'Storage Used'),   val: kpis.storage,    badge: "Secure vault",badgeColor: "bg-[#C79A2B]/10 text-[#B45309]",  valColor: "text-[#0B1F4D]" },
         ].map((k, i) => {
           const Icon = k.icon;
           return (
@@ -222,19 +224,19 @@ export default function ReportsLayout({ role = "analyst" }) {
       <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-3 shadow-sm flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#94A3B8]" />
-          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search reports..." className="w-full pl-9 pr-3 h-8 bg-[#F8F9FB] border border-[#E7ECF3] rounded-lg text-xs font-bold text-[#0B1F4D] placeholder:text-[#94A3B8] focus:outline-none focus:ring-1 focus:ring-[#0B1F4D]/20" />
+          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder={t('dashboard.searchPlaceholder', 'Search reports...')} className="w-full pl-9 pr-3 h-8 bg-[#F8F9FB] border border-[#E7ECF3] rounded-lg text-xs font-bold text-[#0B1F4D] placeholder:text-[#94A3B8] focus:outline-none focus:ring-1 focus:ring-[#0B1F4D]/20" />
         </div>
         <div className="relative">
           <Filter className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#94A3B8]" />
           <select value={filterType} onChange={e => setFilterType(e.target.value)} className="h-8 pl-7 pr-7 bg-[#F8F9FB] border border-[#E7ECF3] rounded-lg text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer appearance-none">
-            <option value="All">All Types</option>
+            <option value="All">{t('dashboard.allCategories', 'All Types')}</option>
             {["Crime Summary","District Report","Hotspot Analysis","Network Analysis","Predictive Risk"].map(t => <option key={t}>{t}</option>)}
           </select>
           <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#94A3B8] pointer-events-none" />
         </div>
         <div className="relative">
           <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="h-8 px-3 pr-7 bg-[#F8F9FB] border border-[#E7ECF3] rounded-lg text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer appearance-none">
-            <option value="All">All Status</option>
+            <option value="All">{t('common.status', 'All Status')}</option>
             {["Ready","Processing","Failed","Scheduled"].map(s => <option key={s}>{s}</option>)}
           </select>
           <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#94A3B8] pointer-events-none" />
@@ -242,16 +244,16 @@ export default function ReportsLayout({ role = "analyst" }) {
         <div className="relative">
           <Calendar className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#94A3B8]" />
           <select className="h-8 pl-7 pr-7 bg-[#F8F9FB] border border-[#E7ECF3] rounded-lg text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer appearance-none">
-            <option>This Month</option><option>Last 30 Days</option><option>Last 90 Days</option><option>This Year</option>
+            <option>{t('dashboard.monthly', 'This Month')}</option><option>Last 30 Days</option><option>Last 90 Days</option><option>{t('dashboard.yearly', 'This Year')}</option>
           </select>
           <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#94A3B8] pointer-events-none" />
         </div>
         <div className="w-px h-5 bg-[#E7ECF3] mx-1" />
-        <button onClick={() => { setSearchQuery(""); setFilterType("All"); setFilterStatus("All"); }} className="h-8 px-3 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider hover:bg-[#F1F5F9] flex items-center gap-1.5 transition-colors">
-          <RotateCcw className="w-3 h-3" /> Reset
+        <button onClick={() => { setSearchQuery(""); setFilterType("All"); setFilterStatus("All"); }} className="h-8 px-3 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider hover:bg-[#F1F5F9] flex items-center gap-1.5 transition-colors cursor-pointer">
+          <RotateCcw className="w-3 h-3" /> {t('dashboard.clearFilters', 'Reset')}
         </button>
-        <button onClick={() => setShowModal(true)} className="h-8 px-3 rounded-lg bg-[#0B1F4D] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 hover:bg-[#0B1F4D]/90 transition-colors">
-          <Plus className="w-3 h-3 text-[#C79A2B]" /> Generate
+        <button onClick={() => setShowModal(true)} className="h-8 px-3 rounded-lg bg-[#0B1F4D] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 hover:bg-[#0B1F4D]/90 transition-colors cursor-pointer">
+          <Plus className="w-3 h-3 text-[#C79A2B]" /> {t('reports.generateReport', 'Generate')}
         </button>
       </div>
 

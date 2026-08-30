@@ -7,6 +7,7 @@ import HotspotAnalytics from './components/HotspotAnalytics';
 import { SUMMARY_CARDS_DATA } from '../../mock/analyticsData';
 import { getMLForecast } from '../../services/api';
 import { TrendingUp, TrendingDown, ArrowRight, ShieldAlert, Calendar, BarChart2 } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
 // Pure SVG Sparkline Component for KPI Sparklines
 function Sparkline({ points, strokeColor }) {
@@ -39,6 +40,7 @@ function Sparkline({ points, strokeColor }) {
 }
 
 export default function AnalyticsLayout() {
+  const { t } = useTranslation();
   const [timeFilter, setTimeFilter] = useState('This Month');
   const [customRange, setCustomRange] = useState({ start: '', end: '' });
   const [mlForecastData, setMlForecastData] = useState(null);
@@ -58,7 +60,13 @@ export default function AnalyticsLayout() {
     return () => { isMounted = false; };
   }, []);
 
-  const filters = ['Today', 'This Week', 'This Month', 'This Year', 'Custom Range'];
+  const filterOptions = [
+    { key: 'Today', label: t('dashboard.daily', 'Today') },
+    { key: 'This Week', label: t('dashboard.weekly', 'This Week') },
+    { key: 'This Month', label: t('dashboard.monthly', 'This Month') },
+    { key: 'This Year', label: t('dashboard.yearly', 'This Year') },
+    { key: 'Custom Range', label: t('common.filter', 'Custom Range') }
+  ];
 
   // Resolve KPI card values from timeFilter
   const kpis = SUMMARY_CARDS_DATA[timeFilter] || SUMMARY_CARDS_DATA['This Month'];
@@ -73,26 +81,28 @@ export default function AnalyticsLayout() {
             <BarChart2 className="w-6 h-6 text-[#C79A2B]" />
           </div>
           <div className="space-y-1">
-            <h1 className="text-[22px] font-black text-[#0B1F4D] uppercase tracking-wider">Crime Trend Analysis &amp; Alerts</h1>
+            <h1 className="text-[22px] font-black text-[#0B1F4D] uppercase tracking-wider">
+              {t('nav.crimeAnalytics', 'Crime Trend Analysis & Alerts')}
+            </h1>
             <p className="text-xs text-[#64748B] font-medium">
-              Monitor historical crime patterns, detect emerging threats, and receive AI-powered intelligence alerts.
+              {t('analytics.trendsSubtitle', 'Monitor historical crime patterns, detect emerging threats, and receive AI-powered intelligence alerts.')}
             </p>
           </div>
         </div>
 
         {/* Filters buttons list */}
         <div className="flex flex-wrap gap-2 items-center">
-          {filters.map(f => (
+          {filterOptions.map(f => (
             <button
-              key={f}
-              onClick={() => setTimeFilter(f)}
+              key={f.key}
+              onClick={() => setTimeFilter(f.key)}
               className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider cursor-pointer border transition-all ${
-                timeFilter === f
+                timeFilter === f.key
                   ? 'bg-[#0B1F4D] text-white border-[#0B1F4D] shadow-sm'
                   : 'bg-[#F8F9FB] text-[#64748B] border-[#E7ECF3] hover:text-[#0B1F4D] hover:bg-[#F1F5F9]'
               }`}
             >
-              {f}
+              {f.label}
             </button>
           ))}
         </div>
@@ -103,7 +113,7 @@ export default function AnalyticsLayout() {
         <div className="bg-white border border-[#E7ECF3] p-4 rounded-[20px] max-w-xl flex flex-col sm:flex-row gap-4 items-end animate-fade-in shadow-sm">
           <div className="flex-1">
             <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-widest mb-1.5 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> Start Date
+              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> {t('common.date', 'Start Date')}
             </label>
             <input 
               type="date"
@@ -114,7 +124,7 @@ export default function AnalyticsLayout() {
           </div>
           <div className="flex-1">
             <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-widest mb-1.5 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> End Date
+              <Calendar className="w-3.5 h-3.5 text-[#C79A2B]" /> {t('common.date', 'End Date')}
             </label>
             <input 
               type="date"
@@ -130,7 +140,7 @@ export default function AnalyticsLayout() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { 
-            title: 'Overall Crime Growth', 
+            title: t('analytics.crimeRateGrowth', 'Overall Crime Growth'), 
             val: kpis.growth.val, 
             color: kpis.growth.trend === 'up' ? 'text-rose-600' : 'text-emerald-600',
             sparkColor: kpis.growth.trend === 'up' ? '#e11d48' : '#059669',
@@ -138,7 +148,7 @@ export default function AnalyticsLayout() {
             pts: kpis.growth.spark 
           },
           { 
-            title: 'Highest Crime Increase', 
+            title: t('analytics.predictedHotspots', 'Highest Crime Increase'), 
             val: kpis.increase.val, 
             color: 'text-rose-600', 
             sparkColor: '#e11d48',
@@ -146,7 +156,7 @@ export default function AnalyticsLayout() {
             pts: kpis.increase.spark 
           },
           { 
-            title: 'Highest Crime Decrease', 
+            title: t('dashboard.resolvedCases', 'Highest Crime Decrease'), 
             val: kpis.decrease.val, 
             color: 'text-emerald-600', 
             sparkColor: '#059669',
@@ -154,7 +164,7 @@ export default function AnalyticsLayout() {
             pts: kpis.decrease.spark 
           },
           { 
-            title: 'Active Intelligence Alerts', 
+            title: t('dashboard.recentAlerts', 'Active Intelligence Alerts'), 
             val: kpis.alerts.val, 
             color: 'text-[#C79A2B]', 
             sparkColor: '#C79A2B',

@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Network, Users, HelpCircle, Activity } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function CriminalNetworkSummary() {
+  const { t } = useTranslation();
+
   // Mock network graph statistics
   const stats = {
     syndicates: 8,
@@ -37,10 +40,12 @@ export default function CriminalNetworkSummary() {
       <div className="flex items-center justify-between border-b border-slate-800/60 pb-2 mb-2 shrink-0 z-10">
         <div className="flex items-center gap-2">
           <Network className="w-4 h-4 text-primary animate-pulse-soft" />
-          <h3 className="text-sm font-semibold text-white">Criminal Network Summary</h3>
+          <h3 className="text-sm font-semibold text-white">
+            {t('network.criminalNetworkSummary', 'Criminal Network Summary')}
+          </h3>
         </div>
         <span className="text-4xs font-mono font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded uppercase tracking-widest shrink-0">
-          Syndicate Link Map
+          {t('network.syndicates', 'Syndicate Link Map')}
         </span>
       </div>
 
@@ -93,19 +98,19 @@ export default function CriminalNetworkSummary() {
         {/* Network Metrics grid */}
         <div className="flex-1 grid grid-cols-2 gap-2.5 w-full text-xs">
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">Active Syndicates</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.syndicates', 'Active Syndicates')}</span>
             <span className="text-sm font-bold text-rose-400 font-mono mt-0.5 block">{stats.syndicates}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">Mapped Nodes</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.nodes', 'Mapped Nodes')}</span>
             <span className="text-sm font-bold text-indigo-400 font-mono mt-0.5 block">{stats.trackedSuspects}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">Total Links</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.links', 'Total Links')}</span>
             <span className="text-sm font-bold text-blue-400 font-mono mt-0.5 block">{stats.mappedConnections}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">Key Hubs</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.keyHubs', 'Key Hubs')}</span>
             <span className="text-sm font-bold text-amber-400 font-mono mt-0.5 block">{stats.keyHubNodes}</span>
           </div>
         </div>
@@ -114,9 +119,11 @@ export default function CriminalNetworkSummary() {
       <div className="flex justify-between items-center text-4xs text-slate-500 border-t border-slate-850/50 pt-2 shrink-0 z-10">
         <span className="flex items-center gap-1">
           <Activity className="w-3.5 h-3.5 text-indigo-500 animate-pulse-soft" />
-          Graph density: 0.14
+          {t('network.density', 'Graph density')}: 0.14
         </span>
-        <button className="text-primary font-semibold hover:underline">Graph Explorer &rarr;</button>
+        <button className="text-primary font-semibold hover:underline cursor-pointer">
+          {t('network.graphExplorer', 'Graph Explorer')} &rarr;
+        </button>
       </div>
     </div>
   );

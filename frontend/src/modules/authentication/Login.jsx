@@ -72,28 +72,30 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     e.preventDefault();
     if (!selectedRole) {
       addToast({
-        title: 'Access Level Required',
-        message: 'Please select an access level before logging in.',
+        title: t('auth.selectAccessLevel', 'Access Level Required'),
+        message: t('auth.selectAccessLevel', 'Please select an access level before logging in.'),
         type: 'warning',
       });
       return;
     }
 
     if (!email || email.trim() === '') {
-      setErrorMessage('Please enter your official email address.');
+      const msg = t('fir.formValidation', 'Please enter your official email address.');
+      setErrorMessage(msg);
       addToast({
-        title: 'Email Required',
-        message: 'Please enter your official email address.',
+        title: t('auth.email', 'Email Required'),
+        message: msg,
         type: 'warning',
       });
       return;
     }
 
     if (!password || password.trim() === '') {
-      setErrorMessage('Please enter your password.');
+      const msg = t('fir.formValidation', 'Please enter your password.');
+      setErrorMessage(msg);
       addToast({
-        title: 'Password Required',
-        message: 'Please enter your password to authenticate.',
+        title: t('auth.password', 'Password Required'),
+        message: msg,
         type: 'warning',
       });
       return;
@@ -104,10 +106,10 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     const normalizedExpectedEmail = expected.email.toLowerCase();
 
     if (normalizedEnteredEmail !== normalizedExpectedEmail || password !== expected.password) {
-      const errorMsg = 'Invalid credentials. Please verify your official email and password for the selected access level.';
+      const errorMsg = t('common.unauthorizedDesc', 'Invalid credentials. Please verify your official email and password for the selected access level.');
       setErrorMessage(errorMsg);
       addToast({
-        title: 'Authentication Denied',
+        title: t('common.unauthorized', 'Authentication Denied'),
         message: errorMsg,
         type: 'error',
       });
@@ -120,7 +122,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
     setTimeout(() => {
       setIsLoading(false);
       addToast({
-        title: 'Authentication Successful',
+        title: t('common.success', 'Authentication Successful'),
         message: `Welcome back, ${expected.name} (${expected.badge}).`,
         type: 'success',
       });
@@ -153,11 +155,11 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
           </div>
           <div>
             <span className="text-white font-extrabold tracking-tight text-base sm:text-lg flex items-center gap-1.5 leading-none">
-              KARNATAKA POLICE
+              {t('auth.kspTitle', 'KARNATAKA POLICE')}
               <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
             </span>
             <p className="text-xs text-[#F5E7C1] font-medium tracking-wide mt-0.5">
-              Crime Analytics Platform
+              {t('auth.portalName', 'Crime Analytics Platform')}
             </p>
           </div>
         </div>
@@ -200,12 +202,12 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             {t('auth.signIn', 'Secure Portal Login')}
           </h2>
           <p className="text-xs text-slate-500 text-center mb-7 font-medium">
-            Select your access level and enter credentials to authenticate.
+            {t('auth.portalName', 'Select your access level and enter credentials to authenticate.')}
           </p>
 
           {/* Access Level Selector Label */}
           <label className="block text-xs font-bold text-[#142B45] mb-3">
-            Select Access Level <span className="text-[#E00000]">*</span>
+            {t('auth.selectAccessLevel', 'Select Access Level')} <span className="text-[#E00000]">*</span>
           </label>
 
           {/* 3 Circular Access Level Selectors */}
@@ -227,7 +229,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   </div>
                   <span className={`text-[11px] font-bold text-center mt-2.5 leading-tight ${isSelected ? 'text-[#E00000]' : 'text-[#142B45]/80'
                     }`}>
-                    {r.name}
+                    {t(r.nameKey, r.name)}
                   </span>
                 </div>
               );
@@ -264,7 +266,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Select access level to autofill"
+                  placeholder={t('auth.email', 'Select access level to autofill')}
                   className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs font-medium"
                 />
               </div>
@@ -290,7 +292,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
+                  placeholder={t('auth.password', 'Enter password')}
                   className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs"
                 />
                 <button
@@ -309,7 +311,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
               disabled={!selectedRole || isLoading}
               className="w-full py-3.5 mt-6 bg-[#E00000] hover:bg-[#C90000] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.signIn', 'Login')}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.loginButton', 'Login')}
             </button>
           </form>
 

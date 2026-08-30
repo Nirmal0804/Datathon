@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, CheckCircle, Clock, FileWarning, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../../i18n';
 
 function AnimatedNumber({ value }) {
   const [current, setCurrent] = useState(0);
@@ -68,54 +69,56 @@ const MiniSparkline = ({ data, color, isPositive }) => {
   );
 };
 
-const stats = [
-  { 
-    label: 'Total Cases (YTD)', 
-    value: '14,289', 
-    icon: FileWarning, 
-    type: 'info', 
-    trend: '+12.5%',
-    isPositive: false,
-    color: '#0B1F4D',
-    bg: 'bg-[#0B1F4D]/10',
-    sparkline: [40, 50, 45, 60, 55, 70, 80]
-  },
-  { 
-    label: 'Active Investigations', 
-    value: '3,492', 
-    icon: Clock, 
-    type: 'warning', 
-    trend: '-5.2%',
-    isPositive: true,
-    color: '#C79A2B',
-    bg: 'bg-[#C79A2B]/10',
-    sparkline: [80, 75, 85, 70, 60, 65, 55]
-  },
-  { 
-    label: 'Resolved Cases', 
-    value: '10,797', 
-    icon: CheckCircle, 
-    type: 'success', 
-    trend: '+18.1%',
-    isPositive: true,
-    color: '#10B981',
-    bg: 'bg-emerald-500/10',
-    sparkline: [50, 55, 60, 75, 80, 85, 95]
-  },
-  { 
-    label: 'Unregistered Incidents', 
-    value: '142', 
-    icon: AlertCircle, 
-    type: 'critical', 
-    trend: '+2.4%',
-    isPositive: false,
-    color: '#EF4444',
-    bg: 'bg-rose-500/10',
-    sparkline: [20, 22, 25, 23, 28, 30, 35]
-  },
-];
-
 export default function CrimeStatistics() {
+  const { t } = useTranslation();
+
+  const stats = [
+    { 
+      label: t('district.totalIncidents', 'Total Cases (YTD)'), 
+      value: '14,289', 
+      icon: FileWarning, 
+      type: 'info', 
+      trend: '+12.5%',
+      isPositive: false,
+      color: '#0B1F4D',
+      bg: 'bg-[#0B1F4D]/10',
+      sparkline: [40, 50, 45, 60, 55, 70, 80]
+    },
+    { 
+      label: t('dashboard.activeCases', 'Active Investigations'), 
+      value: '3,492', 
+      icon: Clock, 
+      type: 'warning', 
+      trend: '-5.2%',
+      isPositive: true,
+      color: '#C79A2B',
+      bg: 'bg-[#C79A2B]/10',
+      sparkline: [80, 75, 85, 70, 60, 65, 55]
+    },
+    { 
+      label: t('dashboard.resolvedCases', 'Resolved Cases'), 
+      value: '10,797', 
+      icon: CheckCircle, 
+      type: 'success', 
+      trend: '+18.1%',
+      isPositive: true,
+      color: '#10B981',
+      bg: 'bg-emerald-500/10',
+      sparkline: [50, 55, 60, 75, 80, 85, 95]
+    },
+    { 
+      label: t('dashboard.pendingCases', 'Unregistered Incidents'), 
+      value: '142', 
+      icon: AlertCircle, 
+      type: 'critical', 
+      trend: '+2.4%',
+      isPositive: false,
+      color: '#EF4444',
+      bg: 'bg-rose-500/10',
+      sparkline: [20, 22, 25, 23, 28, 30, 35]
+    },
+  ];
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 h-full">
       {stats.map((stat, idx) => (
@@ -149,7 +152,7 @@ export default function CrimeStatistics() {
 
           {/* Bottom: Sparkline Context */}
           <div className="mt-4 pt-4 border-t border-[#F1F5F9] flex justify-between items-end">
-            <span className="text-[10px] font-bold text-slate-400">Last 7 days</span>
+            <span className="text-[10px] font-bold text-slate-400">{t('dashboard.last7Days', 'Last 7 days')}</span>
             <MiniSparkline data={stat.sparkline} color={stat.color} isPositive={stat.isPositive} />
           </div>
         </motion.div>

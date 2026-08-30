@@ -4,15 +4,17 @@ import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../../components/ui/LazyImage';
+import { useTranslation } from '../../../i18n';
 
 export default function TopNavbar({ toggleMobileMenu, role }) {
+  const { t } = useTranslation();
   const { unreadCount, togglePanel } = useNotification();
 
   const defaultProfile = role === 'officer'
-    ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }
+    ? { initials: 'RK', name: 'Rakesh Kumar', roleText: t('auth.roleFieldOfficer', 'Inspector'), station: 'Mysuru Rural Police' }
     : role === 'admin'
-    ? { initials: 'SA', name: 'Admin S. Kumar', roleText: 'System Administrator', station: 'State Tech HQ' }
-    : { initials: 'AR', name: 'Analyst S. Rao', roleText: 'Intelligence Analyst', station: 'State Command HQ' };
+    ? { initials: 'SA', name: 'Admin S. Kumar', roleText: t('auth.roleAdmin', 'System Administrator'), station: 'State Tech HQ' }
+    : { initials: 'AR', name: 'Analyst S. Rao', roleText: t('auth.roleAnalyst', 'Intelligence Analyst'), station: 'State Command HQ' };
 
   const [customProfile, setCustomProfile] = React.useState(() => {
     try {
@@ -127,7 +129,7 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
           className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-[#D49A00] hover:bg-[#b88500] text-[#142B45] text-xs font-extrabold rounded-[14px] shadow-xs hover:shadow transition-all duration-200 ease-in-out cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>Quick FIR</span>
+          <span>{t('fir.registerFIR', 'Quick FIR')}</span>
         </motion.button>
 
         {/* Notifications */}
@@ -136,7 +138,7 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative w-9 h-9 sm:w-[42px] sm:h-[42px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 border border-white/20 shadow-xs transition-all duration-200 ease-in-out cursor-pointer"
-          aria-label={`Notifications (${unreadCount} unread)`}
+          aria-label={t('nav.notifications', 'Notifications')}
         >
           <motion.div
             key={unreadCount}

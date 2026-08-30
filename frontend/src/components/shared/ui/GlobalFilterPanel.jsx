@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslation } from '../../../i18n';
 
 export default function GlobalFilterPanel({ title, onApply, onReset, children, layout = 'grid', compact = false }) {
+  const { t } = useTranslation();
+
   return (
     <form onSubmit={(e) => { e.preventDefault(); onApply && onApply(); }} className={`bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm w-full ${compact ? 'p-6 mb-6' : 'p-7 sm:p-8 mb-8'}`}>
       {title && (
@@ -27,7 +30,7 @@ export default function GlobalFilterPanel({ title, onApply, onReset, children, l
                 onClick={onReset}
                 className="h-11 px-6 text-xs font-bold rounded-[16px] bg-white border border-[#E5E7EB] text-[#0F172A] hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
               >
-                Reset
+                {t('dashboard.resetFilters', 'Reset')}
               </button>
             )}
             {onApply && (
@@ -35,7 +38,7 @@ export default function GlobalFilterPanel({ title, onApply, onReset, children, l
                 type="submit"
                 className="h-11 px-6 text-xs font-bold rounded-[16px] bg-[#0B1F4D] text-white hover:bg-[#0A192F] transition-colors shadow-sm flex items-center justify-center cursor-pointer"
               >
-                Apply Filters
+                {t('dashboard.applyFilters', 'Apply Filters')}
               </button>
             )}
           </div>

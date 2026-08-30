@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, ChevronDown, HelpCircle, Key, LayoutDashboard, FileText, Map, Activity, Network, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const HELP_TOPICS = [
   {
@@ -38,44 +39,45 @@ const HELP_TOPICS = [
     category: 'Analytics',
     icon: Activity,
     q: 'How does ML hotspot detection and crime risk index calculation work?',
-    a: 'Hotspot detection runs spatial DBSCAN clustering on incident coordinates to identify density centers. The Composite Crime Risk Index (CCRI) models multi-factor precinct scores based on volume, severity, and closure velocity.',
+    a: 'Hotspot detection clusters incidents using spatio-temporal algorithms, while the composite crime risk index weighs incident volume, chargesheet completion speed, and offense severity.',
   },
   {
     category: 'Network Analysis',
     icon: Network,
-    q: 'How do I inspect syndicates and co-offender networks?',
-    a: 'Open the Network Analysis module to view the interactive sociocentric graph. Drag nodes, click on accused profiles to inspect arrest histories, and search individual suspect names or FIR identifiers.',
+    q: 'How are criminal entity associations and syndicate graphs structured?',
+    a: 'Network graphs connect suspects sharing co-accused FIR filings, common jurisdiction ties, and syndicate memberships, illustrating gang hierarchies and centrality scores.',
   },
   {
-    category: 'Alerts',
+    category: 'Alerts & Feeds',
     icon: Bell,
     q: 'What triggers automated security and anomaly alerts?',
-    a: 'The anomaly detection engine triggers automated notifications when localized crime incidents exceed baseline thresholds, when repeat offenders are logged across multiple stations, or when high-severity FIRs are registered.',
+    a: 'Automated AI anomaly detectors trigger alerts when incident intake frequencies exceed historical baselines, when high-risk repeat offenders are flagged, or when system health metrics fluctuate.',
   },
 ];
 
 export default function HelpCenter({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [openIndex, setOpenIndex] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [openIndex, setOpenIndex] = useState(null);
 
   const categories = ['All', ...new Set(HELP_TOPICS.map((t) => t.category))];
 
-  const filteredTopics = HELP_TOPICS.filter((t) => {
-    const matchesCat = selectedCategory === 'All' || t.category === selectedCategory;
+  const filteredTopics = HELP_TOPICS.filter((topic) => {
+    const matchesCat = selectedCategory === 'All' || topic.category === selectedCategory;
     const matchesSearch =
       !searchQuery.trim() ||
-      t.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.a.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.category.toLowerCase().includes(searchQuery.toLowerCase());
+      topic.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      topic.a.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      topic.category.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
   return (
     <InfoPageLayout
-      title="Help Center"
-      category="Support"
-      description="Quick answers, procedural guidance, and operational tutorials for using the CrimeIntel intelligence platform."
+      title={t('public.helpCenterTitle', 'Help Center')}
+      category={t('nav.support', 'Support')}
+      description={t('public.helpCenterSubtitle', 'Quick answers, procedural guidance, and operational tutorials for using the CrimeIntel intelligence platform.')}
       activeRoute="/help"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}

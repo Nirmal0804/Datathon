@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { ChevronRight, Home, LayoutDashboard } from 'lucide-react';
 import Navbar from '../../../components/shared/navigation/Navbar';
 import Footer from '../../../components/shared/navigation/Footer';
+import { useTranslation } from '../../../i18n';
 
 export default function InfoPageLayout({
   title,
@@ -14,6 +15,8 @@ export default function InfoPageLayout({
   role = null,
   children,
 }) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     document.title = `CrimeIntel | ${title}`;
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -33,6 +36,8 @@ export default function InfoPageLayout({
       onLoginClick();
     }
   };
+
+  const categoryLabel = category === 'Resources' ? t('nav.resources', 'Resources') : t('nav.support', category);
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] font-sans text-[#0F172A] flex flex-col selection:bg-[#0B1F4D]/10 selection:text-[#0B1F4D]">
@@ -55,17 +60,17 @@ export default function InfoPageLayout({
               {role ? (
                 <>
                   <LayoutDashboard className="w-3.5 h-3.5 text-[#64748B]" />
-                  <span>Dashboard</span>
+                  <span>{t('public.dashboard', 'Dashboard')}</span>
                 </>
               ) : (
                 <>
                   <Home className="w-3.5 h-3.5 text-[#64748B]" />
-                  <span>Home</span>
+                  <span>{t('nav.home', 'Home')}</span>
                 </>
               )}
             </button>
             <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-            <span className="text-[#64748B] font-medium">{category}</span>
+            <span className="text-[#64748B] font-medium">{categoryLabel}</span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
             <span className="font-bold text-[#0B1F4D] truncate">{title}</span>
           </nav>
@@ -73,7 +78,7 @@ export default function InfoPageLayout({
           {/* Category Tag */}
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 text-[#0B1F4D] font-extrabold text-[11px] uppercase tracking-wider mb-2.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#C79A2B]" />
-            {category}
+            {categoryLabel}
           </div>
 
           {/* Title & Description */}
@@ -89,7 +94,7 @@ export default function InfoPageLayout({
 
           {lastUpdated && (
             <p className="text-xs font-semibold text-[#94A3B8] mt-3">
-              Last Updated: <span className="text-[#64748B] font-bold">{lastUpdated}</span>
+              {t('reports.lastUpdated', 'Last Updated')}: <span className="text-[#64748B] font-bold">{lastUpdated}</span>
             </p>
           )}
         </div>

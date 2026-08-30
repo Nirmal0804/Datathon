@@ -7,6 +7,7 @@ import {
   Trash2, FileText, Terminal, Calendar, X
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 // ─── Static Data ───────────────────────────────────────────────────────────────
 const PLATFORM_SERVICES = [
@@ -131,6 +132,7 @@ function CircleProgress({ pct, color }) {
 }
 
 export default function AdminSystemHealth() {
+  const { t } = useTranslation();
   const [expandedAlert, setExpandedAlert] = useState(null);
 
   const { addToast } = useToast();
@@ -259,10 +261,10 @@ export default function AdminSystemHealth() {
   };
 
   const KPI_CARDS = [
-    { label: 'CPU Usage', pct: 42, sub: 'Normal',      sparkKey: 'cpu',     sparkColor: '#3B82F6', circColor: '#3B82F6', statusCls: 'text-sky-600 bg-sky-50 border-sky-200' },
-    { label: 'Memory',    pct: 61, sub: 'Stable',      sparkKey: 'memory',  sparkColor: '#10B981', circColor: '#10B981', statusCls: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
-    { label: 'Storage',   pct: 38, sub: 'Healthy',     sparkKey: 'storage', sparkColor: '#06B6D4', circColor: '#06B6D4', statusCls: 'text-cyan-600 bg-cyan-50 border-cyan-200' },
-    { label: 'Network',   pct: 12, sub: 'Low Traffic', sparkKey: 'network', sparkColor: '#8B5CF6', circColor: '#8B5CF6', statusCls: 'text-violet-600 bg-violet-50 border-violet-200' },
+    { label: t('admin.cpuUsage', 'CPU Usage'), pct: 42, sub: t('admin.healthy', 'Normal'),      sparkKey: 'cpu',     sparkColor: '#3B82F6', circColor: '#3B82F6', statusCls: 'text-sky-600 bg-sky-50 border-sky-200' },
+    { label: t('admin.memoryUsage', 'Memory'),    pct: 61, sub: t('admin.healthy', 'Stable'),      sparkKey: 'memory',  sparkColor: '#10B981', circColor: '#10B981', statusCls: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
+    { label: t('admin.diskUsage', 'Storage'),   pct: 38, sub: t('admin.healthy', 'Healthy'),     sparkKey: 'storage', sparkColor: '#06B6D4', circColor: '#06B6D4', statusCls: 'text-cyan-600 bg-cyan-50 border-cyan-200' },
+    { label: t('admin.networkTraffic', 'Network'),   pct: 12, sub: t('common.low', 'Low Traffic'), sparkKey: 'network', sparkColor: '#8B5CF6', circColor: '#8B5CF6', statusCls: 'text-violet-600 bg-violet-50 border-violet-200' },
   ];
 
   const cpuData = [38,40,35,42,45,48,42,44,46,50,48,44,43,42,40,41,43,44,42,43,42,41,42,42];
@@ -286,32 +288,32 @@ export default function AdminSystemHealth() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">Platform Diagnostic Suite</h1>
+              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">{t('admin.systemHealth', 'Platform Diagnostic Suite')}</h1>
               <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-0.5 rounded-full font-extrabold text-xs flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                System Healthy
+                {t('admin.healthy', 'System Healthy')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Real-time infrastructure monitoring, server performance, database health and platform diagnostics.
+              {t('admin.overviewSubtitle', 'Real-time infrastructure monitoring, server performance, database health and platform diagnostics.')}
             </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5 bg-[#F8F9FB] border border-[#E7ECF3] px-3 py-1.5 rounded-full text-xs font-bold text-[#64748B]">
             <Clock className="w-3.5 h-3.5 text-[#0B1F4D]" />
-            Updated: 2 sec ago
+            {t('common.date', 'Updated')}: 2 sec ago
           </div>
           <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-extrabold text-emerald-700">
             <TrendingUp className="w-3.5 h-3.5" />
-            Uptime: 99.98%
+            {t('admin.uptime', 'Uptime')}: 99.98%
           </div>
           <button
             onClick={handleExportDiagnostics}
             className="h-9 px-4 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#143275] transition-colors duration-150 flex items-center gap-1.5 cursor-pointer shadow-xs"
           >
             <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
-            Export Diagnostics
+            {t('reports.exportCSV', 'Export Diagnostics')}
           </button>
         </div>
       </div>

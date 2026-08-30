@@ -5,6 +5,7 @@ import {
   RefreshCw, Save, Send, Eye, Trash2, Key, Database, FileText, Map, Activity, Layers, Globe, Edit3, X, Code, Check, Lock, FileSpreadsheet
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 // ─── Initial Roles & Permissions Data ──────────────────────────────────────────
 const INITIAL_ROLES = [
@@ -229,6 +230,7 @@ function ModernToggle({ checked, onChange, disabled }) {
 }
 
 export default function AdminRoles() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   // Edit Mode State
@@ -608,13 +610,13 @@ export default function AdminRoles() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">Privileges &amp; Role Management</h1>
+              <h1 className="text-xl font-black text-[#0F172A] tracking-tight">{t('admin.roleManagement', 'Privileges & Role Management')}</h1>
               <span className="bg-[#F8F9FB] text-[#0B1F4D] border border-[#E7ECF3] px-3 py-0.5 rounded-full font-extrabold text-xs">
-                {roles.length} Configured Roles
+                {roles.length} {t('admin.roles', 'Configured Roles')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Configure role-based access control (RBAC), permission groups, and operational privileges across the Karnataka Police Intelligence Platform.
+              {t('admin.overviewSubtitle', 'Configure role-based access control (RBAC), permission groups, and operational privileges.')}
             </p>
           </div>
         </div>
@@ -627,12 +629,12 @@ export default function AdminRoles() {
               className="h-10 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors duration-150 flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <Edit3 className="w-4 h-4 text-[#C79A2B]" />
-              Edit Privileges
+              {t('admin.editRole', 'Edit Privileges')}
             </button>
           ) : (
             <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-3.5 py-2 rounded-full text-xs font-extrabold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#0B1F4D] animate-pulse" />
-              Editing Mode Active
+              {t('admin.active', 'Editing Mode Active')}
             </span>
           )}
 
@@ -641,7 +643,7 @@ export default function AdminRoles() {
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            Create New Role
+            {t('admin.createRole', 'Create New Role')}
           </button>
 
           <button
@@ -649,7 +651,7 @@ export default function AdminRoles() {
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
             <Copy className="w-4 h-4" />
-            Clone Role
+            {t('admin.cloneRole', 'Clone Role')}
           </button>
 
           <button
@@ -657,7 +659,7 @@ export default function AdminRoles() {
             className="h-10 px-5 rounded-full border border-[#E7ECF3] bg-white text-[#0B1F4D] font-extrabold text-xs hover:bg-[#F8F9FB] transition-colors duration-150 flex items-center gap-2 cursor-pointer"
           >
             <Download className="w-4 h-4 text-[#0B1F4D]" />
-            Export Matrix
+            {t('reports.exportCSV', 'Export Matrix')}
           </button>
         </div>
       </div>
@@ -665,8 +667,8 @@ export default function AdminRoles() {
       {/* ── 2. SECTION 1 — Role Cards Grid (3 Columns) ────────────────────── */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Select System Role</h2>
-          <span className="text-xs font-semibold text-[#64748B]">{roles.length} Roles Configured</span>
+          <h2 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('admin.roles', 'Select System Role')}</h2>
+          <span className="text-xs font-semibold text-[#64748B]">{roles.length} {t('admin.roles', 'Roles Configured')}</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -693,7 +695,9 @@ export default function AdminRoles() {
                         {r.badge || <Icon className="w-5 h-5" />}
                       </div>
                       <div>
-                        <h3 className="text-sm font-black text-[#0F172A]">{r.name}</h3>
+                        <h3 className="text-sm font-black text-[#0F172A]">
+                          {r.id === 'admin' ? t('auth.roleAdmin', 'System Administrator') : r.id === 'analyst' ? t('auth.roleAnalyst', 'Intelligence Analyst') : r.id === 'officer' ? t('auth.roleFieldOfficer', 'Field Officer') : r.name}
+                        </h3>
                         <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">{r.level}</span>
                       </div>
                     </div>
@@ -701,7 +705,7 @@ export default function AdminRoles() {
                     {isSelected && (
                       <span className="bg-[#0B1F4D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shrink-0 flex items-center gap-1 shadow-sm">
                         <CheckCircle className="w-3 h-3 text-[#C79A2B]" />
-                        Editing
+                        {t('admin.active', 'Editing')}
                       </span>
                     )}
                   </div>
@@ -715,11 +719,11 @@ export default function AdminRoles() {
                 <div>
                   <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#E7ECF3] mb-4">
                     <div>
-                      <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Active Users</p>
-                      <p className="text-xs font-black text-[#0F172A]">{r.userCount} personnel</p>
+                      <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">{t('admin.activeUsers', 'Active Users')}</p>
+                      <p className="text-xs font-black text-[#0F172A]">{r.userCount} {t('cases.officer', 'personnel')}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Last Modified</p>
+                      <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">{t('common.date', 'Last Modified')}</p>
                       <p className="text-xs font-black text-[#0F172A]">{r.lastModified}</p>
                     </div>
                   </div>
@@ -737,7 +741,7 @@ export default function AdminRoles() {
                           : 'bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white'
                       }`}
                     >
-                      {isSelected ? 'Currently Selected' : 'Manage Permissions'}
+                      {isSelected ? t('admin.selected', 'Currently Selected') : t('admin.managePermissions', 'Manage Permissions')}
                     </button>
 
                     <button
@@ -746,7 +750,7 @@ export default function AdminRoles() {
                         e.stopPropagation();
                         setPendingDeleteRole(r);
                       }}
-                      title="Delete Role"
+                      title={t('admin.deleteRole', 'Delete Role')}
                       className="w-9 h-9 rounded-full border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-colors duration-150 flex items-center justify-center cursor-pointer shrink-0"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -769,11 +773,11 @@ export default function AdminRoles() {
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{selectedRole.badge}</span>
                 <h2 className="text-lg font-black text-[#0F172A] tracking-tight">
-                  {selectedRole.name} — Permission Configuration
+                  {selectedRole.name} — {t('admin.rolePermissions', 'Permission Configuration')}
                 </h2>
               </div>
               <p className="text-xs font-semibold text-[#64748B] mt-1">
-                Modify fine-grained operational access control lists (ACL) for this security group.
+                {t('admin.overviewSubtitle', 'Modify fine-grained operational access control lists (ACL) for this security group.')}
               </p>
             </div>
 
@@ -785,7 +789,7 @@ export default function AdminRoles() {
                   ? 'bg-amber-50 text-amber-700 border-amber-200'
                   : 'bg-emerald-50 text-emerald-700 border-emerald-200'
               }`}>
-                {selectedRole.riskLevel === 'high' ? '🔴 High Risk Role' : selectedRole.riskLevel === 'medium' ? '🟡 Medium Risk Role' : '🟢 Low Risk Role'}
+                {selectedRole.riskLevel === 'high' ? `🔴 ${t('common.critical', 'High Risk Role')}` : selectedRole.riskLevel === 'medium' ? `🟡 ${t('common.medium', 'Medium Risk Role')}` : `🟢 ${t('common.low', 'Low Risk Role')}`}
               </span>
 
               <button
@@ -794,7 +798,7 @@ export default function AdminRoles() {
                 className="h-8 px-3 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-xs font-extrabold hover:bg-rose-600 hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                Delete Role
+                {t('admin.deleteRole', 'Delete Role')}
               </button>
             </div>
           </div>
@@ -802,22 +806,22 @@ export default function AdminRoles() {
           {/* ── 3A. Summary KPI Cards ────────────────────────────────────────── */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Granted Permissions</p>
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">{t('admin.grantedPermissions', 'Granted Permissions')}</p>
               <p className="text-2xl font-black text-emerald-600 mt-1">{kpiStats.granted}</p>
             </div>
 
             <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Restricted Permissions</p>
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">{t('admin.restrictedPermissions', 'Restricted Permissions')}</p>
               <p className="text-2xl font-black text-rose-600 mt-1">{kpiStats.restricted}</p>
             </div>
 
             <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">High-Risk Privileges</p>
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">{t('admin.highRiskPrivileges', 'High-Risk Privileges')}</p>
               <p className="text-2xl font-black text-amber-600 mt-1">{kpiStats.highRiskGranted}</p>
             </div>
 
             <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[18px] p-4 text-center">
-              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Assigned Personnel</p>
+              <p className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">{t('admin.assignedPersonnel', 'Assigned Personnel')}</p>
               <p className="text-2xl font-black text-[#0B1F4D] mt-1">{kpiStats.assignedUsers}</p>
             </div>
           </div>
@@ -830,9 +834,9 @@ export default function AdminRoles() {
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Security Risk Assessment</h4>
+                <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('admin.securityRiskAssessment', 'Security Risk Assessment')}</h4>
                 <p className="text-xs font-bold text-[#0F172A] mt-1">
-                  {selectedRole.riskLevel === 'high' ? 'High Privilege Exposure' : 'Operational Scope Assessment'}
+                  {selectedRole.riskLevel === 'high' ? t('common.critical', 'High Privilege Exposure') : t('common.status', 'Operational Scope Assessment')}
                 </p>
                 <p className="text-xs font-medium text-[#64748B] mt-1 leading-relaxed">
                   {selectedRole.riskReason}
@@ -842,7 +846,7 @@ export default function AdminRoles() {
 
             {/* Inheritance Panel */}
             <div className="bg-[#F8F9FB] border border-[#E7ECF3] rounded-[20px] p-5">
-              <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-3">Permission Hierarchy &amp; Inheritance</h4>
+              <h4 className="text-xs font-black text-[#0F172A] uppercase tracking-wider mb-3">{t('admin.permissionHierarchy', 'Permission Hierarchy & Inheritance')}</h4>
               <div className="flex flex-wrap items-center gap-2">
                 {(selectedRole.inheritance || []).map((roleName, idx) => (
                   <React.Fragment key={roleName}>
@@ -864,7 +868,7 @@ export default function AdminRoles() {
               <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search permissions (e.g. backup, delete, FIR)..."
+                placeholder={t('dashboard.searchPlaceholder', 'Search permissions (e.g. backup, delete, FIR)...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-10 pl-10 pr-4 rounded-full border border-[#E7ECF3] bg-[#F8F9FB] text-xs font-bold text-[#0F172A] placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D]/20 transition-all"
@@ -874,7 +878,7 @@ export default function AdminRoles() {
                   onClick={() => setSearchQuery('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#64748B] hover:text-[#0F172A]"
                 >
-                  Clear
+                  {t('dashboard.clearFilters', 'Clear')}
                 </button>
               )}
             </div>
@@ -888,7 +892,7 @@ export default function AdminRoles() {
                 }}
                 className="text-xs font-extrabold text-[#0B1F4D] hover:underline cursor-pointer"
               >
-                Expand All
+                {t('admin.expandAll', 'Expand All')}
               </button>
               <span className="text-[#E7ECF3]">|</span>
               <button
@@ -899,7 +903,7 @@ export default function AdminRoles() {
                 }}
                 className="text-xs font-extrabold text-[#64748B] hover:underline cursor-pointer"
               >
-                Collapse All
+                {t('admin.collapseAll', 'Collapse All')}
               </button>
             </div>
           </div>

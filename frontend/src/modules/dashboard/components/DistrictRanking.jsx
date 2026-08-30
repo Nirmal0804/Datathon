@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
+import { useTranslation } from '../../../i18n';
 
 const mockTrends = [
   { trend: 'up', value: '12%' },
@@ -12,6 +13,7 @@ const mockTrends = [
 ];
 
 export default function DistrictRanking({ districtData }) {
+  const { t } = useTranslation();
   const topList = (districtData || []).slice(0, 5);
   const maxCount = topList[0]?.count || 1;
 
@@ -23,18 +25,22 @@ export default function DistrictRanking({ districtData }) {
             <Award className="w-5 h-5 text-[#C79A2B]" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">District Rankings</h3>
-            <p className="text-xs font-semibold text-[#64748B]">Top 5 Active Districts</p>
+            <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">
+              {t('district.districtRankings', 'District Rankings')}
+            </h3>
+            <p className="text-xs font-semibold text-[#64748B]">
+              {t('district.topActiveDistricts', 'Top 5 Active Districts')}
+            </p>
           </div>
         </div>
-        <button className="text-[10px] font-bold text-[#0B1F4D] hover:text-[#C79A2B] transition-colors uppercase tracking-widest px-3 py-1.5 bg-[#F8F9FB] hover:bg-[#F1F5F9] rounded-lg">
-          View All
+        <button className="text-[10px] font-bold text-[#0B1F4D] hover:text-[#C79A2B] transition-colors uppercase tracking-widest px-3 py-1.5 bg-[#F8F9FB] hover:bg-[#F1F5F9] rounded-lg cursor-pointer">
+          {t('dashboard.viewAll', 'View All')}
         </button>
       </div>
 
       <div className="flex-1 flex flex-col justify-between">
         {topList.length === 0 ? (
-          <EmptyState type="analytics" title="No District Metrics" message="No district crime metrics found." compact={true} />
+          <EmptyState type="analytics" title={t('district.noMetrics', 'No District Metrics')} message={t('district.noMetricsDesc', 'No district crime metrics found.')} compact={true} />
         ) : (
           topList.map((d, i) => {
             const percentage = (d.count / maxCount) * 100;

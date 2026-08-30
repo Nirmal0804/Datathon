@@ -14,85 +14,121 @@ import {
   FolderOpen,
   RotateCcw,
 } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
-const PRESETS = {
+const PRESET_KEYS = {
   search: {
     Icon: SearchX,
-    title: 'No Results Found',
-    message: 'Your search returned no matching records. Try checking for spelling errors or adjusting your query terms.',
-    actionLabel: 'Clear Search',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Results Found',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'Your search returned no matching records. Try checking for spelling errors or adjusting your query terms.',
+    actionKey: 'common.clear',
+    actionDefault: 'Clear Search',
   },
   filters: {
     Icon: FilterX,
-    title: 'No Matching Records',
-    message: 'No records match your selected filter criteria. Try adjusting the date range, district, or category parameters.',
-    actionLabel: 'Clear Filters',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Matching Records',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No records match your selected filter criteria. Try adjusting parameters.',
+    actionKey: 'dashboard.clearFilters',
+    actionDefault: 'Clear Filters',
   },
   table: {
     Icon: FileX,
-    title: 'No Data Available',
-    message: 'There are no active records to display for this view at this time.',
-    actionLabel: 'Refresh Table',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Data Available',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'There are no active records to display for this view at this time.',
+    actionKey: 'dashboard.liveSync',
+    actionDefault: 'Refresh Table',
   },
   map: {
     Icon: MapPinOff,
-    title: 'No Locations to Display',
-    message: 'No geographic crime incidents or station hotspots correspond to the active filter parameters in this viewport.',
-    actionLabel: 'Reset Map View',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Locations to Display',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No geographic crime incidents or station hotspots correspond to active filters.',
+    actionKey: 'map.resetView',
+    actionDefault: 'Reset Map View',
   },
   analytics: {
     Icon: BarChart3,
-    title: 'No Analytics Available',
-    message: 'No statistical data points exist for the chosen timeframe to generate this visualization accurately.',
-    actionLabel: 'Reset Parameters',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Analytics Available',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No statistical data points exist for the chosen timeframe to generate this visualization.',
+    actionKey: 'common.reset',
+    actionDefault: 'Reset Parameters',
   },
   network: {
     Icon: Network,
-    title: 'No Connections Found',
-    message: 'No criminal entity associations, shared gang networks, or repeat co-offender relationships were detected.',
-    actionLabel: 'Expand Network Scope',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Connections Found',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No criminal entity associations or repeat co-offender relationships detected.',
+    actionKey: 'network.expandNetwork',
+    actionDefault: 'Expand Network Scope',
   },
   audit: {
     Icon: ScrollText,
-    title: 'No Audit Events',
-    message: 'No system security events, authentication attempts, or privilege audit logs have been recorded for this filter range.',
-    actionLabel: 'Reset Log Filters',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Audit Events',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No system security events or authentication logs have been recorded for this filter range.',
+    actionKey: 'dashboard.clearFilters',
+    actionDefault: 'Reset Log Filters',
   },
   alerts: {
     Icon: BellOff,
-    title: 'No Active Alerts',
-    message: 'All crime intelligence channels and anomaly triggers are operating within normal operational thresholds.',
-    actionLabel: 'View Historical Feed',
+    titleKey: 'notifications.noNotifications',
+    titleDefault: 'No Active Alerts',
+    messageKey: 'notifications.noNotificationsDesc',
+    messageDefault: 'All crime intelligence channels and anomaly triggers are operating within normal operational thresholds.',
+    actionKey: 'dashboard.viewAll',
+    actionDefault: 'View Historical Feed',
   },
   users: {
     Icon: Users,
-    title: 'No Users Found',
-    message: 'No officer accounts or system personnel match the selected status or role filters.',
-    actionLabel: 'Clear User Filter',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Users Found',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No officer accounts or system personnel match the selected status or role filters.',
+    actionKey: 'dashboard.clearFilters',
+    actionDefault: 'Clear User Filter',
   },
   'no-records': {
     Icon: FolderOpen,
-    title: 'No Crime Records Found',
-    message: 'No FIR or chargesheet records match your current filters. Adjust your parameters to view data.',
-    actionLabel: 'Clear Filters',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Crime Records Found',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'No FIR or chargesheet records match your current filters.',
+    actionKey: 'dashboard.clearFilters',
+    actionDefault: 'Clear Filters',
   },
   'no-results': {
     Icon: SearchX,
-    title: 'No Results Found',
-    message: 'Your query returned no matching entries.',
-    actionLabel: 'Clear Search',
+    titleKey: 'common.noRecords',
+    titleDefault: 'No Results Found',
+    messageKey: 'common.noRecordsDesc',
+    messageDefault: 'Your query returned no matching entries.',
+    actionKey: 'common.clear',
+    actionDefault: 'Clear Search',
   },
   unauthorized: {
     Icon: ShieldOff,
-    title: 'Access Restricted',
-    message: 'You do not have the required operational clearance to view these intelligence records.',
-    actionLabel: 'Return to Dashboard',
+    titleKey: 'common.unauthorized',
+    titleDefault: 'Access Restricted',
+    messageKey: 'common.unauthorizedDesc',
+    messageDefault: 'You do not have the required operational clearance to view these intelligence records.',
+    actionKey: 'public.dashboard',
+    actionDefault: 'Return to Dashboard',
   },
 };
 
 /**
- * Production-ready reusable EmptyState component.
- * Distinguishes empty states from loading skeletons and error screens.
+ * Production-ready reusable EmptyState component with full i18n support.
  */
 export default function EmptyState({
   type = 'table',
@@ -107,11 +143,12 @@ export default function EmptyState({
   compact = false,
   className = '',
 }) {
-  const preset = PRESETS[type] || PRESETS.table;
+  const { t } = useTranslation();
+  const preset = PRESET_KEYS[type] || PRESET_KEYS.table;
   const IconComponent = CustomIcon || preset.Icon;
-  const title = customTitle || preset.title;
-  const message = customMessage || legacySubtitle || preset.message;
-  const actionLabel = customActionLabel || preset.actionLabel;
+  const title = customTitle || t(preset.titleKey, preset.titleDefault);
+  const message = customMessage || legacySubtitle || t(preset.messageKey, preset.messageDefault);
+  const actionLabel = customActionLabel || t(preset.actionKey, preset.actionDefault);
 
   return (
     <motion.div

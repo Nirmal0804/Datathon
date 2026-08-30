@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Send, RotateCcw, Shield, CheckCircle, Loader2 } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const CATEGORIES = [
   'Account Access',
@@ -11,6 +12,7 @@ const CATEGORIES = [
 ];
 
 export default function ContactSupport({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -27,18 +29,18 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
   const validate = () => {
     const newErrors = {};
     if (!form.fullName.trim()) {
-      newErrors.fullName = 'Full name is required.';
+      newErrors.fullName = t('fir.formValidation', 'Full name is required.');
     }
     if (!form.email.trim()) {
-      newErrors.email = 'Official email address is required.';
+      newErrors.email = t('fir.formValidation', 'Official email address is required.');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      newErrors.email = 'Please enter a valid email address.';
+      newErrors.email = t('fir.formValidation', 'Please enter a valid email address.');
     }
     if (!form.subject.trim()) {
-      newErrors.subject = 'Subject is required.';
+      newErrors.subject = t('fir.formValidation', 'Subject is required.');
     }
     if (!form.message.trim()) {
-      newErrors.message = 'Detailed message is required.';
+      newErrors.message = t('fir.formValidation', 'Detailed message is required.');
     }
     return newErrors;
   };
@@ -64,9 +66,8 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validate();
-    setErrors(validationErrors);
-
     if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -74,7 +75,7 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
     // Purely local frontend timeout simulation (no API calls)
     setTimeout(() => {
       setIsSubmitting(false);
-      const generatedRef = `REQ-${Math.floor(100000 + Math.random() * 900000)}`;
+      const generatedRef = `KSP-SUP-${Math.floor(100000 + Math.random() * 900000)}`;
       setReferenceId(generatedRef);
       setSubmitted(true);
     }, 450);
@@ -95,9 +96,9 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
 
   return (
     <InfoPageLayout
-      title="Contact Support"
-      category="Support"
-      description="Submit operational inquiries, report platform technical anomalies, or request credential support from the administrative desk."
+      title={t('public.contactSupportTitle', 'Contact Support')}
+      category={t('nav.support', 'Support')}
+      description={t('public.contactSupportSubtitle', 'Submit operational inquiries, report platform technical anomalies, or request credential support from the administrative desk.')}
       activeRoute="/contact-support"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, FileText, Activity, Shield, Database, Search, Network } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const DOC_SECTIONS = [
   {
@@ -38,62 +39,44 @@ const DOC_SECTIONS = [
         desc: 'Interactive Google GIS canvas mapping incident coordinates, police station telemetry, boundary choropleths, and heatmap layers.',
       },
       {
-        title: 'Real-Time Anomaly & Security Alert Feeds',
-        desc: 'Automated notification stream highlighting sudden local crime surges, repeat offenders, and priority incidents.',
+        title: 'Hotspot Detection & Risk Forecasting',
+        desc: 'Spatial-temporal DBSCAN and kernel density clustering to isolate repeat high-density incident corridors.',
       },
     ],
   },
   {
-    category: 'INTELLIGENCE & INVESTIGATION',
-    icon: Network,
-    items: [
-      {
-        title: 'District Intelligence Profiles',
-        desc: 'Deep-dive analytical profiles for all 31 Karnataka districts featuring temporal breakdown and crime head categorization.',
-      },
-      {
-        title: 'Sociocentric Criminal Network Analysis',
-        desc: 'Force-directed graph canvas mapping co-offender syndicates, shared case connections, and cross-district criminal associations.',
-      },
-      {
-        title: 'Geospatial Timeline Analysis',
-        desc: 'Historical playback slider scrubbing through incident developments over custom chronological date windows.',
-      },
-    ],
-  },
-  {
-    category: 'ANALYTICS & ML ENGINE',
+    category: 'ADVANCED ANALYTICS & AI',
     icon: Activity,
     items: [
       {
-        title: 'DBSCAN Geospatial Hotspot Detection',
-        desc: 'Pre-computed spatial cluster detection isolating high-density crime epicenters and assigning patrol priorities.',
+        title: 'Graph Neural Network Analysis',
+        desc: 'Co-offender graph representations revealing criminal syndicate topology and degree centrality metrics.',
       },
       {
-        title: 'Composite Crime Risk Index (CCRI)',
-        desc: 'Station-level multi-factor risk scoring evaluating case volume, chargesheet velocity, and crime severity.',
+        title: 'Multi-Factor Socio-Economic Correlation',
+        desc: 'Regression and correlation matrix modeling between economic indicators and incident recurrence rates.',
       },
       {
-        title: 'Daily Crime Incident Time-Series Forecasting',
-        desc: '30-day forward predictive volume models for statewide and district-level operational resource planning.',
+        title: 'Predictive Risk Models & Anomaly Triggers',
+        desc: 'Automated statistical anomaly detection flagging spikes exceeding baseline thresholds.',
       },
     ],
   },
   {
-    category: 'SYSTEM ADMINISTRATION',
+    category: 'ADMINISTRATION & COMPLIANCE',
     icon: Shield,
     items: [
       {
-        title: 'Personnel & User Account Management',
-        desc: 'Administering officer access rosters, station assignments, and account status transitions.',
+        title: 'Role-Based Access Control (RBAC) Policies',
+        desc: 'Granular permissions matrix determining operational boundaries across officer roles.',
       },
       {
-        title: 'Role Permissions & Access Matrix',
-        desc: 'Configuring fine-grained authorization scopes and verifying module access gates.',
+        title: 'Audit Logging & Compliance Traceability',
+        desc: 'Comprehensive tamper-evident logging of administrative actions, data exports, and login sessions.',
       },
       {
-        title: 'Security Audit Log Auditing',
-        desc: 'Reviewing forensic audit streams tracking operator interactions, IP addresses, and sensitive resource queries.',
+        title: 'System Health & Resource Telemetry',
+        desc: 'Monitoring microservice latency, PostgreSQL connection pools, and Redis cache hit ratios.',
       },
     ],
   },
@@ -114,6 +97,7 @@ const DOC_SECTIONS = [
 ];
 
 export default function Documentation({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
   const [filterQuery, setFilterQuery] = useState('');
 
   const filteredSections = DOC_SECTIONS.map((sec) => ({
@@ -128,9 +112,9 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
 
   return (
     <InfoPageLayout
-      title="CrimeIntel Documentation"
-      category="Resources"
-      description="Comprehensive operational guides, analytical methodology overviews, and system documentation for the Karnataka State Police Crime Analytics Platform."
+      title={t('public.documentationTitle', 'Platform Documentation')}
+      category={t('nav.resources', 'Resources')}
+      description={t('public.documentationSubtitle', 'Comprehensive operational guides, analytical methodology overviews, and system documentation for the Karnataka State Police Crime Analytics Platform.')}
       activeRoute="/documentation"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}
@@ -143,7 +127,7 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
           <Search className="w-4 h-4 text-[#64748B] shrink-0" />
           <input
             type="text"
-            placeholder="Search documentation guides, operational modules, or analytics topics..."
+            placeholder={t('dashboard.searchPlaceholder', 'Search documentation guides, operational modules, or analytics topics...')}
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
             className="w-full bg-transparent text-xs sm:text-sm font-semibold text-[#0F172A] focus:outline-none placeholder:text-slate-400"
@@ -151,9 +135,9 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
           {filterQuery && (
             <button
               onClick={() => setFilterQuery('')}
-              className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-1 bg-slate-100 rounded-lg"
+              className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-1 bg-slate-100 rounded-lg cursor-pointer"
             >
-              Clear
+              {t('common.clear', 'Clear')}
             </button>
           )}
         </div>

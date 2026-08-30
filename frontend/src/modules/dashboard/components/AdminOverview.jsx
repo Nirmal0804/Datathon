@@ -8,8 +8,10 @@ import { useToast } from '../../../components/ui/Toast';
 import kspBadge from '../../../assets/ksp-badge.webp';
 import LazyImage from '../../../components/ui/LazyImage';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
+import { useTranslation } from '../../../i18n';
 
 export default function AdminOverview({ onNavigate }) {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   // Local Admin Config States
@@ -20,10 +22,10 @@ export default function AdminOverview({ onNavigate }) {
 
   // Diagnostic Stats
   const systemKPIs = [
-    { title: 'Active System Users', value: activeUsers, note: 'Simultaneous connections', icon: Users, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-    { title: 'Precinct Stations Linked', value: 54, note: 'All districts connected', icon: Globe, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { title: 'System Health Factor', value: '99.98%', note: 'Uptime (last 30 days)', icon: Cpu, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-    { title: 'API Gateway Status', value: 'Optimal', note: 'Latency: 12ms avg', icon: Activity, color: 'text-teal-400', bg: 'bg-teal-500/10' },
+    { title: t('admin.activeUsers', 'Active System Users'), value: activeUsers, note: t('admin.activeConnections', 'Simultaneous connections'), icon: Users, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+    { title: t('district.totalStations', 'Precinct Stations Linked'), value: 54, note: t('district.allDistricts', 'All districts connected'), icon: Globe, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+    { title: t('admin.systemHealth', 'System Health Factor'), value: '99.98%', note: t('admin.uptime', 'Uptime (last 30 days)'), icon: Cpu, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+    { title: t('admin.systemStatus', 'API Gateway Status'), value: t('admin.healthy', 'Optimal'), note: 'Latency: 12ms avg', icon: Activity, color: 'text-teal-400', bg: 'bg-teal-500/10' },
   ];
 
   const recentLogins = [
@@ -82,10 +84,10 @@ export default function AdminOverview({ onNavigate }) {
           </div>
           <div className="flex flex-col justify-center">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
-              System Administration
+              {t('nav.adminOverview', 'System Administration')}
             </h1>
             <p className="text-xs sm:text-sm font-normal text-[#64748B] mt-1 leading-normal">
-              Platform status monitoring, user management roster, and diagnostics controls.
+              {t('admin.overviewSubtitle', 'Platform status monitoring, user management roster, and diagnostics controls.')}
             </p>
           </div>
         </div>
@@ -94,7 +96,7 @@ export default function AdminOverview({ onNavigate }) {
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2.5 bg-[#F8F9FB] px-4 h-10 rounded-[999px] border border-[#E7ECF3] shadow-sm transition-all duration-200 ease-in-out hover:shadow-md cursor-default">
             <Activity className="w-4 h-4 text-emerald-600 animate-pulse" />
-            <span className="text-xs font-bold text-[#0F172A]">Server Version: v4.12.2-stable</span>
+            <span className="text-xs font-bold text-[#0F172A]">{t('admin.systemStatus', 'Server Version')}: v4.12.2-stable</span>
           </div>
         </div>
       </div>
@@ -131,9 +133,9 @@ export default function AdminOverview({ onNavigate }) {
                 <div className="w-10 h-10 rounded-[12px] bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
                   <Cpu className="w-5 h-5" />
                 </div>
-                Resource Utilization & Database Latency
+                {t('admin.systemHealth', 'Resource Utilization & Database Latency')}
               </h3>
-              <span className="text-xs font-mono font-bold text-[#64748B]">Live Diagnostics</span>
+              <span className="text-xs font-mono font-bold text-[#64748B]">{t('admin.active', 'Live Diagnostics')}</span>
             </div>
 
             {/* Diagnostic Visualization SVGs */}
@@ -141,7 +143,7 @@ export default function AdminOverview({ onNavigate }) {
               {/* CPU Chart */}
               <div className="flex-1 w-full flex flex-col justify-between h-full">
                 <div className="flex justify-between text-xs mb-2 font-bold text-[#334155]">
-                  <span>Server Core Load (CPU/Memory)</span>
+                  <span>{t('admin.cpuUsage', 'Server Core Load (CPU/Memory)')}</span>
                   <span className="font-mono text-emerald-600">42% CPU / 61% RAM</span>
                 </div>
                 <div className="relative w-full h-36 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] flex items-center justify-center overflow-hidden">
@@ -160,7 +162,7 @@ export default function AdminOverview({ onNavigate }) {
               {/* Database performance Chart */}
               <div className="flex-1 w-full flex flex-col justify-between h-full">
                 <div className="flex justify-between text-xs mb-2 font-bold text-[#334155]">
-                  <span>PostgreSQL API Queries / Latency</span>
+                  <span>{t('admin.databaseStatus', 'PostgreSQL API Queries / Latency')}</span>
                   <span className="font-mono text-police-blue">12ms avg delay</span>
                 </div>
                 <div className="relative w-full h-36 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] flex items-center justify-center overflow-hidden">
@@ -187,26 +189,26 @@ export default function AdminOverview({ onNavigate }) {
                 <div className="w-10 h-10 rounded-[12px] bg-indigo-50 text-[#0B1F4D] flex items-center justify-center shrink-0">
                   <Database className="w-5 h-5" />
                 </div>
-                Database & Server Status
+                {t('admin.databaseStatus', 'Database & Server Status')}
               </h3>
             </div>
             
             <div className="flex-1 py-1 space-y-2.5 text-xs">
               <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
-                <span className="font-bold text-[#334155]">PostgreSQL Status</span>
-                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
+                <span className="font-bold text-[#334155]">{t('admin.databaseStatus', 'PostgreSQL Status')}</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">{t('admin.active', 'Online')}</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
-                <span className="font-bold text-[#334155]">GIS Location Tile Server</span>
-                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
+                <span className="font-bold text-[#334155]">{t('map.layers', 'GIS Location Tile Server')}</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">{t('admin.active', 'Online')}</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
-                <span className="font-bold text-[#334155]">Redis Cache Instance</span>
-                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
+                <span className="font-bold text-[#334155]">{t('admin.cache', 'Redis Cache Instance')}</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">{t('admin.active', 'Online')}</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3]">
-                <span className="font-bold text-[#334155]">ML Forecast Engine</span>
-                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Online</span>
+                <span className="font-bold text-[#334155]">{t('analytics.predictiveTrendsTitle', 'ML Forecast Engine')}</span>
+                <span className="badge rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">{t('admin.active', 'Online')}</span>
               </div>
             </div>
 
@@ -217,7 +219,7 @@ export default function AdminOverview({ onNavigate }) {
                 className="flex-1 gap-2 h-11 rounded-[999px] bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] hover:border-police-gold text-[#0F172A] font-bold text-xs transition-all duration-200 flex items-center justify-center shadow-sm cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-police-blue ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span>Flush Cache</span>
+                <span>{t('admin.clearCache', 'Flush Cache')}</span>
               </button>
               <button 
                 onClick={handleMaintenanceToggle}
@@ -228,7 +230,7 @@ export default function AdminOverview({ onNavigate }) {
                 }`}
               >
                 <Lock className="w-3.5 h-3.5 text-amber-600" />
-                <span>{maintenanceMode ? 'Locked' : 'Maintenance'}</span>
+                <span>{maintenanceMode ? t('admin.locked', 'Locked') : t('admin.maintenanceMode', 'Maintenance')}</span>
               </button>
             </div>
           </div>
@@ -245,13 +247,13 @@ export default function AdminOverview({ onNavigate }) {
                 <div className="w-10 h-10 rounded-[12px] bg-indigo-50 text-[#0B1F4D] flex items-center justify-center shrink-0">
                   <ShieldAlert className="w-5 h-5" />
                 </div>
-                Security Audit Logs
+                {t('admin.auditLogs', 'Security Audit Logs')}
               </h3>
               <button
                 onClick={() => onNavigate('audit_logs')}
-                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors"
+                className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors cursor-pointer"
               >
-                Audit Manager &rarr;
+                {t('admin.auditLogs', 'Audit Manager')} &rarr;
               </button>
             </div>
 
@@ -259,12 +261,12 @@ export default function AdminOverview({ onNavigate }) {
               <table className="w-full text-left" aria-label="System audit log">
                 <thead>
                   <tr className="border-b border-[#E7ECF3] text-[11px] font-bold text-[#64748B] uppercase tracking-wider bg-[#F8F9FB]">
-                    <th className="py-3 px-4">Audit ID</th>
-                    <th className="py-3 px-4">Operator</th>
-                    <th className="py-3 px-4">Action Description</th>
-                    <th className="py-3 px-4">Target Resource</th>
-                    <th className="py-3 px-4">Time</th>
-                    <th className="py-3 px-4 text-right">Status</th>
+                    <th className="py-3 px-4">{t('admin.auditId', 'Audit ID')}</th>
+                    <th className="py-3 px-4">{t('admin.operator', 'Operator')}</th>
+                    <th className="py-3 px-4">{t('admin.actionDesc', 'Action Description')}</th>
+                    <th className="py-3 px-4">{t('admin.targetResource', 'Target Resource')}</th>
+                    <th className="py-3 px-4">{t('common.date', 'Time')}</th>
+                    <th className="py-3 px-4 text-right">{t('common.status', 'Status')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -277,7 +279,7 @@ export default function AdminOverview({ onNavigate }) {
                       <td className="py-3.5 px-4 text-[#64748B]">{log.time}</td>
                       <td className="py-3.5 px-4 text-right">
                         <span className={`badge ${log.status === 'Success' ? 'badge-success' : 'badge-high'} rounded-full py-0.5 px-2.5 text-[10px] font-bold uppercase`}>
-                          {log.status}
+                          {log.status === 'Success' ? t('common.success', 'Success') : t('common.high', 'Warning')}
                         </span>
                       </td>
                     </tr>
@@ -292,7 +294,9 @@ export default function AdminOverview({ onNavigate }) {
         <div className="lg:col-span-1">
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm h-[380px] flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
             <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4 mb-3 shrink-0">
-              <h3 className="text-base font-bold text-[#0F172A]">Recent Admin/User Logins</h3>
+              <h3 className="text-base font-bold text-[#0F172A]">
+                {t('admin.recentLogins', 'Recent Admin/User Logins')}
+              </h3>
             </div>
 
             <div className="flex-1 overflow-y-auto no-scrollbar space-y-3 pt-1">

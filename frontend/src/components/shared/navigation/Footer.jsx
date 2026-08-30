@@ -6,9 +6,30 @@ import {
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../ui/LazyImage';
 import { getRoleNavItems } from '../../../modules/dashboard/components/AnalystTopNav';
+import { useTranslation } from '../../../i18n';
 
 export default function Footer({ onLoginClick, rounded = false, role = null, activeModule = null, activeRoute = null, onNavigate = null }) {
+  const { t } = useTranslation();
   const roleNavItems = role ? getRoleNavItems(role) : null;
+
+  const navLabels = {
+    overview: t('nav.overview', 'Overview'),
+    map: t('nav.crimeMap', 'Crime Map'),
+    district: t('nav.district', 'District Intelligence'),
+    network: t('nav.network', 'Network Analysis'),
+    analytics: t('nav.analytics', 'Predictive Analytics'),
+    reports: t('nav.reports', 'Reports Center'),
+    hotspots: t('nav.hotspots', 'Hotspot Detection'),
+    correlation: t('nav.correlation', 'Socio-Economic Profiling'),
+    assigned_cases: t('nav.assignedCases', 'Assigned Cases'),
+    fir_management: t('nav.firManagement', 'FIR Management'),
+    alerts: t('nav.alerts', 'Security Alerts'),
+    users: t('nav.users', 'User Management'),
+    roles: t('nav.roles', 'Roles & RBAC'),
+    audit_logs: t('nav.auditLogs', 'Audit Logs'),
+    system_health: t('nav.systemHealth', 'System Health'),
+    config: t('nav.settings', 'Platform Settings'),
+  };
 
   return (
     <footer className={`bg-[#E00000] text-white pt-12 pb-8 relative z-10 transition-all ${
@@ -35,17 +56,17 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
               </div>
               <div>
                 <span className="text-white font-extrabold tracking-tight text-base sm:text-lg flex items-center gap-1.5 leading-none">
-                  KARNATAKA POLICE
+                  {t('auth.kspTitle', 'KARNATAKA POLICE')}
                   <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
                 </span>
                 <p className="text-xs text-white/80 font-medium tracking-wide mt-1">
-                  AI-Driven Crime Analytics Platform
+                  {t('auth.portalName', 'AI-Driven Crime Analytics Platform')}
                 </p>
               </div>
             </div>
 
             <p className="text-xs sm:text-sm text-white/85 leading-relaxed mb-6 max-w-sm">
-              Empowering law enforcement with intelligent analytics, actionable insights, and secure data-driven decision making.
+              {t('dashboard.subtitle', 'Empowering law enforcement with intelligent analytics, actionable insights, and secure data-driven decision making.')}
             </p>
 
             <div className="flex items-center gap-3">
@@ -67,7 +88,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
           {/* 2. PLATFORM — CENTER-LEFT (lg:col-span-3) */}
           <div className="lg:col-span-3">
             <h4 className="text-sm font-extrabold text-white tracking-wider uppercase mb-1">
-              PLATFORM
+              {t('nav.modules', 'PLATFORM')}
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
 
@@ -75,6 +96,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
               {roleNavItems ? (
                 roleNavItems.map((item) => {
                   const isActive = activeModule === item.id;
+                  const itemLabel = navLabels[item.id] || item.name;
                   return (
                     <li key={item.id}>
                       <button
@@ -87,7 +109,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                         }`}
                       >
                         <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#D49A00]' : 'text-white/80'}`} />
-                        {item.name}
+                        {itemLabel}
                       </button>
                     </li>
                   );
@@ -95,16 +117,16 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
               ) : (
                 <>
                   {[
-                    { label: 'Home', href: '#home' },
-                    { label: 'Features', href: '#features' },
-                    { label: 'Workflow', href: '#workflow' },
-                    { label: 'Modules', href: '#modules' },
-                    { label: 'About', href: '#about' },
+                    { key: 'nav.home', label: 'Home', href: '#home' },
+                    { key: 'nav.features', label: 'Features', href: '#features' },
+                    { key: 'nav.workflow', label: 'Workflow', href: '#workflow' },
+                    { key: 'nav.modules', label: 'Modules', href: '#modules' },
+                    { key: 'nav.about', label: 'About', href: '#about' },
                   ].map((item) => (
                     <li key={item.label}>
                       <a href={item.href} className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors">
                         <ChevronRight className="w-3.5 h-3.5 text-white/80" />
-                        {item.label}
+                        {t(item.key, item.label)}
                       </a>
                     </li>
                   ))}
@@ -114,7 +136,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                       className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer text-left font-medium text-xs sm:text-sm"
                     >
                       <ChevronRight className="w-3.5 h-3.5 text-white/80" />
-                      Login Portal
+                      {t('nav.loginPortal', 'Login Portal')}
                     </button>
                   </li>
                 </>
@@ -125,18 +147,18 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
           {/* 3. RESOURCES — CENTER-RIGHT (lg:col-span-3) */}
           <div className="lg:col-span-3">
             <h4 className="text-sm font-extrabold text-white tracking-wider uppercase mb-1">
-              RESOURCES
+              {t('nav.resources', 'RESOURCES')}
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
 
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium">
               {[
-                { label: 'Privacy Policy', route: 'public-privacy', path: '/privacy' },
-                { label: 'Terms of Service', route: 'public-terms', path: '/terms' },
-                { label: 'Security Audit', route: 'public-security-audit', path: '/security-audit' },
-                { label: 'Support', route: 'public-support', path: '/support' },
-                { label: 'Documentation', route: 'public-documentation', path: '/documentation' },
-                { label: 'API Access', route: 'public-api-access', path: '/api-access' },
+                { key: 'nav.privacyPolicy', label: 'Privacy Policy', route: 'public-privacy', path: '/privacy' },
+                { key: 'nav.termsOfService', label: 'Terms of Service', route: 'public-terms', path: '/terms' },
+                { key: 'nav.securityAudit', label: 'Security Audit', route: 'public-security-audit', path: '/security-audit' },
+                { key: 'nav.support', label: 'Support', route: 'public-support', path: '/support' },
+                { key: 'nav.documentation', label: 'Documentation', route: 'public-documentation', path: '/documentation' },
+                { key: 'nav.apiAccess', label: 'API Access', route: 'public-api-access', path: '/api-access' },
               ].map((item) => {
                 const isActive = activeRoute === item.path || activeModule === item.route || activeModule === item.path;
                 return (
@@ -154,7 +176,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                       }`}
                     >
                       <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#D49A00]' : 'text-white/80'}`} />
-                      {item.label}
+                      {t(item.key, item.label)}
                     </button>
                   </li>
                 );
@@ -165,16 +187,16 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
           {/* 4. SUPPORT — RIGHT (lg:col-span-2) */}
           <div className="lg:col-span-2">
             <h4 className="text-sm font-extrabold text-white tracking-wider uppercase mb-1">
-              SUPPORT
+              {t('nav.support', 'SUPPORT')}
             </h4>
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
 
             <ul className="space-y-3 text-xs sm:text-sm font-medium">
               {[
-                { label: 'Help Center', route: 'public-help', path: '/help', icon: Headphones },
-                { label: 'Security Guidelines', route: 'public-security-guidelines', path: '/security-guidelines', icon: Lock },
-                { label: 'FAQs', route: 'public-faqs', path: '/faqs', icon: HelpCircle },
-                { label: 'Contact Support', route: 'public-contact-support', path: '/contact-support', icon: Mail },
+                { key: 'nav.helpCenter', label: 'Help Center', route: 'public-help', path: '/help', icon: Headphones },
+                { key: 'nav.securityGuidelines', label: 'Security Guidelines', route: 'public-security-guidelines', path: '/security-guidelines', icon: Lock },
+                { key: 'nav.faqs', label: 'FAQs', route: 'public-faqs', path: '/faqs', icon: HelpCircle },
+                { key: 'nav.contactSupport', label: 'Contact Support', route: 'public-contact-support', path: '/contact-support', icon: Mail },
               ].map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activeRoute === item.path || activeModule === item.route || activeModule === item.path;
@@ -193,7 +215,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                       }`}
                     >
                       <IconComponent className={`w-4 h-4 ${isActive ? 'text-[#D49A00]' : 'text-white'}`} />
-                      {item.label}
+                      {t(item.key, item.label)}
                     </button>
                   </li>
                 );
@@ -210,13 +232,13 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
               <ShieldCheck className="w-4 h-4 text-white" />
             </div>
             <p>
-              &copy; {new Date().getFullYear()} AI-Driven Crime Analytics Platform. All rights reserved.
+              &copy; {new Date().getFullYear()} {t('auth.kspTitle', 'Karnataka State Police')}. {t('common.allRightsReserved', 'All rights reserved.')}
             </p>
           </div>
 
           <div className="flex items-center gap-2 font-extrabold text-xs tracking-wider uppercase text-white">
             <span className="w-2 h-2 rounded-full bg-[#D49A00] animate-pulse" />
-            SECURE GOVERNMENT NETWORK CONNECTION
+            {t('dashboard.systemOnline', 'SECURE GOVERNMENT NETWORK CONNECTION')}
           </div>
         </div>
 

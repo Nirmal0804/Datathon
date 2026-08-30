@@ -5,6 +5,7 @@ import {
   ChevronDown, Minus, Plus, Edit3
 } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
@@ -135,6 +136,7 @@ function ConfigCard({ icon: Icon, title, iconBg = 'bg-[#0B1F4D]', children }) {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 export default function AdminConfiguration() {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   /* ── Edit Mode state ── */
@@ -218,35 +220,40 @@ export default function AdminConfiguration() {
   };
 
   const handleDiscard = () => {
+    // Revert state
     setSec({ mfa: true, passwordPolicy: 'strong', passwordExpiry: '90', loginLimit: 5, autoLock: true });
-    setSession({ timeout: 30, idleLogout: true, multiSession: false, deviceVerify: true, reauth: true });
-    setApi({ rateLimit: 100, maxConcurrent: 500, logging: true, compression: false, internalOnly: true });
-    setDb({ autoBackup: true, backupCron: '0 0 * * *', backupFreq: 'daily', retention: '30', disasterRecovery: false });
-    setOps({ maintenanceMode: false, readOnly: false, scheduledMaint: true, maintWindow: '2026-07-27T02:00', notifications: true });
+    setSession({ timeout: config.timeout, idleLogout: true, multiSession: false, deviceVerify: true, reauth: true });
+    setApi({ rateLimit: config.rateLimit, maxConcurrent: 500, logging: true, compression: false, internalOnly: true });
+    setDb({ autoBackup: true, backupCron: config.backupCron, backupFreq: 'daily', retention: '30', disasterRecovery: false });
+    setOps({ maintenanceMode: config.maintenanceMode, readOnly: false, scheduledMaint: true, maintWindow: '2026-07-27T02:00', notifications: true });
     setSaved(true);
     setIsEditing(false); // Disappear bottom action bar after discarding
     addToast({
       title: 'Changes Discarded',
-      message: 'Reverted configuration parameters to previous saved state.',
+      message: 'Reverted all unsaved configuration values.',
       type: 'info',
     });
   };
 
-  const s = (fn) => (...args) => { fn(...args); markDirty(); };
+  // Helper to wrap setters with markDirty
+  const s = (setter) => (val) => {
+    setter(val);
+    markDirty();
+  };
 
   return (
-    <div className={`w-full max-w-[1600px] mx-auto ${isEditing ? 'pb-28' : 'pb-12'}`}>
+    <div className={`w-full max-w-[1600px] mx-auto space-y-6 ${isEditing ? 'pb-28' : 'pb-12'}`}>
 
-      {/* ── Page Header ──────────────────────────────────────────────────── */}
-      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 min-h-[88px]">
+      {/* ── 1. Hero Header ─────────────────────────────────────────────────── */}
+      <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-h-[88px]">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-[16px] bg-[#0B1F4D] text-[#C79A2B] flex items-center justify-center shrink-0">
             <Settings className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-black text-[#0F172A] tracking-tight">System Configuration Center</h1>
+            <h1 className="text-xl font-black text-[#0F172A] tracking-tight">{t('nav.settings', 'Platform System Configuration')}</h1>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Configure platform-wide operational, security, networking and backup policies.
+              {t('admin.overviewSubtitle', 'Manage system parameters, access control protocols, database cron, and security policies.')}
             </p>
           </div>
         </div>
@@ -258,8 +265,8 @@ export default function AdminConfiguration() {
               : 'bg-amber-50 text-amber-700 border-amber-200'
           }`}>
             {saved
-              ? <><CheckCircle className="w-3.5 h-3.5" /> All Changes Synced</>
-              : <><Clock className="w-3.5 h-3.5" /> Unsaved Changes</>
+              ? <><CheckCircle className="w-3.5 h-3.5" /> {t('admin.active', 'All Changes Synced')}</>
+              : <><Clock className="w-3.5 h-3.5" /> {t('common.status', 'Unsaved Changes')}</>
             }
           </span>
 
@@ -270,12 +277,12 @@ export default function AdminConfiguration() {
               className="h-10 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors duration-150 flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <Edit3 className="w-4 h-4 text-[#C79A2B]" />
-              Edit Configuration
+              {t('settings.title', 'Edit Configuration')}
             </button>
           ) : (
             <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#0B1F4D] animate-pulse" />
-              Editing Mode Active
+              {t('admin.active', 'Editing Mode Active')}
             </span>
           )}
         </div>
@@ -286,16 +293,16 @@ export default function AdminConfiguration() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
           {/* ── Card 1: Security Access Control ── */}
-          <ConfigCard icon={Lock} title="Security Access Control">
+          <ConfigCard icon={Lock} title={t('settings.security', 'Security Access Control')}>
             <SettingRow
-              label="MFA Authentication"
+              label={t('settings.mfa', 'MFA Authentication')}
               description="Require multi-factor authentication for all police personnel."
             >
               <Toggle checked={sec.mfa} onChange={s(v => setSec(p => ({ ...p, mfa: v })))} id="mfa" />
             </SettingRow>
 
             <SettingRow
-              label="Password Policy"
+              label={t('settings.changePassword', 'Password Policy')}
               description="Minimum complexity requirements for all system accounts."
             >
               <ConfigSelect

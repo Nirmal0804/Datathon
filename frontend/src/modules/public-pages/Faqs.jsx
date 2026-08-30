@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const FAQS = [
   {
@@ -38,7 +39,7 @@ const FAQS = [
   },
   {
     q: 'What is Network Analysis?',
-    a: 'Network Analysis visualizes sociocentric criminal syndicates through a force-directed graph canvas. It reveals repeat co-offenders, shared cases, cross-district gang affiliations, and key accused hubs.',
+    a: 'The network analysis tool builds an interactive node graph of suspects, co-accused entities, and criminal syndicates, highlighting degree centrality and shared case relationships.',
   },
   {
     q: 'How are district comparisons generated?',
@@ -56,11 +57,16 @@ const FAQS = [
     q: 'Where can I find API documentation?',
     a: 'Visit the API Access page for endpoint group details, or open the interactive Swagger OpenAPI documentation directly from the API Access portal.',
   },
+  {
+    q: 'How do I export intelligence reports?',
+    a: 'In the Reports Center, choose your target date window and parameters, preview the compiled executive dossier, and export the document in official PDF format.',
+  },
 ];
 
 export default function Faqs({ onNavigate, onLoginClick, role = null }) {
-  const [openIndex, setOpenIndex] = useState(0);
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [openIndex, setOpenIndex] = useState(null);
 
   const filteredFaqs = FAQS.filter(
     (faq) =>
@@ -71,9 +77,9 @@ export default function Faqs({ onNavigate, onLoginClick, role = null }) {
 
   return (
     <InfoPageLayout
-      title="Frequently Asked Questions"
-      category="Support"
-      description="Common questions and answers regarding platform capabilities, analytical methodologies, and operational workflows."
+      title={t('public.faqsTitle', 'Frequently Asked Questions')}
+      category={t('nav.support', 'Support')}
+      description={t('public.faqsSubtitle', 'Answers to common questions regarding platform capabilities, analytical methodologies, and operational workflows.')}
       activeRoute="/faqs"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}
@@ -86,7 +92,7 @@ export default function Faqs({ onNavigate, onLoginClick, role = null }) {
           <Search className="w-4 h-4 text-[#64748B] shrink-0" />
           <input
             type="text"
-            placeholder="Search FAQs by topic or keyword..."
+            placeholder={t('dashboard.searchPlaceholder', 'Search FAQs by topic or keyword...')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-transparent text-xs sm:text-sm font-semibold text-[#0F172A] focus:outline-none placeholder:text-slate-400"
@@ -94,9 +100,9 @@ export default function Faqs({ onNavigate, onLoginClick, role = null }) {
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-1 bg-slate-100 rounded-lg"
+              className="text-xs font-bold text-[#64748B] hover:text-[#0F172A] px-2 py-1 bg-slate-100 rounded-lg cursor-pointer"
             >
-              Clear
+              {t('common.clear', 'Clear')}
             </button>
           )}
         </div>

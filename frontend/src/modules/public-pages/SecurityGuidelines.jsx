@@ -1,6 +1,7 @@
 import React from 'react';
 import { Lock, Key, Monitor, Eye, FileDown, AlertTriangle, UserCheck, ShieldCheck, Mail } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const GUIDELINES = [
   {
@@ -54,11 +55,13 @@ const GUIDELINES = [
 ];
 
 export default function SecurityGuidelines({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
+
   return (
     <InfoPageLayout
-      title="Security Guidelines"
-      category="Support"
-      description="Operational cybersecurity best practices, workstation safety rules, and credential handling requirements for authorized platform users."
+      title={t('public.securityGuidelinesTitle', 'Security Guidelines')}
+      category={t('nav.support', 'Support')}
+      description={t('public.securityGuidelinesSubtitle', 'Operational cybersecurity best practices, workstation safety rules, and credential handling requirements for authorized platform users.')}
       lastUpdated="August 2026"
       activeRoute="/security-guidelines"
       onNavigate={onNavigate}
@@ -97,9 +100,9 @@ export default function SecurityGuidelines({ onNavigate, onLoginClick, role = nu
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-[#0F172A]">Report a Security Concern</h3>
+              <h3 className="text-base font-extrabold text-[#0F172A]">{t('public.contactSupportTitle', 'Report a Security Concern')}</h3>
               <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
-                Observed potential account tampering, suspicious IP activity, or compromised officer credentials?
+                {t('public.contactSupportSubtitle', 'Observed potential account tampering, suspicious IP activity, or compromised officer credentials?')}
               </p>
             </div>
           </div>
@@ -108,7 +111,7 @@ export default function SecurityGuidelines({ onNavigate, onLoginClick, role = nu
             className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm shadow-xs transition-colors cursor-pointer flex items-center gap-2 shrink-0"
           >
             <Mail className="w-4 h-4 text-white" />
-            <span>Notify Security Team</span>
+            <span>{t('nav.contactSupport', 'Notify Security Team')}</span>
           </button>
         </div>
 

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Eye, FileText, Server, UserCheck } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 export default function PrivacyPolicy({ onNavigate, onLoginClick, role = null }) {
+  const { t } = useTranslation();
+
   return (
     <InfoPageLayout
-      title="Privacy Policy"
-      category="Resources"
-      description="Describes how law enforcement data, authentication credentials, and transactional intelligence are securely handled, processed, and safeguarded within the CrimeIntel platform."
+      title={t('public.privacyTitle', 'Privacy Policy')}
+      category={t('nav.resources', 'Resources')}
+      description={t('public.privacySubtitle', 'Describes how law enforcement data, authentication credentials, and transactional intelligence are securely handled, processed, and safeguarded within the CrimeIntel platform.')}
       lastUpdated="August 2026"
       activeRoute="/privacy"
       onNavigate={onNavigate}

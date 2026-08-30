@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Lock, Key, FileCheck, Server, AlertTriangle, ShieldCheck, Activity, Globe, Eye } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
+import { useTranslation } from '../../i18n';
 
 const CONTROLS = [
   {
@@ -28,20 +29,24 @@ const CONTROLS = [
     title: 'API Rate Limiting & Throttling',
     status: 'Implemented',
     category: 'Availability',
-    desc: 'Sliding-window request limiters per client IP address protecting backend API endpoints from abusive traffic surges and brute force attacks.',
+    desc: 'IP and token-based rate limiting guards to defend backend endpoints against brute-force attacks and denial-of-service attempts.',
     icon: Activity,
   },
   {
-    title: 'Input Validation & Pydantic Schemas',
+    title: 'CORS & Strict Origin Validation',
+    status: 'Implemented',
+    category: 'Transport',
+    desc: 'Configurable allowed origins restricting cross-origin resource requests strictly to authorized police workstation domains.',
+    icon: Globe,
+  },
+  {
+    title: 'Input Validation & Pydantic Sanitization',
     status: 'Implemented',
     category: 'Data Integrity',
-    desc: 'Strict type validation, regex pattern matching, and query-parameter bounding on all incoming payloads before reaching business services.',
+    desc: 'All HTTP request bodies, path parameters, and query parameters validated against strict type-safe Pydantic schemas.',
     icon: ShieldCheck,
   },
   {
-    title: 'Hardened HTTP Security Headers',
-    status: 'Implemented',
-    category: 'Network Security',
     desc: 'Automated middleware enforcement of X-Content-Type-Options: nosniff, X-Frame-Options: DENY, X-XSS-Protection, and restrictive CORS origins.',
     icon: Globe,
   },

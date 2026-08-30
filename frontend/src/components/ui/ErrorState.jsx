@@ -1,48 +1,68 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, RefreshCw, Home, WifiOff, Lock, ServerCrash } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
 const CONFIGS = {
   '404': {
     Icon: AlertTriangle,
     code: '404',
-    title: 'Page Not Found',
-    message: 'The resource you are looking for does not exist or has been moved.',
-    action: 'Return to Dashboard',
+    titleKey: 'common.pageNotFound',
+    titleDefault: 'Page Not Found',
+    msgKey: 'common.pageNotFoundDesc',
+    msgDefault: 'The resource you are looking for does not exist or has been moved.',
+    actionKey: 'public.dashboard',
+    actionDefault: 'Return to Dashboard',
   },
   '500': {
     Icon: ServerCrash,
     code: '500',
-    title: 'Internal Server Error',
-    message: 'An unexpected error occurred on our servers. Please try again or contact support.',
-    action: 'Retry',
+    titleKey: 'common.serverError',
+    titleDefault: 'Internal Server Error',
+    msgKey: 'common.serverErrorDesc',
+    msgDefault: 'An unexpected error occurred on our servers. Please try again or contact support.',
+    actionKey: 'common.retry',
+    actionDefault: 'Retry',
   },
   'network': {
     Icon: WifiOff,
     code: null,
-    title: 'No Network Connection',
-    message: 'Unable to reach the server. Please check your network connection and try again.',
-    action: 'Retry',
+    titleKey: 'common.networkError',
+    titleDefault: 'No Network Connection',
+    msgKey: 'common.networkErrorDesc',
+    msgDefault: 'Unable to reach the server. Please check your network connection and try again.',
+    actionKey: 'common.retry',
+    actionDefault: 'Retry',
   },
   'unauthorized': {
     Icon: Lock,
     code: '401',
-    title: 'Unauthorized Access',
-    message: 'Your session may have expired or you lack permissions. Please log in again.',
-    action: 'Log In Again',
+    titleKey: 'common.unauthorized',
+    titleDefault: 'Unauthorized Access',
+    msgKey: 'common.unauthorizedDesc',
+    msgDefault: 'Your session may have expired or you lack permissions. Please log in again.',
+    actionKey: 'auth.signIn',
+    actionDefault: 'Log In Again',
   },
   'api': {
     Icon: ServerCrash,
     code: null,
-    title: 'Data Unavailable',
-    message: 'Failed to load data from the server. The service may be temporarily unavailable.',
-    action: 'Retry',
+    titleKey: 'common.error',
+    titleDefault: 'Data Unavailable',
+    msgKey: 'common.serverErrorDesc',
+    msgDefault: 'Failed to load data from the server. The service may be temporarily unavailable.',
+    actionKey: 'common.retry',
+    actionDefault: 'Retry',
   },
 };
 
 export function ErrorState({ type = '500', onAction, className = '' }) {
+  const { t } = useTranslation();
   const config = CONFIGS[type] || CONFIGS['500'];
-  const { Icon, code, title, message, action } = config;
+  const { Icon, code } = config;
+  const title = t(config.titleKey, config.titleDefault);
+  const message = t(config.msgKey, config.msgDefault);
+  const action = t(config.actionKey, config.actionDefault);
 
   return (
     <motion.div
