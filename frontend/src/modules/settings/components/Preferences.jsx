@@ -3,7 +3,7 @@ import { Monitor, Globe, Clock, Palette } from 'lucide-react';
 
 export default function Preferences() {
   const [prefs, setPrefs] = useState({
-    theme: 'dark',
+    theme: 'light',
     language: 'en',
     timezone: 'Asia/Kolkata',
     dateFormat: 'DD/MM/YYYY',
@@ -18,7 +18,7 @@ export default function Preferences() {
     {
       icon: Palette, title: 'Appearance',
       fields: [
-        { label: 'Color Theme', key: 'theme', type: 'select', options: ['dark', 'light', 'high-contrast'] },
+        { label: 'Color Theme', key: 'theme', type: 'select', options: ['light', 'dark'] },
         { label: 'UI Density', key: 'density', type: 'select', options: ['compact', 'comfortable', 'spacious'] },
       ],
     },

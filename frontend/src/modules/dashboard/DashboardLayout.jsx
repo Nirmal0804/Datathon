@@ -66,12 +66,42 @@ import {
   getDashboardAlerts
 } from './components/mockData';
 
+import { getSavedPreferences } from '../../utils/dateTime';
+
 // Map modules that should be full-height (no scroll container)
 const FULL_HEIGHT_MODULES = new Set(['map']);
 
+function resolveInitialModule(role) {
+  try {
+    const prefs = getSavedPreferences();
+    const landing = prefs.defaultDashboard || 'overview';
+
+    if (landing === 'last') {
+      const last = localStorage.getItem('ksp_active_module');
+      if (last && typeof last === 'string') return last;
+      return 'overview';
+    }
+
+    if (landing === 'cases') {
+      if (role === 'officer') return 'assigned_cases';
+      return 'overview';
+    }
+
+    if (landing === 'health') {
+      if (role === 'admin') return 'system_health';
+      return 'overview';
+    }
+
+    // Default: 'overview'
+    return 'overview';
+  } catch {
+    return 'overview';
+  }
+}
+
 export default function DashboardLayout({ onLogout, role, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeModule, setActiveModule] = useState('overview');
+  const [activeModule, setActiveModule] = useState(() => resolveInitialModule(role));
 
   const isCompact = role === 'analyst' || role === 'officer' || role === 'admin';
 
@@ -214,6 +244,7 @@ export default function DashboardLayout({ onLogout, role, onNavigate }) {
       return;
     }
     setActiveModule(mod);
+    localStorage.setItem('ksp_active_module', mod);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

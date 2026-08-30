@@ -11,6 +11,7 @@ import {
 import { useToast } from '../../../components/ui/Toast';
 import { getAdminAuditEvents } from '../../../services/api';
 import EmptyState from '../../../components/common/EmptyState';
+import { useDateTimeFormatter } from '../../../utils/dateTime';
 
 // ─── Audit Data ────────────────────────────────────────────────────────────────
 const AUDIT_LOGS = [
@@ -120,6 +121,7 @@ export default function AdminAuditLogs() {
   const [selectedLog,    setSelectedLog]    = useState(null);
 
   const { addToast } = useToast();
+  const { formatTime, formatDate } = useDateTimeFormatter();
 
   const handleReset = () => {
     setSearchQuery('');
@@ -387,7 +389,7 @@ export default function AdminAuditLogs() {
 
                       {/* Timestamp */}
                       <td className="px-5 py-3.5 align-middle">
-                        <p className="text-xs font-bold text-[#0F172A]">Today {log.time}</p>
+                        <p className="text-xs font-bold text-[#0F172A]">Today {formatTime(log.time)}</p>
                         <p className="text-[11px] font-semibold text-[#64748B] mt-0.5">{log.rel}</p>
                       </td>
 
@@ -455,7 +457,7 @@ export default function AdminAuditLogs() {
         <div className="lg:col-span-3 bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm p-6">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Today's Security Activity</h3>
-            <span className="text-[11px] font-bold text-[#64748B] bg-[#F8F9FB] border border-[#E7ECF3] px-2.5 py-1 rounded-full">{new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+            <span className="text-[11px] font-bold text-[#64748B] bg-[#F8F9FB] border border-[#E7ECF3] px-2.5 py-1 rounded-full">{formatDate(new Date())}</span>
           </div>
 
           <div className="relative">
@@ -470,7 +472,7 @@ export default function AdminAuditLogs() {
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <p className="text-[10px] font-extrabold text-[#0F172A] text-center leading-tight">{ev.label}</p>
-                    <p className="text-[9px] font-mono font-bold text-[#64748B]">{ev.time}</p>
+                    <p className="text-[9px] font-mono font-bold text-[#64748B]">{formatTime(ev.time)}</p>
                   </div>
                 );
               })}

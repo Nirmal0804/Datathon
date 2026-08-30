@@ -3,13 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Plus, Search, X, ChevronRight, ShieldCheck, Shield, User, Clock, FolderOpen, CheckCircle2 } from 'lucide-react';
 import { MOCK_CASES } from './mockData';
 import { useToast } from '../../../components/ui/Toast';
+import { useDateTimeFormatter } from '../../../utils/dateTime';
+import { useTranslation } from '../../../i18n';
 import EmptyState from '../../../components/common/EmptyState';
 
 const riskBadgeClass = (risk) => {
   switch (risk) {
-    case 'Critical': return 'bg-rose-50 text-rose-600 border border-rose-200';
+    case 'Critical': return 'bg-rose-50 text-rose-700 border border-rose-200';
     case 'High':     return 'bg-amber-50 text-amber-700 border border-amber-200';
-    case 'Medium':   return 'bg-sky-50 text-sky-700 border border-sky-200';
+    case 'Medium':   return 'bg-blue-50 text-blue-700 border border-blue-200';
     default:         return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
   }
 };
@@ -17,7 +19,7 @@ const riskBadgeClass = (risk) => {
 const statusBadgeClass = (status) => {
   switch (status) {
     case 'Active':        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
-    case 'Closed':        return 'bg-slate-100 text-slate-600 border border-slate-200';
+    case 'Closed':        return 'bg-slate-100 text-slate-700 border border-slate-200';
     case 'Investigating': return 'bg-amber-50 text-amber-700 border border-amber-200';
     default:              return 'bg-blue-50 text-blue-700 border border-blue-200';
   }
@@ -34,6 +36,8 @@ const statusDotClass = (status) => {
 
 export default function FieldOfficerFIRManagement() {
   const { addToast } = useToast();
+  const { formatDate } = useDateTimeFormatter();
+  const { t } = useTranslation();
   const [localCases, setLocalCases] = useState(MOCK_CASES);
   const [searchQuery, setSearchQuery] = useState('');
   const [registerModal, setRegisterModal] = useState(false);
@@ -145,13 +149,13 @@ export default function FieldOfficerFIRManagement() {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">FIR Management</h2>
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('fir.title', 'FIR Management')}</h2>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                {localCases.length} Active Records
+                {localCases.length} {t('fir.statusActive', 'Active Records')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Register new incident complaints and view precinct intake logs.
+              {t('fir.subtitle', 'Register new incident complaints and view precinct intake logs.')}
             </p>
           </div>
         </div>
@@ -159,7 +163,7 @@ export default function FieldOfficerFIRManagement() {
         <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-end">
           <div className="hidden md:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>Duty Status: Active On-Field</span>
+            <span>{t('cases.dutyStatus', 'Duty Status: Active On-Field')}</span>
           </div>
 
           <button 
@@ -167,7 +171,7 @@ export default function FieldOfficerFIRManagement() {
             className="w-full sm:w-auto h-9 sm:h-10 px-4 sm:px-5 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4 text-[#C79A2B]" />
-            <span>Register New FIR</span>
+            <span>{t('fir.registerNew', 'Register New FIR')}</span>
           </button>
         </div>
       </div>
@@ -176,9 +180,9 @@ export default function FieldOfficerFIRManagement() {
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-7 md:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7ECF3] pb-5">
           <div className="flex items-center gap-3">
-            <h3 className="text-base font-black text-[#0F172A] tracking-tight">Precinct FIR Records</h3>
+            <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('fir.title', 'Precinct FIR Records')}</h3>
             <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-xs">
-              {filteredCases.length} Records
+              {filteredCases.length} {t('dashboard.records', 'Records')}
             </span>
           </div>
 
@@ -232,7 +236,7 @@ export default function FieldOfficerFIRManagement() {
                       <div className="flex items-center gap-2 sm:gap-3 text-xs text-[#64748B] font-semibold mt-0.5">
                         <span>{c.policeStation}</span>
                         <span>•</span>
-                        <span>{c.date}</span>
+                        <span>{formatDate(c.rawDate || c.date)}</span>
                       </div>
                     </div>
                   </div>
@@ -457,7 +461,7 @@ export default function FieldOfficerFIRManagement() {
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Logged Date</span>
-                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.date}</span>
+                    <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{formatDate(selectedCase.rawDate || selectedCase.date)}</span>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status / Risk</span>

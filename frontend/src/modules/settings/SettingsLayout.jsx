@@ -8,6 +8,7 @@ import {
 import { useToast } from '../../components/ui/Toast';
 import LazyImage from '../../components/ui/LazyImage';
 import AuditLogs from './components/AuditLogs';
+import { useTranslation } from '../../i18n';
 
 // ─── Initial State Helpers ───────────────────────────────────────────────────
 const getRoleDefaultProfile = (role) => {
@@ -54,8 +55,65 @@ const RANKS = ['Constable', 'Sub-Inspector', 'Inspector', 'DSP', 'SP', 'DCP', 'A
 const DEPARTMENTS = ['Crime Branch', 'Intelligence Wing', 'Cyber Crime', 'Law & Order', 'Traffic Police', 'Special Task Force'];
 const DISTRICTS = ['Bengaluru Urban', 'Mysuru', 'Hubballi-Dharwad', 'Mangaluru', 'Belagavi', 'Kalaburagi', 'Udupi', 'Shimoga', 'Tumakuru', 'Ballari'];
 
+const DEFAULT_PREFERENCES = {
+  theme: 'light', // 'light' | 'dark'
+  language: 'en', // 'en' | 'kn'
+  dateFormat: 'DD-MM-YYYY',
+  timeFormat: '24h',
+  mapTheme: 'dark', // 'dark' | 'satellite' | 'light'
+  defaultDashboard: 'overview',
+  fontSize: 'medium',
+  autoSave: true,
+};
+
+export function applyTheme(theme) {
+  const normalized = theme === 'dark' ? 'dark' : 'light';
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-theme', normalized);
+    if (normalized === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    }
+  }
+  return normalized;
+}
+
+const getInitialPreferences = () => {
+  try {
+    const saved = localStorage.getItem('ksp_user_preferences');
+    let themeVal = null;
+    let otherPrefs = {};
+    if (saved && saved !== 'undefined' && saved !== 'null') {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object') {
+        themeVal = parsed.theme;
+        otherPrefs = parsed;
+      }
+    }
+    if (!themeVal) {
+      themeVal = localStorage.getItem('ksp_theme') || localStorage.getItem('theme');
+    }
+
+    // Safe migration: "dark-navy" -> "dark", "system" -> "light", default -> "light"
+    if (themeVal === 'dark-navy') themeVal = 'dark';
+    else if (themeVal === 'system' || (themeVal !== 'light' && themeVal !== 'dark')) themeVal = 'light';
+
+    const merged = { ...DEFAULT_PREFERENCES, ...otherPrefs, theme: themeVal };
+    localStorage.setItem('ksp_user_preferences', JSON.stringify(merged));
+    localStorage.setItem('ksp_theme', themeVal);
+    return merged;
+  } catch (err) {
+    console.warn('Failed to parse ksp_user_preferences:', err);
+    return DEFAULT_PREFERENCES;
+  }
+};
+
 export default function SettingsLayout({ role = 'admin' }) {
   const { addToast } = useToast();
+  const { t } = useTranslation();
 
   // Active Navigation Section
   const [activeSection, setActiveSection] = useState('profile');
@@ -126,22 +184,15 @@ export default function SettingsLayout({ role = 'admin' }) {
   });
 
   // Application Preferences State
-  const [preferences, setPreferences] = useState({
-    theme: 'dark', // 'system' | 'light' | 'dark'
-    language: 'en', // 'en' | 'kn'
-    dateFormat: 'DD-MM-YYYY',
-    timeFormat: '24h',
-    mapTheme: 'dark', // 'dark' | 'satellite' | 'light'
-    defaultDashboard: 'overview',
-    fontSize: 'medium',
-    autoSave: true,
-  });
+  const [preferences, setPreferences] = useState(getInitialPreferences);
+  const [initialPreferencesSnapshot, setInitialPreferencesSnapshot] = useState(preferences);
 
   // Danger Zone Confirmation Modal State
   const [dangerModalAction, setDangerModalAction] = useState(null);
 
-  // Load stored avatar on mount if available
+  // Load stored avatar and apply theme on mount
   useEffect(() => {
+    applyTheme(preferences.theme);
     const savedAvatar = localStorage.getItem('ksp_user_avatar');
     if (savedAvatar) {
       setProfile((prev) => ({ ...prev, avatarUrl: savedAvatar }));
@@ -150,10 +201,12 @@ export default function SettingsLayout({ role = 'admin' }) {
     }
   }, []);
 
-  // Check for unsaved profile changes
+  // Check for unsaved profile or preferences changes
   const isProfileDirty = useMemo(() => {
-    return JSON.stringify(profile) !== JSON.stringify(initialProfileSnapshot);
-  }, [profile, initialProfileSnapshot]);
+    const profileChanged = JSON.stringify(profile) !== JSON.stringify(initialProfileSnapshot);
+    const prefsChanged = JSON.stringify(preferences) !== JSON.stringify(initialPreferencesSnapshot);
+    return profileChanged || prefsChanged;
+  }, [profile, initialProfileSnapshot, preferences, initialPreferencesSnapshot]);
 
   // Form Validation Handler
   const validateField = (name, value) => {
@@ -295,7 +348,7 @@ export default function SettingsLayout({ role = 'admin' }) {
     });
   };
 
-  // ─── Profile Form Submission ─────────────────────────────────────────────────
+  // ─── Profile & Preferences Form Submission ─────────────────────────────────
   const handleSaveProfile = (e) => {
     if (e) e.preventDefault();
     const isNameValid = validateField('fullName', profile.fullName);
@@ -312,22 +365,33 @@ export default function SettingsLayout({ role = 'admin' }) {
     }
 
     setInitialProfileSnapshot(profile);
+    setInitialPreferencesSnapshot(preferences);
+
     localStorage.setItem('ksp_user_profile', JSON.stringify(profile));
+    localStorage.setItem('ksp_user_preferences', JSON.stringify(preferences));
+    localStorage.setItem('ksp_theme', preferences.theme);
+
+    applyTheme(preferences.theme);
+
     window.dispatchEvent(new Event('ksp_profile_updated'));
     window.dispatchEvent(new Event('ksp_avatar_updated'));
+    window.dispatchEvent(new Event('ksp_preferences_updated'));
+
     addToast({
-      title: 'Profile Saved',
-      message: 'Personal identity and department records updated successfully.',
+      title: 'Settings Saved',
+      message: 'Account preferences and personal profile details updated successfully.',
       type: 'success',
     });
   };
 
   const handleResetProfile = () => {
     setProfile(initialProfileSnapshot);
+    setPreferences(initialPreferencesSnapshot);
+    applyTheme(initialPreferencesSnapshot.theme);
     setErrors({});
     addToast({
       title: 'Changes Reverted',
-      message: 'Restored original profile details.',
+      message: 'Restored original profile and preference details.',
       type: 'info',
     });
   };
@@ -398,10 +462,8 @@ export default function SettingsLayout({ role = 'admin' }) {
     } else if (dangerModalAction === 'logout_all') {
       handleTerminateAllOtherSessions();
     } else if (dangerModalAction === 'reset_prefs') {
-      setPreferences({
-        theme: 'dark', language: 'en', dateFormat: 'DD-MM-YYYY', timeFormat: '24h',
-        mapTheme: 'dark', defaultDashboard: 'overview', fontSize: 'medium', autoSave: true,
-      });
+      setPreferences(DEFAULT_PREFERENCES);
+      applyTheme('light');
       addToast({ title: 'Preferences Reset', message: 'All platform user preferences restored to factory defaults.', type: 'info' });
     }
     setDangerModalAction(null);
@@ -409,11 +471,11 @@ export default function SettingsLayout({ role = 'admin' }) {
 
   // Navigation Items List
   const SECTIONS = [
-    { id: 'profile', label: 'Profile', icon: User, desc: 'Personal identity & credentials' },
-    { id: 'security', label: 'Role & Security', icon: Shield, desc: 'Password, MFA & Active sessions' },
-    { id: 'notifications', label: 'Notifications', icon: Bell, desc: 'Alert channels & frequencies' },
-    { id: 'preferences', label: 'Preferences', icon: SlidersHorizontal, desc: 'UI theme, language & formats' },
-    { id: 'audit', label: 'Audit Logs', icon: ScrollText, desc: 'Security activity & audit history' },
+    { id: 'profile', label: t('settings.profileTab', 'Profile'), icon: User, desc: 'Personal identity & credentials' },
+    { id: 'security', label: t('settings.securityTab', 'Role & Security'), icon: Shield, desc: 'Password, MFA & Active sessions' },
+    { id: 'notifications', label: t('settings.notificationsTab', 'Notifications'), icon: Bell, desc: 'Alert channels & frequencies' },
+    { id: 'preferences', label: t('settings.preferencesTab', 'Preferences'), icon: SlidersHorizontal, desc: 'UI theme, language & formats' },
+    { id: 'audit', label: t('settings.auditTab', 'Audit Logs'), icon: ScrollText, desc: 'Security activity & audit history' },
   ];
 
   return (
@@ -427,13 +489,13 @@ export default function SettingsLayout({ role = 'admin' }) {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Platform Settings</h1>
+              <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('settings.title', 'Platform Settings')}</h1>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                Account Governance
+                {t('settings.governance', 'Account Governance')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Manage your account, profile, preferences, notification settings, and platform access.
+              {t('settings.subtitle', 'Manage your account, profile, preferences, notification settings, and platform access.')}
             </p>
           </div>
         </div>
@@ -442,7 +504,7 @@ export default function SettingsLayout({ role = 'admin' }) {
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-end">
           <div className="hidden md:flex items-center gap-1.5 bg-[#F8F9FB] border border-[#E7ECF3] px-3.5 py-2 rounded-full text-xs font-bold text-[#64748B]">
             <Clock className="w-3.5 h-3.5 text-[#0B1F4D]" />
-            Last Updated: Today 09:15 AM
+            {t('settings.lastUpdated', 'Last Updated')}: Today 09:15 AM
           </div>
 
           <div className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-xs font-extrabold flex items-center gap-1.5 border ${
@@ -451,7 +513,7 @@ export default function SettingsLayout({ role = 'admin' }) {
               : 'bg-emerald-50 text-emerald-700 border-emerald-200'
           }`}>
             <span className={`w-2 h-2 rounded-full ${isProfileDirty ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
-            {isProfileDirty ? 'Unsaved Changes' : 'Synced'}
+            {isProfileDirty ? t('settings.unsavedChanges', 'Unsaved Changes') : t('settings.synced', 'Synced')}
           </div>
 
           <button
@@ -464,7 +526,7 @@ export default function SettingsLayout({ role = 'admin' }) {
             }`}
           >
             <Save className="w-4 h-4 text-[#C79A2B]" />
-            Save Changes
+            {t('settings.saveChanges', 'Save Changes')}
           </button>
         </div>
       </div>
@@ -1053,17 +1115,19 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Theme Selector */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-2">Color Theme Mode</label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-2">{t('settings.colorTheme', 'Color Theme Mode')}</label>
+                  <div className="grid grid-cols-2 gap-2">
                     {[
-                      { id: 'system', label: 'System' },
-                      { id: 'light', label: 'Light' },
-                      { id: 'dark', label: 'Dark Navy' },
+                      { id: 'light', label: t('settings.light', 'Light') },
+                      { id: 'dark', label: t('settings.dark', 'Dark') },
                     ].map(({ id, label }) => (
                       <button
                         key={id}
                         type="button"
-                        onClick={() => setPreferences((p) => ({ ...p, theme: id }))}
+                        onClick={() => {
+                          setPreferences((p) => ({ ...p, theme: id }));
+                          applyTheme(id);
+                        }}
                         className={`h-9 rounded-[12px] text-xs font-extrabold transition-all cursor-pointer ${
                           preferences.theme === id
                             ? 'bg-[#0B1F4D] text-white shadow-xs'
@@ -1078,7 +1142,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Language Selector */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-2">Platform Language</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-2">{t('settings.language', 'Platform Language')}</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { id: 'en', label: 'English (UK/IN)' },
@@ -1102,7 +1166,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Date Format */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Date Format</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.dateFormat', 'Date Format')}</label>
                   <select
                     value={preferences.dateFormat}
                     onChange={(e) => setPreferences((p) => ({ ...p, dateFormat: e.target.value }))}
@@ -1116,7 +1180,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Time Format */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Time Format</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.timeFormat', 'Time Format')}</label>
                   <select
                     value={preferences.timeFormat}
                     onChange={(e) => setPreferences((p) => ({ ...p, timeFormat: e.target.value }))}
@@ -1129,7 +1193,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Map Theme */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">GIS Map Layer Theme</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.mapTheme', 'GIS Map Layer Theme')}</label>
                   <select
                     value={preferences.mapTheme}
                     onChange={(e) => setPreferences((p) => ({ ...p, mapTheme: e.target.value }))}
@@ -1143,16 +1207,16 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Default Dashboard */}
                 <div>
-                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Default Dashboard Landing</label>
+                  <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.defaultLanding', 'Default Dashboard Landing')}</label>
                   <select
                     value={preferences.defaultDashboard}
                     onChange={(e) => setPreferences((p) => ({ ...p, defaultDashboard: e.target.value }))}
                     className="w-full h-10 px-4 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none cursor-pointer"
                   >
-                    <option value="overview">Executive Overview</option>
-                    <option value="last">Last Opened Module</option>
-                    <option value="cases">Assigned Precinct Cases</option>
-                    <option value="health">System Diagnostic Suite</option>
+                    <option value="overview">{t('settings.executiveOverview', 'Executive Overview')}</option>
+                    <option value="last">{t('settings.lastOpened', 'Last Opened Module')}</option>
+                    <option value="cases">{t('settings.assignedPrecinct', 'Assigned Precinct Cases')}</option>
+                    <option value="health">{t('settings.diagnosticSuite', 'System Diagnostic Suite')}</option>
                   </select>
                 </div>
               </div>

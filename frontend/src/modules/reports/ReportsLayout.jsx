@@ -1,7 +1,8 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import ReportList, { INITIAL_REPORTS, downloadReportFile } from "./components/ReportList";
 import ReportPreview from "./components/ReportPreview";
 import { useToast } from "../../components/ui/Toast";
+import { useDateTimeFormatter } from "../../utils/dateTime";
 import {
   Plus, History, FileText, BarChart2, Clock, Activity,
   Search, Filter, Calendar, Download, ChevronDown,
@@ -119,6 +120,7 @@ function GenerateModal({ onClose, onGenerate }) {
 
 export default function ReportsLayout({ role = "analyst" }) {
   const { addToast } = useToast();
+  const { formatDate } = useDateTimeFormatter();
   const [searchQuery, setSearchQuery]     = useState("");
   const [reportsList, setReportsList]     = useState(INITIAL_REPORTS);
   const [selectedReport, setSelectedReport] = useState(INITIAL_REPORTS[0] || null);
@@ -181,7 +183,7 @@ export default function ReportsLayout({ role = "analyst" }) {
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-semibold bg-[#F8F9FB] border border-[#E7ECF3] px-3 py-2 rounded-[12px]">
             <Clock className="w-3.5 h-3.5" />
-            <span>Last updated: {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+            <span>Last updated: {formatDate(new Date())}</span>
           </div>
           <button onClick={() => setShowHistory(!showHistory)} className={`flex items-center gap-2 px-4 py-2 rounded-[12px] text-xs font-bold uppercase tracking-wider border transition-colors ${showHistory ? "bg-[#0B1F4D] text-white border-[#0B1F4D]" : "bg-[#F8F9FB] text-[#0B1F4D] border-[#E7ECF3] hover:bg-[#F1F5F9]"}`}>
             <History className="w-3.5 h-3.5" /> Activity Log

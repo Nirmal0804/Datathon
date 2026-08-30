@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import LazyImage from '../../components/ui/LazyImage';
 import { useToast } from '../../components/ui/Toast';
+import { useTranslation } from '../../i18n';
 
 const roles = [
   { id: 'officer', name: 'Field Officer', icon: User },
@@ -34,6 +35,7 @@ export const ROLE_CREDENTIALS = {
 
 export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
   const { addToast } = useToast();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role || null);
 
@@ -166,7 +168,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             onClick={onBack}
             className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#F5E7C1] transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-white/10"
           >
-            Back to Home
+            {t('auth.backToHome', 'Back to Home')}
             <ArrowRight className="w-4 h-4" />
           </button>
         )}
@@ -195,7 +197,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
 
           {/* Card Header */}
           <h2 className="text-2xl font-extrabold text-[#142B45] text-center mb-1 tracking-tight">
-            Secure Portal Login
+            {t('auth.signIn', 'Secure Portal Login')}
           </h2>
           <p className="text-xs text-slate-500 text-center mb-7 font-medium">
             Select your access level and enter credentials to authenticate.
@@ -253,7 +255,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-[#142B45] mb-1.5">
-                Official ID / Email
+                {t('auth.email', 'Official ID / Email')}
               </label>
               <div className="relative flex items-center">
                 <User className="absolute left-4 h-4 w-4 text-slate-400" />
@@ -271,14 +273,14 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-xs font-bold text-[#142B45]">
-                  Password
+                  {t('auth.password', 'Password')}
                 </label>
                 <button
                   type="button"
                   onClick={onForgot}
                   className="text-xs text-[#E00000] hover:underline font-bold transition-colors cursor-pointer"
                 >
-                  Forgot?
+                  {t('auth.forgotPassword', 'Forgot?')}
                 </button>
               </div>
               <div className="relative flex items-center">
@@ -307,7 +309,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
               disabled={!selectedRole || isLoading}
               className="w-full py-3.5 mt-6 bg-[#E00000] hover:bg-[#C90000] disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded-full text-sm transition-all duration-200 shadow-md active:scale-[0.99] flex justify-center items-center cursor-pointer disabled:cursor-not-allowed disabled:shadow-none"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.signIn', 'Login')}
             </button>
           </form>
 

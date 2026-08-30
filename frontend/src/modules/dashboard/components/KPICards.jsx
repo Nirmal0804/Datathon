@@ -1,8 +1,11 @@
 import React from 'react';
 import { FileText, Activity, ShieldCheck, ShieldAlert } from 'lucide-react';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
+import { useTranslation } from '../../../i18n';
 
 export default function KPICards({ data, compact = false }) {
+  const { t } = useTranslation();
+
   // If data is not yet loaded, set fallbacks
   const stats = data || {
     totalFIRs: { value: 0, trend: 'up', percentage: '0%' },
@@ -13,7 +16,7 @@ export default function KPICards({ data, compact = false }) {
 
   const cards = [
     {
-      title: 'Total Registered FIRs',
+      title: t('dashboard.totalFIRs', 'Total Registered FIRs'),
       value: stats.totalFIRs.value.toLocaleString('en-IN'),
       change: stats.totalFIRs.percentage,
       trend: stats.totalFIRs.trend,
@@ -23,7 +26,7 @@ export default function KPICards({ data, compact = false }) {
       positive: stats.totalFIRs.trend === 'down', // Decreasing FIRs is positive
     },
     {
-      title: 'Active Cases',
+      title: t('dashboard.activeCases', 'Active Cases'),
       value: stats.activeCases.value.toLocaleString('en-IN'),
       change: stats.activeCases.percentage,
       trend: stats.activeCases.trend,
@@ -33,7 +36,7 @@ export default function KPICards({ data, compact = false }) {
       positive: stats.activeCases.trend === 'down', // Decreasing active cases is positive
     },
     {
-      title: 'Closed Cases',
+      title: t('dashboard.closedCases', 'Closed Cases'),
       value: stats.closedCases.value.toLocaleString('en-IN'),
       change: stats.closedCases.percentage,
       trend: stats.closedCases.trend,
@@ -43,7 +46,7 @@ export default function KPICards({ data, compact = false }) {
       positive: stats.closedCases.trend === 'up', // Increasing closed cases is positive
     },
     {
-      title: 'Total Arrests',
+      title: t('dashboard.totalArrests', 'Total Arrests'),
       value: stats.totalArrests.value.toLocaleString('en-IN'),
       change: stats.totalArrests.percentage,
       trend: stats.totalArrests.trend,

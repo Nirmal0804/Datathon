@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, AlertCircle, Info, ExternalLink } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
+import { useTranslation } from '../../../i18n';
 
 const typeStyles = {
   critical: {
@@ -28,6 +29,7 @@ const typeStyles = {
 };
 
 export default function RecentAlerts({ data }) {
+  const { t } = useTranslation();
   const alerts = (data || []).slice(0, 3);
 
   return (
@@ -38,13 +40,13 @@ export default function RecentAlerts({ data }) {
             <Zap className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-[14px] font-extrabold text-[#0F172A] tracking-tight">Security Alerts</h3>
-            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Automated AI anomaly feed</p>
+            <h3 className="text-[14px] font-extrabold text-[#0F172A] tracking-tight">{t('dashboard.securityAlerts', 'Security Alerts')}</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{t('dashboard.alertsSubtitle', 'Automated AI anomaly feed')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <button className="text-[10px] font-bold text-[#1E3A8A] hover:text-[#0F172A] hover:underline transition-colors shrink-0 uppercase tracking-widest">
-            View All
+            {t('dashboard.viewAll', 'View All')}
           </button>
           <span className="text-[10px] font-extrabold text-white bg-red-600 px-2 py-0.5 rounded-full shadow-sm shrink-0" title="Total active anomalies">
             {data?.length || 0}

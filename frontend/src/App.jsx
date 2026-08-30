@@ -114,6 +114,40 @@ function AppContent() {
     }
   }, []);
 
+  // Initialize and listen for theme updates
+  useEffect(() => {
+    const applySavedTheme = () => {
+      try {
+        let themeVal = 'light';
+        const saved = localStorage.getItem('ksp_user_preferences');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed?.theme) themeVal = parsed.theme;
+        } else {
+          const legacy = localStorage.getItem('ksp_theme') || localStorage.getItem('theme');
+          if (legacy) themeVal = legacy;
+        }
+        if (themeVal === 'dark-navy') themeVal = 'dark';
+        else if (themeVal === 'system' || (themeVal !== 'light' && themeVal !== 'dark')) themeVal = 'light';
+
+        document.documentElement.setAttribute('data-theme', themeVal);
+        if (themeVal === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+      } catch {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    };
+
+    applySavedTheme();
+    window.addEventListener('ksp_preferences_updated', applySavedTheme);
+    return () => window.removeEventListener('ksp_preferences_updated', applySavedTheme);
+  }, []);
+
   // Listen to browser forward/backward buttons
   useEffect(() => {
     const handlePopState = (e) => {

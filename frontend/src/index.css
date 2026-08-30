@@ -306,3 +306,61 @@
     box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
   }
 }
+
+/* ============================================================
+   DARK THEME (Existing KSP Dark Navy Surface Palette)
+   ============================================================ */
+[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body,
+.dark body {
+  background-color: #081120 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .bg-white,
+.dark .bg-white {
+  background-color: #0D1B36 !important;
+  border-color: #1E345F !important;
+}
+
+[data-theme="dark"] .bg-\[\#F8F9FB\],
+[data-theme="dark"] .bg-\[\#F7F8FA\],
+.dark .bg-\[\#F8F9FB\],
+.dark .bg-\[\#F7F8FA\] {
+  background-color: #0A1428 !important;
+  border-color: #1E345F !important;
+}
+
+[data-theme="dark"] .border-\[\#E7ECF3\],
+[data-theme="dark"] .border-\[\#E6E8EC\],
+[data-theme="dark"] .border-\[\#E7EAF0\],
+[data-theme="dark"] .border-\[\#D9E2EC\],
+.dark .border-\[\#E7ECF3\],
+.dark .border-\[\#E6E8EC\],
+.dark .border-\[\#E7EAF0\],
+.dark .border-\[\#D9E2EC\] {
+  border-color: #1E345F !important;
+}
+
+[data-theme="dark"] .text-\[\#0F172A\],
+.dark .text-\[\#0F172A\] {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .text-\[\#64748B\],
+.dark .text-\[\#64748B\] {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] select,
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark input:not([type="checkbox"]):not([type="radio"]) {
+  background-color: #0A1428 !important;
+  color: #F8FAFC !important;
+  border-color: #1E345F !important;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Download, ShieldCheck, LogIn, LogOut, FilePen, Trash2, Eye, Clock } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
+import { useDateTimeFormatter } from '../../../utils/dateTime';
 
 const logs = [
   { id: 1, action: 'Login', user: 'J. Doe', role: 'Analyst', module: 'Authentication', detail: 'Successful login from 192.168.1.10', time: '2026-07-26 09:14:02', type: 'auth' },
@@ -20,6 +21,7 @@ const typeConfig = {
 
 export default function AuditLogs() {
   const [search, setSearch] = useState('');
+  const { formatDateTime } = useDateTimeFormatter();
 
   const filtered = logs.filter(l =>
     (l.action || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -103,7 +105,7 @@ export default function AuditLogs() {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-semibold text-[#0F172A]">{log.module}</td>
                     <td className="px-4 py-3 max-w-xs truncate text-[#64748B] font-medium">{log.detail}</td>
-                    <td className="px-4 py-3 whitespace-nowrap font-mono text-[11px] font-extrabold text-[#64748B]">{log.time}</td>
+                    <td className="px-4 py-3 whitespace-nowrap font-mono text-[11px] font-extrabold text-[#64748B]">{formatDateTime(log.time)}</td>
                   </tr>
                 );
               })}

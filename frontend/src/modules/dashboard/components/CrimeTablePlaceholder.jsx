@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MoreHorizontal, Download, ArrowUpDown, Search, X, Calendar, Shield, User, FileText, Clock, FolderOpen, Search as SearchIcon, CheckCircle2, ChevronDown } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
+import { useDateTimeFormatter } from '../../../utils/dateTime';
+import { useTranslation } from '../../../i18n';
 
 const riskBadge = (risk) => {
   switch (risk) {
@@ -21,6 +23,8 @@ const statusDot = (status) => {
 
 export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsPerPage, title, subtitle }) {
   const cases = data || [];
+  const { formatDate } = useDateTimeFormatter();
+  const { t } = useTranslation();
 
   // Table states
   const [searchQuery, setSearchQuery] = useState('');
@@ -127,8 +131,8 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
       {/* 3. Improved Table Header & Toolbar (One Clean Horizontal Row) */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#E7ECF3] bg-[#F8F9FB]">
         <div>
-          <h3 className="text-base font-black text-[#0F172A] tracking-tight">{title || 'Recent Intelligence Records'}</h3>
-          <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{subtitle || 'Real-time case intakes'}</p>
+          <h3 className="text-base font-black text-[#0F172A] tracking-tight">{title || t('dashboard.recentRecords', 'Recent Intelligence Records')}</h3>
+          <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{subtitle || t('dashboard.recentSubtitle', 'Real-time case intakes')}</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -137,7 +141,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
             <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search FIR, category, district..."
+              placeholder={t('dashboard.searchPlaceholder', 'Search FIR, category, district...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full sm:w-72 h-10 pl-10 pr-8 bg-white border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all shadow-xs placeholder:text-slate-400 font-sans"
@@ -159,7 +163,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
             title="Export matching records"
           >
             <Download className="w-4 h-4 text-[#C79A2B]" />
-            <span className="hidden sm:inline">Export</span>
+            <span className="hidden sm:inline">{t('common.export', 'Export')}</span>
           </button>
         </div>
       </div>
@@ -171,11 +175,11 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
             <tr className="sticky top-0 bg-[#F8F9FB] z-10 border-b border-[#E7ECF3]">
               {[
                 { label: 'Case ID', field: 'id' },
-                { label: 'Category', field: 'category' },
-                { label: 'Jurisdiction', field: 'district' },
-                { label: 'Date Logged', field: 'rawDate' },
-                { label: 'AI Risk', field: 'risk' },
-                { label: 'Status', field: 'status' },
+                { label: t('cases.classification', 'Category'), field: 'category' },
+                { label: t('cases.jurisdiction', 'Jurisdiction'), field: 'district' },
+                { label: t('cases.loggedDate', 'Date Logged'), field: 'rawDate' },
+                { label: t('cases.aiRisk', 'AI Risk'), field: 'risk' },
+                { label: t('common.status', 'Status'), field: 'status' },
                 { label: '', field: null }
               ].map((h, i) => (
                 <th key={i} className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider text-left bg-[#F8F9FB]">
@@ -221,7 +225,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                     <p className="text-[#0F172A] font-bold text-xs">{row.policeStation}</p>
                     <p className="text-[#64748B] font-semibold text-[11px] mt-0.5">{row.district}</p>
                   </td>
-                  <td className="px-6 py-3.5 align-middle text-xs font-medium text-[#64748B]">{row.date}</td>
+                  <td className="px-6 py-3.5 align-middle text-xs font-medium text-[#64748B]">{formatDate(row.rawDate || row.date)}</td>
                   <td className="px-6 py-3.5 align-middle">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-bold text-[11px] ${riskBadge(row.risk)}`}>{row.risk}</span>
                   </td>
@@ -382,7 +386,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Logged Date</span>
-                    <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{selectedCase.date}</span>
+                    <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{formatDate(selectedCase.rawDate || selectedCase.date)}</span>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Risk / Status</span>

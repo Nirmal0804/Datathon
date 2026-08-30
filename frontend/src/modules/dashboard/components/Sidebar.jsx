@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../../components/ui/LazyImage';
+import { useTranslation } from '../../../i18n';
 
 const ANALYST_NAV_SECTIONS = [
   {
@@ -86,6 +87,7 @@ const OFFICER_NAV_SECTIONS = [
 ];
 
 export default function Sidebar({ onLogout, activeModule, setActiveModule, role, onClose }) {
+  const { t } = useTranslation();
   const navSections = role === 'officer' 
     ? OFFICER_NAV_SECTIONS 
     : role === 'admin'
@@ -204,6 +206,27 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
             <div className="space-y-1">
               {section.items.map(item => {
                 const isActive = activeModule === item.id;
+                const labelMap = {
+                  overview: t('nav.overview', item.name),
+                  map: t('nav.crimeMap', item.name),
+                  district: t('nav.district', item.name),
+                  network: t('nav.network', item.name),
+                  analytics: t('nav.analytics', item.name),
+                  reports: t('nav.reports', item.name),
+                  hotspots: t('nav.hotspots', item.name),
+                  correlation: t('nav.correlation', item.name),
+                  assigned_cases: t('nav.assignedCases', item.name),
+                  fir_management: t('nav.firManagement', item.name),
+                  alerts: t('nav.alerts', item.name),
+                  users: t('nav.users', item.name),
+                  roles: t('nav.roles', item.name),
+                  audit_logs: t('nav.auditLogs', item.name),
+                  system_health: t('nav.systemHealth', item.name),
+                  config: t('nav.settings', item.name),
+                  settings: t('nav.settings', item.name),
+                };
+                const translatedName = labelMap[item.id] || item.name;
+
                 return (
                   <motion.button
                     key={item.id}
@@ -220,7 +243,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <item.icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#0B1F4D]' : 'text-white'}`} aria-hidden="true" />
-                    <span className="truncate">{item.name}</span>
+                    <span className="truncate">{translatedName}</span>
                     {isActive && (
                       <div className="ml-auto w-2 h-2 rounded-full bg-[#C79A2B] shrink-0" />
                     )}
@@ -260,7 +283,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
             className="w-full h-9 px-3 rounded-[12px] text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
             <Settings className="w-3.5 h-3.5 text-[#C79A2B] shrink-0" />
-            <span>Settings</span>
+            <span>{t('nav.settings', 'Settings')}</span>
           </motion.button>
 
           <motion.button
@@ -270,7 +293,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
             aria-label="Secure logout"
           >
             <LogOut className="w-3.5 h-3.5 text-rose-300 shrink-0" />
-            <span>Logout</span>
+            <span>{t('nav.logout', 'Logout')}</span>
           </motion.button>
         </div>
       </div>

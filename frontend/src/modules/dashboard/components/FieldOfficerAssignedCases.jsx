@@ -2,9 +2,11 @@ import React from 'react';
 import CrimeTablePlaceholder from './CrimeTablePlaceholder';
 import { MOCK_CASES } from './mockData';
 import { Briefcase, ShieldCheck } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function FieldOfficerAssignedCases() {
-  // Filter cases assigned to Inspector Patil
+  const { t } = useTranslation();
+  // Filter cases assigned to Inspector Patil (dynamic officer filter remains intact)
   const patilCases = MOCK_CASES.filter(c => c.details?.officer === 'Inspector Patil');
 
   return (
@@ -17,20 +19,20 @@ export default function FieldOfficerAssignedCases() {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Your Assigned Cases</h2>
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('cases.title', 'Your Assigned Cases')}</h2>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                {patilCases.length} Active Intakes
+                {patilCases.length} {t('cases.activeIntakes', 'Active Intakes')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              Roster of active crime investigations delegated to Inspector Patil.
+              {t('cases.subtitle', 'Roster of active crime investigations delegated to your precinct.')}
             </p>
           </div>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 bg-[#F8F9FB] border border-[#E7ECF3] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0F172A]">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>Duty Status: Active On-Field</span>
+          <span>{t('cases.dutyStatus', 'Duty Status: Active On-Field')}</span>
         </div>
       </div>
       
@@ -38,8 +40,8 @@ export default function FieldOfficerAssignedCases() {
       <CrimeTablePlaceholder 
         data={patilCases} 
         itemsPerPage={10} 
-        title="Assigned Case Roster" 
-        subtitle="Real-time case intakes assigned to your precinct" 
+        title={t('cases.title', 'Assigned Case Roster')} 
+        subtitle={t('cases.subtitle', 'Real-time case intakes assigned to your precinct')} 
       />
     </div>
   );
