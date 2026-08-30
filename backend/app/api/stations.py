@@ -11,6 +11,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 
 from app.api.rbac_deps import require_permission
+from app.core.cache import CatalystCacheService, get_cache_service
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.station import StationDetailResponse, StationListResponse
 from app.schemas.auth import AuthenticatedIdentity
@@ -51,13 +52,25 @@ async def list_stations(
         50, ge=1, le=200, description="Items per page (max 200)"
     ),
     service: StationService = Depends(_get_station_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("stations.read")),
 ) -> StationListResponse:
+    cache_key = cache.make_cache_key(
+        "stations_list",
+        district_id=district_id,
+        page=page,
+        page_size=page_size,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return StationListResponse(**cached)
+
     result = service.list_stations(
         district_id=district_id,
         page=page,
         page_size=page_size,
     )
+    cache.put(cache_key, result)
     return StationListResponse(**result)
 
 
@@ -76,7 +89,14 @@ async def list_stations(
 async def get_station_detail(
     station_id: str,
     service: StationService = Depends(_get_station_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("stations.read")),
 ) -> StationDetailResponse:
+    cache_key = f"station_detail_{station_id}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return StationDetailResponse(**cached)
+
     result = service.get_station_detail(station_id)
+    cache.put(cache_key, result)
     return StationDetailResponse(**result)

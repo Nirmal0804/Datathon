@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 
+from app.core.cache import CatalystCacheService, get_cache_service
 from app.schemas.analytics import (
     DashboardMLSummaryPayload,
     ForecastPayload,
@@ -33,9 +34,16 @@ def get_ml_analytics_service() -> MLAnalyticsService:
 )
 async def get_hotspots(
     service: MLAnalyticsService = Depends(get_ml_analytics_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
 ) -> HotspotsPayload:
     """Get DBSCAN geospatial hotspots analysis payload."""
+    cache_key = "analytics_hotspots"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return HotspotsPayload(**cached)
+
     data = service.get_hotspots()
+    cache.put(cache_key, data)
     return HotspotsPayload(**data)
 
 
@@ -47,9 +55,16 @@ async def get_hotspots(
 )
 async def get_risk_scores(
     service: MLAnalyticsService = Depends(get_ml_analytics_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
 ) -> StationRiskPayload:
     """Get station risk scores payload."""
+    cache_key = "analytics_risk_scores"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return StationRiskPayload(**cached)
+
     data = service.get_station_risk_scores()
+    cache.put(cache_key, data)
     return StationRiskPayload(**data)
 
 
@@ -67,9 +82,16 @@ async def get_forecast(
         description="Number of days to forecast (1 to 30)",
     ),
     service: MLAnalyticsService = Depends(get_ml_analytics_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
 ) -> ForecastPayload:
     """Get daily crime volume forecast payload."""
+    cache_key = f"analytics_forecast_{forecast_days}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return ForecastPayload(**cached)
+
     data = service.get_forecast(forecast_days=forecast_days)
+    cache.put(cache_key, data)
     return ForecastPayload(**data)
 
 
@@ -81,7 +103,14 @@ async def get_forecast(
 )
 async def get_summary(
     service: MLAnalyticsService = Depends(get_ml_analytics_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
 ) -> DashboardMLSummaryPayload:
     """Get executive ML summary payload."""
+    cache_key = "analytics_summary"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return DashboardMLSummaryPayload(**cached)
+
     data = service.get_dashboard_ml_summary()
+    cache.put(cache_key, data)
     return DashboardMLSummaryPayload(**data)

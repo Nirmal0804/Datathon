@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import PlainTextResponse
 
 from app.api.rbac_deps import require_permission
+from app.core.cache import CatalystCacheService, get_cache_service
 from app.core.config import settings
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.intelligence_map import (
@@ -65,8 +66,22 @@ async def get_intelligence_analytics(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> IntelligenceAnalyticsResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_analytics",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return IntelligenceAnalyticsResponse(**cached)
+
     result = service.get_analytics(
         district=district,
         station_id=station_id,
@@ -75,6 +90,7 @@ async def get_intelligence_analytics(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result)
     return IntelligenceAnalyticsResponse(**result)
 
 
@@ -102,8 +118,22 @@ async def get_intelligence_heatmap(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> HeatmapResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_heatmap",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return HeatmapResponse(**cached)
+
     result = service.get_heatmap(
         district=district,
         station_id=station_id,
@@ -112,6 +142,7 @@ async def get_intelligence_heatmap(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result)
     return HeatmapResponse(**result)
 
 
@@ -140,8 +171,22 @@ async def get_intelligence_clusters(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> ClusterResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_clusters",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return ClusterResponse(**cached)
+
     result = service.get_clusters(
         district=district,
         station_id=station_id,
@@ -150,6 +195,7 @@ async def get_intelligence_clusters(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result)
     return ClusterResponse(**result)
 
 
@@ -177,8 +223,22 @@ async def get_intelligence_hotspots(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> HotspotResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_hotspots",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return HotspotResponse(**cached)
+
     result = service.get_hotspots(
         district=district,
         station_id=station_id,
@@ -187,6 +247,7 @@ async def get_intelligence_hotspots(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result)
     return HotspotResponse(**result)
 
 
@@ -215,8 +276,22 @@ async def get_intelligence_district_comparison(
         None, description="Inclusive end date (YYYY-MM-DD)"
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> DistrictComparisonResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_district_comparison",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return DistrictComparisonResponse(**cached)
+
     result = service.get_district_comparison(
         district=district,
         station_id=station_id,
@@ -225,6 +300,7 @@ async def get_intelligence_district_comparison(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result)
     return DistrictComparisonResponse(**result)
 
 
@@ -256,8 +332,23 @@ async def get_intelligence_timeline(
         description="Time granularity: 'daily' or 'monthly' (default: monthly)",
     ),
     service: IntelligenceMapService = Depends(_get_intelligence_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("map.intelligence.read")),
 ) -> TimelineResponse:
+    cache_key = cache.make_cache_key(
+        "map_intelligence_timeline",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+        granularity=granularity,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return TimelineResponse(**cached)
+
     result = service.get_timeline(
         district=district,
         station_id=station_id,
@@ -267,6 +358,7 @@ async def get_intelligence_timeline(
         end_date=end_date,
         granularity=granularity,
     )
+    cache.put(cache_key, result)
     return TimelineResponse(**result)
 
 

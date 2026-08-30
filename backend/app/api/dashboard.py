@@ -9,9 +9,10 @@ from __future__ import annotations
 from datetime import date
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.rbac_deps import require_permission
+from app.core.cache import CatalystCacheService, get_cache_service
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.dashboard import DashboardSummaryResponse
 from app.schemas.auth import AuthenticatedIdentity
@@ -39,14 +40,28 @@ def _get_dashboard_service(
     "All filters are optional and combine with AND semantics.",
 )
 async def dashboard_summary(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by police station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
     start_date: Optional[date] = Query(None, description="Inclusive start date (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(None, description="Inclusive end date (YYYY-MM-DD)"),
     service: DashboardService = Depends(_get_dashboard_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("dashboard.read")),
 ) -> DashboardSummaryResponse:
+    cache_key = cache.make_cache_key(
+        "dashboard_summary",
+        district=district,
+        station_id=station_id,
+        crime_head=crime_head,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    cached = cache.get(cache_key, req=request)
+    if cached is not None:
+        return DashboardSummaryResponse(**cached)
+
     result = service.get_summary(
         district=district,
         station_id=station_id,
@@ -54,4 +69,5 @@ async def dashboard_summary(
         start_date=start_date,
         end_date=end_date,
     )
+    cache.put(cache_key, result, req=request)
     return DashboardSummaryResponse(**result)

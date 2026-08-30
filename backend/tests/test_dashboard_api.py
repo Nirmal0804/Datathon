@@ -133,7 +133,7 @@ class TestDashboardAPIUnit:
     def test_health_still_works(self):
         from unittest.mock import patch
         client = TestClient(app)
-        with patch("app.database.postgres.execute_one", side_effect=RuntimeError("pool not initialized")):
+        with patch("app.database.postgres.get_connection", side_effect=RuntimeError("pool not initialized")):
             resp = client.get("/health")
             assert resp.status_code == 200
             data = resp.json()

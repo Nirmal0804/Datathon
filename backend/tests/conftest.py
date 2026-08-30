@@ -34,6 +34,14 @@ _settings.RATE_LIMIT_ENABLED = False
 _settings.DATA_BACKEND = "csv"
 
 
+@pytest.fixture(autouse=True)
+def reset_cache_between_tests():
+    from app.core.cache import get_cache_service
+    get_cache_service().clear()
+    yield
+    get_cache_service().clear()
+
+
 # ---------------------------------------------------------------------------
 # Test keys (generated fresh, never used in production)
 # ---------------------------------------------------------------------------

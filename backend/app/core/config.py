@@ -144,6 +144,12 @@ class Settings(BaseSettings):
     # only). Standard proxies should set this to X-Forwarded-For.
     RATE_LIMIT_CLIENT_HEADER: str = "X-Forwarded-For"
 
+    # ------------------------------------------------------------------
+    # In-Memory Response Cache Settings
+    # ------------------------------------------------------------------
+    CACHE_ENABLED: bool = True
+    CACHE_TTL_SECONDS: int = 600
+
     @model_validator(mode="before")
     @classmethod
     def _normalize_backend(cls, values: dict) -> dict:

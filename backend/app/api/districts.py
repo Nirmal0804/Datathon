@@ -12,6 +12,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 
 from app.api.rbac_deps import require_permission
+from app.core.cache import CatalystCacheService, get_cache_service
 from app.database.dependencies import RepositoryCollection, get_repositories
 from app.schemas.district import (
     DistrictIntelligenceProfile,
@@ -50,9 +51,16 @@ def _get_district_service(
 )
 async def list_districts(
     service: DistrictService = Depends(_get_district_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("districts.read")),
 ) -> DistrictListResponse:
+    cache_key = "districts_list"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return DistrictListResponse(**cached)
+
     result = service.list_all_districts()
+    cache.put(cache_key, result)
     return DistrictListResponse(**result)
 
 
@@ -83,8 +91,20 @@ async def get_district_intelligence(
         None, description="Filter by case status"
     ),
     service: DistrictService = Depends(_get_district_service),
+    cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("districts.read")),
 ) -> DistrictIntelligenceProfile:
+    cache_key = cache.make_cache_key(
+        f"district_intelligence_{district_id}",
+        start_date=start_date,
+        end_date=end_date,
+        crime_head=crime_head,
+        status=status,
+    )
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return DistrictIntelligenceProfile(**cached)
+
     result = service.get_district_intelligence(
         district_id=district_id,
         start_date=start_date,
@@ -92,4 +112,5 @@ async def get_district_intelligence(
         crime_head=crime_head,
         status=status,
     )
+    cache.put(cache_key, result)
     return DistrictIntelligenceProfile(**result)
