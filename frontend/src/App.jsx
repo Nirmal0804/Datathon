@@ -7,6 +7,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import GlobalNotificationCenter from './components/shared/notifications/GlobalNotificationCenter';
 import BackToTop from './components/ui/BackToTop';
 import CookieBanner from './components/shared/CookieBanner';
+import DesktopRecommendationModal from './components/ui/DesktopRecommendationModal';
 
 import Navbar from './components/shared/navigation/Navbar';
 import Hero from './modules/dashboard/Hero';
@@ -346,6 +347,7 @@ function AppContent() {
       <AnimatePresence mode="wait">
         {renderView()}
       </AnimatePresence>
+      {currentView === 'landing' && <DesktopRecommendationModal />}
       <BackToTop />
       <CookieBanner />
     </NotificationProvider>
