@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { User, Eye, ShieldAlert, FileText, Calendar } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 const OFFENDERS_DATA = [
   {
