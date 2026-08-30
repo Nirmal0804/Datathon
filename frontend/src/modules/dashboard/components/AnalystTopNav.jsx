@@ -98,10 +98,10 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
       : ANALYST_NAV_ITEMS;
 
   const platformSubtitle = role === 'officer'
-    ? 'FIELD OPERATIONS'
+    ? (t('nav.fieldOperations') || 'FIELD OPERATIONS')
     : role === 'admin'
-      ? 'SYSTEM ADMINISTRATION PLATFORM'
-      : 'INTELLIGENCE PLATFORM';
+      ? (t('nav.adminPlatform') || 'SYSTEM ADMINISTRATION PLATFORM')
+      : (t('nav.intelligencePlatform') || 'INTELLIGENCE PLATFORM');
 
   const defaultProfile = role === 'officer'
     ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }

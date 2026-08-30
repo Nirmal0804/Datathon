@@ -105,10 +105,10 @@ export default function HotspotFilters({
             onChange={(e) => handleFilterChange('trend', e.target.value)}
             className={`${inputBase} w-full pl-8 pr-6`}
           >
-            <option value="All">{t('dashboard.all', 'All Trends')}</option>
-            <option value="Emerging">Emerging</option>
-            <option value="Persistent">Persistent</option>
-            <option value="Declining">Declining</option>
+            <option value="All">{t('hotspots.allTrends', 'All Trends')}</option>
+            <option value="Emerging">{t('hotspots.emergingHotspots', 'Emerging')}</option>
+            <option value="Persistent">{t('hotspots.persistent', 'Persistent')}</option>
+            <option value="Declining">{t('hotspots.declining', 'Declining')}</option>
           </select>
         </div>
       )}

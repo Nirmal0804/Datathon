@@ -20,7 +20,7 @@ export default function KPICards({ data, compact = false }) {
       value: stats.totalFIRs.value.toLocaleString('en-IN'),
       change: stats.totalFIRs.percentage,
       trend: stats.totalFIRs.trend,
-      note: 'vs previous period',
+      note: t('dashboard.vsPreviousPeriod', 'vs previous period'),
       icon: FileText,
       type: 'info',
       positive: stats.totalFIRs.trend === 'down', // Decreasing FIRs is positive
@@ -30,7 +30,7 @@ export default function KPICards({ data, compact = false }) {
       value: stats.activeCases.value.toLocaleString('en-IN'),
       change: stats.activeCases.percentage,
       trend: stats.activeCases.trend,
-      note: 'ongoing inquiries',
+      note: t('dashboard.ongoingInquiries', 'ongoing inquiries'),
       icon: Activity,
       type: 'warning',
       positive: stats.activeCases.trend === 'down', // Decreasing active cases is positive
@@ -40,7 +40,7 @@ export default function KPICards({ data, compact = false }) {
       value: stats.closedCases.value.toLocaleString('en-IN'),
       change: stats.closedCases.percentage,
       trend: stats.closedCases.trend,
-      note: 'clearance rate YTD',
+      note: t('dashboard.clearanceRateYtd', 'clearance rate YTD'),
       icon: ShieldCheck,
       type: 'success',
       positive: stats.closedCases.trend === 'up', // Increasing closed cases is positive
@@ -50,7 +50,7 @@ export default function KPICards({ data, compact = false }) {
       value: stats.totalArrests.value.toLocaleString('en-IN'),
       change: stats.totalArrests.percentage,
       trend: stats.totalArrests.trend,
-      note: 'suspects apprehended',
+      note: t('dashboard.suspectsApprehended', 'suspects apprehended'),
       icon: ShieldAlert,
       type: 'critical',
       positive: stats.totalArrests.trend === 'up', // Increasing arrests is positive

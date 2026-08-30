@@ -545,10 +545,10 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
               <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 text-center max-w-sm shadow-xl">
                 <EmptyState
                   type="map"
-                  title="No Locations to Display"
-                  message="No crime incidents or geographic coordinates match the active filter criteria."
+                  title={t('map.noLocations', 'No Locations to Display')}
+                  message={t('map.noLocationsDesc', 'No crime incidents or geographic coordinates match the active filter criteria.')}
                   onAction={handleResetAll}
-                  actionLabel="Clear Filters"
+                  actionLabel={t('cases.resetFilters', 'Clear Filters')}
                 />
               </div>
             </div>
@@ -588,7 +588,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono font-bold text-white/90 uppercase tracking-widest block leading-tight">
-                    FIR CASE DETAIL
+                    {t('cases.caseBrief', 'FIR CASE DETAIL')}
                   </span>
                   <h3 className="text-sm font-black text-white font-mono tracking-wide">
                     {selectedCase.id}
@@ -598,7 +598,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
               <button
                 onClick={() => setSelectedCase(null)}
                 className="p-2 bg-white/15 hover:bg-white/25 text-white rounded-full transition-colors cursor-pointer"
-                aria-label="Close Case Details"
+                aria-label={t('common.close', 'Close Case Details')}
               >
                 <X className="w-4 h-4 text-white" />
               </button>
@@ -610,22 +610,27 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 {/* Severity & Status */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3.5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
-                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">Severity Level</span>
+                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">{t('cases.riskLevelLabel', 'Severity Level')}</span>
                     <span className={`inline-block py-0.5 px-2.5 rounded-full text-[10px] font-bold text-white uppercase tracking-wider ${
                       selectedCase.risk === 'Critical' || selectedCase.risk === 'High' ? 'bg-rose-600' : 
                       selectedCase.risk === 'Medium' ? 'bg-amber-500' : 'bg-emerald-600'
                     }`}>
-                      {selectedCase.risk}
+                      {selectedCase.risk === 'Critical' ? t('common.critical', 'Critical') :
+                       selectedCase.risk === 'High' ? t('common.high', 'High') :
+                       selectedCase.risk === 'Medium' ? t('common.medium', 'Medium') :
+                       t('common.low', 'Low')}
                     </span>
                   </div>
 
                   <div className="p-3.5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
-                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">Status Code</span>
+                    <span className="block text-[10px] text-[#64748B] font-bold uppercase mb-1 tracking-wider">{t('cases.statusLabel', 'Status Code')}</span>
                     <span className="text-[#0F172A] font-bold text-xs flex items-center gap-1.5 mt-1">
                       <span className={`w-2 h-2 rounded-full ${
                         selectedCase.status === 'Closed' ? 'bg-slate-400' : 'bg-emerald-500 animate-pulse'
                       }`} />
-                      {selectedCase.status}
+                      {selectedCase.status === 'Active' ? t('cases.statusActive', 'Active') :
+                       selectedCase.status === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') :
+                       selectedCase.status === 'Closed' ? t('cases.statusClosed', 'Closed') : selectedCase.status}
                     </span>
                   </div>
                 </div>
@@ -633,27 +638,27 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 {/* Case Meta Details */}
                 <div className="space-y-2.5 p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
                   <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
-                    <span className="text-[#64748B] font-semibold">Crime Category</span>
+                    <span className="text-[#64748B] font-semibold">{t('fir.category', 'Crime Category')}</span>
                     <span className="font-bold text-[#0F172A]">{selectedCase.category}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
-                    <span className="text-[#64748B] font-semibold">Precinct Station</span>
+                    <span className="text-[#64748B] font-semibold">{t('common.station', 'Precinct Station')}</span>
                     <span className="font-bold text-[#0F172A]">{selectedCase.policeStation}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
-                    <span className="text-[#64748B] font-semibold">Jurisdiction District</span>
+                    <span className="text-[#64748B] font-semibold">{t('common.district', 'Jurisdiction District')}</span>
                     <span className="font-bold text-[#0F172A]">{selectedCase.district}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
-                    <span className="text-[#64748B] font-semibold">IPC Legal Code</span>
+                    <span className="text-[#64748B] font-semibold">{t('cases.penalSectionLabel', 'IPC Legal Code')}</span>
                     <span className="font-mono font-bold text-[#0B1F4D]">{selectedCase.details?.section || 'Section 379 IPC'}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5 border-b border-[#E7ECF3]">
-                    <span className="text-[#64748B] font-semibold">Date Logged</span>
+                    <span className="text-[#64748B] font-semibold">{t('cases.dateLoggedLabel', 'Date Logged')}</span>
                     <span className="font-bold text-[#0F172A]">{selectedCase.date}</span>
                   </div>
                   <div className="flex justify-between items-center py-1.5">
-                    <span className="text-[#64748B] font-semibold">Officer Assigned</span>
+                    <span className="text-[#64748B] font-semibold">{t('cases.leadInvestigator', 'Officer Assigned')}</span>
                     <span className="font-bold text-[#0B1F4D]">{selectedCase.details?.officer || 'Inspector Patil'}</span>
                   </div>
                 </div>
@@ -661,33 +666,33 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 {/* Analyst-specific details dashboard extensions */}
                 {isAnalyst && caseMetrics && (
                   <div className="space-y-2.5 p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
-                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px] mb-1">GIS Spatial Indicators</h4>
+                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px] mb-1">{t('map.gisSpatialIndicators', 'GIS Spatial Indicators')}</h4>
 
                     <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
-                      <span className="text-[#64748B] font-medium">District Crime Volume</span>
-                      <span className="font-bold text-[#0F172A] font-mono">{caseMetrics.totalDistrictCrimes} cases</span>
+                      <span className="text-[#64748B] font-medium">{t('map.districtCrimeVolume', 'District Crime Volume')}</span>
+                      <span className="font-bold text-[#0F172A] font-mono">{caseMetrics.totalDistrictCrimes} {t('hotspots.casesSuffix', 'cases')}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
-                      <span className="text-[#64748B] font-medium">High-Severity Ratio</span>
-                      <span className="font-bold text-rose-600 font-mono">{caseMetrics.highSeverityCount} cases</span>
+                      <span className="text-[#64748B] font-medium">{t('map.highSeverityRatio', 'High-Severity Ratio')}</span>
+                      <span className="font-bold text-rose-600 font-mono">{caseMetrics.highSeverityCount} {t('hotspots.casesSuffix', 'cases')}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-1 border-b border-[#E7ECF3]">
-                      <span className="text-[#64748B] font-medium">Zone Hotspot Status</span>
+                      <span className="text-[#64748B] font-medium">{t('map.zoneHotspotStatus', 'Zone Hotspot Status')}</span>
                       <span className={`font-bold ${caseMetrics.isHotspot ? 'text-rose-600' : 'text-slate-500'}`}>
-                        {caseMetrics.isHotspot ? 'Active Hotspot' : 'Normal Beat'}
+                        {caseMetrics.isHotspot ? t('map.activeHotspot', 'Active Hotspot') : t('map.normalBeat', 'Normal Beat')}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-[#64748B] font-medium">Related Crimes in District</span>
-                      <span className="font-bold text-[#0B1F4D] font-mono">{caseMetrics.relatedCrimes} identical</span>
+                      <span className="text-[#64748B] font-medium">{t('map.relatedCrimesInDistrict', 'Related Crimes in District')}</span>
+                      <span className="font-bold text-[#0B1F4D] font-mono">{caseMetrics.relatedCrimes}</span>
                     </div>
 
                     {caseMetrics.nearby.length > 0 && (
                       <div className="pt-2 border-t border-[#E7ECF3] space-y-1">
-                        <span className="text-[#64748B] text-[10px] font-bold uppercase block mb-1">Nearby Incidents:</span>
+                        <span className="text-[#64748B] text-[10px] font-bold uppercase block mb-1">{t('map.nearbyIncidents', 'Nearby Incidents:')}</span>
                         <div className="flex gap-1.5 flex-wrap">
                           {caseMetrics.nearby.map(nb => (
                             <button
@@ -706,7 +711,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
 
                 {/* Summary */}
                 <div className="space-y-1.5">
-                  <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">Incident Narrative Summary</h4>
+                  <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">{t('fir.incidentNarrative', 'Incident Narrative Summary')}</h4>
                   <div className="p-4 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3] text-[#334155] leading-relaxed font-normal">
                     {selectedCase.details?.summary}
                   </div>
@@ -715,7 +720,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
                 {/* Timeline */}
                 {selectedCase.details?.timeline && selectedCase.details.timeline.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">Investigation Milestones</h4>
+                    <h4 className="text-[#0B1F4D] font-bold uppercase tracking-wider text-[11px]">{t('cases.caseTimeline', 'Investigation Milestones')}</h4>
                     <div className="border-l-2 border-[#E7ECF3] pl-4 ml-2 space-y-3.5 pt-1">
                       {selectedCase.details.timeline.map((item, idx) => (
                         <div key={idx} className="relative">

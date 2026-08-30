@@ -48,6 +48,28 @@ export default function EmergingCrimePatterns() {
     }
   ];
 
+  const getPatternTitle = (title) => {
+    const map = {
+      'Property Theft Cluster': t('patterns.propertyTheftCluster', 'Property Theft Cluster'),
+      'Phishing / Cyber Spike': t('patterns.cyberSpike', 'Phishing / Cyber Spike'),
+      'Narcotics Route Drift': t('patterns.narcoticsRoute', 'Narcotics Route Drift'),
+      'Commercial Burglary Trend': t('patterns.burglaryTrend', 'Commercial Burglary Trend'),
+      'Inter-district Vehicle Theft': t('patterns.vehicleTheft', 'Inter-district Vehicle Theft'),
+    };
+    return map[title] || title;
+  };
+
+  const getPatternDesc = (desc) => {
+    const map = {
+      'Repeated nighttime residential burglary signatures matching syndicate patterns.': t('patterns.propertyTheftDesc', 'Repeated nighttime residential burglary signatures matching syndicate patterns.'),
+      '300% surge in financial impersonation scams logged at cyber units in 48h.': t('patterns.cyberSpikeDesc', '300% surge in financial impersonation scams logged at cyber units in 48h.'),
+      'ML trajectory forecasting models predicted new transport syndicate path node.': t('patterns.narcoticsRouteDesc', 'ML trajectory forecasting models predicted new transport syndicate path node.'),
+      'Automated cluster alert: multi-store forced entries logged post-midnight.': t('patterns.burglaryTrendDesc', 'Automated cluster alert: multi-store forced entries logged post-midnight.'),
+      'High correlation with regional organized vehicle stripping operations.': t('patterns.vehicleTheftDesc', 'High correlation with regional organized vehicle stripping operations.'),
+    };
+    return map[desc] || desc;
+  };
+
   return (
     <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-6 sm:p-7 shadow-sm flex flex-col h-[560px] min-h-[560px] justify-between transition-all duration-200">
       
@@ -140,7 +162,7 @@ export default function EmergingCrimePatterns() {
             <div key={i} className={`px-3 py-2 rounded-[14px] bg-white border border-[#E5E7EB] border-l-4 ${borderColor} hover:shadow-sm transition-shadow flex flex-col gap-1.5 group cursor-pointer shrink-0`}>
               <div className="flex justify-between items-center">
                 <div className="min-w-0 flex-1 pr-3">
-                  <h4 className="font-bold text-[#0F172A] text-[12px] truncate">{pat.title}</h4>
+                  <h4 className="font-bold text-[#0F172A] text-[12px] truncate">{getPatternTitle(pat.title)}</h4>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <span className={`text-[9px] font-bold uppercase ${textColor}`}>
@@ -150,7 +172,7 @@ export default function EmergingCrimePatterns() {
                 </div>
               </div>
               <p className="text-[10px] text-[#64748B] leading-tight line-clamp-1 w-full">
-                {pat.desc}
+                {getPatternDesc(pat.desc)}
               </p>
               {/* Thin Progress Bar */}
               <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden mt-0.5">

@@ -1,8 +1,10 @@
 import React from "react";
 import { FileText, Download, Printer, Share2, X, Shield, BarChart2, AlertTriangle, TrendingUp, Target, Brain } from "lucide-react";
 import { downloadReportFile } from "./ReportList";
+import { useTranslation } from "../../../i18n";
 
 export default function ReportPreview({ report, onClose, role = "analyst" }) {
+  const { t } = useTranslation();
   const officerInfo = {
     analyst: { name: "Inspector Patil", role: "Intelligence Analyst" },
     officer: { name: "Insp. R. Kumar", role: "Field Officer" },
@@ -21,8 +23,8 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
         <div className="w-16 h-16 rounded-[20px] bg-[#F8F9FB] flex items-center justify-center mb-4">
           <FileText className="w-8 h-8 text-[#CBD5E1]" />
         </div>
-        <p className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">No Report Selected</p>
-        <p className="text-xs text-[#64748B] mt-1 font-semibold">Select a report from the library to preview it here.</p>
+        <p className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">{t('hotspots.selectZoneTitle', 'No Report Selected')}</p>
+        <p className="text-xs text-[#64748B] mt-1 font-semibold">{t('hotspots.selectZoneDesc', 'Select a report from the library to preview it here.')}</p>
       </div>
     );
   }
@@ -46,13 +48,13 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
           </div>
           <div className="min-w-0">
             <p className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider truncate">{report.title}</p>
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 uppercase tracking-wider">CONFIDENTIAL</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 uppercase tracking-wider">{t('reports.classification', 'CONFIDENTIAL')}</span>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {[
-            { label: "Print",   icon: Printer, handler: handlePrint },
-            { label: "Share",   icon: Share2,  handler: handleShare },
+            { label: t('district.print', 'Print'),   icon: Printer, handler: handlePrint },
+            { label: t('network.mappedLinks', 'Share'),   icon: Share2,  handler: handleShare },
             { label: "CSV",     icon: Download, handler: handleExportCSV },
             { label: "Excel",   icon: Download, handler: handleExportExcel },
           ].map(({ label, icon: Icon, handler }) => (
@@ -61,7 +63,7 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
             </button>
           ))}
           <button onClick={handleExportPDF} className="flex items-center gap-1.5 h-7 px-2.5 bg-[#0B1F4D] hover:bg-[#0B1F4D]/90 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer">
-            <Download className="w-3 h-3 text-[#C79A2B]" /> Export PDF
+            <Download className="w-3 h-3 text-[#C79A2B]" /> {t('reports.exportPDF', 'Export PDF')}
           </button>
           {onClose && (
             <button onClick={onClose} className="p-1.5 text-[#94A3B8] hover:text-[#0B1F4D] hover:bg-[#E7ECF3] rounded-lg transition-colors cursor-pointer">
@@ -81,7 +83,7 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
               <Shield className="w-5 h-5 text-[#0B1F4D]" />
               <div>
                 <p className="text-xs font-black text-[#0B1F4D] uppercase tracking-widest">Karnataka Police Department</p>
-                <p className="text-[10px] text-[#94A3B8] uppercase tracking-widest">Intelligence Platform</p>
+                <p className="text-[10px] text-[#94A3B8] uppercase tracking-widest">{t('nav.intelligencePlatform', 'Intelligence Platform')}</p>
               </div>
             </div>
             <div className="text-right">
@@ -94,12 +96,12 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
-              { label: "District",    val: report.district },
-              { label: "Officer",     val: officerInfo.name },
-              { label: "Role",        val: officerInfo.role },
-              { label: "Generated",   val: `${report.generated} 09:30` },
-              { label: "Classification", val: "CONFIDENTIAL", highlight: true },
-              { label: "Version",     val: "v1.0" },
+              { label: t('common.district', 'District'),    val: report.district },
+              { label: t('reports.reportingOfficer', 'Officer'),     val: officerInfo.name },
+              { label: t('network.allRoles', 'Role'),        val: officerInfo.role },
+              { label: t('reports.generatedOn', 'Generated'),   val: `${report.generated} 09:30` },
+              { label: t('reports.classification', 'Classification'), val: "CONFIDENTIAL", highlight: true },
+              { label: t('common.status', 'Version'),     val: "v1.0" },
             ].map(({ label, val, highlight }) => (
               <div key={label}>
                 <span className="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-0.5">{label}</span>
@@ -113,7 +115,7 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
         <div className="bg-[#0B1F4D]/5 border border-[#0B1F4D]/10 rounded-[16px] p-5">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse" />
-            <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Executive Summary</h3>
+            <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">{t('reports.executiveSummary', 'Executive Summary')}</h3>
           </div>
           <p className="text-sm text-[#334155] leading-relaxed">
             This report presents a comprehensive analysis of crime data for <strong className="text-[#0B1F4D]">{report.district}</strong> for the reporting period.
@@ -125,14 +127,14 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
         {/* Key Metrics */}
         <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-5 shadow-sm">
           <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <BarChart2 className="w-4 h-4 text-[#C79A2B]" /> Key Metrics
+            <BarChart2 className="w-4 h-4 text-[#C79A2B]" /> {t('district.stationPerformance', 'Key Metrics')}
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { icon: AlertTriangle, label: "Total Incidents", val: "1,248",  valColor: "text-[#0B1F4D]",   bg: "bg-[#F8F9FB]" },
-              { icon: TrendingUp,    label: "Clearance Rate",  val: "+12%",   valColor: "text-emerald-600",  bg: "bg-emerald-50/50" },
-              { icon: Brain,         label: "AI Risk Score",   val: "84",     valColor: "text-red-600",      bg: "bg-red-50/50" },
-              { icon: Target,        label: "AI Confidence",   val: "91%",    valColor: "text-blue-600",     bg: "bg-blue-50/50" },
+              { icon: AlertTriangle, label: t('hotspots.incidentCount', 'Total Incidents'), val: "1,248",  valColor: "text-[#0B1F4D]",   bg: "bg-[#F8F9FB]" },
+              { icon: TrendingUp,    label: t('dashboard.clearanceRate', 'Clearance Rate'),  val: "+12%",   valColor: "text-emerald-600",  bg: "bg-emerald-50/50" },
+              { icon: Brain,         label: t('district.aiRiskScore', 'AI Risk Score'),   val: "84",     valColor: "text-red-600",      bg: "bg-red-50/50" },
+              { icon: Target,        label: t('analytics.forecastConfidence', 'AI Confidence'),   val: "91%",    valColor: "text-blue-600",     bg: "bg-blue-50/50" },
             ].map(({ icon: Icon, label, val, valColor, bg }) => (
               <div key={label} className={`${bg} border border-[#E7ECF3] rounded-xl p-3 text-center`}>
                 <Icon className="w-4 h-4 text-[#64748B] mx-auto mb-1.5" />
@@ -147,7 +149,7 @@ export default function ReportPreview({ report, onClose, role = "analyst" }) {
         {/* Recommendations */}
         <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-5 shadow-sm">
           <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#C79A2B]" /> Key Findings & Recommendations
+            <AlertTriangle className="w-4 h-4 text-[#C79A2B]" /> {t('hotspots.strategicRecommendations', 'Key Findings & Recommendations')}
           </h3>
           <div className="space-y-3">
             {recommendations.map((rec, i) => (

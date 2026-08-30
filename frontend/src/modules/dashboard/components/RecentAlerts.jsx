@@ -35,6 +35,45 @@ export default function RecentAlerts({ data }) {
   const { t } = useTranslation();
   const alerts = (data || []).slice(0, 3);
 
+  const getAlertTitle = (title) => {
+    const map = {
+      'Cybercrime Surge': t('alerts.cybercrimeSurgeTitle', 'Cybercrime Surge'),
+      'Property Theft Alert': t('alerts.propertyTheftTitle', 'Property Theft Alert'),
+      'Narcotics Syndicate Node': t('alerts.narcoticsNodeTitle', 'Narcotics Syndicate Node'),
+      'Data Reconciliation Complete': t('alerts.dataReconciliationTitle', 'Data Reconciliation Complete'),
+      'Repeat Offender Alert': t('alerts.repeatOffenderTitle', 'Repeat Offender Alert'),
+    };
+    return map[title] || title;
+  };
+
+  const getAlertDesc = (desc) => {
+    const map = {
+      'Phishing cases spiked 35% in Bengaluru City during last 48 hours.': t('alerts.cybercrimeSurgeDesc', 'Phishing cases spiked 35% in Bengaluru City during last 48 hours.'),
+      'Unusual nighttime burglary pattern spotted in Saraswathipuram, Mysuru.': t('alerts.propertyTheftDesc', 'Unusual nighttime burglary pattern spotted in Saraswathipuram, Mysuru.'),
+      'Syndicate transport route flagged near Hubballi-Dharwad highway checkpost.': t('alerts.narcoticsNodeDesc', 'Syndicate transport route flagged near Hubballi-Dharwad highway checkpost.'),
+      'Weekly Crime & Criminal Tracking Network Systems (CCTNS) databases synced.': t('alerts.dataReconciliationDesc', 'Weekly Crime & Criminal Tracking Network Systems (CCTNS) databases synced.'),
+      'Known financial fraud offender spotted near bank cluster in Mangaluru.': t('alerts.repeatOffenderDesc', 'Known financial fraud offender spotted near bank cluster in Mangaluru.'),
+    };
+    return map[desc] || desc;
+  };
+
+  const getAlertTime = (time) => {
+    const map = {
+      '10m ago': t('common.tenMinAgo', '10m ago'),
+      '24m ago': t('common.twentyFourMinAgo', '24m ago'),
+      '45m ago': t('common.fortyFiveMinAgo', '45m ago'),
+      '1h ago': t('common.oneHourAgo', '1h ago'),
+      '2h ago': t('common.twoHoursAgo', '2h ago'),
+      '3h ago': t('common.threeHoursAgo', '3h ago'),
+      '4h ago': t('common.fourHoursAgo', '4h ago'),
+      '6h ago': t('common.sixHoursAgo', '6h ago'),
+      '1d ago': t('common.oneDayAgo', '1d ago'),
+      '2d ago': t('common.twoDaysAgo', '2d ago'),
+      'Just now': t('common.justNow', 'Just now'),
+    };
+    return map[time] || time;
+  };
+
   return (
     <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-auto lg:h-[400px] justify-between w-full">
       <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
@@ -87,14 +126,14 @@ export default function RecentAlerts({ data }) {
                         {t(cfg.labelKey, cfg.defaultLabel)}
                       </span>
                       <span className="text-[10px] text-slate-500 font-semibold shrink-0">
-                        {alert.time}
+                        {getAlertTime(alert.time)}
                       </span>
                     </div>
                     <p className="text-[14px] font-extrabold text-[#0F172A] leading-snug group-hover:text-[#1E3A8A] transition-colors pr-2">
-                      {alert.title}
+                      {getAlertTitle(alert.title)}
                     </p>
                     <p className="text-[12px] font-medium text-slate-500 mt-1.5 leading-relaxed line-clamp-3">
-                      {alert.desc}
+                      {getAlertDesc(alert.desc)}
                     </p>
                   </div>
 

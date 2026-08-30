@@ -43,6 +43,33 @@ export default function FilterBar({ filters, onApply, onReset, compact = false }
     onReset();
   };
 
+  const getCategoryLabel = (c) => {
+    if (c === 'All') return t('dashboard.allCategories', 'All Categories');
+    const catKeyMap = {
+      'Property Crime': t('categories.property', 'Property Crime'),
+      'Violent Crime': t('categories.violentCrime', 'Violent Crime'),
+      'Cyber Crime': t('categories.cybercrime', 'Cyber Crime'),
+      'Financial Fraud': t('categories.financialFraud', 'Financial Fraud'),
+      'Theft': t('categories.propertyTheft', 'Theft'),
+      'Assault': t('categories.assault', 'Assault'),
+      'Narcotics': t('categories.narcotics', 'Narcotics'),
+      'Crime Against Women': t('categories.crimeAgainstWomen', 'Crime Against Women'),
+    };
+    return catKeyMap[c] || c;
+  };
+
+  const getStatusLabel = (s) => {
+    if (s === 'All') return t('dashboard.allStatuses', 'All Statuses');
+    const statusKeyMap = {
+      'Active': t('cases.statusActive', 'Active'),
+      'Investigating': t('cases.statusInvestigating', 'Investigating'),
+      'Closed': t('cases.statusClosed', 'Closed'),
+      'Pending': t('cases.statusPending', 'Pending'),
+      'Chargesheeted': t('cases.chargesheeted', 'Chargesheeted'),
+    };
+    return statusKeyMap[s] || s;
+  };
+
   return (
     <GlobalFilterPanel 
       title={t('common.filter', 'Intelligence Filters')}
@@ -101,7 +128,7 @@ export default function FilterBar({ filters, onApply, onReset, compact = false }
       >
         <option value="All">{t('dashboard.allCategories', 'All Categories')}</option>
         {CATEGORIES.map(c => (
-          <option key={c} value={c}>{c}</option>
+          <option key={c} value={c}>{getCategoryLabel(c)}</option>
         ))}
       </GlobalFilterSelect>
 
@@ -114,7 +141,7 @@ export default function FilterBar({ filters, onApply, onReset, compact = false }
       >
         <option value="All">{t('dashboard.allStatuses', 'All Statuses')}</option>
         {STATUSES.map(s => (
-          <option key={s} value={s}>{s}</option>
+          <option key={s} value={s}>{getStatusLabel(s)}</option>
         ))}
       </GlobalFilterSelect>
     </GlobalFilterPanel>

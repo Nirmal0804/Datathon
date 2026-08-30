@@ -73,12 +73,35 @@ const OFFENDERS_DATA = [
 ];
 
 export default function RepeatOffenders({ onSelectOffender }) {
+  const { t } = useTranslation();
   const toast = useToast();
 
   const handleViewProfile = (name) => {
-    toast.success('Dossier Unlocked', `Successfully retrieved intelligence records profile for ${name}.`);
+    toast.success(t('district.dossierUnlocked', 'Dossier Unlocked'), `${t('district.dossierUnlockedDesc', 'Successfully retrieved intelligence records profile for')} ${name}.`);
     if (onSelectOffender) {
       onSelectOffender(name);
+    }
+  };
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Armed Robbery': return t('categories.violentCrime', 'Armed Robbery');
+      case 'Narcotics Trafficking': return t('categories.narcotics', 'Narcotics Trafficking');
+      case 'Phishing Fraud': return t('categories.cybercrime', 'Phishing Fraud');
+      case 'Vehicle Theft': return t('categories.propertyTheft', 'Vehicle Theft');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Property Trespass': return t('categories.property', 'Property Trespass');
+      default: return cat;
+    }
+  };
+
+  const getRiskLabel = (risk) => {
+    switch (risk) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'High': return t('common.high', 'High');
+      case 'Medium': return t('common.medium', 'Medium');
+      case 'Low': return t('common.low', 'Low');
+      default: return risk;
     }
   };
 
@@ -86,12 +109,12 @@ export default function RepeatOffenders({ onSelectOffender }) {
     <div className="bg-white border border-[#E7ECF3] rounded-[22px] p-6 sm:p-8 shadow-sm space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-[#F1F5F9]">
         <div>
-          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Repeat Offenders Watchlist</h3>
-          <p className="text-xs font-semibold text-[#64748B]">District surveillance roster categorized by prior charges.</p>
+          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">{t('district.repeatOffendersWatchlist', 'Repeat Offenders Watchlist')}</h3>
+          <p className="text-xs font-semibold text-[#64748B]">{t('district.districtSurveillanceRoster', 'District surveillance roster categorized by prior charges.')}</p>
         </div>
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-lg">
           <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-          <span className="text-[10px] font-bold text-rose-600 uppercase tracking-widest">Active Monitoring</span>
+          <span className="text-[10px] font-bold text-rose-600 uppercase tracking-widest">{t('district.activeMonitoring', 'Active Monitoring')}</span>
         </div>
       </div>
 
@@ -116,7 +139,7 @@ export default function RepeatOffenders({ onSelectOffender }) {
                 </div>
               </div>
               <span className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-widest border ${offender.badge}`}>
-                {offender.riskLevel}
+                {getRiskLabel(offender.riskLevel)}
               </span>
             </div>
 
@@ -124,21 +147,21 @@ export default function RepeatOffenders({ onSelectOffender }) {
             <div className="grid grid-cols-3 gap-2 p-3 bg-[#F8F9FB] rounded-xl mb-4 border border-[#F1F5F9]/50">
               <div className="flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest mb-1 flex items-center gap-1">
-                  <FileText className="w-3 h-3" /> FIRs
+                  <FileText className="w-3 h-3" /> {t('fir.title', 'FIRs')}
                 </span>
                 <span className="text-sm font-black text-[#0B1F4D]">{offender.firsCount}</span>
               </div>
               <div className="flex flex-col items-center justify-center text-center border-l border-r border-[#E2E8F0]">
                 <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest mb-1 flex items-center gap-1">
-                  <ShieldAlert className="w-3 h-3" /> Category
+                  <ShieldAlert className="w-3 h-3" /> {t('common.category', 'Category')}
                 </span>
                 <span className="text-xs font-bold text-[#334155] leading-tight px-1 truncate w-full text-center" title={offender.category}>
-                  {offender.category}
+                  {getCategoryLabel(offender.category)}
                 </span>
               </div>
               <div className="flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest mb-1 flex items-center gap-1">
-                  <Calendar className="w-3 h-3" /> Active
+                  <Calendar className="w-3 h-3" /> {t('cases.statusActive', 'Active')}
                 </span>
                 <span className="text-xs font-bold text-[#334155]">{offender.lastReported.split('-').slice(1).join('/')}</span>
               </div>
@@ -150,7 +173,7 @@ export default function RepeatOffenders({ onSelectOffender }) {
               className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] hover:border-[#CBD5E1] rounded-[14px] text-xs font-bold text-[#0B1F4D] transition-colors cursor-pointer group/btn"
             >
               <Eye className="w-4 h-4 text-[#64748B] group-hover/btn:text-[#C79A2B] transition-colors" />
-              <span>View Full Dossier</span>
+              <span>{t('district.viewFullDossier', 'View Full Dossier')}</span>
             </button>
           </motion.div>
         ))}

@@ -2,9 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { HOTSPOTS_DATA } from '../../../mock/analyticsData';
 import { Flame, Compass, ArrowUpRight, TrendingUp, Map } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function HotspotAnalytics({ timeFilter }) {
+  const { t } = useTranslation();
   const [timeTab, setTimeTab] = useState('Monthly'); // 'Daily' | 'Monthly' | 'Yearly'
+
+  const tabs = [
+    { key: 'Daily', label: t('dashboard.daily', 'Daily') },
+    { key: 'Monthly', label: t('dashboard.monthly', 'Monthly') },
+    { key: 'Yearly', label: t('dashboard.yearly', 'Yearly') },
+  ];
 
   const activeHotspots = useMemo(() => {
     return HOTSPOTS_DATA[timeTab] || HOTSPOTS_DATA.Monthly;
@@ -21,24 +29,24 @@ export default function HotspotAnalytics({ timeFilter }) {
               <Flame className="w-4 h-4 text-[#C79A2B] animate-pulse-soft" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Emerging Crime Hotspots</h3>
-              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">Spatial clusters reporting the highest surge in weekly cases.</p>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">{t('hotspots.emergingHotspots', 'Emerging Crime Hotspots')}</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">{t('hotspots.subtitle', 'Spatial clusters reporting the highest surge in weekly cases.')}</p>
             </div>
           </div>
 
           {/* Time tab toggle */}
           <div className="flex bg-[#F8F9FB] p-1 rounded-xl border border-[#E7ECF3] shrink-0">
-            {['Daily', 'Monthly', 'Yearly'].map(tab => (
+            {tabs.map(tab => (
               <button
-                key={tab}
-                onClick={() => setTimeTab(tab)}
+                key={tab.key}
+                onClick={() => setTimeTab(tab.key)}
                 className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
-                  timeTab === tab
+                  timeTab === tab.key
                     ? 'bg-[#0B1F4D] text-white shadow-sm'
                     : 'text-[#64748B] hover:text-[#0B1F4D]'
                 }`}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -67,18 +75,18 @@ export default function HotspotAnalytics({ timeFilter }) {
                 </div>
                 {/* Risk Badge */}
                 <span className="px-2 py-1 bg-red-50 text-red-600 border border-red-100 rounded font-bold uppercase tracking-wider text-[9px]">
-                  High Risk
+                  {t('hotspots.highRisk', 'High Risk')}
                 </span>
               </div>
 
               {/* Stats */}
               <div className="flex justify-between items-center mb-4">
                 <div className="space-y-1 text-[10px]">
-                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">Incidents</span>
-                  <span className="text-[#0B1F4D] font-bold">{hs.count} cases</span>
+                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">{t('hotspots.incidentCount', 'Incidents')}</span>
+                  <span className="text-[#0B1F4D] font-bold">{hs.count} {t('hotspots.casesSuffix', 'cases')}</span>
                 </div>
                 <div className="space-y-1 text-[10px] text-right">
-                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">Trend</span>
+                  <span className="text-[#64748B] font-bold uppercase tracking-wider block">{t('hotspots.trendStatus', 'Trend')}</span>
                   <span className="font-bold text-rose-600 flex items-center gap-1 justify-end">
                     <TrendingUp className="w-3 h-3 text-rose-600" /> +{hs.rate}%
                   </span>
@@ -86,8 +94,8 @@ export default function HotspotAnalytics({ timeFilter }) {
               </div>
 
               {/* Action */}
-              <button className="w-full flex items-center justify-center gap-2 py-2 bg-white border border-[#E7ECF3] rounded-lg hover:bg-[#F1F5F9] transition-colors text-[10px] font-bold text-[#0B1F4D] uppercase tracking-wider">
-                <Map className="w-3 h-3 text-[#C79A2B]" /> View Map
+              <button className="w-full flex items-center justify-center gap-2 py-2 bg-white border border-[#E7ECF3] rounded-lg hover:bg-[#F1F5F9] transition-colors text-[10px] font-bold text-[#0B1F4D] uppercase tracking-wider cursor-pointer">
+                <Map className="w-3 h-3 text-[#C79A2B]" /> {t('hotspots.viewOnMap', 'View Map')}
               </button>
             </motion.div>
           ))}

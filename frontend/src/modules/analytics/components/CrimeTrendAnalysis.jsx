@@ -2,15 +2,37 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { TRENDS_CHART_DATA } from '../../../mock/analyticsData';
 import { LineChart, Calendar, TrendingUp, TrendingDown } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function CrimeTrendAnalysis({ timeFilter }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('Monthly'); // 'Daily' | 'Monthly' | 'Yearly' | 'Seasonal'
 
-  const tabs = ['Daily', 'Monthly', 'Yearly', 'Seasonal'];
+  const tabs = [
+    { key: 'Daily', label: t('dashboard.daily', 'Daily') },
+    { key: 'Monthly', label: t('dashboard.monthly', 'Monthly') },
+    { key: 'Yearly', label: t('dashboard.yearly', 'Yearly') },
+    { key: 'Seasonal', label: t('hotspots.seasonal', 'Seasonal') },
+  ];
 
   const chartData = useMemo(() => {
     return TRENDS_CHART_DATA[activeTab] || TRENDS_CHART_DATA.Monthly;
   }, [activeTab]);
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cyber Crime': return t('categories.cybercrime', 'Cyber Crime');
+      case 'Vehicle Theft': return t('categories.theft', 'Vehicle Theft');
+      case 'Burglary': return t('categories.propertyTheft', 'Burglary');
+      case 'Fraud': return t('categories.financialFraud', 'Fraud');
+      case 'Armed Robbery': return t('categories.violentCrime', 'Armed Robbery');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crimes': return t('categories.violentCrime', 'Violent Crimes');
+      default: return cat;
+    }
+  };
 
   // Compute SVG line points
   const points = useMemo(() => {
@@ -88,24 +110,24 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
               <LineChart className="w-4 h-4 text-[#C79A2B] animate-pulse-soft" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Crime Volume Trend Charts</h3>
-              <p className="text-[10px] text-[#64748B] mt-0.5">Interactive volume projections based on select time metrics.</p>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">{t('dashboard.crimeTrends', 'Crime Volume Trend Charts')}</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5">{t('dashboard.trendsSubtitle', 'Interactive volume projections based on select time metrics.')}</p>
             </div>
           </div>
 
           {/* Chart tabs selectors */}
           <div className="flex bg-[#F8F9FB] p-1 rounded-xl border border-[#E7ECF3] shrink-0">
-            {tabs.map(t => (
+            {tabs.map(tabItem => (
               <button
-                key={t}
-                onClick={() => setActiveTab(t)}
+                key={tabItem.key}
+                onClick={() => setActiveTab(tabItem.key)}
                 className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
-                  activeTab === t
+                  activeTab === tabItem.key
                     ? 'bg-[#0B1F4D] text-white shadow-sm'
                     : 'text-[#64748B] hover:text-[#0B1F4D]'
                 }`}
               >
-                {t}
+                {tabItem.label}
               </button>
             ))}
           </div>
@@ -185,7 +207,7 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
           <div className="w-6 h-6 rounded bg-[#F8F9FB] border border-[#E7ECF3] flex items-center justify-center">
             <Calendar className="w-3 h-3 text-[#C79A2B]" />
           </div>
-          Category Growth
+          {t('dashboard.categoryBreakdown', 'Category Growth')}
         </h4>
 
         <div className="flex flex-col gap-3 flex-1 justify-between">
@@ -195,7 +217,7 @@ export default function CrimeTrendAnalysis({ timeFilter }) {
             return (
               <div key={idx} className="p-4 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] space-y-3 flex flex-col justify-between hover:border-[#CBD5E1] transition-colors shadow-sm">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-[#0B1F4D]">{c.name}</span>
+                  <span className="font-bold text-[#0B1F4D]">{getCategoryLabel(c.name)}</span>
                   <span className={`font-mono font-bold flex items-center gap-1 ${isUp ? 'text-rose-600' : 'text-emerald-600'}`}>
                     {isUp ? <TrendingUp className="w-3 h-3 text-rose-600" /> : <TrendingDown className="w-3 h-3 text-emerald-600" />}
                     {isUp ? '+' : ''}{c.change}%

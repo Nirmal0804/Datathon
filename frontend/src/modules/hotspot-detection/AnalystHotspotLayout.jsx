@@ -6,6 +6,7 @@ import HotspotRankingTable from './components/HotspotRankingTable';
 import RiskBadge from './components/RiskBadge';
 import TrendBadge from './components/TrendBadge';
 import { ANALYST_HOTSPOTS } from '../../mock/hotspotAnalytics';
+import { useTranslation } from '../../i18n';
 import { 
   Layers, ShieldAlert, Info, Eye, ClipboardList, Download
 } from 'lucide-react';
@@ -19,6 +20,7 @@ const ANOMALY_THRESHOLDS = {
 };
 
 export default function AnalystHotspotLayout({ onNavigate }) {
+  const { t } = useTranslation();
   // Initialize with first hotspot to ensure analyst sees populated data immediately
   const [selectedHotspot, setSelectedHotspot] = useState(ANALYST_HOTSPOTS[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -334,12 +336,12 @@ export default function AnalystHotspotLayout({ onNavigate }) {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
-              <h1 className="text-lg sm:text-2xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Intelligence</h1>
+              <h1 className="text-lg sm:text-2xl font-black text-[#0F172A] tracking-tight">{t('hotspots.title', 'Crime Hotspot Intelligence')}</h1>
               <div className="px-2.5 py-0.5 rounded-full bg-[#0B1F4D]/10 border border-[#0B1F4D]/20 flex items-center gap-1.5">
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI Active</span>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">{t('admin.running', 'AI Active')}</span>
               </div>
             </div>
-            <p className="text-xs font-semibold text-[#64748B]">Tactical command suite for district-level risk rankings and predictive hotspot telemetry.</p>
+            <p className="text-xs font-semibold text-[#64748B]">{t('hotspots.subtitle', 'Tactical command suite for district-level risk rankings and predictive hotspot telemetry.')}</p>
           </div>
         </div>
 
@@ -349,7 +351,7 @@ export default function AnalystHotspotLayout({ onNavigate }) {
             className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-[12px] transition-colors shrink-0 cursor-pointer shadow-sm group"
           >
             <Download className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
-            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">Export Report</span>
+            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">{t('reports.exportReport', 'Export Report')}</span>
           </button>
         </div>
       </div>
@@ -357,12 +359,12 @@ export default function AnalystHotspotLayout({ onNavigate }) {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3.5 sm:gap-5">
         {[
-          { label: 'Total Hotspots', val: kpis.total, color: 'text-[#0F172A]' },
-          { label: 'Emerging', val: kpis.emerging, color: 'text-[#B91C1C]' },
-          { label: 'Persistent', val: kpis.persistent, color: 'text-[#B45309]' },
-          { label: 'Critical Risk Zones', val: kpis.critical, color: 'text-[#B91C1C]' },
-          { label: 'Avg Density Index', val: `${kpis.avgDensity} /10`, color: 'text-[#0F172A]' },
-          { label: 'Highest Risk District', val: kpis.highestRiskDistrict, color: 'text-[#0F172A]', textOnly: true }
+          { label: t('hotspots.totalHotspots', 'Total Hotspots'), val: kpis.total, color: 'text-[#0F172A]' },
+          { label: t('hotspots.emergingHotspots', 'Emerging'), val: kpis.emerging, color: 'text-[#B91C1C]' },
+          { label: t('hotspots.persistent', 'Persistent'), val: kpis.persistent, color: 'text-[#B45309]' },
+          { label: t('hotspots.criticalZones', 'Critical Risk Zones'), val: kpis.critical, color: 'text-[#B91C1C]' },
+          { label: t('hotspots.avgDensityIndex', 'Avg Density Index'), val: `${kpis.avgDensity} /10`, color: 'text-[#0F172A]' },
+          { label: t('hotspots.highestRiskDistrict', 'Highest Risk District'), val: kpis.highestRiskDistrict, color: 'text-[#0F172A]', textOnly: true }
         ].map((card, i) => (
           <div key={i} className="bg-white border border-[#E7ECF3] rounded-[18px] sm:rounded-[20px] p-3.5 sm:p-5 flex flex-col justify-between shadow-sm">
             <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">{card.label}</span>
@@ -404,9 +406,9 @@ export default function AnalystHotspotLayout({ onNavigate }) {
                 <div className="flex items-center justify-between pb-2 border-b border-[#F1F5F9]">
                   <div className="flex items-center gap-2 text-[#B91C1C] font-black text-xs uppercase tracking-wider">
                     <ShieldAlert className="w-4 h-4" />
-                    <span>{activeAlerts.length} Active Crime Anomalies Detected</span>
+                    <span>{activeAlerts.length} {t('hotspots.activeAnomaliesDetected', 'Active Crime Anomalies Detected')}</span>
                   </div>
-                  <span className="text-[10px] bg-[#B91C1C]/10 text-[#B91C1C] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse-soft">Early Warning Alerts</span>
+                  <span className="text-[10px] bg-[#B91C1C]/10 text-[#B91C1C] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse-soft">{t('hotspots.earlyWarningAlerts', 'Early Warning Alerts')}</span>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -420,8 +422,12 @@ export default function AnalystHotspotLayout({ onNavigate }) {
                       <div key={idx} className={`flex items-start gap-2.5 p-2.5 bg-[#F8F9FB] rounded-lg border border-[#E7ECF3] border-l-4 ${stripColor}`}>
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start mb-0.5">
-                            <span className={`text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${bgBadge}`}>{alert.priority}</span>
-                            <span className="text-xs font-bold text-[#94A3B8] uppercase">Just Now</span>
+                            <span className={`text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${bgBadge}`}>
+                              {alert.priority === 'Critical' ? t('common.critical', 'Critical') :
+                               alert.priority === 'High' ? t('common.high', 'High') :
+                               alert.priority === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
+                            </span>
+                            <span className="text-xs font-bold text-[#94A3B8] uppercase">{t('common.justNow', 'Just Now')}</span>
                           </div>
                           <p className="text-xs font-bold text-[#0F172A] leading-tight truncate" title={alert.title}>
                             {alert.title.replace(/^[🚨🔥⚠️]\s*/u, '')}
@@ -440,10 +446,10 @@ export default function AnalystHotspotLayout({ onNavigate }) {
           ) : filteredHotspots.length === 0 ? (
             <div className="p-10 text-center bg-white border border-[#E7ECF3] rounded-[20px] max-w-md mx-auto shadow-sm">
               <ShieldAlert className="w-12 h-12 text-[#94A3B8] mx-auto mb-4" />
-              <h4 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">No hotspots matches filters</h4>
-              <p className="text-[10px] font-bold text-[#64748B] mt-2 mb-5 uppercase tracking-wider">Try adjusting your query or resetting all filter tags.</p>
+              <h4 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">{t('hotspots.noHotspotsFound', 'No hotspots matches filters')}</h4>
+              <p className="text-[10px] font-bold text-[#64748B] mt-2 mb-5 uppercase tracking-wider">{t('hotspots.noHotspotsFoundDesc', 'Try adjusting your query or resetting all filter tags.')}</p>
               <button onClick={handleResetFilters} className="h-9 px-4 rounded-lg bg-[#0B1F4D] text-white font-bold text-[10px] uppercase tracking-wider hover:bg-[#0B1F4D]/90 transition-colors w-full">
-                Clear Filters
+                {t('cases.resetFilters', 'Clear Filters')}
               </button>
             </div>
           ) : (

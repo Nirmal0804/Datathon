@@ -3,6 +3,7 @@ import { APIProvider, Map as GoogleMap, InfoWindow, useMap } from '@vis.gl/react
 import { ZoomIn, ZoomOut, Maximize2, Layers, Zap } from 'lucide-react';
 import { KARNATAKA_DISTRICTS_GEOJSON } from '../../../mock/karnatakaDistrictsGeoJSON';
 import { DISTRICT_PREDICTION_DATA } from '../../../mock/districtPredictionData';
+import { useTranslation } from '../../../i18n';
 
 // Google Maps API Key from Environment
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
@@ -251,6 +252,7 @@ export default function GoogleGISMap({
   onExportSnapshot = () => { },
   onDistrictClick = () => { }
 }) {
+  const { t } = useTranslation();
   const safeCases = useMemo(() => (Array.isArray(filteredCases) ? filteredCases : []), [filteredCases]);
   const safeLayers = layers || {};
   const safeMapState = mapState || { center: [15.3173, 75.7139], zoom: 7, resetKey: 0 };
@@ -411,7 +413,7 @@ export default function GoogleGISMap({
                         <span className="font-bold">{activeInfoWindow.data.policeStation}</span>
                       </div>
                       <div className="flex justify-between gap-3">
-                        <span className="text-slate-500">Risk Level:</span>
+                        <span className="text-slate-500">{t('cases.riskLevelLabel', 'Risk Level')}:</span>
                         <span
                           className="font-bold px-1.5 py-0.2 rounded text-[10px]"
                           style={{
@@ -419,15 +421,22 @@ export default function GoogleGISMap({
                             color: getRiskColor(activeInfoWindow.data.risk)
                           }}
                         >
-                          {activeInfoWindow.data.risk || 'Normal'}
+                          {activeInfoWindow.data.risk === 'Critical' ? t('common.critical', 'Critical') :
+                           activeInfoWindow.data.risk === 'High' ? t('common.high', 'High') :
+                           activeInfoWindow.data.risk === 'Medium' ? t('common.medium', 'Medium') :
+                           t('common.low', 'Low')}
                         </span>
                       </div>
                       <div className="flex justify-between gap-3">
-                        <span className="text-slate-500">Status:</span>
-                        <span className="font-bold text-slate-900">{activeInfoWindow.data.status}</span>
+                        <span className="text-slate-500">{t('cases.statusLabel', 'Status')}:</span>
+                        <span className="font-bold text-slate-900">
+                          {activeInfoWindow.data.status === 'Active' ? t('cases.statusActive', 'Active') :
+                           activeInfoWindow.data.status === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') :
+                           activeInfoWindow.data.status === 'Closed' ? t('cases.statusClosed', 'Closed') : activeInfoWindow.data.status}
+                        </span>
                       </div>
                       <div className="flex justify-between gap-3 pt-1 border-t border-slate-200">
-                        <span className="text-slate-500">Date:</span>
+                        <span className="text-slate-500">{t('common.date', 'Date')}:</span>
                         <span className="font-semibold text-slate-600">{activeInfoWindow.data.date}</span>
                       </div>
                     </div>
@@ -436,14 +445,14 @@ export default function GoogleGISMap({
                   /* District Hotspot InfoWindow */
                   <div className="p-2 min-w-[160px] text-slate-900 font-sans">
                     <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1">
-                      AI Hotspot Intelligence
+                      {t('hotspots.aiHotspotIntel', 'AI Hotspot Intelligence')}
                     </span>
                     <h4 className="font-extrabold text-sm text-slate-900 mb-1 leading-tight">
                       {activeInfoWindow.data.district}
                     </h4>
                     <div className="space-y-1 text-xs text-slate-700">
                       <div className="flex justify-between gap-4">
-                        <span className="text-slate-500">Risk Level:</span>
+                        <span className="text-slate-500">{t('hotspots.threatLevel', 'Risk Level')}:</span>
                         <span
                           className="font-bold px-1.5 py-0.2 rounded text-[10px]"
                           style={{
@@ -451,15 +460,18 @@ export default function GoogleGISMap({
                             color: activeInfoWindow.data.color
                           }}
                         >
-                          {activeInfoWindow.data.level}
+                          {activeInfoWindow.data.level === 'Critical' ? t('common.critical', 'Critical') :
+                           activeInfoWindow.data.level === 'High' ? t('common.high', 'High') :
+                           activeInfoWindow.data.level === 'Medium' ? t('common.medium', 'Medium') :
+                           t('common.low', 'Low')}
                         </span>
                       </div>
                       <div className="flex justify-between gap-4">
-                        <span className="text-slate-500">Total Cases:</span>
+                        <span className="text-slate-500">{t('hotspots.incidents', 'Total Cases')}:</span>
                         <span className="font-bold">{activeInfoWindow.data.count}</span>
                       </div>
                       <div className="flex justify-between gap-4">
-                        <span className="text-slate-500">Dominant Crime:</span>
+                        <span className="text-slate-500">{t('map.dominantCrime', 'Dominant Crime')}:</span>
                         <span className="font-bold text-[#0B1F4D]">{activeInfoWindow.data.dominantCat || 'N/A'}</span>
                       </div>
                     </div>
@@ -478,21 +490,21 @@ export default function GoogleGISMap({
           <button
             onClick={handleZoomIn}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Zoom In"
+            title={t('map.zoomIn', 'Zoom In')}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={handleZoomOut}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Zoom Out"
+            title={t('map.zoomOut', 'Zoom Out')}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
           <button
             onClick={handleResetView}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Reset Map View"
+            title={t('map.resetView', 'Reset Map View')}
           >
             <Maximize2 className="w-4 h-4" />
           </button>
@@ -503,16 +515,16 @@ export default function GoogleGISMap({
           <button
             onClick={() => setLayersMenuOpen(!layersMenuOpen)}
             className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 shadow-lg flex items-center justify-center transition-colors backdrop-blur-md cursor-pointer"
-            title="Map Layer Controls"
+            title={t('map.mapLayers', 'Map Layer Controls')}
           >
             <Layers className="w-4 h-4" />
           </button>
 
           {layersMenuOpen && (
             <div className="absolute right-0 top-11 w-52 bg-slate-900/95 border border-slate-800 rounded-2xl p-3 shadow-2xl z-30 backdrop-blur-md space-y-2 text-xs">
-              <h4 className="font-bold text-slate-300 text-[11px] uppercase tracking-wider mb-2">Map Layers</h4>
+              <h4 className="font-bold text-slate-300 text-[11px] uppercase tracking-wider mb-2">{t('map.mapLayers', 'Map Layers')}</h4>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>Severity Markers</span>
+                <span>{t('map.severityMarkers', 'Severity Markers')}</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showMarkers}
@@ -521,7 +533,7 @@ export default function GoogleGISMap({
                 />
               </label>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>District Boundaries</span>
+                <span>{t('map.districtBoundaries', 'District Boundaries')}</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showBoundaries}
@@ -530,7 +542,7 @@ export default function GoogleGISMap({
                 />
               </label>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>Emerging Hotspots</span>
+                <span>{t('map.emergingHotspots', 'Emerging Hotspots')}</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showHotspots}
@@ -539,7 +551,7 @@ export default function GoogleGISMap({
                 />
               </label>
               <label className="flex items-center justify-between text-slate-300 cursor-pointer hover:text-white">
-                <span>Crime Density</span>
+                <span>{t('map.crimeDensity', 'Crime Density')}</span>
                 <input
                   type="checkbox"
                   checked={!!safeLayers.showDensity}

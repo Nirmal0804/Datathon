@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '../../../i18n';
 
 const MOCK_DATA = [
   { label: 'Property Crime', value: 45, color: '#0B1F4D', percentage: '45%' },
@@ -9,7 +10,22 @@ const MOCK_DATA = [
 ];
 
 export default function CategoryDistribution() {
+  const { t } = useTranslation();
   const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Property Crime': return t('categories.property', 'Property Crime');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Cyber Crime': return t('categories.cybercrime', 'Cyber Crime');
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
 
   // SVG Donut Chart Calculation
   const total = MOCK_DATA.reduce((sum, item) => sum + item.value, 0);
@@ -47,8 +63,8 @@ export default function CategoryDistribution() {
       className="bg-white border border-[#E7ECF3] rounded-[22px] p-6 shadow-sm h-full flex flex-col hover:border-[#1A2F63]/30 transition-all duration-300"
     >
       <div className="mb-6">
-        <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Category Breakdown</h3>
-        <p className="text-xs font-semibold text-[#64748B]">Distribution of registered cases</p>
+        <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">{t('dashboard.categoryDistribution', 'Category Breakdown')}</h3>
+        <p className="text-xs font-semibold text-[#64748B]">{t('district.distributionRegisteredCases', 'Distribution of registered cases')}</p>
       </div>
 
       <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8">
@@ -91,7 +107,7 @@ export default function CategoryDistribution() {
                   className="text-center"
                 >
                   <div className="text-2xl font-black text-[#0B1F4D] tracking-tight">{MOCK_DATA[hoveredIndex].percentage}</div>
-                  <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest max-w-[80px] leading-tight mt-1">{MOCK_DATA[hoveredIndex].label}</div>
+                  <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest max-w-[80px] leading-tight mt-1">{getCategoryLabel(MOCK_DATA[hoveredIndex].label)}</div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -102,7 +118,7 @@ export default function CategoryDistribution() {
                   className="text-center"
                 >
                   <div className="text-2xl font-black text-[#0B1F4D] tracking-tight">100%</div>
-                  <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest mt-1">Total</div>
+                  <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest mt-1">{t('common.total', 'Total')}</div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -120,7 +136,7 @@ export default function CategoryDistribution() {
             >
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
-                <span className={`text-xs font-bold transition-colors ${hoveredIndex === idx ? 'text-[#0B1F4D]' : 'text-[#64748B]'}`}>{item.label}</span>
+                <span className={`text-xs font-bold transition-colors ${hoveredIndex === idx ? 'text-[#0B1F4D]' : 'text-[#64748B]'}`}>{getCategoryLabel(item.label)}</span>
               </div>
               <span className={`text-xs font-black transition-colors ${hoveredIndex === idx ? 'text-[#0B1F4D]' : 'text-[#94A3B8]'}`}>{item.percentage}</span>
             </div>

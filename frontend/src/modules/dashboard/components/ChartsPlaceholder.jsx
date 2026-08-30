@@ -43,6 +43,20 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
     };
   });
 
+  const getCategoryLabel = (cat) => {
+    const catMap = {
+      'Property Crime': t('categories.property', 'Property Crime'),
+      'Violent Crime': t('categories.violentCrime', 'Violent Crime'),
+      'Cybercrime': t('categories.cybercrime', 'Cybercrime'),
+      'Cyber Crime': t('categories.cybercrime', 'Cyber Crime'),
+      'Property Theft': t('categories.propertyTheft', 'Property Theft'),
+      'Financial Fraud': t('categories.financialFraud', 'Financial Fraud'),
+      'Narcotics': t('categories.narcotics', 'Narcotics'),
+      'Crime Against Women': t('categories.crimeAgainstWomen', 'Crime Against Women'),
+    };
+    return catMap[cat] || cat;
+  };
+
   // Render Daily Crime Trend SVG
   const renderDailyTrend = () => {
     const data = trends.daily || [];
@@ -66,8 +80,8 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
     return (
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-6">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Daily Trend (Last 10 Days)</span>
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Total volume</span>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.dailyTrend10Days', 'Daily Trend (Last 10 Days)')}</span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{t('dashboard.totalVolume', 'Total volume')}</span>
         </div>
         <div className="relative w-full h-40">
           <svg className="w-full h-full" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
@@ -122,7 +136,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
                 {/* Tooltip */}
                 <foreignObject x={p.x - 30} y={p.y - 36} width="60" height="28" className="opacity-0 group-hover/dot:opacity-100 transition-opacity pointer-events-none">
                   <div className="bg-[#0F172A] rounded-lg px-2 py-1 text-center shadow-md">
-                    <p className="text-[10px] font-bold text-white leading-tight">{p.count} FIRs</p>
+                    <p className="text-[10px] font-bold text-white leading-tight">{p.count} {t('dashboard.total', 'FIRs')}</p>
                   </div>
                 </foreignObject>
               </g>
@@ -142,7 +156,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Monthly Crime Trend SVG
   const renderMonthlyTrend = () => {
     const data = trends.monthly || [];
-    if (data.length === 0) return <EmptyState type="analytics" title="No Monthly Trends" message="No monthly trend data available." compact={true} />;
+    if (data.length === 0) return <EmptyState type="analytics" title={t('dashboard.noMonthlyTrends', 'No Monthly Trends')} message={t('dashboard.noMonthlyTrendsDesc', 'No monthly trend data available.')} compact={true} />;
 
     const width = 500;
     const height = 160;
@@ -165,8 +179,8 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
     return (
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-6">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Monthly Incident Load</span>
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Yearly</span>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.monthlyIncidentLoad', 'Monthly Incident Load')}</span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{t('dashboard.yearly', 'Yearly')}</span>
         </div>
         <div className="relative w-full h-40">
           <svg className="w-full h-full" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
@@ -230,7 +244,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
                 {/* Tooltip */}
                 <foreignObject x={p.x - 30} y={p.y - 36} width="60" height="28" className="opacity-0 group-hover/dot:opacity-100 transition-opacity pointer-events-none">
                   <div className="bg-[#0F172A] rounded-lg px-2 py-1 text-center shadow-md">
-                    <p className="text-[10px] font-bold text-white leading-tight">{p.count} Cases</p>
+                    <p className="text-[10px] font-bold text-white leading-tight">{p.count} {t('hotspots.casesSuffix', 'Cases')}</p>
                   </div>
                 </foreignObject>
               </g>
@@ -251,15 +265,15 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   const renderDistrictBarChart = () => {
     // Show top 6 districts from filtered list
     const topDistricts = districts.slice(0, 6);
-    if (topDistricts.length === 0) return <EmptyState type="analytics" title="No District Data" message="No district data available." compact={true} />;
+    if (topDistricts.length === 0) return <EmptyState type="analytics" title={t('district.noMetrics', 'No District Data')} message={t('district.noMetricsDesc', 'No district data available.')} compact={true} />;
 
     const maxVal = Math.max(...topDistricts.map(d => d.count), 5);
 
     return (
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-6">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">District Incident Counts</span>
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Volume</span>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.districtIncidentCounts', 'District Incident Counts')}</span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{t('dashboard.volume', 'Volume')}</span>
         </div>
 
         <div className="flex-1 flex items-end justify-between gap-4 h-40 pt-4 px-4">
@@ -297,15 +311,15 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
   // Render Yearly Summary Bar Chart
   const renderYearlySummary = () => {
     const data = trends.yearly || [];
-    if (data.length === 0) return <EmptyState type="analytics" title="No Yearly Trends" message="No yearly trend data available." compact={true} />;
+    if (data.length === 0) return <EmptyState type="analytics" title={t('dashboard.noYearlyTrends', 'No Yearly Trends')} message={t('dashboard.noYearlyTrendsDesc', 'No yearly trend data available.')} compact={true} />;
 
     const maxVal = Math.max(...data.map(y => y.count), 5);
 
     return (
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-6">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Year-over-Year Summary</span>
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Timeline</span>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.yearOverYearSummary', 'Year-over-Year Summary')}</span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{t('dashboard.timeline', 'Timeline')}</span>
         </div>
 
         <div className="flex-1 flex items-end justify-between gap-6 h-40 pt-4 px-4">
@@ -442,7 +456,7 @@ export default function ChartsPlaceholder({ trendsData, categoryData, districtDa
                 <div key={i} className="flex items-center justify-between text-[12px] p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
                     <span className="w-3 h-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: seg.color }} />
-                    <span className="font-bold text-[#0F172A] truncate max-w-36">{seg.category}</span>
+                    <span className="font-bold text-[#0F172A] truncate max-w-36">{getCategoryLabel(seg.category)}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="font-semibold text-slate-500">{seg.count}</span>

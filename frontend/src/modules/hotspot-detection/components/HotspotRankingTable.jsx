@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import RiskBadge from './RiskBadge';
 import TrendBadge from './TrendBadge';
 import { ArrowUpRight, ArrowUpDown, ShieldAlert } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function HotspotRankingTable({ 
   hotspots, 
@@ -10,6 +11,19 @@ export default function HotspotRankingTable({
   sortKey,
   setSortKey
 }) {
+  const { t } = useTranslation();
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
 
   // Risk weighting for sorting
   const riskWeights = { Critical: 4, High: 3, Medium: 2, Low: 1 };
@@ -44,11 +58,11 @@ export default function HotspotRankingTable({
     <div className="bg-white border border-[#E7ECF3] rounded-[20px] overflow-hidden shadow-sm flex flex-col h-full">
       <div className="px-6 py-5 border-b border-[#E7ECF3] flex justify-between items-center bg-white sticky top-0 z-10">
         <div>
-          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">Karnataka Crime Hotspot Rankings</h3>
-          <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider mt-1">Ranked by composite threat indexes, growth spikes, and precinct density rates.</p>
+          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">{t('hotspots.karnatakaHotspotRankings', 'Karnataka Crime Hotspot Rankings')}</h3>
+          <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider mt-1">{t('hotspots.rankedByThreat', 'Ranked by composite threat indexes, growth spikes, and precinct density rates.')}</p>
         </div>
         <span className="text-xs font-bold font-mono bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] px-2.5 py-1 rounded-lg uppercase tracking-wider">
-          {sortedList.length} hotspots tracked
+          {sortedList.length} {t('hotspots.hotspotsTracked', 'hotspots tracked')}
         </span>
       </div>
 
@@ -56,24 +70,24 @@ export default function HotspotRankingTable({
         <table className="w-full text-left border-collapse" aria-label="Analyst hotspots ranking table">
           <thead className="bg-[#F8F9FB] sticky top-0 z-10 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
             <tr className="border-b border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider select-none">
-              <th className="py-3 px-4 text-center w-12">Rank</th>
-              <th className="py-3 px-3">Hotspot ID & Station</th>
+              <th className="py-3 px-4 text-center w-12">{t('hotspots.rank', 'Rank')}</th>
+              <th className="py-3 px-3">{t('hotspots.idAndStation', 'Hotspot ID & Station')}</th>
               <th 
                 className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('crimeCount')}
               >
                 <div className="flex items-center gap-1">
-                  <span>Crime Count</span>
+                  <span>{t('hotspots.crimeCount', 'Crime Count')}</span>
                   <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-              <th className="py-3 px-3">Category</th>
+              <th className="py-3 px-3">{t('common.category', 'Category')}</th>
               <th 
                 className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('density')}
               >
                 <div className="flex items-center gap-1">
-                  <span>Density</span>
+                  <span>{t('hotspots.density', 'Density')}</span>
                   <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
@@ -82,23 +96,23 @@ export default function HotspotRankingTable({
                 onClick={() => toggleSort('growth')}
               >
                 <div className="flex items-center gap-1">
-                  <span>Growth %</span>
+                  <span>{t('hotspots.growthPercent', 'Growth %')}</span>
                   <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-              <th className="py-3 px-3">Trend History</th>
-              <th className="py-3 px-3">Status</th>
+              <th className="py-3 px-3">{t('hotspots.trendHistory', 'Trend History')}</th>
+              <th className="py-3 px-3">{t('common.status', 'Status')}</th>
               <th 
                 className="py-3 px-3 cursor-pointer hover:text-[#0B1F4D] transition-colors group"
                 onClick={() => toggleSort('risk')}
               >
                 <div className="flex items-center gap-1">
-                  <span>Risk Level</span>
+                  <span>{t('cases.riskLevelLabel', 'Risk Level')}</span>
                   <ArrowUpDown className="w-3 h-3 text-[#94A3B8] group-hover:text-[#0B1F4D] transition-colors" />
                 </div>
               </th>
-              <th className="py-3 px-3">Last Incident</th>
-              <th className="py-3 px-4 text-right">Inspect</th>
+              <th className="py-3 px-3">{t('hotspots.lastIncident', 'Last Incident')}</th>
+              <th className="py-3 px-4 text-right">{t('common.inspect', 'Inspect')}</th>
             </tr>
           </thead>
           <tbody>
@@ -173,7 +187,7 @@ export default function HotspotRankingTable({
                     {h.crimeCount}
                   </td>
                   
-                  <td className="py-3 px-3 text-[#0F172A] font-semibold">{h.dominantCrime}</td>
+                  <td className="py-3 px-3 text-[#0F172A] font-semibold">{getCategoryLabel(h.dominantCrime)}</td>
                   
                   <td className="py-3 px-3 font-mono font-bold text-[#64748B]">
                     {h.densityIndex} <span className="text-xs opacity-70">/10</span>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldAlert, TrendingUp } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 function AnimatedNumber({ value }) {
   const [current, setCurrent] = useState(0);
@@ -25,6 +26,7 @@ function AnimatedNumber({ value }) {
 }
 
 export default function RiskScoreCard() {
+  const { t } = useTranslation();
   const score = 84;
   const circumference = 2 * Math.PI * 40; 
   const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -40,8 +42,8 @@ export default function RiskScoreCard() {
 
       <div className="relative z-10 flex justify-between items-start mb-6">
         <div>
-          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">AI Risk Score</h3>
-          <p className="text-xs font-semibold text-[#64748B]">Predictive Threat Level</p>
+          <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">{t('district.aiRiskScore', 'AI Risk Score')}</h3>
+          <p className="text-xs font-semibold text-[#64748B]">{t('district.predictiveThreatLevel', 'Predictive Threat Level')}</p>
         </div>
         <div className="w-10 h-10 rounded-[14px] bg-rose-50 flex items-center justify-center border border-rose-100">
           <ShieldAlert className="w-5 h-5 text-rose-500" />
@@ -87,18 +89,18 @@ export default function RiskScoreCard() {
 
         <div className="space-y-2">
           <div className="px-3 py-1 bg-rose-50 border border-rose-100 rounded-full inline-block">
-            <span className="text-xs font-bold text-rose-600 uppercase tracking-widest">Critical Risk</span>
+            <span className="text-xs font-bold text-rose-600 uppercase tracking-widest">{t('hotspots.criticalRisk', 'Critical Risk')}</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs font-bold text-rose-600">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>+12% this month</span>
+            <span>+12% {t('common.thisMonth', 'this month')}</span>
           </div>
         </div>
       </div>
       
       <div className="relative z-10 mt-auto pt-4 border-t border-[#F1F5F9]">
         <p className="text-xs font-medium text-[#334155] leading-relaxed">
-          <strong className="text-[#0B1F4D] font-bold">Insight:</strong> Risk increased significantly due to a recent spike in property-related crimes in the central sectors.
+          <strong className="text-[#0B1F4D] font-bold">{t('district.aiRecommendations', 'Insight:')}</strong> {t('district.riskScoreInsight', 'Risk increased significantly due to a recent spike in property-related crimes in the central sectors.')}
         </p>
       </div>
     </motion.div>

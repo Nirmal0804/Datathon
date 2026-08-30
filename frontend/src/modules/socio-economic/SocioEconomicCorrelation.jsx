@@ -3,8 +3,10 @@ import { Database, Download, AlertTriangle, ShieldAlert, TrendingUp, RotateCcw, 
 import { jsPDF } from 'jspdf';
 import { SOCIO_ECONOMIC_DATA } from '../../mock/socioEconomicData';
 import { CRIME_CORRELATION_MATRIX, CORRELATION_INDICATORS, CORRELATION_CATEGORIES } from '../../mock/crimeCorrelationData';
+import { useTranslation } from '../../i18n';
 
 export default function SocioEconomicCorrelation({ role }) {
+  const { t } = useTranslation();
   // Role Access Guard: Expose only to Intelligence Analyst
   if (role !== 'analyst') {
     return (
@@ -12,9 +14,9 @@ export default function SocioEconomicCorrelation({ role }) {
         <div className="w-12 h-12 rounded-[16px] bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
           <ShieldAlert className="w-6 h-6" />
         </div>
-        <h3 className="text-base font-black text-[#0F172A] tracking-tight">Access Restricted</h3>
+        <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('common.unauthorized', 'Access Restricted')}</h3>
         <p className="text-xs font-semibold text-[#64748B] mt-1">
-          This strategic socio-economic correlation analysis module is restricted to authorized Intelligence Analysts only.
+          {t('common.unauthorizedDesc', 'This strategic socio-economic correlation analysis module is restricted to authorized Intelligence Analysts only.')}
         </p>
       </div>
     );
@@ -191,12 +193,12 @@ export default function SocioEconomicCorrelation({ role }) {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">Socio-economic Crime Correlation</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">{t('socio.title', 'Socio-economic Crime Correlation')}</h1>
               <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3] flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">AI ACTIVE</span>
+                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">{t('admin.active', 'AI ACTIVE')}</span>
               </div>
             </div>
-            <p className="text-xs font-semibold text-[#64748B]">Strategic analytics suite correlating crime trends with district-level socio-economic indicators.</p>
+            <p className="text-xs font-semibold text-[#64748B]">{t('socio.subtitle', 'Strategic analytics suite correlating crime trends with district-level socio-economic indicators.')}</p>
           </div>
         </div>
 
@@ -213,7 +215,7 @@ export default function SocioEconomicCorrelation({ role }) {
             className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-[12px] transition-colors shrink-0 cursor-pointer shadow-sm group"
           >
             <Download className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
-            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">Export Report</span>
+            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-widest">{t('reports.generateReport', 'Export Report')}</span>
           </button>
         </div>
       </div>
@@ -223,43 +225,43 @@ export default function SocioEconomicCorrelation({ role }) {
         
         {/* Card 1 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">Target District</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('reports.selectDistrict', 'Target District')}</span>
           <span className="text-base sm:text-lg font-black text-[#0B1F4D] tracking-tight truncate block">{selectedDistrict}</span>
         </div>
 
         {/* Card 2 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">Active Indicator</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('socio.selectedIndicator', 'Active Indicator')}</span>
           <span className="text-base sm:text-lg font-black text-[#0B1F4D] tracking-tight truncate block">{selectedIndName}</span>
         </div>
 
         {/* Card 3 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">Peak Positive (r)</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('socio.correlationIndex', 'Peak Positive (r)')}</span>
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="text-base sm:text-lg font-black text-rose-600 tracking-tight shrink-0">+0.89</span>
-            <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100 truncate">Cybercrime</span>
+            <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100 truncate">{t('categories.cybercrime', 'Cybercrime')}</span>
           </div>
         </div>
 
         {/* Card 4 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">Peak Negative (r)</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('socio.correlationIndex', 'Peak Negative (r)')}</span>
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="text-base sm:text-lg font-black text-sky-600 tracking-tight shrink-0">-0.58</span>
-            <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100 truncate">Assault</span>
+            <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100 truncate">{t('categories.assault', 'Assault')}</span>
           </div>
         </div>
 
         {/* Card 5 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">Evaluated Parameters</span>
-          <span className="text-base sm:text-lg font-black text-[#0B1F4D] tracking-tight truncate block">5 Indicators</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('common.filter', 'Evaluated Parameters')}</span>
+          <span className="text-base sm:text-lg font-black text-[#0B1F4D] tracking-tight truncate block">5 {t('socio.selectedIndicator', 'Indicators')}</span>
         </div>
 
         {/* Card 6 */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-4 shadow-sm h-[88px] flex flex-col justify-between">
-          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">High Impact Zone</span>
+          <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block truncate">{t('hotspots.criticalPriorityZones', 'High Impact Zone')}</span>
           <span className="text-base sm:text-lg font-black text-[#0B1F4D] tracking-tight truncate block">Bengaluru City</span>
         </div>
 
@@ -277,7 +279,7 @@ export default function SocioEconomicCorrelation({ role }) {
               onChange={(e) => setSelectedDistrict(e.target.value)}
               className="w-full h-9 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-[11px] font-bold rounded-lg pl-9 pr-3 focus:outline-none focus:ring-1 focus:ring-[#0B1F4D] cursor-pointer uppercase tracking-wider"
             >
-              <option value="All">All Districts</option>
+              <option value="All">{t('dashboard.allDistricts', 'All Districts')}</option>
               {SOCIO_ECONOMIC_DATA.map(d => (
                 <option key={d.district} value={d.district}>{d.district}</option>
               ))}
@@ -292,7 +294,7 @@ export default function SocioEconomicCorrelation({ role }) {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full h-9 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-[11px] font-bold rounded-lg pl-9 pr-3 focus:outline-none focus:ring-1 focus:ring-[#0B1F4D] cursor-pointer uppercase tracking-wider"
             >
-              <option value="All">All Categories</option>
+              <option value="All">{t('categories.allCategories', 'All Categories')}</option>
               {CORRELATION_CATEGORIES.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
@@ -307,9 +309,9 @@ export default function SocioEconomicCorrelation({ role }) {
               onChange={(e) => setSelectedYear(e.target.value)}
               className="w-full h-9 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-[11px] font-bold rounded-lg pl-9 pr-3 focus:outline-none focus:ring-1 focus:ring-[#0B1F4D] cursor-pointer uppercase tracking-wider"
             >
-              <option value="2026">2026 (Forecasted)</option>
-              <option value="2025">2025 (Historical)</option>
-              <option value="2024">2024 (Historical)</option>
+              <option value="2026">2026 ({t('analytics.predictedRisk', 'Forecasted')})</option>
+              <option value="2025">2025 ({t('analytics.historicalVsPredicted', 'Historical')})</option>
+              <option value="2024">2024 ({t('analytics.historicalVsPredicted', 'Historical')})</option>
             </select>
           </div>
 
@@ -333,7 +335,7 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="flex items-center gap-2.5 bg-[#F8F9FB] border border-[#E7ECF3] px-3 py-1.5 rounded-lg h-9">
             <Sliders className="w-3.5 h-3.5 text-[#0B1F4D]" />
             <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider whitespace-nowrap">
-              Threshold: <span className="font-mono text-[#0B1F4D] font-black">{correlationThreshold}</span>
+              {t('analytics.triggerThreshold', 'Threshold')}: <span className="font-mono text-[#0B1F4D] font-black">{correlationThreshold}</span>
             </span>
             <input
               type="range"
@@ -351,7 +353,7 @@ export default function SocioEconomicCorrelation({ role }) {
             className="h-9 px-3.5 rounded-lg bg-[#F8F9FB] border border-[#E7ECF3] text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 font-bold text-[10px] uppercase tracking-wider"
           >
             <RotateCcw className="w-3.5 h-3.5 mr-1" />
-            Reset
+            {t('dashboard.clearFilters', 'Reset')}
           </button>
         </div>
 
@@ -368,10 +370,10 @@ export default function SocioEconomicCorrelation({ role }) {
             <div className="flex items-center justify-between pb-2 border-b border-[#F1F5F9]">
               <div className="flex items-center gap-2 text-[#0B1F4D] font-black text-xs uppercase tracking-wider">
                 <TrendingUp className="w-4 h-4 text-[#C79A2B]" />
-                <span>Strategic Correlation Findings</span>
+                <span>{t('socio.districtComparison', 'Strategic Correlation Findings')}</span>
               </div>
               <span className="text-[10px] bg-emerald-50 border border-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                AI Correlation Telemetry
+                {t('analytics.hotspotAnalytics', 'AI Correlation Telemetry')}
               </span>
             </div>
             
@@ -392,8 +394,8 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 sm:p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-[#E7ECF3]">
               <div>
-                <h3 className="text-base font-black text-[#0F172A] tracking-tight">Pearson Correlation Heatmap</h3>
-                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">Statistical r-coefficients (-1.00 to +1.00)</p>
+                <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('socio.districtComparison', 'Pearson Correlation Heatmap')}</h3>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{t('socio.rSquaredValue', 'Statistical r-coefficients (-1.00 to +1.00)')}</p>
               </div>
               <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-1 rounded-full font-extrabold text-xs font-mono">
                 r-matrix
@@ -402,7 +404,7 @@ export default function SocioEconomicCorrelation({ role }) {
 
             <div className="overflow-x-auto min-w-0">
               <div className="grid grid-cols-6 gap-2 text-center text-[10px] font-black tracking-wider uppercase text-[#64748B] pb-2 border-b border-[#E7ECF3]">
-                <div className="text-left">Crime Category</div>
+                <div className="text-left">{t('common.category', 'Crime Category')}</div>
                 {CORRELATION_INDICATORS.map(ind => (
                   <div key={ind.id} className="truncate" title={ind.name}>{ind.name}</div>
                 ))}
@@ -458,25 +460,23 @@ export default function SocioEconomicCorrelation({ role }) {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Correlation Matrix Table */}
+          </div>          {/* Correlation Matrix Table */}
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] overflow-hidden shadow-sm">
             <div className="px-6 py-4 border-b border-[#E7ECF3] flex justify-between items-center bg-[#F8F9FB]">
               <div>
-                <h3 className="text-base font-black text-[#0F172A] tracking-tight">Correlation Coefficients Matrix</h3>
-                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">Cross-category Pearson correlation table</p>
+                <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('socio.districtComparison', 'Correlation Coefficients Matrix')}</h3>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{t('socio.rSquaredValue', 'Cross-category Pearson correlation table')}</p>
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-[#F8F9FB] border-b border-[#E7ECF3] text-[#0F172A] uppercase font-extrabold text-[10px] tracking-wider">
-                    <th className="py-3.5 px-6">Socio-economic Indicator</th>
-                    <th className="py-3.5 px-6 text-center font-mono">Property Theft</th>
-                    <th className="py-3.5 px-6 text-center font-mono">Assault</th>
-                    <th className="py-3.5 px-6 text-center font-mono">Cybercrime</th>
-                    <th className="py-3.5 px-6 text-center font-mono">Fraud</th>
+                    <th className="py-3.5 px-6">{t('socio.selectedIndicator', 'Socio-economic Indicator')}</th>
+                    <th className="py-3.5 px-6 text-center font-mono">{t('categories.propertyTheft', 'Property Theft')}</th>
+                    <th className="py-3.5 px-6 text-center font-mono">{t('categories.assault', 'Assault')}</th>
+                    <th className="py-3.5 px-6 text-center font-mono">{t('categories.cybercrime', 'Cybercrime')}</th>
+                    <th className="py-3.5 px-6 text-center font-mono">{t('categories.financialFraud', 'Fraud')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E7ECF3]/60 font-mono">
@@ -498,21 +498,21 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] overflow-hidden shadow-sm">
             <div className="px-6 py-4 border-b border-[#E7ECF3] flex justify-between items-center bg-[#F8F9FB]">
               <div>
-                <h3 className="text-base font-black text-[#0F172A] tracking-tight">District Rankings Index</h3>
-                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">District ordering based on active socio-economic indicator</p>
+                <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('district.stationPerformance', 'District Rankings Index')}</h3>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{t('district.stationPerformanceDesc', 'District ordering based on active socio-economic indicator')}</p>
               </div>
               <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-1 rounded-full font-extrabold text-xs">
-                Sorted: {selectedIndName}
+                {t('cases.sortBy', 'Sorted')}: {selectedIndName}
               </span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-[#F8F9FB] border-b border-[#E7ECF3] text-[#0F172A] uppercase font-extrabold text-[10px] tracking-wider">
-                    <th className="py-3.5 px-6 text-center w-16">Rank</th>
-                    <th className="py-3.5 px-6">District</th>
-                    <th className="py-3.5 px-6 text-right">Indicator Value</th>
-                    <th className="py-3.5 px-6 text-right">Crime Rate (per 1k)</th>
+                    <th className="py-3.5 px-6 text-center w-16">{t('hotspots.rank', 'Rank')}</th>
+                    <th className="py-3.5 px-6">{t('common.district', 'District')}</th>
+                    <th className="py-3.5 px-6 text-right">{t('socio.selectedIndicator', 'Indicator Value')}</th>
+                    <th className="py-3.5 px-6 text-right">{t('socio.urbanizationCorrelation', 'Crime Rate (per 1k)')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E7ECF3]/60">
@@ -554,8 +554,8 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 sm:p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-start border-b border-[#E7ECF3] pb-3">
               <div>
-                <h3 className="text-base font-black text-[#0F172A]">Interactive Scatter Plot</h3>
-                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">X: {selectedIndName} vs Y: Crime Rate</p>
+                <h3 className="text-base font-black text-[#0F172A]">{t('socio.regressionModel', 'Interactive Scatter Plot')}</h3>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">X: {selectedIndName} vs Y: {t('socio.urbanizationCorrelation', 'Crime Rate')}</p>
               </div>
               <span className="text-[10px] font-mono font-extrabold text-[#0B1F4D] bg-[#0B1F4D]/5 px-2.5 py-1 rounded-full border border-[#0B1F4D]/10 uppercase">
                 SCATTER-2D
@@ -570,13 +570,13 @@ export default function SocioEconomicCorrelation({ role }) {
                 <line x1="20" y1="20" x2="200" y2="20" stroke="#E7ECF3" strokeWidth="1" />
 
                 {/* Vertical grid lines */}
-                <line x1="20" y1="20" x2="20" y2="110" stroke="#E7ECF3" strokeWidth="1" />
+                <line x1="20" y1="20" x2="200" y2="20" stroke="#E7ECF3" strokeWidth="1" />
                 <line x1="110" y1="20" x2="110" y2="110" stroke="#E7ECF3" strokeWidth="1" strokeDasharray="3" />
                 <line x1="200" y1="20" x2="200" y2="110" stroke="#E7ECF3" strokeWidth="1" />
 
                 {/* Axes annotations */}
                 <text x="200" y="122" fill="#64748B" fontSize="7" fontWeight="bold" textAnchor="end">X: {selectedIndName}</text>
-                <text x="12" y="16" fill="#64748B" fontSize="7" fontWeight="bold" transform="rotate(-90 12 16)" textAnchor="end">Y: Crime Rate</text>
+                <text x="12" y="16" fill="#64748B" fontSize="7" fontWeight="bold" transform="rotate(-90 12 16)" textAnchor="end">Y: {t('socio.urbanizationCorrelation', 'Crime Rate')}</text>
 
                 {/* Plotting dots */}
                 {SOCIO_ECONOMIC_DATA.map((d) => {
@@ -617,7 +617,7 @@ export default function SocioEconomicCorrelation({ role }) {
                 <div className="absolute top-3 right-3 bg-white border border-[#E7ECF3] p-3 rounded-[12px] shadow-md text-[10px] font-mono leading-relaxed max-w-44 z-10">
                   <p className="font-bold text-[#0F172A] font-sans">{hoveredDistrict.district}</p>
                   <p className="text-[#64748B] pt-0.5">Val: {hoveredDistrict[selectedIndicator]?.toLocaleString()}</p>
-                  <p className="text-rose-600 font-extrabold">Crime Rate: {hoveredDistrict.crimeRate}</p>
+                  <p className="text-rose-600 font-extrabold">{t('socio.urbanizationCorrelation', 'Crime Rate')}: {hoveredDistrict.crimeRate}</p>
                 </div>
               )}
             </div>
@@ -627,7 +627,7 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 sm:p-6 shadow-sm space-y-3">
             <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider flex items-center gap-2 border-b border-[#E7ECF3] pb-2.5">
               <TrendingUp className="w-4 h-4 text-[#0B1F4D]" />
-              <span>AI Analytical Insights</span>
+              <span>{t('district.aiGeneratedInsights', 'AI Analytical Insights')}</span>
             </h3>
             <div className="space-y-2.5 pt-1">
               {activeInsights.map((ins, index) => (
@@ -646,7 +646,7 @@ export default function SocioEconomicCorrelation({ role }) {
           <div className="bg-amber-50/70 border border-amber-200/80 rounded-[20px] p-4.5 flex items-start gap-3 shadow-xs">
             <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <div className="text-xs">
-              <span className="block text-amber-900 font-black uppercase tracking-wider mb-0.5">Correlation Caution</span>
+              <span className="block text-amber-900 font-black uppercase tracking-wider mb-0.5">{t('socio.pValue', 'Correlation Caution')}</span>
               <p className="text-amber-800 font-medium leading-relaxed">
                 Statistical correlation indicates association only and <strong className="font-black text-amber-950">does not imply direct causation</strong>.
               </p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, ShieldAlert, MapPin, Link2, FileText, Clock } from 'lucide-react';
 import { MOCK_OFFENDERS_DOSSIERS } from '../../../mock/offenderData';
+import { useTranslation } from '../../../i18n';
 
 const RISK_STYLES = {
   Critical: 'bg-rose-50 text-rose-600 border-rose-200',
@@ -19,6 +20,7 @@ function InfoRow({ label, value, valueClass = 'text-[#0B1F4D]' }) {
 }
 
 export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
+  const { t } = useTranslation();
   if (!node) return null;
 
   const offenderDossier = node.type === 'Accused' ? MOCK_OFFENDERS_DOSSIERS[node.id] : null;
@@ -31,6 +33,27 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
     'Crime Category': '#94A3B8',
   }[node.type] || '#64748B';
 
+  const getNodeTypeLabel = (type) => {
+    switch (type) {
+      case 'Accused': return t('network.associate', 'Accused');
+      case 'Case': return t('fir.title', 'Case');
+      case 'Police Station': return t('common.station', 'Police Station');
+      case 'District': return t('common.district', 'District');
+      case 'Crime Category': return t('common.category', 'Crime Category');
+      default: return type;
+    }
+  };
+
+  const getRiskLabel = (risk) => {
+    switch (risk) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'High': return t('common.high', 'High');
+      case 'Medium': return t('common.medium', 'Medium');
+      case 'Low': return t('common.low', 'Low');
+      default: return risk;
+    }
+  };
+
   return (
     <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-5 shadow-sm space-y-4">
       {/* Header */}
@@ -39,7 +62,7 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
           <div className="w-7 h-7 bg-[#0B1F4D]/10 rounded-[8px] flex items-center justify-center">
             <ShieldAlert className="w-3.5 h-3.5 text-[#C79A2B]" />
           </div>
-          <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Entity Inspector</h3>
+          <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">{t('network.nodeInspector', 'Entity Inspector')}</h3>
         </div>
         <button
           onClick={onClose}
@@ -63,7 +86,7 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
             className="inline-block mt-1 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border"
             style={{ color: nodeTypeColor, background: nodeTypeColor + '15', borderColor: nodeTypeColor + '40' }}
           >
-            {node.type}
+            {getNodeTypeLabel(node.type)}
           </span>
         </div>
       </div>
@@ -74,9 +97,9 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
           {/* Stats mini-row */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: 'Cases',    value: offenderDossier.totalCases   },
-              { label: 'Arrests',  value: offenderDossier.totalArrests },
-              { label: 'Warrants', value: offenderDossier.activeWarrants },
+              { label: t('fir.title', 'Cases'),    value: offenderDossier.totalCases   },
+              { label: t('district.priorArrests', 'Arrests'),  value: offenderDossier.totalArrests },
+              { label: t('district.activeWarrants', 'Warrants'), value: offenderDossier.activeWarrants },
             ].map((s, i) => (
               <div key={i} className="text-center p-2.5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[12px]">
                 <div className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-0.5">{s.label}</div>
@@ -88,17 +111,17 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
           {/* Risk badge */}
           {node.risk && (
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#64748B]">Threat Level</span>
+              <span className="text-xs font-semibold text-[#64748B]">{t('district.threat', 'Threat Level')}</span>
               <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border ${RISK_STYLES[node.risk] || ''}`}>
-                {node.risk}
+                {getRiskLabel(node.risk)}
               </span>
             </div>
           )}
 
           {/* Details */}
           <div className="space-y-0">
-            <InfoRow label="District Jurisdiction" value={offenderDossier.lastKnownDistrict} />
-            <InfoRow label="Police Station" value={node.station || '—'} />
+            <InfoRow label={t('cases.jurisdiction', 'District Jurisdiction')} value={offenderDossier.lastKnownDistrict} />
+            <InfoRow label={t('common.station', 'Police Station')} value={node.station || '—'} />
           </div>
 
           {/* Connected Associates */}
@@ -106,7 +129,7 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
             <div>
               <div className="text-[10px] font-black text-[#64748B] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Link2 className="w-3 h-3 text-[#C79A2B]" />
-                Connected Associates
+                {t('network.knownAssociatesNetwork', 'Connected Associates')}
               </div>
               <div className="space-y-1.5">
                 {offenderDossier.knownAssociates.map((assoc, i) => (
@@ -128,12 +151,12 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
       {/* ── CASE PANEL ── */}
       {node.type === 'Case' && (
         <div className="space-y-0">
-          <InfoRow label="FIR ID" value={node.id} valueClass="text-violet-600 font-mono" />
-          <InfoRow label="Crime Type" value={node.category || 'Theft'} />
-          <InfoRow label="Intake Date" value={node.date || '2026-07-22'} />
-          <InfoRow label="Investigator" value={node.officer || 'Inspector Patil'} />
+          <InfoRow label={t('fir.firNumber', 'FIR ID')} value={node.id} valueClass="text-violet-600 font-mono" />
+          <InfoRow label={t('cases.crimeType', 'Crime Type')} value={node.category || 'Theft'} />
+          <InfoRow label={t('fir.filingDate', 'Intake Date')} value={node.date || '2026-07-22'} />
+          <InfoRow label={t('cases.investigator', 'Investigator')} value={node.officer || 'Inspector Patil'} />
           <div className="mt-3 p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[12px] text-[11px] font-semibold text-[#64748B] leading-relaxed">
-            Case files link co-defendants through mobile geolocation clusters.
+            {t('network.selectNodePrompt', 'Case files link co-defendants through mobile geolocation clusters.')}
           </div>
         </div>
       )}
@@ -141,19 +164,19 @@ export default function NodeInfoPanel({ node, onClose, onSelectNode }) {
       {/* ── POLICE STATION PANEL ── */}
       {node.type === 'Police Station' && (
         <div className="space-y-0">
-          <InfoRow label="Station Name" value={node.id} />
-          <InfoRow label="District Zone" value={node.district || 'Bengaluru City'} />
-          <InfoRow label="Connected Cases" value="5 active" valueClass="text-violet-600" />
-          <InfoRow label="Offenders Monitored" value="8 monitored" valueClass="text-rose-600" />
+          <InfoRow label={t('common.station', 'Station Name')} value={node.id} />
+          <InfoRow label={t('common.district', 'District Zone')} value={node.district || 'Bengaluru City'} />
+          <InfoRow label={t('network.connections', 'Connected Cases')} value="5 active" valueClass="text-violet-600" />
+          <InfoRow label={t('district.activeMonitoring', 'Offenders Monitored')} value="8 monitored" valueClass="text-rose-600" />
         </div>
       )}
 
       {/* ── DISTRICT PANEL ── */}
       {node.type === 'District' && (
         <div className="space-y-0">
-          <InfoRow label="Jurisdiction" value={node.id} />
-          <InfoRow label="Active Stations" value="12" />
-          <InfoRow label="Open FIRs" value="87" valueClass="text-rose-600" />
+          <InfoRow label={t('cases.jurisdiction', 'Jurisdiction')} value={node.id} />
+          <InfoRow label={t('district.stationPerformance', 'Active Stations')} value="12" />
+          <InfoRow label={t('dashboard.activeCases', 'Open FIRs')} value="87" valueClass="text-rose-600" />
         </div>
       )}
 

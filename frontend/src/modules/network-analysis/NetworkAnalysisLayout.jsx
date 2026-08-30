@@ -9,6 +9,7 @@ import {
   TrendingDown, X, Activity, Link2, ChevronDown
 } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState';
+import { useTranslation } from '../../i18n';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -49,26 +50,6 @@ const INITIAL_EDGES = [
   { source: 'Suresh Gowda',  target: 'Drug',  label: 'Shared Crime Category' },
 ];
 
-// ─── KPI DATA ─────────────────────────────────────────────────────────────────
-
-const KPI_DATA = [
-  { label: 'Total Nodes',      value: '27', icon: Network,    color: '#0B1F4D', bg: 'bg-[#0B1F4D]/10', trend: '+3',   up: true  },
-  { label: 'Relationships',    value: '42', icon: Share2,     color: '#C79A2B', bg: 'bg-[#C79A2B]/10', trend: '+8',   up: true  },
-  { label: 'Groups Identified',value: '3',  icon: Users,      color: '#7C3AED', bg: 'bg-violet-500/10',trend: 'Stable',up: null },
-  { label: 'High-Risk Networks',value: '2', icon: ShieldAlert,color: '#EF4444', bg: 'bg-rose-500/10',  trend: '+1',   up: false },
-  { label: 'Co-Offenders',     value: '4',  icon: AlertTriangle,color:'#F97316',bg: 'bg-orange-500/10',trend: '+2',  up: false },
-  { label: 'Cross-District',   value: '2',  icon: Compass,    color: '#10B981', bg: 'bg-emerald-500/10',trend: 'Stable',up: null},
-];
-
-// ─── NETWORK STATS ────────────────────────────────────────────────────────────
-
-const NETWORK_STATS = [
-  { label: 'Avg Links / Node',   value: '1.56', bar: 52, color: '#0B1F4D' },
-  { label: 'Largest Cluster',    value: '6 nodes', bar: 60, color: '#C79A2B' },
-  { label: 'Isolated Nodes',     value: '3',     bar: 11, color: '#EF4444' },
-  { label: 'Active Syndicates',  value: '2',     bar: 40, color: '#7C3AED' },
-];
-
 // ─── SELECT DROPDOWN ──────────────────────────────────────────────────────────
 
 function FilterSelect({ value, onChange, children }) {
@@ -89,6 +70,7 @@ function FilterSelect({ value, onChange, children }) {
 // ─── MAIN LAYOUT ──────────────────────────────────────────────────────────────
 
 export default function NetworkAnalysisLayout() {
+  const { t } = useTranslation();
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -98,6 +80,22 @@ export default function NetworkAnalysisLayout() {
   const [relTypeFilter, setRelTypeFilter] = useState('All');
 
   const [liveSearchResults, setLiveSearchResults] = useState([]);
+
+  const KPI_DATA = [
+    { label: t('network.totalNodes', 'Total Nodes'),      value: '27', icon: Network,    color: '#0B1F4D', bg: 'bg-[#0B1F4D]/10', trend: '+3',   up: true  },
+    { label: t('network.mappedLinks', 'Relationships'),    value: '42', icon: Share2,     color: '#C79A2B', bg: 'bg-[#C79A2B]/10', trend: '+8',   up: true  },
+    { label: t('network.activeSyndicates', 'Groups Identified'),value: '3',  icon: Users,      color: '#7C3AED', bg: 'bg-violet-500/10',trend: 'Stable',up: null },
+    { label: t('network.keyHubs', 'High-Risk Networks'),value: '2', icon: ShieldAlert,color: '#EF4444', bg: 'bg-rose-500/10',  trend: '+1',   up: false },
+    { label: t('network.associate', 'Co-Offenders'),     value: '4',  icon: AlertTriangle,color:'#F97316',bg: 'bg-orange-500/10',trend: '+2',  up: false },
+    { label: t('common.district', 'Cross-District'),   value: '2',  icon: Compass,    color: '#10B981', bg: 'bg-emerald-500/10',trend: 'Stable',up: null},
+  ];
+
+  const NETWORK_STATS = [
+    { label: t('network.connections', 'Avg Links / Node'),   value: '1.56', bar: 52, color: '#0B1F4D' },
+    { label: t('network.keyHubs', 'Largest Cluster'),    value: '6 nodes', bar: 60, color: '#C79A2B' },
+    { label: t('network.totalNodes', 'Isolated Nodes'),     value: '3',     bar: 11, color: '#EF4444' },
+    { label: t('network.activeSyndicates', 'Active Syndicates'),  value: '2',     bar: 40, color: '#7C3AED' },
+  ];
 
   // Fetch live network graph from backend on mount
   useEffect(() => {
@@ -177,13 +175,13 @@ export default function NetworkAnalysisLayout() {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">Criminal Network Analysis</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-[#0B1F4D] tracking-tight">{t('network.title', 'Criminal Network Analysis')}</h1>
               <div className="px-3 py-1 rounded-full bg-[#F1F5F9] border border-[#E7ECF3] flex items-center gap-1.5">
                 <Activity className="w-3 h-3 text-[#0B1F4D]" />
-                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">Live Graph</span>
+                <span className="text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest whitespace-nowrap">{t('dashboard.liveSync', 'Live Graph')}</span>
               </div>
             </div>
-            <p className="text-xs font-semibold text-[#64748B]">Uncover syndicate connections, repeat co-offenders, and cross-district crime networks.</p>
+            <p className="text-xs font-semibold text-[#64748B]">{t('network.subtitle', 'Uncover syndicate connections, repeat co-offenders, and cross-district crime networks.')}</p>
           </div>
         </div>
 
@@ -192,7 +190,7 @@ export default function NetworkAnalysisLayout() {
           <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search offender, FIR, district..."
+            placeholder={t('network.searchPlaceholder', 'Search suspect name, syndicate tag, or node ID...')}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[12px] text-xs font-semibold text-[#0B1F4D] placeholder-[#94A3B8] focus:outline-none focus:border-[#1A2F63]/40 transition-all shadow-sm"
@@ -236,39 +234,39 @@ export default function NetworkAnalysisLayout() {
       <div className="bg-white border border-[#E7ECF3] rounded-[18px] px-5 py-3.5 shadow-sm flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 text-[11px] font-bold text-[#0B1F4D] uppercase tracking-widest shrink-0">
           <Filter className="w-3.5 h-3.5 text-[#C79A2B]" />
-          Filters
+          {t('common.filter', 'Filters')}
         </div>
         <div className="w-px h-5 bg-[#E7ECF3] shrink-0" />
 
         <FilterSelect value={districtFilter} onChange={setDistrictFilter}>
-          <option value="All">District ▾</option>
+          <option value="All">{t('common.district', 'District')} ▾</option>
           <option value="Bengaluru City">Bengaluru City</option>
           <option value="Mysuru">Mysuru</option>
           <option value="Hubballi-Dharwad">Hubballi-Dharwad</option>
         </FilterSelect>
 
         <FilterSelect value={categoryFilter} onChange={setCategoryFilter}>
-          <option value="All">Crime Category ▾</option>
-          <option value="Theft">Theft</option>
-          <option value="Drug">Drug</option>
-          <option value="Cyber">Cyber</option>
-          <option value="Assault">Assault</option>
+          <option value="All">{t('categories.allCategories', 'Crime Category')} ▾</option>
+          <option value="Theft">{t('categories.theft', 'Theft')}</option>
+          <option value="Drug">{t('categories.drug', 'Drug')}</option>
+          <option value="Cyber">{t('categories.cyber', 'Cyber')}</option>
+          <option value="Assault">{t('categories.assault', 'Assault')}</option>
         </FilterSelect>
 
         <FilterSelect value={riskFilter} onChange={setRiskFilter}>
-          <option value="All">Risk Level ▾</option>
-          <option value="Critical">Critical</option>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
+          <option value="All">{t('cases.riskLevelLabel', 'Risk Level')} ▾</option>
+          <option value="Critical">{t('common.critical', 'Critical')}</option>
+          <option value="High">{t('common.high', 'High')}</option>
+          <option value="Medium">{t('common.medium', 'Medium')}</option>
+          <option value="Low">{t('common.low', 'Low')}</option>
         </FilterSelect>
 
         <FilterSelect value={relTypeFilter} onChange={setRelTypeFilter}>
-          <option value="All">Relationship Type ▾</option>
-          <option value="co-offender">Co-Offender</option>
-          <option value="same-case">Same Case</option>
-          <option value="same-station">Same Station</option>
-          <option value="cross-district">Cross-District</option>
+          <option value="All">{t('network.connections', 'Relationship Type')} ▾</option>
+          <option value="co-offender">{t('network.associate', 'Co-Offender')}</option>
+          <option value="same-case">{t('fir.title', 'Same Case')}</option>
+          <option value="same-station">{t('common.station', 'Same Station')}</option>
+          <option value="cross-district">{t('common.district', 'Cross-District')}</option>
         </FilterSelect>
 
         <button
@@ -276,7 +274,7 @@ export default function NetworkAnalysisLayout() {
           className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[10px] text-[11px] font-bold text-[#64748B] hover:text-[#0B1F4D] hover:border-[#1A2F63]/30 transition-all cursor-pointer"
         >
           <X className="w-3 h-3" />
-          Reset Filters
+          {t('dashboard.resetFilters', 'Reset Filters')}
         </button>
       </div>
 
@@ -289,12 +287,12 @@ export default function NetworkAnalysisLayout() {
             {/* Canvas Header */}
             <div className="flex justify-between items-center pb-4 border-b border-[#F1F5F9]">
               <div>
-                <h2 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">Criminal Relationship Canvas</h2>
-                <p className="text-[11px] font-semibold text-[#64748B] mt-0.5">Drag nodes · Click to inspect · Ctrl+scroll to zoom</p>
+                <h2 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">{t('network.title', 'Criminal Relationship Canvas')}</h2>
+                <p className="text-[11px] font-semibold text-[#64748B] mt-0.5">{t('network.selectNodePrompt', 'Drag nodes · Click to inspect · Ctrl+scroll to zoom')}</p>
               </div>
               <div className="flex items-center gap-2 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[10px] px-3 py-1.5">
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-[10px] font-bold text-[#0B1F4D] uppercase tracking-widest">Sociocentric Network Active</span>
+                <span className="text-[10px] font-bold text-[#0B1F4D] uppercase tracking-widest">{t('admin.active', 'Sociocentric Network Active')}</span>
               </div>
             </div>
 
@@ -303,10 +301,10 @@ export default function NetworkAnalysisLayout() {
               <div className="h-[480px] flex items-center justify-center bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
                 <EmptyState
                   type="network"
-                  title="No Network Entities Found"
-                  message="No offenders, cases, or co-offender relationships match your active filter parameters."
+                  title={t('common.noRecords', 'No Network Entities Found')}
+                  message={t('common.noRecordsDesc', 'No offenders, cases, or co-offender relationships match your active filter parameters.')}
                   onAction={resetFilters}
-                  actionLabel="Reset Network Filters"
+                  actionLabel={t('dashboard.resetFilters', 'Reset Network Filters')}
                 />
               </div>
             ) : (
@@ -323,14 +321,14 @@ export default function NetworkAnalysisLayout() {
             {/* Node Legend */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#F1F5F9]">
               {[
-                { label: 'Critical Accused', color: '#EF4444' },
-                { label: 'High Risk',        color: '#F97316' },
-                { label: 'Medium Risk',      color: '#F59E0B' },
-                { label: 'Low Risk',         color: '#10B981' },
-                { label: 'Case / FIR',       color: '#8B5CF6' },
-                { label: 'Police Station',   color: '#3B82F6' },
-                { label: 'District',         color: '#6366F1' },
-                { label: 'Crime Category',   color: '#EC4899' },
+                { label: t('common.critical', 'Critical Accused'), color: '#EF4444' },
+                { label: t('common.high', 'High Risk'),        color: '#F97316' },
+                { label: t('common.medium', 'Medium Risk'),      color: '#F59E0B' },
+                { label: t('common.low', 'Low Risk'),         color: '#10B981' },
+                { label: t('fir.title', 'Case / FIR'),       color: '#8B5CF6' },
+                { label: t('common.station', 'Police Station'),   color: '#3B82F6' },
+                { label: t('common.district', 'District'),         color: '#6366F1' },
+                { label: t('common.category', 'Crime Category'),   color: '#EC4899' },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full border-2 bg-white" style={{ borderColor: item.color }} />
@@ -369,14 +367,14 @@ export default function NetworkAnalysisLayout() {
               <div className="w-7 h-7 bg-[#0B1F4D]/10 rounded-[8px] flex items-center justify-center">
                 <Link2 className="w-3.5 h-3.5 text-[#C79A2B]" />
               </div>
-              <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Network Overview</h3>
+              <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">{t('dashboard.networkSummaryTitle', 'Network Overview')}</h3>
             </div>
             <div className="space-y-3">
               {[
-                { label: 'Most Connected Offender', value: 'Ramesh Kumar (8 links)', highlight: 'text-rose-600' },
-                { label: 'Largest Syndicate',       value: 'Bengaluru-Mysuru Axis',  highlight: 'text-[#0B1F4D]' },
-                { label: 'Highest Risk Cluster',    value: 'Bengaluru South',         highlight: 'text-rose-500' },
-                { label: 'Cross-District Network',  value: 'Ramesh / Suresh Axis',    highlight: 'text-emerald-600' },
+                { label: t('network.keyHubs', 'Most Connected Offender'), value: 'Ramesh Kumar (8 links)', highlight: 'text-rose-600' },
+                { label: t('network.activeSyndicates', 'Largest Syndicate'),       value: 'Bengaluru-Mysuru Axis',  highlight: 'text-[#0B1F4D]' },
+                { label: t('hotspots.criticalRisk', 'Highest Risk Cluster'),    value: 'Bengaluru South',         highlight: 'text-rose-500' },
+                { label: t('network.title', 'Cross-District Network'),  value: 'Ramesh / Suresh Axis',    highlight: 'text-emerald-600' },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between items-center text-xs py-2 border-b border-[#F8F9FB] last:border-0">
                   <span className="font-semibold text-[#64748B]">{item.label}</span>
@@ -392,7 +390,7 @@ export default function NetworkAnalysisLayout() {
               <div className="w-7 h-7 bg-[#C79A2B]/10 rounded-[8px] flex items-center justify-center">
                 <BarChart2 className="w-3.5 h-3.5 text-[#C79A2B]" />
               </div>
-              <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">Network Statistics</h3>
+              <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">{t('network.graphDensity', 'Network Statistics')}</h3>
             </div>
             <div className="space-y-4">
               {NETWORK_STATS.map((stat, i) => (

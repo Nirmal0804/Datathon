@@ -2,8 +2,10 @@ import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ALERTS_DATA } from '../../../mock/analyticsData';
 import { AlertOctagon, Clock, UserCheck, ShieldAlert, Zap } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function AnomalyDetection({ timeFilter }) {
+  const { t } = useTranslation();
   // Filter alerts simulated by timeFilter
   const activeAlerts = useMemo(() => {
     if (timeFilter === 'Today') {
@@ -27,6 +29,16 @@ export default function AnomalyDetection({ timeFilter }) {
     Medium: '🟢'
   };
 
+  const getSeverityLabel = (s) => {
+    switch (s) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'High': return t('common.high', 'High');
+      case 'Medium': return t('common.medium', 'Medium');
+      case 'Low': return t('common.low', 'Low');
+      default: return s;
+    }
+  };
+
   return (
     <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-sm space-y-4 flex flex-col h-full justify-between">
       
@@ -38,12 +50,12 @@ export default function AnomalyDetection({ timeFilter }) {
               <ShieldAlert className="w-4 h-4 text-[#C79A2B] animate-pulse" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">Automatic Intelligence Alerts</h3>
-              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">AI outlier models detecting precinct threat increases in real-time.</p>
+              <h3 className="text-sm font-bold text-[#0B1F4D] uppercase tracking-wider">{t('dashboard.recentAlerts', 'Automatic Intelligence Alerts')}</h3>
+              <p className="text-[10px] text-[#64748B] mt-0.5 font-medium">{t('analytics.anomaliesTriggered', 'AI outlier models detecting precinct threat increases in real-time.')}</p>
             </div>
           </div>
           <span className="px-2.5 py-1 bg-red-50 border border-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wider rounded-lg flex items-center gap-1">
-            <Zap className="w-3 h-3" /> Live Feed
+            <Zap className="w-3 h-3" /> {t('dashboard.liveSync', 'Live Feed')}
           </span>
         </div>
 
@@ -66,7 +78,7 @@ export default function AnomalyDetection({ timeFilter }) {
                     severityStyles[alert.severity] || severityStyles.Medium
                   }`}>
                     <span className="text-[8px]">{severityIcons[alert.severity] || '🟢'}</span>
-                    <span>{alert.severity}</span>
+                    <span>{getSeverityLabel(alert.severity)}</span>
                   </span>
                   <span className="text-[11px] text-[#0B1F4D] font-bold mt-1 block leading-tight">{alert.crimeType}</span>
                 </div>
@@ -79,7 +91,7 @@ export default function AnomalyDetection({ timeFilter }) {
                   <div className="p-2.5 bg-white border border-[#E7ECF3] rounded-xl text-[10px] font-medium text-[#64748B] leading-relaxed flex items-start gap-2 shadow-sm">
                     <AlertOctagon className="w-4 h-4 text-[#C79A2B] shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-[#0B1F4D] uppercase tracking-wider text-[9px] block mb-0.5">AI Recommendation</span>
+                      <span className="font-bold text-[#0B1F4D] uppercase tracking-wider text-[9px] block mb-0.5">{t('district.aiRecommendations', 'AI Recommendation')}</span>
                       {alert.recommendation}
                     </div>
                   </div>
@@ -87,7 +99,7 @@ export default function AnomalyDetection({ timeFilter }) {
 
                 {/* Right: Timestamp & Status */}
                 <div className="w-full sm:w-24 shrink-0 flex flex-row sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 border-[#E2E8F0] pt-3 sm:pt-0">
-                  <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider bg-[#F1F5F9] px-2 py-1 rounded-md">New</span>
+                  <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider bg-[#F1F5F9] px-2 py-1 rounded-md">{t('common.status', 'New')}</span>
                   <span className="text-[10px] text-[#64748B] font-mono flex items-center gap-1 bg-white px-2 py-1 rounded-md border border-[#E7ECF3] shadow-sm">
                     <Clock className="w-3 h-3 text-[#C79A2B]" />
                     {alert.timestamp}

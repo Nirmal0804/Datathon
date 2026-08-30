@@ -38,6 +38,7 @@ function StatusPill({ status }) {
 }
 
 function GenerateModal({ onClose, onGenerate }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     type: "Crime Summary", district: "Bengaluru City",
     dateRange: "This Month", classification: "Confidential",
@@ -54,8 +55,8 @@ function GenerateModal({ onClose, onGenerate }) {
               <FileOutput className="w-4 h-4 text-[#C79A2B]" />
             </div>
             <div>
-              <h2 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">Generate New Report</h2>
-              <p className="text-xs text-[#64748B] font-semibold">Configure intelligence report parameters</p>
+              <h2 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider">{t('reports.generateReport', 'Generate New Report')}</h2>
+              <p className="text-xs text-[#64748B] font-semibold">{t('reports.subtitle', 'Configure intelligence report parameters')}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#E7ECF3] text-[#64748B] transition-colors">
@@ -65,13 +66,13 @@ function GenerateModal({ onClose, onGenerate }) {
         <div className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">Report Type</label>
+              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">{t('reports.reportType', 'Report Type')}</label>
               <select value={form.type} onChange={e => set("type", e.target.value)} className="w-full appearance-none bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl py-2 px-3 text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer">
-                {["Crime Summary","District Report","Hotspot Analysis","Network Analysis","Predictive Risk"].map(t => <option key={t}>{t}</option>)}
+                {["Crime Summary","District Report","Hotspot Analysis","Network Analysis","Predictive Risk"].map(tItem => <option key={tItem}>{tItem}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">District</label>
+              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">{t('common.district', 'District')}</label>
               <select value={form.district} onChange={e => set("district", e.target.value)} className="w-full appearance-none bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl py-2 px-3 text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer">
                 {["Bengaluru City","Mysuru","Hubballi-Dharwad","Mangaluru","Belagavi","All Karnataka"].map(d => <option key={d}>{d}</option>)}
               </select>
@@ -79,20 +80,20 @@ function GenerateModal({ onClose, onGenerate }) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">Date Range</label>
+              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">{t('reports.dateRange', 'Date Range')}</label>
               <select value={form.dateRange} onChange={e => set("dateRange", e.target.value)} className="w-full appearance-none bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl py-2 px-3 text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer">
                 {["This Month","Last 30 Days","Last 90 Days","This Year","Custom"].map(d => <option key={d}>{d}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">Classification</label>
+              <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1.5">{t('reports.classification', 'Classification')}</label>
               <select value={form.classification} onChange={e => set("classification", e.target.value)} className="w-full appearance-none bg-[#F8F9FB] border border-[#E7ECF3] rounded-xl py-2 px-3 text-xs font-bold text-[#0B1F4D] focus:outline-none cursor-pointer">
                 {["Confidential","Internal","Restricted","Top Secret"].map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-2">Export Format</label>
+            <label className="block text-xs font-bold text-[#64748B] uppercase tracking-wider mb-2">{t('reports.exportPDF', 'Export Format')}</label>
             <div className="flex gap-2">
               {["PDF","Excel","CSV"].map(fmt => (
                 <button key={fmt} onClick={() => set("format", fmt)} className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all ${form.format === fmt ? "bg-[#0B1F4D] text-white border-[#0B1F4D]" : "bg-[#F8F9FB] text-[#64748B] border-[#E7ECF3] hover:border-[#0B1F4D]/30"}`}>{fmt}</button>
@@ -100,7 +101,7 @@ function GenerateModal({ onClose, onGenerate }) {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            {[{label:"AI Insights",key:"aiInsights"},{label:"Maps",key:"includeMaps"},{label:"Charts",key:"includeCharts"}].map(({label,key}) => (
+            {[{label: t('district.aiGeneratedInsights', 'AI Insights'),key:"aiInsights"},{label: t('nav.crimeMap', 'Maps'),key:"includeMaps"},{label: t('nav.crimeAnalytics', 'Charts'),key:"includeCharts"}].map(({label,key}) => (
               <button key={key} onClick={() => set(key, !form[key])} className={`py-2 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-1.5 transition-all ${form[key] ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-[#F8F9FB] text-[#94A3B8] border-[#E7ECF3]"}`}>
                 <span className={`w-2 h-2 rounded-full ${form[key] ? "bg-emerald-500" : "bg-[#94A3B8]"}`} />
                 {label}
@@ -109,9 +110,9 @@ function GenerateModal({ onClose, onGenerate }) {
           </div>
         </div>
         <div className="flex gap-3 p-5 pt-0">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider hover:bg-[#F8F9FB] transition-colors">Cancel</button>
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[#E7ECF3] text-xs font-bold text-[#64748B] uppercase tracking-wider hover:bg-[#F8F9FB] transition-colors">{t('common.cancel', 'Cancel')}</button>
           <button onClick={() => { onGenerate(form); onClose(); }} className="flex-1 py-2.5 rounded-xl bg-[#0B1F4D] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#0B1F4D]/90 transition-colors flex items-center justify-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-[#C79A2B]" /> Generate Report
+            <Zap className="w-3.5 h-3.5 text-[#C79A2B]" /> {t('reports.generateReport', 'Generate Report')}
           </button>
         </div>
       </div>

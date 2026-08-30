@@ -29,7 +29,7 @@ export default function DistrictRanking({ districtData }) {
               {t('district.districtRankings', 'District Rankings')}
             </h3>
             <p className="text-xs font-semibold text-[#64748B]">
-              {t('district.topActiveDistricts', 'Top 5 Active Districts')}
+              {t('dashboard.topActiveDistricts', 'Top 5 Active Districts')}
             </p>
           </div>
         </div>

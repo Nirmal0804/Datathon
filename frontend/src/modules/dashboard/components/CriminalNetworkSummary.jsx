@@ -98,15 +98,15 @@ export default function CriminalNetworkSummary() {
         {/* Network Metrics grid */}
         <div className="flex-1 grid grid-cols-2 gap-2.5 w-full text-xs">
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.syndicates', 'Active Syndicates')}</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.activeSyndicates', 'Active Syndicates')}</span>
             <span className="text-sm font-bold text-rose-400 font-mono mt-0.5 block">{stats.syndicates}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.nodes', 'Mapped Nodes')}</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.totalNodes', 'Mapped Nodes')}</span>
             <span className="text-sm font-bold text-indigo-400 font-mono mt-0.5 block">{stats.trackedSuspects}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
-            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.links', 'Total Links')}</span>
+            <span className="block text-4xs text-slate-500 font-bold uppercase">{t('network.mappedLinks', 'Total Links')}</span>
             <span className="text-sm font-bold text-blue-400 font-mono mt-0.5 block">{stats.mappedConnections}</span>
           </div>
           <div className="p-2 bg-slate-950/30 border border-slate-850 rounded">
@@ -119,7 +119,7 @@ export default function CriminalNetworkSummary() {
       <div className="flex justify-between items-center text-4xs text-slate-500 border-t border-slate-850/50 pt-2 shrink-0 z-10">
         <span className="flex items-center gap-1">
           <Activity className="w-3.5 h-3.5 text-indigo-500 animate-pulse-soft" />
-          {t('network.density', 'Graph density')}: 0.14
+          {t('network.graphDensity', 'Graph density')}: 0.14
         </span>
         <button className="text-primary font-semibold hover:underline cursor-pointer">
           {t('network.graphExplorer', 'Graph Explorer')} &rarr;

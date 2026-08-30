@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FileText, ArrowRight } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 const cases = [
   { id: 'FIR-2023-0892', category: 'Cybercrime', time: '2 hours ago', risk: 'High' },
@@ -11,10 +12,40 @@ const cases = [
 ];
 
 export default function RecentCases() {
+  const { t } = useTranslation();
   const toast = useToast();
 
   const handleInspect = (caseId) => {
-    toast.success('Inspection Mode Active', `Opening database dossier log for Case ${caseId}.`);
+    toast.success(t('cases.inspectionModeActive', 'Inspection Mode Active'), `${t('cases.openingDossierLog', 'Opening database dossier log for Case')} ${caseId}.`);
+  };
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property': return t('categories.property', 'Property');
+      case 'Violent': return t('categories.violentCrime', 'Violent');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      default: return cat;
+    }
+  };
+
+  const getRiskLabel = (risk) => {
+    switch (risk) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'High': return t('common.high', 'High');
+      case 'Medium': return t('common.medium', 'Medium');
+      case 'Low': return t('common.low', 'Low');
+      default: return risk;
+    }
+  };
+
+  const getTimeLabel = (time) => {
+    const map = {
+      '2 hours ago': t('common.twoHoursAgo', '2 hours ago'),
+      '5 hours ago': t('common.fiveHoursAgo', '5 hours ago'),
+      '1 day ago': t('common.oneDayAgo', '1 day ago'),
+    };
+    return map[time] || time;
   };
 
   return (
@@ -25,8 +56,8 @@ export default function RecentCases() {
             <FileText className="w-5 h-5 text-[#0B1F4D]" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Recent Case Intake</h3>
-            <p className="text-xs font-semibold text-[#64748B]">Live Activity Feed</p>
+            <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">{t('dashboard.recentCases', 'Recent Case Intake')}</h3>
+            <p className="text-xs font-semibold text-[#64748B]">{t('dashboard.liveIncidentFeed', 'Live Activity Feed')}</p>
           </div>
         </div>
       </div>
@@ -52,15 +83,15 @@ export default function RecentCases() {
                     c.risk === 'Critical' ? 'bg-rose-50 text-rose-700 border-rose-100' :
                     c.risk === 'High' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-blue-50 text-blue-700 border-blue-100'
                   }`}>
-                    {c.risk}
+                    {getRiskLabel(c.risk)}
                   </span>
                 </div>
-                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">{c.category} • {c.time}</p>
+                <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">{getCategoryLabel(c.category)} • {getTimeLabel(c.time)}</p>
               </div>
             </div>
             <button 
               onClick={() => handleInspect(c.id)}
-              className="w-8 h-8 rounded-full bg-white border border-[#E7ECF3] flex items-center justify-center text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"
+              className="w-8 h-8 rounded-full bg-white border border-[#E7ECF3] flex items-center justify-center text-[#0B1F4D] hover:bg-[#0B1F4D] hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 cursor-pointer"
             >
               <ArrowRight className="w-4 h-4" />
             </button>

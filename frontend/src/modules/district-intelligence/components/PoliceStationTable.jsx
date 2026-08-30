@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../../i18n';
 
 const stations = [
   { id: 'PS-101', name: 'Central Station', inspector: 'R. K. Sharma', activeCases: 142, efficiency: '89%', status: 'Optimal' },
@@ -9,22 +10,33 @@ const stations = [
 ];
 
 export default function PoliceStationTable() {
+  const { t } = useTranslation();
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'Overloaded': return t('common.high', 'Overloaded');
+      case 'Optimal': return t('admin.active', 'Optimal');
+      default: return status;
+    }
+  };
+
   return (
     <div className="bg-white border border-[#E7ECF3] rounded-[22px] shadow-sm overflow-hidden flex flex-col h-full hover:border-[#1A2F63]/30 transition-all duration-300">
       <div className="px-6 py-5 border-b border-[#F1F5F9] shrink-0">
-        <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">Police Station Performance Metrics</h3>
-        <p className="text-xs font-semibold text-[#64748B]">Operational capacity and clearance rates</p>
+        <h3 className="text-sm font-black text-[#0B1F4D] uppercase tracking-wider mb-1">{t('district.stationPerformance', 'Police Station Performance Metrics')}</h3>
+        <p className="text-xs font-semibold text-[#64748B]">{t('district.stationPerformanceDesc', 'Operational capacity and clearance rates')}</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-[#F8F9FB] border-b border-[#E7ECF3]">
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Station ID</th>
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Name</th>
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Inspector-In-Charge</th>
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Active Cases</th>
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Clearance Rate</th>
-              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">Workload Status</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('common.stationId', 'Station ID')}</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('common.station', 'Name')}</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('district.inspectorInCharge', 'Inspector-In-Charge')}</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('dashboard.activeCases', 'Active Cases')}</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('dashboard.clearanceRate', 'Clearance Rate')}</th>
+              <th className="px-6 py-3 text-[10px] font-black text-[#64748B] uppercase tracking-widest whitespace-nowrap">{t('district.workloadStatus', 'Workload Status')}</th>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +82,7 @@ export default function PoliceStationTable() {
                     row.status === 'Overloaded' ? 'bg-amber-50 text-amber-700 border-amber-100' :
                     'bg-emerald-50 text-emerald-700 border-emerald-100'
                   }`}>
-                    {row.status}
+                    {getStatusLabel(row.status)}
                   </span>
                 </td>
               </motion.tr>

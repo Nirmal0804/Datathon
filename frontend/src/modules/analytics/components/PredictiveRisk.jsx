@@ -2,10 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { FORECAST_DATA } from '../../../mock/analyticsData';
 import { Brain, TrendingUp, Info, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function PredictiveRisk({ timeFilter }) {
+  const { t } = useTranslation();
   const [forecastPeriod, setForecastPeriod] = useState('Next 7 Days');
-  const periods = ['Next 7 Days', 'Next 30 Days', 'Next 90 Days'];
+  
+  const periods = [
+    { key: 'Next 7 Days', label: '7 ' + t('dashboard.daily', 'Days') },
+    { key: 'Next 30 Days', label: '30 ' + t('dashboard.daily', 'Days') },
+    { key: 'Next 90 Days', label: '90 ' + t('dashboard.daily', 'Days') }
+  ];
 
   const forecast = useMemo(() => {
     return FORECAST_DATA[forecastPeriod] || FORECAST_DATA['Next 7 Days'];
@@ -129,10 +136,10 @@ export default function PredictiveRisk({ timeFilter }) {
           </div>
           <div>
             <h2 className="text-sm sm:text-base font-black text-[#0B1F4D] uppercase tracking-wider">
-              AI Crime Forecast
+              {t('analytics.title', 'AI Crime Forecast')}
             </h2>
             <p className="text-xs text-[#64748B] font-medium mt-0.5">
-              Predictive forecasting models simulating seasonal offsets and boundaries.
+              {t('analytics.subtitle', 'Predictive forecasting models simulating seasonal offsets and boundaries.')}
             </p>
           </div>
         </div>
@@ -141,15 +148,15 @@ export default function PredictiveRisk({ timeFilter }) {
         <div className="flex bg-[#F8F9FB] p-1 rounded-xl border border-[#E7ECF3] shrink-0">
           {periods.map(p => (
             <button
-              key={p}
-              onClick={() => setForecastPeriod(p)}
+              key={p.key}
+              onClick={() => setForecastPeriod(p.key)}
               className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
-                forecastPeriod === p
+                forecastPeriod === p.key
                   ? 'bg-[#0B1F4D] text-white shadow-xs'
                   : 'text-[#64748B] hover:text-[#0B1F4D] hover:bg-slate-200/50'
               }`}
             >
-              {p}
+              {p.label}
             </button>
           ))}
         </div>
@@ -163,10 +170,10 @@ export default function PredictiveRisk({ timeFilter }) {
           <div className="space-y-4">
             <div>
               <span className="text-[11px] font-black text-[#0B1F4D] uppercase tracking-wider block">
-                Forecast Accuracy
+                {t('analytics.forecastConfidence', 'Forecast Accuracy')}
               </span>
               <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest block mt-0.5">
-                (Historical)
+                ({t('common.filter', 'Historical')})
               </span>
             </div>
 
@@ -183,7 +190,7 @@ export default function PredictiveRisk({ timeFilter }) {
                     : 'bg-amber-50 text-amber-700 border-amber-200'
                 }`}>
                   <TrendingUp className="w-3.5 h-3.5" />
-                  {forecast.confidence >= 90 ? 'High Accuracy' : 'Moderate Accuracy'}
+                  {forecast.confidence >= 90 ? t('common.high', 'High') : t('common.medium', 'Moderate')}
                 </span>
               </div>
             </div>
@@ -191,7 +198,7 @@ export default function PredictiveRisk({ timeFilter }) {
 
           <div className="pt-6 border-t border-[#E2E8F0]/80 mt-6">
             <p className="text-[11px] text-[#64748B] font-medium leading-relaxed">
-              Calculated using MAPE on last 90 days of data.
+              {t('analytics.confidenceInterval', 'Calculated using MAPE on last 90 days of data.')}
             </p>
           </div>
         </div>
@@ -202,22 +209,22 @@ export default function PredictiveRisk({ timeFilter }) {
           {/* Chart Header & Legend Row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-2 mb-2">
             <h3 className="text-xs font-black text-[#0B1F4D] uppercase tracking-wider">
-              Predicted Incident Count
+              {t('analytics.predictedIncidents', 'Predicted Incident Count')}
             </h3>
 
             {/* Legend */}
             <div className="flex flex-wrap items-center gap-4 text-[10px] font-semibold text-[#64748B] select-none">
               <div className="flex items-center gap-1.5">
                 <span className="w-3.5 h-0.5 bg-[#0B1F4D] rounded-full" />
-                <span className="text-[#334155]">Historical</span>
+                <span className="text-[#334155]">{t('analytics.historicalVsPredicted', 'Historical')}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-3.5 h-0.5 border-t-2 border-dashed border-[#C79A2B]" />
-                <span className="text-[#334155]">Predicted</span>
+                <span className="text-[#334155]">{t('analytics.predictedIncidents', 'Predicted')}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-2.5 bg-[#C79A2B]/15 border border-[#C79A2B]/40 rounded-[2px]" />
-                <span className="text-[#334155]">95% Prediction Interval</span>
+                <span className="text-[#334155]">{t('analytics.confidenceInterval', '95% Prediction Interval')}</span>
               </div>
             </div>
           </div>
