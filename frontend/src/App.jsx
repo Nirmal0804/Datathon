@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './components/ui/Toast';
 import { ErrorBoundary } from './components/ui/ErrorState';
@@ -24,13 +24,113 @@ import ForgotPassword from './modules/authentication/ForgotPassword';
 // Dashboard
 import DashboardLayout from './modules/dashboard/DashboardLayout';
 
+// Public Informational Pages
+import PrivacyPolicy from './modules/public-pages/PrivacyPolicy';
+import TermsOfService from './modules/public-pages/TermsOfService';
+import SecurityAudit from './modules/public-pages/SecurityAudit';
+import SupportLanding from './modules/public-pages/SupportLanding';
+import Documentation from './modules/public-pages/Documentation';
+import ApiAccess from './modules/public-pages/ApiAccess';
+import HelpCenter from './modules/public-pages/HelpCenter';
+import SecurityGuidelines from './modules/public-pages/SecurityGuidelines';
+import Faqs from './modules/public-pages/Faqs';
+import ContactSupport from './modules/public-pages/ContactSupport';
+
+const ROUTE_PATH_MAP = {
+  '/privacy': 'public-privacy',
+  '/terms': 'public-terms',
+  '/security-audit': 'public-security-audit',
+  '/support': 'public-support',
+  '/documentation': 'public-documentation',
+  '/api-access': 'public-api-access',
+  '/help': 'public-help',
+  '/security-guidelines': 'public-security-guidelines',
+  '/faqs': 'public-faqs',
+  '/contact-support': 'public-contact-support',
+  '/dashboard': 'dashboard',
+  '/login': 'auth-login',
+  '/forgot-password': 'auth-forgot',
+  '/': 'landing',
+  'public-privacy': 'public-privacy',
+  'public-terms': 'public-terms',
+  'public-security-audit': 'public-security-audit',
+  'public-support': 'public-support',
+  'public-documentation': 'public-documentation',
+  'public-api-access': 'public-api-access',
+  'public-help': 'public-help',
+  'public-security-guidelines': 'public-security-guidelines',
+  'public-faqs': 'public-faqs',
+  'public-contact-support': 'public-contact-support',
+};
+
+const VIEW_PATH_MAP = {
+  'public-privacy': '/privacy',
+  'public-terms': '/terms',
+  'public-security-audit': '/security-audit',
+  'public-support': '/support',
+  'public-documentation': '/documentation',
+  'public-api-access': '/api-access',
+  'public-help': '/help',
+  'public-security-guidelines': '/security-guidelines',
+  'public-faqs': '/faqs',
+  'public-contact-support': '/contact-support',
+  'landing': '/',
+  'auth-login': '/login',
+  'auth-forgot': '/forgot-password',
+  'dashboard': '/dashboard',
+};
+
+function resolveInitialView() {
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+  const hash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
+
+  if (ROUTE_PATH_MAP[pathname]) {
+    return ROUTE_PATH_MAP[pathname];
+  }
+  if (ROUTE_PATH_MAP[hash]) {
+    return ROUTE_PATH_MAP[hash];
+  }
+
+  return localStorage.getItem('ksp_current_view') || 'landing';
+}
+
 function AppContent() {
-  const [currentView, setCurrentView] = useState(() => {
-    return localStorage.getItem('ksp_current_view') || 'landing';
-  });
+  const [currentView, setCurrentView] = useState(resolveInitialView);
   const [selectedRole, setSelectedRole] = useState(() => {
     return localStorage.getItem('ksp_selected_role') || null;
   });
+
+  const navigateTo = useCallback((viewOrPath) => {
+    const resolvedView = ROUTE_PATH_MAP[viewOrPath] || viewOrPath;
+    setCurrentView(resolvedView);
+    const targetPath = VIEW_PATH_MAP[resolvedView] || (resolvedView === 'landing' ? '/' : null);
+    if (targetPath && window.location.pathname !== targetPath) {
+      try {
+        window.history.pushState({ view: resolvedView }, '', targetPath);
+      } catch {
+        // Fallback for isolated webview contexts
+      }
+    }
+  }, []);
+
+  // Listen to browser forward/backward buttons
+  useEffect(() => {
+    const handlePopState = (e) => {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+      if (ROUTE_PATH_MAP[pathname]) {
+        setCurrentView(ROUTE_PATH_MAP[pathname]);
+      } else if (e.state?.view) {
+        setCurrentView(e.state.view);
+      } else if (pathname === '/dashboard') {
+        setCurrentView('dashboard');
+      } else if (pathname === '/' || pathname === '') {
+        setCurrentView('landing');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (currentView) {
@@ -44,13 +144,17 @@ function AppContent() {
     }
   }, [selectedRole]);
 
-  const navigateToAuth    = () => setCurrentView('auth-login');
-  const navigateToLanding = () => {
-    setCurrentView('landing');
+  const navigateToAuth = () => navigateTo('auth-login');
+
+  const handleLogout = () => {
     setSelectedRole(null);
-    localStorage.removeItem('ksp_current_view');
     localStorage.removeItem('ksp_selected_role');
     localStorage.removeItem('ksp_active_module');
+    navigateTo('landing');
+  };
+
+  const navigateToLanding = () => {
+    navigateTo('landing');
   };
 
   const handleRoleSelect = (role) => {
@@ -61,17 +165,132 @@ function AppContent() {
     if (role) {
       setSelectedRole(role);
     }
-    setCurrentView('dashboard');
+    navigateTo('dashboard');
   };
 
   const renderView = () => {
     switch (currentView) {
+      case 'public-privacy':
+        return (
+          <PageTransition key="public-privacy">
+            <PrivacyPolicy
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-terms':
+        return (
+          <PageTransition key="public-terms">
+            <TermsOfService
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-security-audit':
+        return (
+          <PageTransition key="public-security-audit">
+            <SecurityAudit
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-support':
+        return (
+          <PageTransition key="public-support">
+            <SupportLanding
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-documentation':
+        return (
+          <PageTransition key="public-documentation">
+            <Documentation
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-api-access':
+        return (
+          <PageTransition key="public-api-access">
+            <ApiAccess
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-help':
+        return (
+          <PageTransition key="public-help">
+            <HelpCenter
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-security-guidelines':
+        return (
+          <PageTransition key="public-security-guidelines">
+            <SecurityGuidelines
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-faqs':
+        return (
+          <PageTransition key="public-faqs">
+            <Faqs
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
+      case 'public-contact-support':
+        return (
+          <PageTransition key="public-contact-support">
+            <ContactSupport
+              onNavigate={navigateTo}
+              onLoginClick={navigateToAuth}
+              role={selectedRole}
+            />
+          </PageTransition>
+        );
+
       case 'dashboard':
         return (
           <PageTransition key="dashboard">
-            <DashboardLayout onLogout={navigateToLanding} role={selectedRole || 'analyst'} />
+            <DashboardLayout
+              onLogout={handleLogout}
+              onNavigate={navigateTo}
+              role={selectedRole || 'analyst'}
+            />
           </PageTransition>
         );
+
       case 'auth-role':
       case 'auth-login':
         return (
@@ -80,31 +299,41 @@ function AppContent() {
               role={selectedRole}
               onRoleSelect={handleRoleSelect}
               onBack={navigateToLanding}
-              onForgot={() => setCurrentView('auth-forgot')}
+              onForgot={() => navigateTo('auth-forgot')}
               onLogin={handleLogin}
             />
           </PageTransition>
         );
+
       case 'auth-forgot':
         return (
           <PageTransition key="auth-forgot">
-            <ForgotPassword onBack={() => setCurrentView('auth-login')} />
+            <ForgotPassword onBack={() => navigateTo('auth-login')} />
           </PageTransition>
         );
+
       default:
         return (
           <PageTransition key="landing">
             <div className="min-h-screen bg-[#F8F9FB] font-sans text-[#111827] selection:bg-[#153E75]/10 selection:text-[#153E75]">
-              <Navbar onLoginClick={navigateToAuth} />
+              <Navbar
+                onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth}
+                onHomeClick={navigateToLanding}
+                role={selectedRole}
+              />
               <main>
-                <Hero onLoginClick={navigateToAuth} />
+                <Hero onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth} />
                 <Stats />
                 <Features />
                 <Workflow />
                 <ModulesOverview />
                 <About />
               </main>
-              <Footer onLoginClick={navigateToAuth} />
+              <Footer
+                onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth}
+                onNavigate={navigateTo}
+                role={selectedRole}
+              />
             </div>
           </PageTransition>
         );

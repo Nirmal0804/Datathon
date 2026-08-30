@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 /**
  * Reusable BackToTop floating button.
  * Automatically appears after scrolling down ~350px and provides a smooth scroll back to the top.
+ * Visual Theme: Red (#E00000) button with Gold (#D49A00 / #F5E7C1) arrow accent.
  */
 export default function BackToTop({ threshold = 350 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -56,9 +57,9 @@ export default function BackToTop({ threshold = 350 }) {
           whileTap={{ scale: 0.92 }}
           aria-label="Back to top"
           title="Back to top"
-          className="fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#0B1F4D] hover:bg-[#153E75] text-white flex items-center justify-center shadow-[0_6px_20px_rgba(11,31,77,0.35)] border border-white/20 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C79A2B] focus-visible:ring-offset-2 cursor-pointer"
+          className="fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#E00000] hover:bg-[#C90000] text-[#F5E7C1] hover:text-white flex items-center justify-center shadow-[0_6px_20px_rgba(224,0,0,0.35)] border border-[#D49A00]/40 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D49A00] focus-visible:ring-offset-2 cursor-pointer"
         >
-          <ArrowUp className="w-5 h-5 text-white stroke-[2.5]" />
+          <ArrowUp className="w-5 h-5 stroke-[2.5]" />
         </motion.button>
       )}
     </AnimatePresence>

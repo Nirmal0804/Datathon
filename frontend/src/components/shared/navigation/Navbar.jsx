@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { id: 'about', label: 'About' },
 ];
 
-export default function Navbar({ onLoginClick }) {
+export default function Navbar({ onLoginClick, onHomeClick, role = null }) {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -42,7 +42,14 @@ export default function Navbar({ onLoginClick }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo Brand */}
-          <div className="-ml-1 sm:-ml-2 lg:-ml-3 flex items-center gap-3 cursor-pointer group" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveSection('home'); }}>
+          <div
+            className="-ml-1 sm:-ml-2 lg:-ml-3 flex items-center gap-3 cursor-pointer group"
+            onClick={() => {
+              if (onHomeClick) onHomeClick();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveSection('home');
+            }}
+          >
             <div className="w-11 h-11 rounded-full bg-white flex items-center justify-center p-1 shadow-sm shrink-0 transition-transform duration-200 group-hover:scale-[1.02] overflow-hidden">
               <LazyImage
                 src={kspLogo}
@@ -69,7 +76,10 @@ export default function Navbar({ onLoginClick }) {
                 <a
                   key={link.id}
                   href={`#${link.id}`}
-                  onClick={() => setActiveSection(link.id)}
+                  onClick={() => {
+                    if (onHomeClick) onHomeClick();
+                    setActiveSection(link.id);
+                  }}
                   className={`relative text-sm transition-colors duration-200 ${
                     isActive ? 'font-bold text-white' : 'font-semibold text-white/80 hover:text-white'
                   }`}
@@ -81,8 +91,11 @@ export default function Navbar({ onLoginClick }) {
                 </a>
               );
             })}
-            <button onClick={onLoginClick} className="px-5 py-2 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ml-2">
-              Login Portal
+            <button
+              onClick={onLoginClick}
+              className="px-5 py-2 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ml-2"
+            >
+              {role ? 'Dashboard' : 'Login Portal'}
             </button>
           </div>
 
@@ -106,7 +119,12 @@ export default function Navbar({ onLoginClick }) {
               {link.label}
             </a>
           ))}
-          <button onClick={() => { setIsOpen(false); onLoginClick(); }} className="w-full px-5 py-2.5 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-colors shadow-sm cursor-pointer">Login Portal</button>
+          <button
+            onClick={() => { setIsOpen(false); onLoginClick(); }}
+            className="w-full px-5 py-2.5 text-sm font-extrabold text-[#E00000] bg-white hover:bg-[#FFF1F1] rounded-xl transition-colors shadow-sm cursor-pointer"
+          >
+            {role ? 'Dashboard' : 'Login Portal'}
+          </button>
         </div>
       )}
     </nav>

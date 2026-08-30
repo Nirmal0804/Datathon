@@ -7,7 +7,7 @@ import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../ui/LazyImage';
 import { getRoleNavItems } from '../../../modules/dashboard/components/AnalystTopNav';
 
-export default function Footer({ onLoginClick, rounded = false, role = null, activeModule = null, onNavigate = null }) {
+export default function Footer({ onLoginClick, rounded = false, role = null, activeModule = null, activeRoute = null, onNavigate = null }) {
   const roleNavItems = role ? getRoleNavItems(role) : null;
 
   return (
@@ -131,20 +131,34 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
 
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium">
               {[
-                'Privacy Policy',
-                'Terms of Service',
-                'Security Audit',
-                'Support',
-                'Documentation',
-                'API Access',
-              ].map((label) => (
-                <li key={label}>
-                  <span className="inline-flex items-center gap-1.5 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
-                    <ChevronRight className="w-3.5 h-3.5 text-white/80" />
-                    {label}
-                  </span>
-                </li>
-              ))}
+                { label: 'Privacy Policy', route: 'public-privacy', path: '/privacy' },
+                { label: 'Terms of Service', route: 'public-terms', path: '/terms' },
+                { label: 'Security Audit', route: 'public-security-audit', path: '/security-audit' },
+                { label: 'Support', route: 'public-support', path: '/support' },
+                { label: 'Documentation', route: 'public-documentation', path: '/documentation' },
+                { label: 'API Access', route: 'public-api-access', path: '/api-access' },
+              ].map((item) => {
+                const isActive = activeRoute === item.path || activeModule === item.route || activeModule === item.path;
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onNavigate) {
+                          onNavigate(item.path);
+                        }
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer text-left ${
+                        isActive ? 'text-[#D49A00] font-bold' : 'text-white/90 hover:text-white font-medium'
+                      }`}
+                    >
+                      <ChevronRight className={`w-3.5 h-3.5 ${isActive ? 'text-[#D49A00]' : 'text-white/80'}`} />
+                      {item.label}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -156,30 +170,34 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
             <div className="w-6 h-0.5 bg-[#D49A00] rounded-full mb-4" />
 
             <ul className="space-y-3 text-xs sm:text-sm font-medium">
-              <li>
-                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
-                  <Headphones className="w-4 h-4 text-white" />
-                  Help Center
-                </span>
-              </li>
-              <li>
-                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
-                  <Lock className="w-4 h-4 text-white" />
-                  Security Guidelines
-                </span>
-              </li>
-              <li>
-                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
-                  <HelpCircle className="w-4 h-4 text-white" />
-                  FAQs
-                </span>
-              </li>
-              <li>
-                <span className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors cursor-pointer select-none">
-                  <Mail className="w-4 h-4 text-white" />
-                  Contact Support
-                </span>
-              </li>
+              {[
+                { label: 'Help Center', route: 'public-help', path: '/help', icon: Headphones },
+                { label: 'Security Guidelines', route: 'public-security-guidelines', path: '/security-guidelines', icon: Lock },
+                { label: 'FAQs', route: 'public-faqs', path: '/faqs', icon: HelpCircle },
+                { label: 'Contact Support', route: 'public-contact-support', path: '/contact-support', icon: Mail },
+              ].map((item) => {
+                const IconComponent = item.icon;
+                const isActive = activeRoute === item.path || activeModule === item.route || activeModule === item.path;
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onNavigate) {
+                          onNavigate(item.path);
+                        }
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className={`inline-flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                        isActive ? 'text-[#D49A00] font-bold' : 'text-white/90 hover:text-white font-medium'
+                      }`}
+                    >
+                      <IconComponent className={`w-4 h-4 ${isActive ? 'text-[#D49A00]' : 'text-white'}`} />
+                      {item.label}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

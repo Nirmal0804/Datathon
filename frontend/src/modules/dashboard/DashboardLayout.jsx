@@ -69,7 +69,7 @@ import {
 // Map modules that should be full-height (no scroll container)
 const FULL_HEIGHT_MODULES = new Set(['map']);
 
-export default function DashboardLayout({ onLogout, role }) {
+export default function DashboardLayout({ onLogout, role, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeModule, setActiveModule] = useState('overview');
 
@@ -207,6 +207,12 @@ export default function DashboardLayout({ onLogout, role }) {
   };
 
   const handleModuleChange = (mod) => {
+    if (typeof mod === 'string' && (mod.startsWith('/') || mod.startsWith('public-') || mod === 'landing' || mod === 'auth-login' || mod === 'auth-forgot')) {
+      if (onNavigate) {
+        onNavigate(mod);
+      }
+      return;
+    }
     setActiveModule(mod);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
