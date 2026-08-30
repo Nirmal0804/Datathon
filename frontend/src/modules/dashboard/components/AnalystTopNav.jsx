@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../../components/ui/LazyImage';
-import { useTranslation } from '../../../i18n';
 
 export const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
@@ -44,7 +43,6 @@ export function getRoleNavItems(role) {
 }
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
-  const { t } = useTranslation();
   const { unreadCount, togglePanel } = useNotification();
   const [customProfile, setCustomProfile] = React.useState(() => {
     try {
@@ -98,10 +96,10 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
       : ANALYST_NAV_ITEMS;
 
   const platformSubtitle = role === 'officer'
-    ? (t('nav.fieldOperations') || 'FIELD OPERATIONS')
+    ? 'FIELD OPERATIONS'
     : role === 'admin'
-      ? (t('nav.adminPlatform') || 'SYSTEM ADMINISTRATION PLATFORM')
-      : (t('nav.intelligencePlatform') || 'INTELLIGENCE PLATFORM');
+      ? 'SYSTEM ADMINISTRATION PLATFORM'
+      : 'INTELLIGENCE PLATFORM';
 
   const defaultProfile = role === 'officer'
     ? { initials: 'RK', name: 'Rakesh Kumar', roleText: 'Inspector', station: 'Mysuru Rural Police' }
@@ -143,26 +141,6 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
       <div className="flex-1 overflow-x-auto no-scrollbar flex items-center justify-start lg:justify-center px-2 sm:px-3 gap-1 sm:gap-1.5 h-full">
         {navItems.map((item) => {
           const isActive = activeModule === item.id;
-          const labelMap = {
-            overview: t('nav.overview', item.name),
-            map: t('nav.crimeMap', item.name),
-            district: t('nav.district', item.name),
-            network: t('nav.network', item.name),
-            analytics: t('nav.analytics', item.name),
-            reports: t('nav.reports', item.name),
-            hotspots: t('nav.hotspots', item.name),
-            correlation: t('nav.correlation', item.name),
-            assigned_cases: t('nav.assignedCases', item.name),
-            fir_management: t('nav.firManagement', item.name),
-            alerts: t('nav.alerts', item.name),
-            users: t('nav.users', item.name),
-            roles: t('nav.roles', item.name),
-            audit_logs: t('nav.auditLogs', item.name),
-            system_health: t('nav.systemHealth', item.name),
-            config: t('nav.config', item.name),
-            settings: t('nav.settings', item.name),
-          };
-          const translatedName = labelMap[item.id] || item.name;
 
           return (
             <button
@@ -172,7 +150,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
                 }`}
             >
               <div className="relative h-full flex items-center">
-                <span>{translatedName}</span>
+                <span>{item.name}</span>
                 {isActive && (
                   <motion.div
                     layoutId="topNavActiveUnderline"
