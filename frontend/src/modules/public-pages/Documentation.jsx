@@ -1,106 +1,106 @@
 import React, { useState } from 'react';
-import { BookOpen, FileText, Activity, Shield, Database, Search, Network } from 'lucide-react';
+import { BookOpen, FileText, Activity, Shield, Database, Search } from 'lucide-react';
 import InfoPageLayout from './components/InfoPageLayout';
 import { useTranslation } from '../../i18n';
-
-const DOC_SECTIONS = [
-  {
-    category: 'GETTING STARTED',
-    icon: BookOpen,
-    items: [
-      {
-        title: 'Platform Architecture & Role Overview',
-        desc: 'Understanding the tri-role operational framework (Field Officer, Intelligence Analyst, Administrator) and precinct boundaries.',
-      },
-      {
-        title: 'Authentication & Session Token Management',
-        desc: 'Navigating the secure login portal, password reset workflows, and symmetric JWT token persistence.',
-      },
-      {
-        title: 'Executive Dashboard Navigation',
-        desc: 'Reading high-level KPI cards, real-time security anomaly feeds, and multi-district summary metrics.',
-      },
-    ],
-  },
-  {
-    category: 'CORE OPERATIONS',
-    icon: FileText,
-    items: [
-      {
-        title: 'Field Officer FIR Management',
-        desc: 'Registering new precinct FIR complaints, updating case lifecycle stages (Active, Investigating, Closed), and inspecting records.',
-      },
-      {
-        title: 'Assigned Cases Workflow',
-        desc: 'Delegated investigation rosters tailored specifically for precinct officers with evidence tracking.',
-      },
-      {
-        title: 'Karnataka Geospatial Crime Map',
-        desc: 'Interactive Google GIS canvas mapping incident coordinates, police station telemetry, boundary choropleths, and heatmap layers.',
-      },
-      {
-        title: 'Hotspot Detection & Risk Forecasting',
-        desc: 'Spatial-temporal DBSCAN and kernel density clustering to isolate repeat high-density incident corridors.',
-      },
-    ],
-  },
-  {
-    category: 'ADVANCED ANALYTICS & AI',
-    icon: Activity,
-    items: [
-      {
-        title: 'Graph Neural Network Analysis',
-        desc: 'Co-offender graph representations revealing criminal syndicate topology and degree centrality metrics.',
-      },
-      {
-        title: 'Multi-Factor Socio-Economic Correlation',
-        desc: 'Regression and correlation matrix modeling between economic indicators and incident recurrence rates.',
-      },
-      {
-        title: 'Predictive Risk Models & Anomaly Triggers',
-        desc: 'Automated statistical anomaly detection flagging spikes exceeding baseline thresholds.',
-      },
-    ],
-  },
-  {
-    category: 'ADMINISTRATION & COMPLIANCE',
-    icon: Shield,
-    items: [
-      {
-        title: 'Role-Based Access Control (RBAC) Policies',
-        desc: 'Granular permissions matrix determining operational boundaries across officer roles.',
-      },
-      {
-        title: 'Audit Logging & Compliance Traceability',
-        desc: 'Comprehensive tamper-evident logging of administrative actions, data exports, and login sessions.',
-      },
-      {
-        title: 'System Health & Resource Telemetry',
-        desc: 'Monitoring microservice latency, PostgreSQL connection pools, and Redis cache hit ratios.',
-      },
-    ],
-  },
-  {
-    category: 'DEVELOPER API INTEGRATION',
-    icon: Database,
-    items: [
-      {
-        title: 'REST API Overview & Bearer Authentication',
-        desc: 'Consuming FastAPI v1 endpoints with Bearer token authentication and structured Pydantic payload models.',
-      },
-      {
-        title: 'Endpoint Reference & OpenAPI Schema',
-        desc: 'Documentation for /dashboard, /districts, /stations, /analytics, and /admin endpoints.',
-      },
-    ],
-  },
-];
 
 export default function Documentation({ onNavigate, onLoginClick, role = null }) {
   const { t } = useTranslation();
   const [filterQuery, setFilterQuery] = useState('');
 
-  const filteredSections = DOC_SECTIONS.map((sec) => ({
+  const docSections = [
+    {
+      category: t('public.docCatGettingStarted', 'GETTING STARTED'),
+      icon: BookOpen,
+      items: [
+        {
+          title: t('public.docItem1_1Title', 'Platform Architecture & Role Overview'),
+          desc: t('public.docItem1_1Desc', 'Understanding the tri-role operational framework (Field Officer, Intelligence Analyst, Administrator) and precinct boundaries.'),
+        },
+        {
+          title: t('public.docItem1_2Title', 'Authentication & Session Token Management'),
+          desc: t('public.docItem1_2Desc', 'Navigating the secure login portal, password reset workflows, and symmetric JWT token persistence.'),
+        },
+        {
+          title: t('public.docItem1_3Title', 'Executive Dashboard Navigation'),
+          desc: t('public.docItem1_3Desc', 'Reading high-level KPI cards, real-time security anomaly feeds, and multi-district summary metrics.'),
+        },
+      ],
+    },
+    {
+      category: t('public.docCatCoreOperations', 'CORE OPERATIONS'),
+      icon: FileText,
+      items: [
+        {
+          title: t('public.docItem2_1Title', 'Field Officer FIR Management'),
+          desc: t('public.docItem2_1Desc', 'Registering new precinct FIR complaints, updating case lifecycle stages (Active, Investigating, Closed), and inspecting records.'),
+        },
+        {
+          title: t('public.docItem2_2Title', 'Assigned Cases Workflow'),
+          desc: t('public.docItem2_2Desc', 'Delegated investigation rosters tailored specifically for precinct officers with evidence tracking.'),
+        },
+        {
+          title: t('public.docItem2_3Title', 'Karnataka Geospatial Crime Map'),
+          desc: t('public.docItem2_3Desc', 'Interactive Google GIS canvas mapping incident coordinates, police station telemetry, boundary choropleths, and heatmap layers.'),
+        },
+        {
+          title: t('public.docItem2_4Title', 'Hotspot Detection & Risk Forecasting'),
+          desc: t('public.docItem2_4Desc', 'Spatial-temporal DBSCAN and kernel density clustering to isolate repeat high-density incident corridors.'),
+        },
+      ],
+    },
+    {
+      category: t('public.docCatAnalytics', 'ADVANCED ANALYTICS & AI'),
+      icon: Activity,
+      items: [
+        {
+          title: t('public.docItem3_1Title', 'Graph Neural Network Analysis'),
+          desc: t('public.docItem3_1Desc', 'Co-offender graph representations revealing criminal syndicate topology and degree centrality metrics.'),
+        },
+        {
+          title: t('public.docItem3_2Title', 'Multi-Factor Socio-Economic Correlation'),
+          desc: t('public.docItem3_2Desc', 'Regression and correlation matrix modeling between economic indicators and incident recurrence rates.'),
+        },
+        {
+          title: t('public.docItem3_3Title', 'Predictive Risk Models & Anomaly Triggers'),
+          desc: t('public.docItem3_3Desc', 'Automated statistical anomaly detection flagging spikes exceeding baseline thresholds.'),
+        },
+      ],
+    },
+    {
+      category: t('public.docCatAdmin', 'ADMINISTRATION & COMPLIANCE'),
+      icon: Shield,
+      items: [
+        {
+          title: t('public.docItem4_1Title', 'Role-Based Access Control (RBAC) Policies'),
+          desc: t('public.docItem4_1Desc', 'Granular permissions matrix determining operational boundaries across officer roles.'),
+        },
+        {
+          title: t('public.docItem4_2Title', 'Audit Logging & Compliance Traceability'),
+          desc: t('public.docItem4_2Desc', 'Comprehensive tamper-evident logging of administrative actions, data exports, and login sessions.'),
+        },
+        {
+          title: t('public.docItem4_3Title', 'System Health & Resource Telemetry'),
+          desc: t('public.docItem4_3Desc', 'Monitoring microservice latency, PostgreSQL connection pools, and Redis cache hit ratios.'),
+        },
+      ],
+    },
+    {
+      category: t('public.docCatApi', 'DEVELOPER API INTEGRATION'),
+      icon: Database,
+      items: [
+        {
+          title: t('public.docItem5_1Title', 'REST API Overview & Bearer Authentication'),
+          desc: t('public.docItem5_1Desc', 'Consuming FastAPI v1 endpoints with Bearer token authentication and structured Pydantic payload models.'),
+        },
+        {
+          title: t('public.docItem5_2Title', 'Endpoint Reference & OpenAPI Schema'),
+          desc: t('public.docItem5_2Desc', 'Documentation for /dashboard, /districts, /stations, /analytics, and /admin endpoints.'),
+        },
+      ],
+    },
+  ];
+
+  const filteredSections = docSections.map((sec) => ({
     ...sec,
     items: sec.items.filter(
       (it) =>
@@ -127,7 +127,7 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
           <Search className="w-4 h-4 text-[#64748B] shrink-0" />
           <input
             type="text"
-            placeholder={t('dashboard.searchPlaceholder', 'Search documentation guides, operational modules, or analytics topics...')}
+            placeholder={t('public.docSearchPlaceholder', 'Search documentation guides, operational modules, or analytics topics...')}
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
             className="w-full bg-transparent text-xs sm:text-sm font-semibold text-[#0F172A] focus:outline-none placeholder:text-slate-400"
@@ -179,3 +179,4 @@ export default function Documentation({ onNavigate, onLoginClick, role = null })
     </InfoPageLayout>
   );
 }
+

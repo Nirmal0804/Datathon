@@ -11,7 +11,7 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
       title={t('public.termsTitle', 'Terms of Service')}
       category={t('nav.resources', 'Resources')}
       description={t('public.termsSubtitle', 'Guidelines, usage policies, and operational conditions governing authorized access to the CrimeIntel intelligence and analytics ecosystem.')}
-      lastUpdated="August 2026"
+      lastUpdated={t('public.august2026', 'August 2026')}
       activeRoute="/terms"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}
@@ -25,10 +25,10 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               01
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Purpose of the Platform</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec1Title', 'Purpose of the Platform')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            The CrimeIntel application is intended exclusively for official law enforcement, investigative, crime prevention, and analytical operations within the Karnataka State Police jurisdiction. All use of this application must align strictly with authorized departmental duties and statutory obligations.
+            {t('public.termsSec1Desc', 'The CrimeIntel application is intended exclusively for official law enforcement, investigative, crime prevention, and analytical operations within the Karnataka State Police jurisdiction. All use of this application must align strictly with authorized departmental duties and statutory obligations.')}
           </p>
         </section>
 
@@ -38,15 +38,15 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               02
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Authorized Use & Credentials</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec2Title', 'Authorized Use & Credentials')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            Access to CrimeIntel is restricted to verified police personnel who have been issued individual officer or administrator accounts. Users must:
+            {t('public.termsSec2Desc', 'Access to CrimeIntel is restricted to verified police personnel who have been issued individual officer or administrator accounts. Users must:')}
           </p>
           <ul className="list-disc pl-5 text-xs sm:text-sm text-[#475569] space-y-1.5 leading-relaxed">
-            <li>Maintain the strict confidentiality of their personal credentials, passwords, and security tokens.</li>
-            <li>Never share individual login credentials with colleagues or third parties.</li>
-            <li>Immediately notify system administrators if unauthorized access or compromised credentials are suspected.</li>
+            <li>{t('public.termsSec2B1', 'Maintain the strict confidentiality of their personal credentials, passwords, and security tokens.')}</li>
+            <li>{t('public.termsSec2B2', 'Never share individual login credentials with colleagues or third parties.')}</li>
+            <li>{t('public.termsSec2B3', 'Immediately notify system administrators if unauthorized access or compromised credentials are suspected.')}</li>
           </ul>
         </section>
 
@@ -56,21 +56,21 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               03
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Acceptable Use & Prohibited Activities</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec3Title', 'Acceptable Use & Prohibited Activities')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            Authorized personnel must use the system in a professional and lawful manner. The following activities are strictly prohibited:
+            {t('public.termsSec3Desc', 'Authorized personnel must use the system in a professional and lawful manner. The following activities are strictly prohibited:')}
           </p>
           <div className="p-4 rounded-xl bg-red-50/60 border border-red-100 text-xs text-red-900 space-y-2">
             <div className="flex items-center gap-2 font-bold text-red-800">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-              Prohibited Actions:
+              {t('public.termsProhibitedTitle', 'Prohibited Actions:')}
             </div>
             <ul className="list-disc pl-5 space-y-1 text-red-800">
-              <li>Querying records, case histories, or personal dossiers for non-official or personal reasons.</li>
-              <li>Exporting or transmitting sensitive crime intelligence to unauthorized external systems or unapproved media.</li>
-              <li>Attempting to bypass Role-Based Access Control restrictions, reverse engineer API endpoints, or conduct unauthorized vulnerability probing.</li>
-              <li>Sharing or publishing intelligence snapshots, hotspot models, or predictive risk indicators to non-departmental entities.</li>
+              <li>{t('public.termsSec3B1', 'Querying records, case histories, or personal dossiers for non-official or personal reasons.')}</li>
+              <li>{t('public.termsSec3B2', 'Exporting or transmitting sensitive crime intelligence to unauthorized external systems or unapproved media.')}</li>
+              <li>{t('public.termsSec3B3', 'Attempting to bypass Role-Based Access Control restrictions, reverse engineer API endpoints, or conduct unauthorized vulnerability probing.')}</li>
+              <li>{t('public.termsSec3B4', 'Sharing or publishing intelligence snapshots, hotspot models, or predictive risk indicators to non-departmental entities.')}</li>
             </ul>
           </div>
         </section>
@@ -81,10 +81,10 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               04
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Data Stewardship & Auditability</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec4Title', 'Data Stewardship & Auditability')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            All actions conducted on the CrimeIntel platform—including logins, record lookups, report downloads, filter executions, and administrative modifications—are logged permanently in immutable audit records. Officers acknowledge that audit logs are reviewed routinely to ensure accountability and policy adherence.
+            {t('public.termsSec4Desc', 'All actions conducted on the CrimeIntel platform—including logins, record lookups, report downloads, filter executions, and administrative modifications—are logged permanently in immutable audit records. Officers acknowledge that audit logs are reviewed routinely to ensure accountability and policy adherence.')}
           </p>
         </section>
 
@@ -94,10 +94,10 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               05
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">System Availability & Maintenance</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec5Title', 'System Availability & Maintenance')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            While CrimeIntel is architected for high reliability on cloud serverless infrastructure, occasional planned maintenance or database sync cycles may be required. Advance notice will be communicated through operational bulletin channels when possible.
+            {t('public.termsSec5Desc', 'While CrimeIntel is architected for high reliability on cloud serverless infrastructure, occasional planned maintenance or database sync cycles may be required. Advance notice will be communicated through operational bulletin channels when possible.')}
           </p>
         </section>
 
@@ -107,15 +107,15 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
             <div className="w-8 h-8 rounded-lg bg-[#0B1F4D]/5 text-[#0B1F4D] flex items-center justify-center font-extrabold text-xs">
               06
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Contact & Inquiries</h2>
+            <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.termsSec6Title', 'Contact & Inquiries')}</h2>
           </div>
           <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-            Questions regarding terms of use or operational governance should be addressed to the Karnataka Police Information Technology Division or submitted via the{' '}
+            {t('public.termsSec6Desc', 'Questions regarding terms of use or operational governance should be addressed to the Karnataka Police Information Technology Division or submitted via the')}{' '}
             <button
               onClick={() => onNavigate && onNavigate('public-contact-support')}
               className="text-[#0B1F4D] font-bold underline hover:text-[#C79A2B] cursor-pointer"
             >
-              Contact Support page
+              {t('public.contactSupportPage', 'Contact Support page')}
             </button>.
           </p>
         </section>
@@ -124,3 +124,4 @@ export default function TermsOfService({ onNavigate, onLoginClick, role = null }
     </InfoPageLayout>
   );
 }
+

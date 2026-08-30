@@ -3,16 +3,17 @@ import { Mail, Send, RotateCcw, Shield, CheckCircle, Loader2 } from 'lucide-reac
 import InfoPageLayout from './components/InfoPageLayout';
 import { useTranslation } from '../../i18n';
 
-const CATEGORIES = [
-  'Account Access',
-  'Technical Issue',
-  'Data Issue',
-  'Security Issue',
-  'General Question',
-];
-
 export default function ContactSupport({ onNavigate, onLoginClick, role = null }) {
   const { t } = useTranslation();
+
+  const categories = [
+    { value: 'Account Access', label: t('public.catAccountAccessOpt', 'Account Access') },
+    { value: 'Technical Issue', label: t('public.catTechnicalIssueOpt', 'Technical Issue') },
+    { value: 'Data Issue', label: t('public.catDataIssueOpt', 'Data Issue') },
+    { value: 'Security Issue', label: t('public.catSecurityIssueOpt', 'Security Issue') },
+    { value: 'General Question', label: t('public.catGeneralQuestionOpt', 'General Question') },
+  ];
+
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -29,18 +30,18 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
   const validate = () => {
     const newErrors = {};
     if (!form.fullName.trim()) {
-      newErrors.fullName = t('fir.formValidation', 'Full name is required.');
+      newErrors.fullName = t('public.valFullNameRequired', 'Full name is required.');
     }
     if (!form.email.trim()) {
-      newErrors.email = t('fir.formValidation', 'Official email address is required.');
+      newErrors.email = t('public.valEmailRequired', 'Official email address is required.');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      newErrors.email = t('fir.formValidation', 'Please enter a valid email address.');
+      newErrors.email = t('public.valEmailInvalid', 'Please enter a valid email address.');
     }
     if (!form.subject.trim()) {
-      newErrors.subject = t('fir.formValidation', 'Subject is required.');
+      newErrors.subject = t('public.valSubjectRequired', 'Subject is required.');
     }
     if (!form.message.trim()) {
-      newErrors.message = t('fir.formValidation', 'Detailed message is required.');
+      newErrors.message = t('public.valMessageRequired', 'Detailed message is required.');
     }
     return newErrors;
   };
@@ -72,7 +73,6 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
     }
 
     setIsSubmitting(true);
-    // Purely local frontend timeout simulation (no API calls)
     setTimeout(() => {
       setIsSubmitting(false);
       const generatedRef = `KSP-SUP-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -93,6 +93,8 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
     setSubmitted(false);
     setReferenceId('');
   };
+
+  const selectedCategoryLabel = categories.find((c) => c.value === form.category)?.label || form.category;
 
   return (
     <InfoPageLayout
@@ -116,35 +118,35 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
 
               <div className="space-y-1.5">
                 <h2 className="text-lg sm:text-xl font-extrabold text-[#0F172A]">
-                  Request Submitted Successfully
+                  {t('public.requestSuccessTitle', 'Request Submitted Successfully')}
                 </h2>
                 <p className="text-xs sm:text-sm text-[#64748B] max-w-md mx-auto">
-                  Thank you. Your support request has been received.
+                  {t('public.requestSuccessSubtitle', 'Thank you. Your support request has been received.')}
                 </p>
               </div>
 
               {referenceId && (
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-mono font-bold text-[#0B1F4D]">
-                  <span className="text-[#64748B]">Reference Number:</span>
+                  <span className="text-[#64748B]">{t('public.refNumberLabel', 'Reference Number:')}</span>
                   <span className="text-[#0B1F4D]">{referenceId}</span>
                 </div>
               )}
 
               <div className="max-w-md mx-auto p-4 rounded-xl bg-[#F8F9FB] border border-[#E7ECF3] text-left text-xs space-y-2">
                 <div className="flex justify-between border-b border-[#E7ECF3]/60 pb-1.5">
-                  <span className="text-[#64748B] font-medium">Submitted By:</span>
+                  <span className="text-[#64748B] font-medium">{t('public.submittedByLabel', 'Submitted By:')}</span>
                   <span className="font-bold text-[#0F172A]">{form.fullName}</span>
                 </div>
                 <div className="flex justify-between border-b border-[#E7ECF3]/60 pb-1.5">
-                  <span className="text-[#64748B] font-medium">Official Email:</span>
+                  <span className="text-[#64748B] font-medium">{t('public.officialEmailFieldLabel', 'Official Email:')}</span>
                   <span className="font-bold text-[#0F172A]">{form.email}</span>
                 </div>
                 <div className="flex justify-between border-b border-[#E7ECF3]/60 pb-1.5">
-                  <span className="text-[#64748B] font-medium">Category:</span>
-                  <span className="font-bold text-[#0F172A]">{form.category}</span>
+                  <span className="text-[#64748B] font-medium">{t('public.categoryFieldLabel', 'Category:')}</span>
+                  <span className="font-bold text-[#0F172A]">{selectedCategoryLabel}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#64748B] font-medium">Subject:</span>
+                  <span className="text-[#64748B] font-medium">{t('public.subjectFieldLabel', 'Subject:')}</span>
                   <span className="font-bold text-[#0F172A] truncate max-w-[200px]">{form.subject}</span>
                 </div>
               </div>
@@ -156,7 +158,7 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                   className="px-6 py-2.5 rounded-xl bg-[#0B1F4D] hover:bg-[#153E75] text-white font-extrabold text-xs sm:text-sm shadow-xs transition-colors cursor-pointer inline-flex items-center gap-2"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Submit Another Request</span>
+                  <span>{t('public.submitAnotherBtn', 'Submit Another Request')}</span>
                 </button>
               </div>
             </div>
@@ -167,8 +169,8 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                   <Mail className="w-5 h-5 text-[#C79A2B]" />
                 </div>
                 <div>
-                  <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">Submit an Operational Request</h2>
-                  <p className="text-xs text-[#64748B] font-semibold">Complete the details below to log a support ticket</p>
+                  <h2 className="text-base sm:text-lg font-extrabold text-[#0F172A]">{t('public.submitRequestTitle', 'Submit an Operational Request')}</h2>
+                  <p className="text-xs text-[#64748B] font-semibold">{t('public.submitRequestSubtitle', 'Complete the details below to log a support ticket')}</p>
                 </div>
               </div>
 
@@ -176,11 +178,11 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Full Name <span className="text-red-500">*</span>
+                      {t('public.fullNameLabel', 'Full Name')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Officer / Analyst Name"
+                      placeholder={t('public.fullNamePlaceholder', 'Officer / Analyst Name')}
                       value={form.fullName}
                       onChange={(e) => handleChange('fullName', e.target.value)}
                       className={`w-full h-10 px-3.5 bg-[#F8F9FB] border text-xs font-semibold text-[#0F172A] rounded-xl focus:outline-none focus:ring-2 transition-all ${
@@ -196,11 +198,11 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
 
                   <div>
                     <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Official Email Address <span className="text-red-500">*</span>
+                      {t('public.officialEmailLabel', 'Official Email Address')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
-                      placeholder="officer@ksp.gov.in"
+                      placeholder={t('public.officialEmailPlaceholder', 'officer@ksp.gov.in')}
                       value={form.email}
                       onChange={(e) => handleChange('email', e.target.value)}
                       className={`w-full h-10 px-3.5 bg-[#F8F9FB] border text-xs font-semibold text-[#0F172A] rounded-xl focus:outline-none focus:ring-2 transition-all ${
@@ -218,16 +220,16 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Issue Category <span className="text-red-500">*</span>
+                      {t('public.issueCategoryLabel', 'Issue Category')} <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={form.category}
                       onChange={(e) => handleChange('category', e.target.value)}
                       className="w-full h-10 px-3 bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all cursor-pointer"
                     >
-                      {CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
+                      {categories.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
                         </option>
                       ))}
                     </select>
@@ -235,11 +237,11 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
 
                   <div>
                     <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                      Subject <span className="text-red-500">*</span>
+                      {t('public.subjectLabel', 'Subject')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Brief summary of issue"
+                      placeholder={t('public.subjectPlaceholder', 'Brief summary of issue')}
                       value={form.subject}
                       onChange={(e) => handleChange('subject', e.target.value)}
                       className={`w-full h-10 px-3.5 bg-[#F8F9FB] border text-xs font-semibold text-[#0F172A] rounded-xl focus:outline-none focus:ring-2 transition-all ${
@@ -256,11 +258,11 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
 
                 <div>
                   <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1.5">
-                    Detailed Message <span className="text-red-500">*</span>
+                    {t('public.detailedMessageLabel', 'Detailed Message')} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     rows={5}
-                    placeholder="Describe the incident, error code, affected case ID, or required access adjustment..."
+                    placeholder={t('public.detailedMessagePlaceholder', 'Describe the incident, error code, affected case ID, or required access adjustment...')}
                     value={form.message}
                     onChange={(e) => handleChange('message', e.target.value)}
                     className={`w-full p-3.5 bg-[#F8F9FB] border text-xs font-semibold text-[#0F172A] rounded-xl focus:outline-none focus:ring-2 transition-all leading-relaxed resize-none ${
@@ -283,12 +285,12 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-3.5 h-3.5 text-[#C79A2B] animate-spin" />
-                        <span>Submitting...</span>
+                        <span>{t('public.submittingBtn', 'Submitting...')}</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-3.5 h-3.5 text-[#C79A2B]" />
-                        <span>Submit Request</span>
+                        <span>{t('public.submitRequestBtn', 'Submit Request')}</span>
                       </>
                     )}
                   </button>
@@ -300,7 +302,7 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                     className="px-4 py-2.5 rounded-xl bg-[#F8F9FB] hover:bg-slate-200 text-[#64748B] font-bold text-xs sm:text-sm transition-colors cursor-pointer flex items-center gap-1.5"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Clear</span>
+                    <span>{t('common.clear', 'Clear')}</span>
                   </button>
                 </div>
               </form>
@@ -316,20 +318,20 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
                 <Shield className="w-4 h-4 text-[#C79A2B]" />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-[#0F172A]">Direct Support Channels</h3>
-                <p className="text-[11px] text-[#64748B] font-semibold">Departmental assistance</p>
+                <h3 className="text-sm font-extrabold text-[#0F172A]">{t('public.directSupportChannelsTitle', 'Direct Support Channels')}</h3>
+                <p className="text-[11px] text-[#64748B] font-semibold">{t('public.directSupportChannelsSubtitle', 'Departmental assistance')}</p>
               </div>
             </div>
 
             <div className="space-y-3 pt-2 text-xs text-[#475569]">
               <div className="p-3.5 rounded-xl bg-[#F8F9FB] border border-[#E7ECF3] space-y-1">
-                <span className="font-bold text-[#0F172A] block">Operational Support Hours</span>
-                <p className="text-[11px] text-[#64748B]">24x7 Continuous Telemetry & Incident Monitoring</p>
+                <span className="font-bold text-[#0F172A] block">{t('public.supportHoursTitle', 'Operational Support Hours')}</span>
+                <p className="text-[11px] text-[#64748B]">{t('public.supportHoursDesc', '24x7 Continuous Telemetry & Incident Monitoring')}</p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#F8F9FB] border border-[#E7ECF3] space-y-1">
-                <span className="font-bold text-[#0F172A] block">Critical Security Incidents</span>
-                <p className="text-[11px] text-[#64748B]">Notify the designated Station House Officer (SHO) or Cyber Crime Division.</p>
+                <span className="font-bold text-[#0F172A] block">{t('public.criticalIncidentsTitle', 'Critical Security Incidents')}</span>
+                <p className="text-[11px] text-[#64748B]">{t('public.criticalIncidentsDesc', 'Notify the designated Station House Officer (SHO) or Cyber Crime Division.')}</p>
               </div>
             </div>
           </div>
@@ -339,3 +341,4 @@ export default function ContactSupport({ onNavigate, onLoginClick, role = null }
     </InfoPageLayout>
   );
 }
+

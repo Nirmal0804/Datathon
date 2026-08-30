@@ -3,49 +3,65 @@ import { Key, LayoutDashboard, Database, ShieldAlert, ArrowRight, Mail } from 'l
 import InfoPageLayout from './components/InfoPageLayout';
 import { useTranslation } from '../../i18n';
 
-const SUPPORT_CATEGORIES = [
-  {
-    title: 'Account & Access Support',
-    desc: 'Assistance with portal authentication, officer password resets, session expiration, and role assignments.',
-    icon: Key,
-    topics: ['Forgot Password Workflow', 'Station/Precinct Transfer', 'Role Privilege Adjustments'],
-    action: 'View Help Guide',
-    route: 'public-help',
-  },
-  {
-    title: 'Platform & Module Support',
-    desc: 'Guidance on operating the Crime Map, FIR records explorer, hotspot cluster analysis, and reports.',
-    icon: LayoutDashboard,
-    topics: ['Interactive Map Filters', 'FIR Status Updates', 'Generating PDF Reports'],
-    action: 'Browse Documentation',
-    route: 'public-documentation',
-  },
-  {
-    title: 'Data & Incident Inquiries',
-    desc: 'Resolving questions concerning missing FIR intakes, district aggregations, or date-range filter logic.',
-    icon: Database,
-    topics: ['Filter Query Troubleshooting', 'District Boundary Data', 'Historical Case Trends'],
-    action: 'Read FAQs',
-    route: 'public-faqs',
-  },
-  {
-    title: 'Security & Telemetry Concerns',
-    desc: 'Immediate reporting channels for suspicious login notifications, unauthorized token use, or audit flags.',
-    icon: ShieldAlert,
-    topics: ['Suspicious Activity Reports', 'Device Security Policies', 'Audit Trail Inquiries'],
-    action: 'Security Guidelines',
-    route: 'public-security-guidelines',
-  },
-];
-
 export default function SupportLanding({ onNavigate, onLoginClick, role = null }) {
   const { t } = useTranslation();
 
+  const supportCategories = [
+    {
+      title: t('public.suppCat1Title', 'Account & Access Support'),
+      desc: t('public.suppCat1Desc', 'Assistance with portal authentication, officer password resets, session expiration, and role assignments.'),
+      icon: Key,
+      topics: [
+        t('public.suppCat1Topic1', 'Forgot Password Workflow'),
+        t('public.suppCat1Topic2', 'Station/Precinct Transfer'),
+        t('public.suppCat1Topic3', 'Role Privilege Adjustments'),
+      ],
+      action: t('public.suppCat1Action', 'View Help Guide'),
+      route: 'public-help',
+    },
+    {
+      title: t('public.suppCat2Title', 'Platform & Module Support'),
+      desc: t('public.suppCat2Desc', 'Guidance on operating the Crime Map, FIR records explorer, hotspot cluster analysis, and reports.'),
+      icon: LayoutDashboard,
+      topics: [
+        t('public.suppCat2Topic1', 'Interactive Map Filters'),
+        t('public.suppCat2Topic2', 'FIR Status Updates'),
+        t('public.suppCat2Topic3', 'Generating PDF Reports'),
+      ],
+      action: t('public.suppCat2Action', 'Browse Documentation'),
+      route: 'public-documentation',
+    },
+    {
+      title: t('public.suppCat3Title', 'Data & Incident Inquiries'),
+      desc: t('public.suppCat3Desc', 'Resolving questions concerning missing FIR intakes, district aggregations, or date-range filter logic.'),
+      icon: Database,
+      topics: [
+        t('public.suppCat3Topic1', 'Filter Query Troubleshooting'),
+        t('public.suppCat3Topic2', 'District Boundary Data'),
+        t('public.suppCat3Topic3', 'Historical Case Trends'),
+      ],
+      action: t('public.suppCat3Action', 'Read FAQs'),
+      route: 'public-faqs',
+    },
+    {
+      title: t('public.suppCat4Title', 'Security & Telemetry Concerns'),
+      desc: t('public.suppCat4Desc', 'Immediate reporting channels for suspicious login notifications, unauthorized token use, or audit flags.'),
+      icon: ShieldAlert,
+      topics: [
+        t('public.suppCat4Topic1', 'Suspicious Activity Reports'),
+        t('public.suppCat4Topic2', 'Device Security Policies'),
+        t('public.suppCat4Topic3', 'Audit Trail Inquiries'),
+      ],
+      action: t('public.suppCat4Action', 'Security Guidelines'),
+      route: 'public-security-guidelines',
+    },
+  ];
+
   return (
     <InfoPageLayout
-      title={t('nav.support', 'Support Center')}
+      title={t('public.supportLandingTitle', 'Support Center')}
       category={t('nav.support', 'Support')}
-      description={t('public.contactSupportSubtitle', 'Get assistance with account access, operational workflows, intelligence data verification, and platform technical support.')}
+      description={t('public.supportLandingSubtitle', 'Get assistance with account access, operational workflows, intelligence data verification, and platform technical support.')}
       activeRoute="/support"
       onNavigate={onNavigate}
       onLoginClick={onLoginClick}
@@ -55,7 +71,7 @@ export default function SupportLanding({ onNavigate, onLoginClick, role = null }
         
         {/* Support Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {SUPPORT_CATEGORIES.map((cat) => {
+          {supportCategories.map((cat) => {
             const Icon = cat.icon;
             return (
               <div key={cat.title} className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 shadow-xs flex flex-col justify-between hover:border-[#0B1F4D]/25 transition-all">
@@ -70,10 +86,10 @@ export default function SupportLanding({ onNavigate, onLoginClick, role = null }
                     {cat.desc}
                   </p>
                   <ul className="space-y-1.5 mb-6">
-                    {cat.topics.map((t) => (
-                      <li key={t} className="text-xs text-[#64748B] flex items-center gap-2 font-medium">
+                    {cat.topics.map((topicItem) => (
+                      <li key={topicItem} className="text-xs text-[#64748B] flex items-center gap-2 font-medium">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C79A2B]" />
-                        {t}
+                        {topicItem}
                       </li>
                     ))}
                   </ul>
@@ -94,9 +110,9 @@ export default function SupportLanding({ onNavigate, onLoginClick, role = null }
         {/* Quick Links Banner */}
         <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div className="space-y-1">
-            <h3 className="text-base font-extrabold text-[#0F172A]">Still need assistance?</h3>
+            <h3 className="text-base font-extrabold text-[#0F172A]">{t('public.stillNeedAssistance', 'Still need assistance?')}</h3>
             <p className="text-xs sm:text-sm text-[#64748B]">
-              Submit an operational support inquiry to your designated police system desk.
+              {t('public.stillNeedAssistanceDesc', 'Submit an operational support inquiry to your designated police system desk.')}
             </p>
           </div>
           <button
@@ -104,7 +120,7 @@ export default function SupportLanding({ onNavigate, onLoginClick, role = null }
             className="px-5 py-2.5 rounded-xl bg-[#0B1F4D] hover:bg-[#153E75] text-white font-extrabold text-xs sm:text-sm shadow-xs transition-colors cursor-pointer flex items-center gap-2 shrink-0"
           >
             <Mail className="w-4 h-4 text-[#C79A2B]" />
-            <span>Contact Support</span>
+            <span>{t('nav.contactSupport', 'Contact Support')}</span>
           </button>
         </div>
 
@@ -112,3 +128,4 @@ export default function SupportLanding({ onNavigate, onLoginClick, role = null }
     </InfoPageLayout>
   );
 }
+
