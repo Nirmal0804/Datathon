@@ -8,16 +8,16 @@
 
 CrimeIntel unifies crime records, geospatial intelligence, analytical dashboards, hotspot detection, district intelligence, criminal-network analysis, and AI/ML-assisted insights in a secure decision-support platform for law-enforcement workflows.
 
-DEPLOYMENT LINK:https://crime-intel-tosumotv.onslate.in
+DEPLOYMENT LINK: https://crime-intel-60079748823.development.catalystserverless.in/app/index.html
 
-[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61dafb)](#5-technology-stack)
-[![Backend](https://img.shields.io/badge/Backend-FastAPI%20(Python)-009688)](#5-technology-stack)
-[![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ecf8e)](#5-technology-stack)
-[![Auth](https://img.shields.io/badge/Auth-Supabase%20Auth%20%2B%20JWT-6f42c1)](#7-security--authentication)
-[![GIS](https://img.shields.io/badge/GIS-Leaflet-1a936f)](#3-key-features)
-[![Deployment](https://img.shields.io/badge/Deployment-Zoho%20Catalyst-2e7d32)](#13-deployment)
+[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61dafb)](#6-technology-stack)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI%20(Python)-009688)](#6-technology-stack)
+[![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ecf8e)](#6-technology-stack)
+[![Auth](https://img.shields.io/badge/Auth-Supabase%20Auth%20%2B%20JWT-6f42c1)](#8-security--authentication)
+[![GIS](https://img.shields.io/badge/GIS-Google%20Maps-4285F4)](#4-key-features)
+[![Deployment](https://img.shields.io/badge/Deployment-Zoho%20Catalyst-2e7d32)](#14-deployment)
 
-**React + Vite · FastAPI · Supabase PostgreSQL · Supabase Auth + JWT · Leaflet GIS · Zoho Catalyst**
+**React + Vite · FastAPI · Supabase PostgreSQL · Supabase Auth + JWT · Google Maps · Zoho Catalyst**
 
 </div>
 
@@ -36,6 +36,13 @@ During the Refined Prototype Phase, CrimeIntel was enhanced beyond its initial f
 - Consistent red/yellow/Karnataka Police visual identity.
 - Professional settings/preferences experience.
 - Added Resources and Support sections for better content presentation.
+
+### 🗺️ Google Maps Upgrade
+- Replaced the initial Leaflet-based mapping layer with **Google Maps**.
+- Refined the geographic intelligence visualization experience to provide a more familiar, polished, and integrated interface.
+- Integrated mapping more closely with the overall CrimeIntel design system.
+- Preserved the existing crime-intelligence and analytical purpose of the map.
+- Improved the overall usability and presentation of spatial crime information.
 
 ### 🌐 Language & Accessibility
 - Multilingual interface supporting English (UK/IN) and Kannada (ಕನ್ನಡ).
@@ -87,18 +94,19 @@ These preferences persist to provide a tailored user experience.
 
 1. [Problem Statement](#1--problem-statement)
 2. [Solution Overview](#2--solution-overview)
-3. [Key Features](#3--key-features)
-4. [System Architecture](#4--system-architecture)
-5. [Technology Stack](#5--technology-stack)
-6. [Data & Transparency](#6--data--transparency)
-7. [Security & Authentication](#7--security--authentication)
-8. [Project Structure](#8--project-structure)
-9. [Getting Started](#9--getting-started)
-10. [Configuration](#10--configuration)
-11. [API Overview](#11--api-overview)
-12. [Testing & Reliability](#12--testing--reliability)
-13. [Deployment](#13--deployment)
-14. [Production Extensions](#14--production-extensions)
+3. [Google Maps Integration](#3--google-maps-integration)
+4. [Key Features](#4--key-features)
+5. [System Architecture](#5--system-architecture)
+6. [Technology Stack](#6--technology-stack)
+7. [Data & Transparency](#7--data--transparency)
+8. [Security & Authentication](#8--security--authentication)
+9. [Project Structure](#9--project-structure)
+10. [Getting Started](#10--getting-started)
+11. [Configuration](#11--configuration)
+12. [API Overview](#12--api-overview)
+13. [Testing & Reliability](#13--testing--reliability)
+14. [Deployment](#14--deployment)
+15. [Production Extensions](#15--production-extensions)
 
 ---
 
@@ -119,7 +127,7 @@ Law-enforcement agencies generate large volumes of information across FIRs, dist
 
 **CrimeIntel** is an integrated crime analytics and intelligence platform that converts structured police data into operational and strategic insights.
 
-> **Crime Dashboard · GIS Crime Map · Hotspot Intelligence · District Intelligence · Trend Analytics · Network Analysis · AI/ML Insights · Secure Decision Support**
+> **Crime Dashboard · Geographic Crime Map · Hotspot Intelligence · District Intelligence · Trend Analytics · Network Analysis · AI/ML Insights · Secure Decision Support**
 
 CrimeIntel follows an API-first architecture. The React frontend consumes secured FastAPI services. Supabase provides authentication and hosted PostgreSQL infrastructure, while Zoho Catalyst is used for application deployment.
 
@@ -139,13 +147,43 @@ Crime Intelligence Response
 
 ---
 
-## 3. ✨ Key Features
+## 3. 🗺️ Google Maps Integration
+
+During the Refined Prototype Phase, the original Leaflet-based mapping implementation was replaced with **Google Maps** (`@vis.gl/react-google-maps`) to provide a more familiar, polished, and integrated geographic visualization experience.
+
+This refinement aligns the mapping experience with the product's professional, production-oriented interface, maintaining the exact same analytical capabilities but presenting them with enhanced usability and visual hierarchy.
+
+### Prototype Evolution
+
+| Mapping Layer | Initial Prototype | Refined Prototype |
+|---|---|---|
+| Mapping Technology | Leaflet | Google Maps |
+| Geographic Visualization | ✅ | ✅ Enhanced |
+| Crime Locations | ✅ | ✅ |
+| Hotspot Visualization | ✅ | ✅ |
+| Heatmap/Spatial Analysis | Existing prototype capability | Refined Google Maps experience |
+| Role-Based Map Usage | Existing | Refined |
+
+### Geographic Capabilities
+
+CrimeIntel uses Google Maps to provide an interactive geographic intelligence layer. Current implementation features include:
+- **Crime Location Visualization:** Precise coordinate plotting of incidents.
+- **Crime Hotspots:** Visualizing geographic concentrations of recorded crime.
+- **Heatmap Visualization:** Rendering intensity maps based on location density.
+- **Cluster Visualization:** Grouping dense incident records for easier map navigation.
+- **Location-Based Intelligence:** Clicking map markers reveals detailed case insights.
+
+*(Note: Google Maps credentials/API keys are securely managed through environment configuration (`.env.production`) and must not be committed to source control.)*
+
+---
+
+## 4. ✨ Key Features
 
 ### 📊 Interactive Crime Dashboard
 Consolidated crime indicators, district distribution, trends, recent cases, and intelligence summaries.
 
-### 🗺️ Karnataka GIS Crime Map
-Interactive geographic visualization of crime incidents, filters, clusters, heatmaps, and hotspot information.
+### 🗺️ Karnataka Geographic Crime Map
+Powered by Google Maps, providing interactive geographic visualization of crime incidents, filters, clusters, heatmaps, and hotspot information.
 
 ### 🔥 Crime Hotspot Intelligence
 Highlights geographic concentrations of crime to support location-focused analysis and operational planning.
@@ -167,7 +205,7 @@ Provides bounded operational CSV export, interactive visualizations, and analyti
 
 ---
 
-## 4. 🧩 System Architecture
+## 5. 🧩 System Architecture
 
 ```text
                        +----------------------+
@@ -207,18 +245,18 @@ Architecture principles include API-first separation, repository abstraction, ba
 
 ---
 
-## 5. 🧰 Technology Stack
+## 6. 🧰 Technology Stack
 
 | Layer | Technologies |
 |-------|--------------|
 | **Frontend** | React 19, Vite, JavaScript/JSX, Tailwind CSS |
-| **Visualization** | Interactive charts, Leaflet |
+| **Visualization** | Interactive charts, Google Maps |
 | **Backend** | Python, FastAPI, Uvicorn, Pydantic |
 | **Database** | PostgreSQL hosted on Supabase |
 | **Authentication** | Supabase Auth, JWT |
 | **Data Access** | Repository pattern with PostgreSQL and CSV adapters |
 | **Analytics/ML** | Python, Pandas, NumPy, Scikit-learn, XGBoost, DBSCAN |
-| **GIS** | Leaflet, coordinate-based spatial visualization, GeoJSON-ready architecture |
+| **GIS** | Google Maps (`@vis.gl/react-google-maps`), coordinate-based spatial visualization |
 | **Network Intelligence** | FIR-person relationship graph analysis |
 | **Testing** | Pytest |
 | **Version Control** | Git, GitHub |
@@ -226,7 +264,7 @@ Architecture principles include API-first separation, repository abstraction, ba
 
 ---
 
-## 6. 📋 Data & Transparency
+## 7. 📋 Data & Transparency
 
 CrimeIntel follows a strict data-transparency principle: crime records, identities, coordinates, model outputs, and district statistics must not be fabricated and represented as authoritative information.
 
@@ -243,7 +281,7 @@ The data layer supports structured entities including districts, police stations
 
 ---
 
-## 7. 🔐 Security & Authentication
+## 8. 🔐 Security & Authentication
 
 CrimeIntel uses **Supabase Auth** for frontend authentication and **FastAPI JWT verification** for backend enforcement.
 
@@ -280,7 +318,7 @@ Database Row Level Security is enabled on all tables (`supabase/migrations/005_r
 
 ---
 
-## 8. 📂 Project Structure
+## 9. 📂 Project Structure
 
 ```text
 Datathon/
@@ -323,7 +361,7 @@ Datathon/
 
 ---
 
-## 9. 🚀 Getting Started
+## 10. 🚀 Getting Started
 
 ### Prerequisites
 
@@ -379,7 +417,7 @@ http://localhost:5173
 
 ---
 
-## 10. 🔧 Configuration
+## 11. 🔧 Configuration
 
 Representative backend configuration:
 
@@ -407,7 +445,7 @@ Use the repository `.env.example` files as the authoritative configuration refer
 
 ---
 
-## 11. 📡 API Overview
+## 12. 📡 API Overview
 
 ### Health
 
@@ -482,7 +520,7 @@ For exact query parameters and response contracts, refer to the API contract und
 
 ---
 
-## 12. ✅ Testing & Reliability
+## 13. ✅ Testing & Reliability
 
 The automated backend test suite (734 tests) covers authentication and JWT security, RBAC authorization, audit write + read API, rate limiting, dashboard services, crime-map APIs, intelligence analytics, district intelligence, stations, network analysis, health probes, error handling, repositories, ingestion, audit logging, and privacy/PII behavior.
 
@@ -491,7 +529,7 @@ During the refinement phase, cache tests, concurrency testing, and individual mo
 
 ---
 
-## 13. 📦 Deployment
+## 14. 📦 Deployment
 
 CrimeIntel uses **Zoho Catalyst** for application deployment.
 
@@ -518,7 +556,7 @@ Production deployment must configure the final frontend origin in CORS and suppl
 
 ---
 
-## 14. 🔮 Production Extensions
+## 15. 🔮 Production Extensions
 
 Implemented this iteration:
 
