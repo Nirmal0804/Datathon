@@ -62,8 +62,8 @@ export default function RoleManagement() {
             </div>
 
             <div className="flex gap-2 mt-4 pt-4 border-t border-slate-800">
-              <button className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors">Edit Permissions</button>
-              <button className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors">View Users</button>
+              <button className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">{t('admin.editPermissions', 'Edit Permissions')}</button>
+              <button className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-md transition-colors cursor-pointer">{t('admin.viewUsers', 'View Users')}</button>
             </div>
           </div>
         ))}

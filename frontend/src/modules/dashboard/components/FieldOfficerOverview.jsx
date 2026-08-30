@@ -62,7 +62,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
   const handleRegisterFIR = (e) => {
     e.preventDefault();
     if (!firForm.complainant || !firForm.description) {
-      toast.error('Validation Error', 'Please fill in all required fields.');
+      toast.error(t('common.validationError', 'Validation Error'), t('officer.fillAllRequired', 'Please fill in all required fields.'));
       return;
     }
 
@@ -98,14 +98,14 @@ export default function FieldOfficerOverview({ onNavigate }) {
       description: '',
       risk: 'Medium'
     });
-    toast.success('FIR Logged', `FIR ${newId} has been successfully registered.`);
+    toast.success(t('fir.firLogged', 'FIR Logged'), `FIR ${newId} ${t('officer.firLoggedToastMsg', 'has been successfully registered.')}`);
   };
 
   const handleUpdateStatus = (e) => {
     e.preventDefault();
     const targetId = statusForm.caseId || patilCases[0]?.id;
     if (!targetId) {
-      toast.error('Error', 'No cases available to update.');
+      toast.error(t('common.error', 'Error'), t('officer.noCasesToUpdate', 'No cases available to update.'));
       return;
     }
 
@@ -126,21 +126,21 @@ export default function FieldOfficerOverview({ onNavigate }) {
       return c;
     }));
     setActiveModal(null);
-    toast.success('Status Updated', `Case ${targetId} status updated to ${statusForm.status}.`);
+    toast.success(t('officer.statusUpdated', 'Status Updated'), `Case ${targetId} ${t('officer.statusUpdatedToastMsg', 'status updated to')} ${statusForm.status}.`);
   };
 
   const handleUploadEvidence = (e) => {
     e.preventDefault();
     const targetId = evidenceForm.caseId || patilCases[0]?.id;
     if (!targetId || !evidenceForm.fileName) {
-      toast.error('Validation Error', 'Please select a case and type a file name.');
+      toast.error(t('common.validationError', 'Validation Error'), t('officer.selectCaseAndFileName', 'Please select a case and type a file name.'));
       return;
     }
 
     setLocalCases(prev => prev.map(c => {
       if (c.id === targetId) {
-        return {
-          ...c,
+        return { 
+          ...c, 
           details: {
             ...c.details,
             timeline: [
@@ -154,7 +154,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
     }));
     setActiveModal(null);
     setEvidenceForm(prev => ({ ...prev, fileName: '' }));
-    toast.success('Evidence Uploaded', `Linked evidence successfully to Case ${targetId}.`);
+    toast.success(t('officer.evidenceUploaded', 'Evidence Uploaded'), `${t('officer.evidenceLinkedToast', 'Evidence Linked')}: Case ${targetId}.`);
   };
 
   const activityIcons = {
@@ -164,6 +164,42 @@ export default function FieldOfficerOverview({ onNavigate }) {
     evidence_upload: { Icon: Upload, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
     patrol_dispatch: { Icon: Activity, color: 'text-rose-400', bg: 'bg-rose-500/10' },
     high_priority: { Icon: ShieldAlert, color: 'text-rose-500', bg: 'bg-rose-500/10' },
+  };
+
+  const getActivityTitle = (act) => {
+    switch (act.type) {
+      case 'patrol_dispatch': return t('officer.patrolDispatchedTitle', act.title);
+      case 'evidence_upload': return t('officer.evidenceLinkedTitle', act.title);
+      case 'fir_registration': return t('officer.newFirRegisteredTitle', act.title);
+      case 'case_assignment': return t('officer.caseDelegationTitle', act.title);
+      case 'status_update': return t('officer.inquiryStatusUpdatedTitle', act.title);
+      case 'high_priority': return t('officer.highPriorityAlertTitle', act.title);
+      default: return act.title;
+    }
+  };
+
+  const getActivityDesc = (act) => {
+    switch (act.type) {
+      case 'patrol_dispatch': return t('officer.patrolDispatchedDesc', act.desc);
+      case 'evidence_upload': return t('officer.evidenceLinkedDesc', act.desc);
+      case 'fir_registration': return t('officer.newFirRegisteredDesc', act.desc);
+      case 'case_assignment': return t('officer.caseDelegationDesc', act.desc);
+      case 'status_update': return t('officer.inquiryStatusUpdatedDesc', act.desc);
+      case 'high_priority': return t('officer.highPriorityAlertDesc', act.desc);
+      default: return act.desc;
+    }
+  };
+
+  const getActivityStatusLabel = (status) => {
+    switch (status) {
+      case 'Deployed': return t('officer.activityDeployed', 'Deployed');
+      case 'Linked': return t('officer.activityLinked', 'Linked');
+      case 'Registered': return t('officer.activityRegistered', 'Registered');
+      case 'Assigned': return t('officer.activityAssigned', 'Assigned');
+      case 'Active': return t('cases.statusActive', 'Active');
+      case 'Critical': return t('common.critical', 'Critical');
+      default: return status;
+    }
   };
 
   const baseActivities = [
@@ -216,7 +252,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
     // Check if new FIRs have been registered in this state session
     if (localCases.length > MOCK_CASES.length) {
       const added = localCases.slice(0, localCases.length - MOCK_CASES.length);
-      added.forEach((c, idx) => {
+      added.forEach((c) => {
         list.unshift({
           time: 'Just now',
           type: 'fir_registration',
@@ -247,10 +283,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
           </div>
           <div className="flex flex-col justify-center">
             <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] leading-tight tracking-tight">
-              {t('nav.fieldOverview', 'Field Officer Operations')}
+              {t('officer.overviewTitle', 'Field Officer Operations')}
             </h1>
             <p className="text-xs sm:text-sm font-normal text-[#64748B] mt-0.5 sm:mt-1 leading-normal">
-              {t('cases.title', 'Assigned cases dashboard, FIR registry utilities, and precinct alerts feed.')}
+              {t('officer.overviewSubtitle', 'Assigned cases dashboard, FIR registry utilities, and precinct alerts feed.')}
             </p>
           </div>
         </div>
@@ -260,7 +296,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
           <div className="flex items-center gap-2 bg-[#F8F9FB] px-3 sm:px-4 h-8 sm:h-10 rounded-[14px] sm:rounded-[16px] border border-[#E5E7EB] shadow-sm cursor-default">
             <Clock className="w-4 h-4 text-[#C79A2B]" />
             <span className="text-[11px] sm:text-xs font-bold text-[#0F172A]">
-              {t('common.status', 'Active Shift')}: 14:00 - 22:00
+              {t('officer.activeShift', 'Active Shift')}: 14:00 - 22:00
             </span>
           </div>
         </div>
@@ -269,10 +305,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
       {/* Field Officer KPIs (Spacious Minimal Proportions) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {[
-          { title: t('cases.activeFIRs', 'Active Station FIRs'), value: activeFIRs, note: t('dashboard.totalFirs', 'Station total'), icon: FileText, type: 'info' },
-          { title: t('cases.casesAssigned', 'Cases Assigned to You'), value: casesAssigned, note: t('cases.myCases', 'Inspector Patil roster'), icon: User, type: 'info' },
-          { title: t('cases.pendingCases', 'Pending Investigations'), value: pendingCases, note: t('common.status', 'Requires inquiry logs'), icon: Activity, type: 'warning' },
-          { title: t('cases.todayIncidents', 'Today Precinct Logs'), value: todayIncidents, note: t('dashboard.daily', 'Last 24 hours'), icon: ShieldCheck, type: 'success' }
+          { title: t('officer.activeStationFirs', 'Active Station FIRs'), value: activeFIRs, note: t('officer.stationTotal', 'Station total'), icon: FileText, type: 'info' },
+          { title: t('officer.casesAssignedToYou', 'Cases Assigned to You'), value: casesAssigned, note: t('officer.rosterNote', 'Inspector Patil roster'), icon: User, type: 'info' },
+          { title: t('officer.pendingInvestigations', 'Pending Investigations'), value: pendingCases, note: t('officer.requiresInquiryLogs', 'Requires inquiry logs'), icon: Activity, type: 'warning' },
+          { title: t('officer.todayPrecinctLogs', 'Today Precinct Logs'), value: todayIncidents, note: t('officer.last24Hours', 'Last 24 hours'), icon: ShieldCheck, type: 'success' }
         ].map((card, i) => (
           <GlobalKPICard
             key={i}
@@ -295,17 +331,17 @@ export default function FieldOfficerOverview({ onNavigate }) {
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
                 <h3 className="text-base font-bold text-[#0F172A]">
-                  {t('cases.myCases', 'Your Assigned Cases')}
+                  {t('officer.yourAssignedCases', 'Your Assigned Cases')}
                 </h3>
                 <p className="text-xs text-[#64748B] mt-0.5">
-                  {t('cases.title', 'Assigned to Inspector Patil. Select a row to update status.')}
+                  {t('officer.assignedCasesDesc', 'Assigned to Inspector Patil. Select a row to update status.')}
                 </p>
               </div>
               <button
                 onClick={() => onNavigate('assigned_cases')}
                 className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0 cursor-pointer"
               >
-                {t('cases.viewAllCases', 'View Roster')} &rarr;
+                {t('officer.viewRoster', 'View Roster')} &rarr;
               </button>
             </div>
 
@@ -361,10 +397,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
           <div className="bg-white border border-[#E5E7EB] rounded-[24px] p-7 sm:p-8 shadow-sm flex flex-col h-[400px] justify-between">
             <div className="border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <h3 className="text-base font-bold text-[#0F172A]">
-                {t('cases.quickActions', 'Operations Utility Tool')}
+                {t('officer.operationsUtilityTool', 'Operations Utility Tool')}
               </h3>
               <p className="text-xs text-[#64748B] mt-0.5">
-                {t('cases.title', 'Quick station-level actions.')}
+                {t('officer.quickActionsDesc', 'Quick station-level actions.')}
               </p>
             </div>
             
@@ -435,10 +471,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
             <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4 mb-4 shrink-0">
               <div>
                 <h3 className="text-base font-bold text-[#0F172A]">
-                  {t('dashboard.recentAlerts', 'Recent Precinct Activity')}
+                  {t('officer.recentPrecinctActivity', 'Recent Precinct Activity')}
                 </h3>
                 <p className="text-xs text-[#64748B] mt-0.5 font-sans">
-                  {t('dashboard.alertsSubtitle', 'Precinct activity logs and notifications feed.')}
+                  {t('officer.precinctActivityDesc', 'Precinct activity logs and notifications feed.')}
                 </p>
               </div>
               <span className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
@@ -458,15 +494,15 @@ export default function FieldOfficerOverview({ onNavigate }) {
                         <ActIcon className={`w-4.5 h-4.5 ${cfg.color.replace('400', '600').replace('500', '700')}`} />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-[#0F172A] truncate">{act.title}</p>
-                        <p className="text-[#64748B] text-xs truncate mt-0.5">{act.desc}</p>
+                        <p className="font-bold text-[#0F172A] truncate">{getActivityTitle(act)}</p>
+                        <p className="text-[#64748B] text-xs truncate mt-0.5">{getActivityDesc(act)}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-3.5 shrink-0 pl-3">
                       {act.status && (
                         <span className="badge badge-neutral bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-wider py-1 px-2.5">
-                          {act.status}
+                          {getActivityStatusLabel(act.status)}
                         </span>
                       )}
                       <span className="text-[10px] text-[#64748B] font-mono">{act.time}</span>
@@ -485,14 +521,14 @@ export default function FieldOfficerOverview({ onNavigate }) {
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-police-alert" />
                 <h3 className="text-base font-bold text-[#0F172A]">
-                  {t('dashboard.recentAlerts', 'Local Precinct BOLO')}
+                  {t('officer.localPrecinctBolo', 'Local Precinct BOLO')}
                 </h3>
               </div>
               <button
                 onClick={() => onNavigate('alerts')}
                 className="text-xs font-bold text-police-navy hover:text-police-blue hover:underline transition-colors shrink-0 cursor-pointer"
               >
-                {t('dashboard.viewAll', 'View Feed')} &rarr;
+                {t('officer.viewFeed', 'View Feed')} &rarr;
               </button>
             </div>
 
@@ -533,7 +569,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-police-blue/10">
                     <Plus className="w-5 h-5 text-police-blue" />
                   </div>
-                  {t('fir.registerFIR', 'Log New Incident Report (FIR)')}
+                  {t('officer.logNewFIR', 'Log New Incident Report (FIR)')}
                 </h3>
                 <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
@@ -550,12 +586,12 @@ export default function FieldOfficerOverview({ onNavigate }) {
                       onChange={(e) => setFirForm(prev => ({ ...prev, category: e.target.value }))}
                       className="select text-sm h-10 w-full"
                     >
-                      <option value="Cybercrime">Cybercrime</option>
-                      <option value="Property Theft">Property Theft</option>
-                      <option value="Violent Crime">Violent Crime</option>
-                      <option value="Financial Fraud">Financial Fraud</option>
-                      <option value="Narcotics">Narcotics</option>
-                      <option value="Crime Against Women">Crime Against Women</option>
+                      <option value="Cybercrime">{t('categories.cybercrime', 'Cybercrime')}</option>
+                      <option value="Property Theft">{t('categories.propertyTheft', 'Property Theft')}</option>
+                      <option value="Violent Crime">{t('categories.violentCrime', 'Violent Crime')}</option>
+                      <option value="Financial Fraud">{t('categories.financialFraud', 'Financial Fraud')}</option>
+                      <option value="Narcotics">{t('categories.narcotics', 'Narcotics')}</option>
+                      <option value="Crime Against Women">{t('categories.crimeAgainstWomen', 'Crime Against Women')}</option>
                     </select>
                   </div>
                   <div>
@@ -602,7 +638,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <input 
                     type="text" 
                     required 
-                    placeholder={t('fir.complainantName', 'Enter full name')}
+                    placeholder={t('fir.complainantPlaceholder', 'Enter full name')}
                     className="input text-sm h-10 w-full"
                     value={firForm.complainant}
                     onChange={(e) => setFirForm(prev => ({ ...prev, complainant: e.target.value }))}
@@ -616,7 +652,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <textarea 
                     required 
                     rows="3" 
-                    placeholder={t('fir.incidentNarrative', 'Describe incident in detail...')}
+                    placeholder={t('fir.narrativePlaceholder', 'Describe incident in detail...')}
                     className="input text-sm pt-2 w-full"
                     value={firForm.description}
                     onChange={(e) => setFirForm(prev => ({ ...prev, description: e.target.value }))}
@@ -645,7 +681,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-police-navy/10">
                     <RefreshCw className="w-5 h-5 text-police-navy" />
                   </div>
-                  {t('cases.updateStatus', 'Update Investigation Status')}
+                  {t('officer.updateInvestigationStatus', 'Update Investigation Status')}
                 </h3>
                 <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
@@ -675,10 +711,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     onChange={(e) => setStatusForm(prev => ({ ...prev, status: e.target.value }))}
                     className="select text-sm h-10 w-full"
                   >
-                    <option value="Active">{t('cases.statusActive', 'Active (In Roster)')}</option>
-                    <option value="Investigating">{t('cases.statusInvestigating', 'Investigating (Active Inquiry)')}</option>
-                    <option value="Under Review">{t('cases.statusInvestigating', 'Under Review (Report Pending)')}</option>
-                    <option value="Closed">{t('cases.statusClosed', 'Closed (Charge Sheet Filed)')}</option>
+                    <option value="Active">{t('officer.statusActiveRoster', 'Active (In Roster)')}</option>
+                    <option value="Investigating">{t('officer.statusInvestigatingActive', 'Investigating (Active Inquiry)')}</option>
+                    <option value="Under Review">{t('officer.statusUnderReviewReport', 'Under Review (Report Pending)')}</option>
+                    <option value="Closed">{t('officer.statusClosedChargesheet', 'Closed (Charge Sheet Filed)')}</option>
                   </select>
                 </div>
               </div>
@@ -704,7 +740,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="p-1.5 rounded-full bg-emerald-500/10">
                     <Upload className="w-5 h-5 text-emerald-600" />
                   </div>
-                  {t('cases.uploadEvidence', 'Link Case Evidence File')}
+                  {t('officer.linkEvidenceFile', 'Link Case Evidence File')}
                 </h3>
                 <button type="button" onClick={() => setActiveModal(null)} className="p-2 rounded-full bg-white border border-[#E5E7EB] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8F9FB] transition-colors shadow-sm cursor-pointer">
                   <X className="w-4 h-4" />
@@ -734,20 +770,20 @@ export default function FieldOfficerOverview({ onNavigate }) {
                     onChange={(e) => setEvidenceForm(prev => ({ ...prev, fileType: e.target.value }))}
                     className="select text-sm h-10 w-full"
                   >
-                    <option value="Document">Written Statement Document</option>
-                    <option value="Image">CCTV/Crime Scene Image</option>
-                    <option value="Audio">Witness Voice Recording</option>
-                    <option value="Video">Precinct Surveillance Video</option>
+                    <option value="Document">{t('officer.writtenStatement', 'Written Statement Document')}</option>
+                    <option value="Image">{t('officer.cctvSceneImage', 'CCTV/Crime Scene Image')}</option>
+                    <option value="Audio">{t('officer.witnessVoiceRecording', 'Witness Voice Recording')}</option>
+                    <option value="Video">{t('officer.precinctSurveillanceVideo', 'Precinct Surveillance Video')}</option>
                   </select>
                 </div>
                 <div>
                   <label className="label text-[11px] font-bold text-[#334155] uppercase tracking-wider mb-1 block">
-                    {t('common.details', 'Evidence Identifier Name')}
+                    {t('cases.evidenceTitle', 'Evidence Identifier Name')}
                   </label>
                   <input 
                     type="text" 
                     required 
-                    placeholder="e.g. CCTV_Footage_Oct24.mp4"
+                    placeholder={t('officer.evidencePlaceholder', 'e.g. CCTV_Footage_Oct24.mp4')}
                     className="input text-sm h-10 w-full"
                     value={evidenceForm.fileName}
                     onChange={(e) => setEvidenceForm(prev => ({ ...prev, fileName: e.target.value }))}
@@ -756,7 +792,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
               </div>
               <div className="px-6 py-5 bg-[#F8F9FB] border-t border-[#E7EAF0] flex justify-end gap-3">
                 <button type="button" onClick={() => setActiveModal(null)} className="btn-secondary px-5 py-2 cursor-pointer">{t('common.cancel', 'Cancel')}</button>
-                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue cursor-pointer">{t('cases.uploadEvidence', 'Upload File')}</button>
+                <button type="submit" className="btn-primary px-6 py-2 bg-police-navy text-white hover:bg-police-blue cursor-pointer">{t('officer.uploadAndLink', 'Upload & Link Evidence')}</button>
               </div>
             </motion.form>
           </div>

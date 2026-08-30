@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { ClipboardList, ShieldAlert, CheckSquare, Square } from 'lucide-react';
+import { ClipboardList, CheckSquare, Square } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { useTranslation } from '../../../i18n';
 
 export default function PatrolRecommendationCard({ hotspot }) {
+  const { t } = useTranslation();
   const toast = useToast();
   const [completedTasks, setCompletedTasks] = useState({});
 
@@ -48,9 +50,9 @@ export default function PatrolRecommendationCard({ hotspot }) {
     setCompletedTasks(prev => {
       const nextState = !prev[taskId];
       if (nextState) {
-        toast.success('Directive Initiated', `Patrol task: "${taskText}" status updated.`);
+        toast.success(t('hotspots.directiveInitiated', 'Directive Initiated'), `Patrol task: "${taskText}" status updated.`);
       } else {
-        toast.info('Directive Paused', `Patrol task: "${taskText}" status updated.`);
+        toast.info(t('hotspots.directivePaused', 'Directive Paused'), `Patrol task: "${taskText}" status updated.`);
       }
       return {
         ...prev,
@@ -68,8 +70,8 @@ export default function PatrolRecommendationCard({ hotspot }) {
       <div className="flex items-center gap-2 pb-3 border-b border-[#E7ECF3]">
         <ClipboardList className="w-5 h-5 text-[#0B1F4D]" />
         <div>
-          <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Patrol Directives Checklist</h3>
-          <p className="text-[11px] font-mono font-bold text-[#64748B] mt-0.5">Dynamic patrol plan for {hotspot.hotspotId}</p>
+          <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('hotspots.patrolDirectives', 'Patrol Directives Checklist')}</h3>
+          <p className="text-[11px] font-mono font-bold text-[#64748B] mt-0.5">{t('hotspots.dynamicPatrolPlan', 'Dynamic patrol plan for')} {hotspot.hotspotId}</p>
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import RiskBadge from './RiskBadge';
 import TrendBadge from './TrendBadge';
 import { ArrowUpRight } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 const priorityBadge = (priority) => {
   switch (priority) {
@@ -17,6 +18,29 @@ export default function HotspotTable({
   selectedHotspot, 
   onSelect 
 }) {
+  const { t } = useTranslation();
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
+
+  const getPriorityLabel = (priority) => {
+    switch (priority) {
+      case 'Critical': return t('common.critical', 'Critical');
+      case 'High': return t('common.high', 'High');
+      case 'Medium': return t('common.medium', 'Medium');
+      case 'Low': return t('common.low', 'Low');
+      default: return priority;
+    }
+  };
 
   // Sort hotspots by risk level weight descending (Critical = 4, High = 3, Medium = 2, Low = 1)
   const sortedHotspots = useMemo(() => {
@@ -35,11 +59,11 @@ export default function HotspotTable({
     <div className="bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm overflow-hidden flex flex-col justify-between">
       <div className="px-6 py-5 border-b border-[#E7ECF3] flex justify-between items-center bg-[#F8F9FB]">
         <div>
-          <h3 className="text-base font-black text-[#0F172A] tracking-tight">Hotspot Risk Registry</h3>
-          <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">Prioritized by active threat indexes & density metrics</p>
+          <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('hotspots.riskRegistryTitle', 'Hotspot Risk Registry')}</h3>
+          <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mt-0.5">{t('hotspots.riskRegistrySubtitle', 'Prioritized by active threat indexes & density metrics')}</p>
         </div>
         <span className="bg-[#0B1F4D]/5 text-[#0B1F4D] border border-[#0B1F4D]/10 px-3 py-1 rounded-full font-extrabold text-xs">
-          {sortedHotspots.length} Logged Zones
+          {sortedHotspots.length} {t('hotspots.loggedZones', 'Logged Zones')}
         </span>
       </div>
 
@@ -47,14 +71,14 @@ export default function HotspotTable({
         <table className="w-full text-left border-collapse" aria-label="Hotspots ranking table">
           <thead>
             <tr className="sticky top-0 bg-[#F8F9FB] z-10 border-b border-[#E7ECF3]">
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Hotspot ID</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Jurisdiction</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Incidents</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Dominant Category</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Threat Level</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Trend Status</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">Priority</th>
-              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB] text-right">Inspect</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.hotspotId', 'Hotspot ID')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.jurisdiction', 'Jurisdiction')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.incidents', 'Incidents')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.dominantCategory', 'Dominant Category')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.threatLevel', 'Threat Level')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.trendStatus', 'Trend Status')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB]">{t('hotspots.priority', 'Priority')}</th>
+              <th className="py-3.5 px-6 font-bold text-xs text-[#0F172A] uppercase tracking-wider bg-[#F8F9FB] text-right">{t('hotspots.inspect', 'Inspect')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E7ECF3]/60">
@@ -76,7 +100,7 @@ export default function HotspotTable({
                     </div>
                   </td>
                   <td className="px-6 py-3.5 align-middle font-mono font-extrabold text-xs text-[#0F172A]">{h.crimeCount}</td>
-                  <td className="px-6 py-3.5 align-middle text-xs font-bold text-[#0F172A]">{h.dominantCrime}</td>
+                  <td className="px-6 py-3.5 align-middle text-xs font-bold text-[#0F172A]">{getCategoryLabel(h.dominantCrime)}</td>
                   <td className="px-6 py-3.5 align-middle">
                     <RiskBadge risk={h.riskLevel} />
                   </td>
@@ -85,7 +109,7 @@ export default function HotspotTable({
                   </td>
                   <td className="px-6 py-3.5 align-middle">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-bold text-[11px] ${priorityBadge(h.patrolPriority)}`}>
-                      {h.patrolPriority}
+                      {getPriorityLabel(h.patrolPriority)}
                     </span>
                   </td>
                   <td className="px-6 py-3.5 align-middle text-right">

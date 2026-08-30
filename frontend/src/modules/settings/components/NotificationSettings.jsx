@@ -33,8 +33,8 @@ export default function NotificationSettings() {
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
       <div className="p-5 border-b border-slate-800">
-        <h3 className="text-base font-semibold text-white">{t('settings.notifications', 'Notification Preferences')}</h3>
-        <p className="text-sm text-slate-400 mt-0.5">{t('settings.profile', 'Choose how and when you want to be notified.')}</p>
+        <h3 className="text-base font-semibold text-white">{t('settings.notificationsTitle', 'Notification Preferences')}</h3>
+        <p className="text-sm text-slate-400 mt-0.5">{t('settings.notificationsSubtitle', 'Choose how and when you want to be notified.')}</p>
       </div>
 
       <div className="overflow-x-auto">
@@ -43,13 +43,13 @@ export default function NotificationSettings() {
             <tr>
               <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/2">{t('common.category', 'Alert Category')}</th>
               <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                <div className="flex items-center justify-center gap-1"><Mail className="w-3.5 h-3.5" /> Email</div>
+                <div className="flex items-center justify-center gap-1"><Mail className="w-3.5 h-3.5" /> {t('settings.emailAlerts', 'Email')}</div>
               </th>
               <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                <div className="flex items-center justify-center gap-1"><Smartphone className="w-3.5 h-3.5" /> SMS</div>
+                <div className="flex items-center justify-center gap-1"><Smartphone className="w-3.5 h-3.5" /> {t('settings.smsAlerts', 'SMS')}</div>
               </th>
               <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                <div className="flex items-center justify-center gap-1"><Bell className="w-3.5 h-3.5" /> In-App</div>
+                <div className="flex items-center justify-center gap-1"><Bell className="w-3.5 h-3.5" /> {t('settings.pushAlerts', 'In-App')}</div>
               </th>
             </tr>
           </thead>
@@ -71,9 +71,10 @@ export default function NotificationSettings() {
 
       <div className="p-5 border-t border-slate-800 flex justify-end">
         <button className="px-5 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors">
-          Save Preferences
+          {t('settings.saveChanges', 'Save Preferences')}
         </button>
       </div>
     </div>
   );
 }
+

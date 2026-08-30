@@ -7,6 +7,7 @@ import { MOCK_HOTSPOTS } from '../../mock/hotspotData';
 import { getMLHotspots } from '../../services/api';
 import { ShieldAlert, Radio, ShieldCheck, Activity, Zap, AlertTriangle } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState';
+import { useTranslation } from '../../i18n';
 
 function SkeletonDashboard() {
   return (
@@ -28,6 +29,7 @@ function SkeletonDashboard() {
 }
 
 export default function HotspotDetectionLayout({ onNavigate, role }) {
+  const { t } = useTranslation();
   const [selectedHotspot, setSelectedHotspot] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -170,20 +172,20 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">Crime Hotspot Detection</h1>
+              <h1 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('hotspots.title', 'Crime Hotspot Detection')}</h1>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                {filteredHotspots.length} Active Zones
+                {filteredHotspots.length} {t('hotspots.activeZones', 'Active Zones')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              AI-driven geospatial hotspot telemetry for tactical officer deployments.
+              {t('hotspots.subtitle', 'AI-driven geospatial hotspot telemetry for tactical officer deployments.')}
             </p>
           </div>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>Telemetry Status: Live Sync</span>
+          <span>{t('hotspots.telemetryLiveSync', 'Telemetry Status: Live Sync')}</span>
         </div>
       </div>
 
@@ -195,7 +197,7 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 shadow-sm flex items-center justify-between">
               <div>
-                <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">Active Hotspots</p>
+                <p className="text-[11px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('hotspots.activeHotspots', 'Active Hotspots')}</p>
                 <h3 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight mt-1">{kpis.total}</h3>
               </div>
               <div className="w-10 h-10 rounded-[14px] bg-[#0B1F4D]/10 border border-[#0B1F4D]/20 flex items-center justify-center text-[#0B1F4D] font-extrabold">
@@ -205,7 +207,7 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
 
             <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Critical Threat Zones</p>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('hotspots.criticalThreatZones', 'Critical Threat Zones')}</p>
                 <h3 className="text-2xl font-black text-rose-600 tracking-tight mt-1">{kpis.critical}</h3>
               </div>
               <div className="w-10 h-10 rounded-[14px] bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-extrabold">
@@ -215,7 +217,7 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
 
             <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">High Priority Patrols</p>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('hotspots.highPriorityPatrols', 'High Priority Patrols')}</p>
                 <h3 className="text-2xl font-black text-amber-600 tracking-tight mt-1">{kpis.highPatrol}</h3>
               </div>
               <div className="w-10 h-10 rounded-[14px] bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 font-extrabold">
@@ -225,8 +227,10 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
 
             <div className="bg-white border border-[#E7ECF3] rounded-[24px] p-5 shadow-sm flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg Threat Rating</p>
-                <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">{kpis.avgLabel}</h3>
+                <p className="text-xs font-bold text-[#64748B] uppercase tracking-wider">{t('hotspots.avgThreatRating', 'Avg Threat Rating')}</p>
+                <h3 className="text-2xl font-black text-[#0B1F4D] tracking-tight mt-1">
+                  {kpis.avgLabel === 'Critical' ? t('common.critical', 'Critical') : kpis.avgLabel === 'High' ? t('common.high', 'High') : kpis.avgLabel === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
+                </h3>
               </div>
               <div className="w-10 h-10 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-extrabold">
                 <Activity className="w-5 h-5" />
@@ -254,10 +258,10 @@ export default function HotspotDetectionLayout({ onNavigate, role }) {
                 <div className="p-8 bg-white border border-[#E7ECF3] rounded-[24px] shadow-sm">
                   <EmptyState
                     type="map"
-                    title="No Hotspots Match Filters"
-                    message="No geospatial crime hotspots match your current filter parameters. Try clearing date ranges or search terms."
+                    title={t('hotspots.noHotspotsMatch', 'No Hotspots Match Filters')}
+                    message={t('hotspots.noHotspotsDesc', 'No geospatial crime hotspots match your current filter parameters. Try clearing date ranges or search terms.')}
                     onAction={handleResetFilters}
-                    actionLabel="Clear Filters"
+                    actionLabel={t('cases.resetFilters', 'Clear Filters')}
                   />
                 </div>
               ) : (

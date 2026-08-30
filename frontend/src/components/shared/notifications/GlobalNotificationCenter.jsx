@@ -197,9 +197,14 @@ export default function GlobalNotificationCenter() {
                     <ShieldAlert className="w-4 h-4 text-[#C79A2B]" /> {t('settings.notificationsTab', 'Alert Categories')}
                   </h3>
                   <div className="space-y-3 bg-white p-4 rounded-[16px] border border-[#E7ECF3] shadow-sm">
-                    {['Crime Hotspot Alerts', 'AI Predictions', 'Task Assignments', 'System Health'].map((item, i) => (
+                    {[
+                      { key: 'hotspots', label: t('nav.hotspots', 'Crime Hotspot Alerts') },
+                      { key: 'ai', label: t('settings.instantAiNotif', 'AI Predictions') },
+                      { key: 'tasks', label: t('cases.assignedCases', 'Task Assignments') },
+                      { key: 'system', label: t('nav.systemHealth', 'System Health') },
+                    ].map((item, i) => (
                       <label key={i} className="flex items-center justify-between cursor-pointer group">
-                        <span className="text-sm font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{item}</span>
+                        <span className="text-sm font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{item.label}</span>
                         <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-slate-300 text-[#0B1F4D] focus:ring-[#0B1F4D]" />
                       </label>
                     ))}
@@ -211,9 +216,13 @@ export default function GlobalNotificationCenter() {
                     <Activity className="w-4 h-4 text-[#C79A2B]" /> {t('settings.governance', 'Delivery Channels')}
                   </h3>
                   <div className="space-y-3 bg-white p-4 rounded-[16px] border border-[#E7ECF3] shadow-sm">
-                    {['Push Notifications', 'Email Digest', 'SMS Alerts (Critical Only)'].map((item, i) => (
+                    {[
+                      { key: 'push', label: t('settings.pushAlerts', 'Push Notifications') },
+                      { key: 'email', label: t('settings.emailAlerts', 'Email Digest') },
+                      { key: 'sms', label: t('settings.smsAlerts', 'SMS Alerts (Critical Only)') },
+                    ].map((item, i) => (
                       <label key={i} className="flex items-center justify-between cursor-pointer group">
-                        <span className="text-sm font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{item}</span>
+                        <span className="text-sm font-bold text-[#0F172A] group-hover:text-[#0B1F4D] transition-colors">{item.label}</span>
                         <input type="checkbox" defaultChecked={i !== 2} className="w-4 h-4 rounded border-slate-300 text-[#0B1F4D] focus:ring-[#0B1F4D]" />
                       </label>
                     ))}

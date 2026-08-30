@@ -471,11 +471,11 @@ export default function SettingsLayout({ role = 'admin' }) {
 
   // Navigation Items List
   const SECTIONS = [
-    { id: 'profile', label: t('settings.profileTab', 'Profile'), icon: User, desc: 'Personal identity & credentials' },
-    { id: 'security', label: t('settings.securityTab', 'Role & Security'), icon: Shield, desc: 'Password, MFA & Active sessions' },
-    { id: 'notifications', label: t('settings.notificationsTab', 'Notifications'), icon: Bell, desc: 'Alert channels & frequencies' },
-    { id: 'preferences', label: t('settings.preferencesTab', 'Preferences'), icon: SlidersHorizontal, desc: 'UI theme, language & formats' },
-    { id: 'audit', label: t('settings.auditTab', 'Audit Logs'), icon: ScrollText, desc: 'Security activity & audit history' },
+    { id: 'profile', label: t('settings.profileTab', 'Profile'), icon: User, desc: t('settings.personalIdentityDesc', 'Personal identity & credentials') },
+    { id: 'security', label: t('settings.securityTab', 'Role & Security'), icon: Shield, desc: t('settings.securityTabDesc', 'Password, MFA & Active sessions') },
+    { id: 'notifications', label: t('settings.notificationsTab', 'Notifications'), icon: Bell, desc: t('settings.notificationsTabDesc', 'Alert channels & frequencies') },
+    { id: 'preferences', label: t('settings.preferencesTab', 'Preferences'), icon: SlidersHorizontal, desc: t('settings.preferencesTabDesc', 'UI theme, language & formats') },
+    { id: 'audit', label: t('settings.auditTab', 'Audit Logs'), icon: ScrollText, desc: t('settings.auditTabDesc', 'Security activity & audit history') },
   ];
 
   return (
@@ -537,7 +537,7 @@ export default function SettingsLayout({ role = 'admin' }) {
         {/* ── LEFT SIDEBAR (Permanent Settings Nav Card) ────────────────────── */}
         <div className="lg:col-span-1 bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-3 shadow-sm space-y-1.5">
           <div className="px-3 py-2 border-b border-[#E7ECF3] mb-1">
-            <h2 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Settings Navigation</h2>
+            <h2 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('settings.settingsNavTitle', 'Settings Navigation')}</h2>
           </div>
 
           {SECTIONS.map((sec) => {
@@ -642,7 +642,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                         className="h-9 px-4 rounded-full border border-[#0B1F4D]/20 bg-[#0B1F4D]/5 text-[#0B1F4D] text-xs font-extrabold hover:bg-[#0B1F4D] hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
                       >
                         <Upload className="w-3.5 h-3.5" />
-                        Upload New Photo
+                        {t('settings.uploadNewPhoto', 'Upload New Photo')}
                       </button>
 
                       {profile.avatarUrl && (
@@ -651,13 +651,13 @@ export default function SettingsLayout({ role = 'admin' }) {
                           className="h-9 px-3 rounded-full border border-rose-200 bg-rose-50 text-rose-600 text-xs font-extrabold hover:bg-rose-600 hover:text-white transition-colors duration-150 flex items-center gap-1 cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                          Remove
+                          {t('settings.removePhoto', 'Remove')}
                         </button>
                       )}
                     </div>
                   </div>
                   <p className="text-xs font-medium text-[#64748B] mt-2">
-                    JPG, PNG, or WEBP up to 5MB. Circular cropping tool automatically formats avatar across platform headers.
+                    {t('settings.photoGuidelines', 'JPG, PNG, or WEBP up to 5MB. Circular cropping tool automatically formats avatar across platform headers.')}
                   </p>
                 </div>
               </div>
@@ -665,8 +665,8 @@ export default function SettingsLayout({ role = 'admin' }) {
               {/* Profile Details Form (2-Column Grid) */}
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
                 <div className="border-b border-[#E7ECF3] pb-4">
-                  <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Personal Identity &amp; Department Credentials</h3>
-                  <p className="text-xs font-semibold text-[#64748B] mt-0.5">Official personnel roster attributes and station contact details.</p>
+                  <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.departmentCredentials', 'Personal Identity & Department Credentials')}</h3>
+                  <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.departmentCredentialsDesc', 'Official personnel roster attributes and station contact details.')}</p>
                 </div>
 
                 <form onSubmit={handleSaveProfile} className="space-y-6">
@@ -676,7 +676,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                     <div className="space-y-4">
                       {/* Full Name */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Full Name *</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.fullNameLabel', 'Full Name *')}</label>
                         <input
                           type="text"
                           value={profile.fullName}
@@ -691,8 +691,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                       {/* Badge Number (Read Only) */}
                       <div>
                         <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                          <span>Badge Number (Read-Only)</span>
-                          <span className="text-[10px] text-slate-400 font-bold">Immutable System ID</span>
+                          <span>{t('settings.badgeReadOnly', 'Badge Number (Read-Only)')}</span>
+                          <span className="text-[10px] text-slate-400 font-bold">{t('settings.immutableSystemId', 'Immutable System ID')}</span>
                         </label>
                         <input
                           type="text"
@@ -700,12 +700,12 @@ export default function SettingsLayout({ role = 'admin' }) {
                           readOnly
                           className="w-full h-10 px-4 rounded-[14px] bg-slate-100 border border-slate-200 text-xs font-mono font-extrabold text-slate-500 cursor-not-allowed select-none"
                         />
-                        <p className="text-[10px] text-[#64748B] mt-1">Badge ID is assigned by KSP Headquarters governance team.</p>
+                        <p className="text-[10px] text-[#64748B] mt-1">{t('settings.badgeIdHelp', 'Badge ID is assigned by KSP Headquarters governance team.')}</p>
                       </div>
 
                       {/* Rank Dropdown */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Official Rank</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.rank', 'Official Rank')}</label>
                         <select
                           value={profile.rank}
                           onChange={(e) => handleProfileChange('rank', e.target.value)}
@@ -719,7 +719,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                       {/* Department Dropdown */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Department / Wing</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.department', 'Department / Wing')}</label>
                         <select
                           value={profile.department}
                           onChange={(e) => handleProfileChange('department', e.target.value)}
@@ -736,7 +736,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                     <div className="space-y-4">
                       {/* Official Email */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Official Email Address *</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.emailLabel', 'Official Email Address *')}</label>
                         <input
                           type="email"
                           value={profile.email}
@@ -748,13 +748,13 @@ export default function SettingsLayout({ role = 'admin' }) {
                         {errors.email ? (
                           <p className="text-[10px] font-extrabold text-rose-600 mt-1">{errors.email}</p>
                         ) : (
-                          <p className="text-[10px] text-[#64748B] mt-1">Must be an active @ksp.gov.in official mailbox.</p>
+                          <p className="text-[10px] text-[#64748B] mt-1">{t('settings.activeMailboxHelp', 'Must be an active @ksp.gov.in official mailbox.')}</p>
                         )}
                       </div>
 
                       {/* Phone Number */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Contact Mobile (+91) *</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.phoneLabel', 'Contact Mobile (+91) *')}</label>
                         <input
                           type="text"
                           value={profile.phone}
@@ -768,7 +768,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                       {/* District Dropdown */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Assigned District</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.assignedDistrict', 'Assigned District')}</label>
                         <select
                           value={profile.district}
                           onChange={(e) => handleProfileChange('district', e.target.value)}
@@ -782,7 +782,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                       {/* Police Station / HQ */}
                       <div>
-                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Police Station / HQ Post</label>
+                        <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.stationPost', 'Police Station / HQ Post')}</label>
                         <input
                           type="text"
                           value={profile.policeStation}
@@ -805,7 +805,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                           : 'border-slate-200 text-slate-300 cursor-not-allowed'
                       }`}
                     >
-                      Reset Changes
+                      {t('settings.resetChanges', 'Reset Changes')}
                     </button>
 
                     <div className="flex items-center gap-3">
@@ -818,7 +818,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                             : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
                         }`}
                       >
-                        Save Profile
+                        {t('settings.saveProfile', 'Save Profile')}
                       </button>
                     </div>
                   </div>
@@ -837,8 +837,8 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
                 <div className="border-b border-[#E7ECF3] pb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Change Password</h3>
-                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">Ensure your authentication credentials comply with KSP cyber security guidelines.</p>
+                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.changePassword', 'Change Password')}</h3>
+                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.changePasswordDesc', 'Ensure your authentication credentials comply with KSP cyber security guidelines.')}</p>
                   </div>
                   <Lock className="w-5 h-5 text-[#0B1F4D]" />
                 </div>
@@ -847,13 +847,13 @@ export default function SettingsLayout({ role = 'admin' }) {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {/* Current Password */}
                     <div>
-                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Current Password</label>
+                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.currentPassword', 'Current Password')}</label>
                       <div className="relative">
                         <input
                           type={showCurrentPass ? 'text' : 'password'}
                           value={passwords.current}
                           onChange={(e) => setPasswords((p) => ({ ...p, current: e.target.value }))}
-                          placeholder="••••••••••••"
+                          placeholder={t('settings.currentPassPlaceholder', '••••••••••••')}
                           className="w-full h-10 pl-4 pr-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#0B1F4D]"
                         />
                         <button
@@ -868,13 +868,13 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                     {/* New Password */}
                     <div>
-                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">New Password</label>
+                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.newPassword', 'New Password')}</label>
                       <div className="relative">
                         <input
                           type={showNewPass ? 'text' : 'password'}
                           value={passwords.newPass}
                           onChange={(e) => setPasswords((p) => ({ ...p, newPass: e.target.value }))}
-                          placeholder="Min 10 characters"
+                          placeholder={t('settings.newPassPlaceholder', 'Min 10 characters')}
                           className="w-full h-10 pl-4 pr-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#0B1F4D]"
                         />
                         <button
@@ -889,13 +889,13 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                     {/* Confirm Password */}
                     <div>
-                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">Confirm New Password</label>
+                      <label className="block text-xs font-extrabold text-[#0F172A] mb-1.5">{t('settings.confirmPassword', 'Confirm New Password')}</label>
                       <div className="relative">
                         <input
                           type={showConfirmPass ? 'text' : 'password'}
                           value={passwords.confirmPass}
                           onChange={(e) => setPasswords((p) => ({ ...p, confirmPass: e.target.value }))}
-                          placeholder="Re-type new password"
+                          placeholder={t('settings.confirmPassPlaceholder', 'Re-type new password')}
                           className="w-full h-10 pl-4 pr-10 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#0B1F4D]"
                         />
                         <button
@@ -913,17 +913,17 @@ export default function SettingsLayout({ role = 'admin' }) {
                   {passwords.newPass && (
                     <div className="bg-[#F8F9FB] border border-[#E7ECF3] p-4 rounded-[18px] space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-extrabold text-[#0F172A]">Password Strength:</span>
+                        <span className="font-extrabold text-[#0F172A]">{t('settings.passwordStrength', 'Password Strength:')}</span>
                         <span className={`font-black uppercase ${passwordStrength.textCls}`}>{passwordStrength.label}</span>
                       </div>
                       <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                         <div className={`h-full transition-all duration-300 ${passwordStrength.color}`} style={{ width: `${passwordStrength.score}%` }} />
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 text-[10px] font-bold text-[#64748B]">
-                        <span className={passwords.newPass.length >= 10 ? 'text-emerald-600' : ''}>✓ Min 10 Chars</span>
-                        <span className={/[A-Z]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>✓ Uppercase Letter</span>
-                        <span className={/[a-z]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>✓ Lowercase Letter</span>
-                        <span className={/[0-9]/.test(passwords.newPass) && /[^A-Za-z0-9]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>✓ Number &amp; Symbol</span>
+                        <span className={passwords.newPass.length >= 10 ? 'text-emerald-600' : ''}>{t('settings.ruleMinChars', '✓ Min 10 Chars')}</span>
+                        <span className={/[A-Z]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>{t('settings.ruleUpper', '✓ Uppercase Letter')}</span>
+                        <span className={/[a-z]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>{t('settings.ruleLower', '✓ Lowercase Letter')}</span>
+                        <span className={/[0-9]/.test(passwords.newPass) && /[^A-Za-z0-9]/.test(passwords.newPass) ? 'text-emerald-600' : ''}>{t('settings.ruleNumberSymbol', '✓ Number & Symbol')}</span>
                       </div>
                     </div>
                   )}
@@ -933,7 +933,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                       type="submit"
                       className="h-9 px-5 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors shadow-sm cursor-pointer"
                     >
-                      Update Password
+                      {t('settings.updatePasswordBtn', 'Update Password')}
                     </button>
                   </div>
                 </form>
@@ -943,8 +943,8 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
                 <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4">
                   <div>
-                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Multi-Factor Authentication (MFA)</h3>
-                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">Require multi-step OTP verification during user authentication.</p>
+                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.mfaTitle', 'Multi-Factor Authentication (MFA)')}</h3>
+                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.mfaSubtitle', 'Require multi-step OTP verification during user authentication.')}</p>
                   </div>
 
                   <button
@@ -952,8 +952,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                     onClick={() => {
                       setMfaEnabled(!mfaEnabled);
                       addToast({
-                        title: !mfaEnabled ? 'MFA Enabled' : 'MFA Disabled',
-                        message: !mfaEnabled ? 'Two-factor OTP authentication activated.' : 'MFA deactivated for your account.',
+                        title: !mfaEnabled ? t('settings.mfaEnabledToast', 'MFA Enabled') : t('settings.mfaDisabledToast', 'MFA Disabled'),
+                        message: !mfaEnabled ? t('settings.mfaEnabledToastMsg', 'Two-factor OTP authentication activated.') : t('settings.mfaDisabledToastMsg', 'MFA deactivated for your account.'),
                         type: !mfaEnabled ? 'success' : 'warning',
                       });
                     }}
@@ -967,12 +967,12 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {mfaEnabled && (
                   <div className="space-y-4 animate-in fade-in duration-200">
-                    <p className="text-xs font-extrabold text-[#0F172A]">Select Preferred OTP Delivery Method:</p>
+                    <p className="text-xs font-extrabold text-[#0F172A]">{t('settings.selectOtpMethod', 'Select Preferred OTP Delivery Method:')}</p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {[
-                        { id: 'sms', label: 'Phone SMS OTP', desc: `Send 6-digit code to +91 ${profile.phone}`, icon: Smartphone },
-                        { id: 'app', label: 'Authenticator App (TOTP)', desc: 'Google Authenticator or Microsoft Auth app', icon: ShieldCheck },
-                        { id: 'email', label: 'Email OTP', desc: `Send login OTP code to ${profile.email}`, icon: Key },
+                        { id: 'sms', label: t('settings.otpSms', 'Phone SMS OTP'), desc: `${t('settings.otpSmsDesc', 'Send 6-digit code to')} +91 ${profile.phone}`, icon: Smartphone },
+                        { id: 'app', label: t('settings.otpApp', 'Authenticator App (TOTP)'), desc: t('settings.otpAppDesc', 'Google Authenticator or Microsoft Auth app'), icon: ShieldCheck },
+                        { id: 'email', label: t('settings.otpEmail', 'Email OTP'), desc: `${t('settings.otpEmailDesc', 'Send login OTP code to')} ${profile.email}`, icon: Key },
                       ].map(({ id, label, desc, icon: Icon }) => (
                         <div
                           key={id}
@@ -1003,15 +1003,15 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
                 <div className="flex items-center justify-between border-b border-[#E7ECF3] pb-4">
                   <div>
-                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Active Device Sessions</h3>
-                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">Manage active JWT tokens and logged-in hardware devices.</p>
+                    <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.activeSessionsTitle', 'Active Device Sessions')}</h3>
+                    <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.activeSessionsSubtitle', 'Manage active JWT tokens and logged-in hardware devices.')}</p>
                   </div>
 
                   <button
                     onClick={handleTerminateAllOtherSessions}
                     className="h-8 px-3 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-xs font-extrabold hover:bg-rose-600 hover:text-white transition-colors cursor-pointer"
                   >
-                    Terminate All Other Sessions
+                    {t('settings.terminateAllOtherSessions', 'Terminate All Other Sessions')}
                   </button>
                 </div>
 
@@ -1027,7 +1027,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                             <p className="text-xs font-black text-[#0F172A]">{s.device}</p>
                             {s.isCurrent && (
                               <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full border border-emerald-200">
-                                THIS DEVICE
+                                {t('settings.thisDevice', 'THIS DEVICE')}
                               </span>
                             )}
                           </div>
@@ -1042,7 +1042,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                           onClick={() => handleTerminateSession(s.id)}
                           className="h-8 px-3 rounded-full border border-rose-200 bg-white text-rose-600 text-xs font-extrabold hover:bg-rose-600 hover:text-white transition-colors cursor-pointer self-start sm:self-auto"
                         >
-                          Revoke Access
+                          {t('settings.revokeAccess', 'Revoke Access')}
                         </button>
                       )}
                     </div>
@@ -1058,19 +1058,19 @@ export default function SettingsLayout({ role = 'admin' }) {
           {(activeSection === 'notifications' || activeSection === 'all') && (
             <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
               <div className="border-b border-[#E7ECF3] pb-4">
-                <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Notification &amp; Alert Preferences</h3>
-                <p className="text-xs font-semibold text-[#64748B] mt-0.5">Configure operational alert channels, critical incident dispatches and intelligence digest emails.</p>
+                <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.notificationsTitle', 'Notification & Alert Preferences')}</h3>
+                <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.notificationsSubtitle', 'Configure operational alert channels, critical incident dispatches and intelligence digest emails.')}</p>
               </div>
 
               <div className="divide-y divide-[#E7ECF3]">
                 {[
-                  { key: 'emailAlerts', label: 'Email Notifications', desc: 'Receive official intelligence reports and audit activity summaries via email.' },
-                  { key: 'smsAlerts', label: 'SMS Security Alerts', desc: 'High-priority SMS alerts for urgent precinct incidents and password modifications.' },
-                  { key: 'criticalIncidents', label: 'Critical Incident Dispatch Alerts', desc: 'Real-time broadcast for major law & order events and emergency dispatches.' },
-                  { key: 'weeklyReports', label: 'Weekly Analytical Summary Digest', desc: 'Automated weekly crime trend graph statistics emailed every Monday.' },
-                  { key: 'systemMaintenance', label: 'System Maintenance Alerts', desc: 'Notifications regarding database backups, patch deployments, and server health.' },
-                  { key: 'pushNotifications', label: 'Push Notifications', desc: 'Desktop browser alert notifications when active on the platform.' },
-                  { key: 'instantAI', label: 'Instant AI Crime Pattern Alerts', desc: 'Predictive notifications when AI models detect emerging crime clusters.' },
+                  { key: 'emailAlerts', label: t('settings.emailAlerts', 'Email Notifications'), desc: t('settings.emailAlertsDesc', 'Receive official intelligence reports and audit activity summaries via email.') },
+                  { key: 'smsAlerts', label: t('settings.smsAlerts', 'SMS Security Alerts'), desc: t('settings.smsAlertsDesc', 'High-priority SMS alerts for urgent precinct incidents and password modifications.') },
+                  { key: 'criticalIncidents', label: t('settings.criticalIncidentsNotif', 'Critical Incident Dispatch Alerts'), desc: t('settings.criticalIncidentsNotifDesc', 'Real-time broadcast for major law & order events and emergency dispatches.') },
+                  { key: 'weeklyReports', label: t('settings.weeklyReportsNotif', 'Weekly Analytical Summary Digest'), desc: t('settings.weeklyReportsNotifDesc', 'Automated weekly crime trend graph statistics emailed every Monday.') },
+                  { key: 'systemMaintenance', label: t('settings.systemMaintenanceNotif', 'System Maintenance Alerts'), desc: t('settings.systemMaintenanceNotifDesc', 'Notifications regarding database backups, patch deployments, and server health.') },
+                  { key: 'pushNotifications', label: t('settings.pushAlerts', 'Push Notifications'), desc: t('settings.pushAlertsDesc', 'Desktop browser alert notifications when active on the platform.') },
+                  { key: 'instantAI', label: t('settings.instantAiNotif', 'Instant AI Crime Pattern Alerts'), desc: t('settings.instantAiNotifDesc', 'Predictive notifications when AI models detect emerging crime clusters.') },
                 ].map(({ key, label, desc }) => (
                   <div key={key} className="py-4 flex items-center justify-between">
                     <div>
@@ -1084,8 +1084,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                         const nextVal = !notifications[key];
                         setNotifications((prev) => ({ ...prev, [key]: nextVal }));
                         addToast({
-                          title: 'Preference Saved',
-                          message: `"${label}" set to ${nextVal ? 'ENABLED' : 'DISABLED'}.`,
+                          title: t('settings.prefSaved', 'Preference Saved'),
+                          message: `"${label}" set to ${nextVal ? t('settings.enabledStatus', 'ENABLED') : t('settings.disabledStatus', 'DISABLED')}.`,
                           type: 'success',
                         });
                       }}
@@ -1107,8 +1107,8 @@ export default function SettingsLayout({ role = 'admin' }) {
           {(activeSection === 'preferences' || activeSection === 'all') && (
             <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
               <div className="border-b border-[#E7ECF3] pb-4">
-                <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Application &amp; Workspace Preferences</h3>
-                <p className="text-xs font-semibold text-[#64748B] mt-0.5">Customize UI theme, default dashboard view, spatial map themes, and regional language.</p>
+                <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.workspacePrefs', 'Application & Workspace Preferences')}</h3>
+                <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.workspacePrefsDesc', 'Customize UI theme, default dashboard view, spatial map themes, and regional language.')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1145,8 +1145,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                   <label className="block text-xs font-extrabold text-[#0F172A] mb-2">{t('settings.language', 'Platform Language')}</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { id: 'en', label: 'English (UK/IN)' },
-                      { id: 'kn', label: 'Kannada (ಕನ್ನಡ)' },
+                      { id: 'en', label: t('settings.englishOption', 'English (UK/IN)') },
+                      { id: 'kn', label: t('settings.kannadaOption', 'Kannada (ಕನ್ನಡ)') },
                     ].map(({ id, label }) => (
                       <button
                         key={id}
@@ -1186,8 +1186,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                     onChange={(e) => setPreferences((p) => ({ ...p, timeFormat: e.target.value }))}
                     className="w-full h-10 px-4 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none cursor-pointer"
                   >
-                    <option value="24h">24 Hour (14:30 IST)</option>
-                    <option value="12h">12 Hour (02:30 PM IST)</option>
+                    <option value="24h">{t('settings.hour24', '24 Hour (14:30 IST)')}</option>
+                    <option value="12h">{t('settings.hour12', '12 Hour (02:30 PM IST)')}</option>
                   </select>
                 </div>
 
@@ -1199,9 +1199,9 @@ export default function SettingsLayout({ role = 'admin' }) {
                     onChange={(e) => setPreferences((p) => ({ ...p, mapTheme: e.target.value }))}
                     className="w-full h-10 px-4 rounded-[14px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs font-bold text-[#0F172A] focus:outline-none cursor-pointer"
                   >
-                    <option value="dark">Dark Tactical Base</option>
-                    <option value="satellite">High-Res Satellite Imagery</option>
-                    <option value="light">Light Standard Topographic</option>
+                    <option value="dark">{t('settings.mapDarkTactical', 'Dark Tactical Base')}</option>
+                    <option value="satellite">{t('settings.mapSatellite', 'High-Res Satellite Imagery')}</option>
+                    <option value="light">{t('settings.mapLightTopographic', 'Light Standard Topographic')}</option>
                   </select>
                 </div>
 
@@ -1239,36 +1239,36 @@ export default function SettingsLayout({ role = 'admin' }) {
               {/* Account Read-Only Information */}
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 shadow-sm space-y-4">
                 <div className="border-b border-[#E7ECF3] pb-3">
-                  <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Account Specifications &amp; Governance</h3>
+                  <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('settings.accountSpecs', 'Account Specifications & Governance')}</h3>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Employee ID</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.employeeId', 'Employee ID')}</p>
                     <p className="font-mono font-black text-[#0F172A] mt-0.5">EMP-98214</p>
                   </div>
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Badge Number</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.badgeNumber', 'Badge Number')}</p>
                     <p className="font-mono font-black text-[#0F172A] mt-0.5">{profile.badgeNumber}</p>
                   </div>
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Account Created</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.accountCreated', 'Account Created')}</p>
                     <p className="font-black text-[#0F172A] mt-0.5">15 Jan 2019</p>
                   </div>
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Account Status</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.accountStatus', 'Account Status')}</p>
                     <p className="font-black text-emerald-600 mt-0.5 flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      🟢 Online / Active
+                      {t('settings.onlineActive', '🟢 Online / Active')}
                     </p>
                   </div>
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Reporting Officer</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.reportingOfficer', 'Reporting Officer')}</p>
                     <p className="font-black text-[#0F172A] mt-0.5">DCP M. Gowda</p>
                   </div>
                   <div className="p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
-                    <p className="text-[10px] font-bold text-[#64748B] uppercase">Security Level</p>
-                    <p className="font-black text-[#0B1F4D] mt-0.5">Level 4 — High Clearance</p>
+                    <p className="text-[10px] font-bold text-[#64748B] uppercase">{t('settings.securityLevel', 'Security Level')}</p>
+                    <p className="font-black text-[#0B1F4D] mt-0.5">{t('settings.securityLevelVal', 'Level 4 — High Clearance')}</p>
                   </div>
                 </div>
               </div>
@@ -1276,15 +1276,15 @@ export default function SettingsLayout({ role = 'admin' }) {
               {/* Recent Security Activity Timeline */}
               <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 shadow-sm space-y-4">
                 <div className="border-b border-[#E7ECF3] pb-3">
-                  <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">Recent Account Activity</h3>
+                  <h3 className="text-xs font-black text-[#0F172A] uppercase tracking-wider">{t('settings.recentAccountActivity', 'Recent Account Activity')}</h3>
                 </div>
 
                 <div className="space-y-3">
                   {[
-                    { action: 'Profile Details Updated', time: 'Yesterday 04:20 PM', icon: User, color: 'text-sky-600 bg-sky-50' },
-                    { action: 'Password Changed', time: '5 Days Ago', icon: Lock, color: 'text-amber-600 bg-amber-50' },
-                    { action: 'Avatar Photo Updated', time: '2 Weeks Ago', icon: Camera, color: 'text-violet-600 bg-violet-50' },
-                    { action: 'Multi-Factor Authentication Enabled', time: 'Last Month', icon: ShieldCheck, color: 'text-emerald-600 bg-emerald-50' },
+                    { action: t('settings.actProfileUpdated', 'Profile Details Updated'), time: t('settings.timeYesterday', 'Yesterday 04:20 PM'), icon: User, color: 'text-sky-600 bg-sky-50' },
+                    { action: t('settings.actPasswordChanged', 'Password Changed'), time: t('settings.time5DaysAgo', '5 Days Ago'), icon: Lock, color: 'text-amber-600 bg-amber-50' },
+                    { action: t('settings.actAvatarUpdated', 'Avatar Photo Updated'), time: t('settings.time2WeeksAgo', '2 Weeks Ago'), icon: Camera, color: 'text-violet-600 bg-violet-50' },
+                    { action: t('settings.actMfaEnabled', 'Multi-Factor Authentication Enabled'), time: t('settings.timeLastMonth', 'Last Month'), icon: ShieldCheck, color: 'text-emerald-600 bg-emerald-50' },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between p-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px]">
                       <div className="flex items-center gap-3">
@@ -1297,7 +1297,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                         </div>
                       </div>
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                        Verified
+                        {t('settings.verifiedBadge', 'Verified')}
                       </span>
                     </div>
                   ))}
@@ -1314,8 +1314,8 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="flex items-center gap-3 text-rose-700 border-b border-rose-200 pb-4">
                 <AlertTriangle className="w-5 h-5 shrink-0" />
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider">Danger Zone</h3>
-                  <p className="text-xs font-semibold text-rose-600 mt-0.5">IRREVERSIBLE ACCOUNT ACTIONS — Require confirmation.</p>
+                  <h3 className="text-sm font-black uppercase tracking-wider">{t('settings.dangerZoneTitle', 'Danger Zone')}</h3>
+                  <p className="text-xs font-semibold text-rose-600 mt-0.5">{t('settings.dangerZoneDesc', 'IRREVERSIBLE ACCOUNT ACTIONS — Require confirmation.')}</p>
                 </div>
               </div>
 
@@ -1325,8 +1325,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                   onClick={() => setDangerModalAction('deactivate')}
                   className="p-4 rounded-[18px] bg-white border border-rose-200 hover:bg-rose-500 hover:text-white transition-all text-left text-rose-700 cursor-pointer group shadow-xs"
                 >
-                  <p className="text-xs font-black group-hover:text-white">Deactivate Account</p>
-                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">Temporarily disable platform access and session tokens.</p>
+                  <p className="text-xs font-black group-hover:text-white">{t('settings.deactivateAccount', 'Deactivate Account')}</p>
+                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">{t('settings.deactivateAccountDesc', 'Temporarily disable platform access and session tokens.')}</p>
                 </button>
 
                 <button
@@ -1334,8 +1334,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                   onClick={() => setDangerModalAction('delete')}
                   className="p-4 rounded-[18px] bg-white border border-rose-200 hover:bg-rose-600 hover:text-white transition-all text-left text-rose-700 cursor-pointer group shadow-xs"
                 >
-                  <p className="text-xs font-black group-hover:text-white">Request Account Deletion</p>
-                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">Submit permanent account purge request to Headquarters IAM team.</p>
+                  <p className="text-xs font-black group-hover:text-white">{t('settings.requestDeletion', 'Request Account Deletion')}</p>
+                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">{t('settings.requestDeletionDesc', 'Submit permanent account purge request to Headquarters IAM team.')}</p>
                 </button>
 
                 <button
@@ -1343,8 +1343,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                   onClick={() => setDangerModalAction('logout_all')}
                   className="p-4 rounded-[18px] bg-white border border-rose-200 hover:bg-rose-500 hover:text-white transition-all text-left text-rose-700 cursor-pointer group shadow-xs"
                 >
-                  <p className="text-xs font-black group-hover:text-white">Sign Out From All Devices</p>
-                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">Revoke all active bearer tokens across web and mobile platforms.</p>
+                  <p className="text-xs font-black group-hover:text-white">{t('settings.signOutAllDevices', 'Sign Out From All Devices')}</p>
+                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">{t('settings.signOutAllDevicesDesc', 'Revoke all active bearer tokens across web and mobile platforms.')}</p>
                 </button>
 
                 <button
@@ -1352,8 +1352,8 @@ export default function SettingsLayout({ role = 'admin' }) {
                   onClick={() => setDangerModalAction('reset_prefs')}
                   className="p-4 rounded-[18px] bg-white border border-rose-200 hover:bg-rose-500 hover:text-white transition-all text-left text-rose-700 cursor-pointer group shadow-xs"
                 >
-                  <p className="text-xs font-black group-hover:text-white">Reset All Preferences</p>
-                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">Restore all notification settings and UI preferences to defaults.</p>
+                  <p className="text-xs font-black group-hover:text-white">{t('settings.resetAllPreferences', 'Reset All Preferences')}</p>
+                  <p className="text-[10px] font-semibold text-rose-600 group-hover:text-white/80 mt-1">{t('settings.resetAllPreferencesDesc', 'Restore all notification settings and UI preferences to defaults.')}</p>
                 </button>
               </div>
             </div>
@@ -1370,7 +1370,7 @@ export default function SettingsLayout({ role = 'admin' }) {
             <div className="px-6 py-4 bg-[#0B1F4D] text-white flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Camera className="w-5 h-5 text-[#C79A2B]" />
-                <h3 className="text-sm font-black tracking-tight text-white">Crop Profile Photo</h3>
+                <h3 className="text-sm font-black tracking-tight text-white">{t('settings.cropModalTitle', 'Crop Profile Photo')}</h3>
               </div>
               <button
                 onClick={() => setCropModalOpen(false)}
@@ -1390,7 +1390,7 @@ export default function SettingsLayout({ role = 'admin' }) {
               <div className="w-full space-y-3 pt-2 text-white">
                 {/* Zoom Slider */}
                 <div className="flex items-center justify-between gap-4 text-xs">
-                  <span className="font-bold flex items-center gap-1.5"><ZoomOut className="w-3.5 h-3.5" /> Zoom</span>
+                  <span className="font-bold flex items-center gap-1.5"><ZoomOut className="w-3.5 h-3.5" /> {t('settings.zoom', 'Zoom')}</span>
                   <input
                     type="range"
                     min="0.5"
@@ -1405,7 +1405,7 @@ export default function SettingsLayout({ role = 'admin' }) {
 
                 {/* Rotation Controls */}
                 <div className="flex items-center justify-between gap-3 text-xs pt-1">
-                  <span className="font-bold">Rotation:</span>
+                  <span className="font-bold">{t('settings.rotation', 'Rotation:')}</span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -1426,7 +1426,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                       onClick={() => { setZoom(1); setRotation(0); }}
                       className="h-8 px-3 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-bold cursor-pointer"
                     >
-                      Reset
+                      {t('settings.reset', 'Reset')}
                     </button>
                   </div>
                 </div>
@@ -1439,7 +1439,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                 onClick={() => setCropModalOpen(false)}
                 className="h-9 px-5 rounded-full border border-[#E7ECF3] text-xs font-extrabold text-[#64748B] hover:bg-[#E7ECF3] cursor-pointer"
               >
-                Cancel
+                {t('settings.cancel', 'Cancel')}
               </button>
 
               <button
@@ -1447,7 +1447,7 @@ export default function SettingsLayout({ role = 'admin' }) {
                 className="h-9 px-6 rounded-full bg-[#0B1F4D] text-white font-extrabold text-xs hover:bg-[#0F2A6B] transition-colors shadow-sm cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4 text-[#C79A2B]" />
-                Apply &amp; Save Avatar
+                {t('settings.applyAvatar', 'Apply & Save Avatar')}
               </button>
             </div>
           </div>
@@ -1463,19 +1463,20 @@ export default function SettingsLayout({ role = 'admin' }) {
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-black text-[#0F172A]">Confirm Dangerous Action</h3>
-                <p className="text-xs text-[#64748B]">Karnataka Police IAM Security Protocol</p>
+                <h3 className="text-sm font-black text-[#0F172A]">{t('settings.confirmDangerousAction', 'Confirm Dangerous Action')}</h3>
+                <p className="text-xs text-[#64748B]">{t('settings.iamProtocol', 'Karnataka Police IAM Security Protocol')}</p>
               </div>
             </div>
 
             <p className="text-xs font-medium text-[#64748B] leading-relaxed">
-              Are you sure you want to proceed with{' '}
+              {t('settings.confirmActionMsg', 'Are you sure you want to proceed with')}{' '}
               <strong className="text-[#0F172A]">
-                {dangerModalAction === 'deactivate' ? 'Account Deactivation' :
-                 dangerModalAction === 'delete' ? 'Permanent Account Deletion' :
-                 dangerModalAction === 'logout_all' ? 'Signing Out All Devices' :
-                 'Resetting Preferences to Factory Defaults'}
-              </strong>? This action will take effect immediately.
+                {dangerModalAction === 'deactivate' ? t('settings.deactivateAccount', 'Account Deactivation') :
+                 dangerModalAction === 'delete' ? t('settings.requestDeletion', 'Permanent Account Deletion') :
+                 dangerModalAction === 'logout_all' ? t('settings.signOutAllDevices', 'Signing Out All Devices') :
+                 t('settings.resetAllPreferences', 'Resetting Preferences to Factory Defaults')}
+              </strong>
+              {t('settings.immediateEffect', '? This action will take effect immediately.')}
             </p>
 
             <div className="flex justify-end gap-3 pt-2">
@@ -1483,14 +1484,14 @@ export default function SettingsLayout({ role = 'admin' }) {
                 onClick={() => setDangerModalAction(null)}
                 className="h-9 px-4 rounded-full border border-[#E7ECF3] text-xs font-bold text-[#64748B] hover:bg-[#F8F9FB] cursor-pointer"
               >
-                Cancel
+                {t('settings.cancel', 'Cancel')}
               </button>
 
               <button
                 onClick={handleConfirmDangerAction}
                 className="h-9 px-5 rounded-full bg-rose-600 text-white text-xs font-extrabold hover:bg-rose-700 shadow-sm cursor-pointer"
               >
-                Confirm Action
+                {t('settings.confirmAction', 'Confirm Action')}
               </button>
             </div>
           </div>

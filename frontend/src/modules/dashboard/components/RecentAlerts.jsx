@@ -7,21 +7,24 @@ import { useTranslation } from '../../../i18n';
 const typeStyles = {
   critical: {
     badge: 'bg-red-100 text-red-700 border-red-200',
-    label: 'High Severity',
+    labelKey: 'feed.highSeverity',
+    defaultLabel: 'High Severity',
     iconClass: 'text-red-700 bg-red-100 border-red-200',
     cardClass: 'bg-[#FEF2F2] border-[#E7EAF0] border-l-red-500 border-l-4 hover:border-l-red-600',
     Icon: Zap
   },
   warning: {
     badge: 'bg-amber-100 text-amber-700 border-amber-200',
-    label: 'Medium Severity',
+    labelKey: 'feed.mediumSeverity',
+    defaultLabel: 'Medium Severity',
     iconClass: 'text-amber-700 bg-amber-100 border-amber-200',
     cardClass: 'bg-[#FFF8E7] border-[#E7EAF0] border-l-[#C79A2B] border-l-4 hover:border-l-[#B45309]',
     Icon: AlertCircle
   },
   info: {
     badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    label: 'Low Severity',
+    labelKey: 'feed.lowSeverity',
+    defaultLabel: 'Low Severity',
     iconClass: 'text-emerald-700 bg-emerald-100 border-emerald-200',
     cardClass: 'bg-[#F0FDF4] border-[#E7EAF0] border-l-emerald-500 border-l-4 hover:border-l-emerald-600',
     Icon: Info
@@ -40,13 +43,13 @@ export default function RecentAlerts({ data }) {
             <Zap className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-[14px] font-extrabold text-[#0F172A] tracking-tight">{t('dashboard.securityAlerts', 'Security Alerts')}</h3>
-            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{t('dashboard.alertsSubtitle', 'Automated AI anomaly feed')}</p>
+            <h3 className="text-[14px] font-extrabold text-[#0F172A] tracking-tight">{t('feed.securityAlertsTitle', 'Security Alerts')}</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{t('feed.aiAnomalyFeed', 'Automated AI anomaly feed')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button className="text-[10px] font-bold text-[#1E3A8A] hover:text-[#0F172A] hover:underline transition-colors shrink-0 uppercase tracking-widest">
-            {t('dashboard.viewAll', 'View All')}
+          <button className="text-[10px] font-bold text-[#1E3A8A] hover:text-[#0F172A] hover:underline transition-colors shrink-0 uppercase tracking-widest cursor-pointer">
+            {t('feed.viewAll', 'View All')}
           </button>
           <span className="text-[10px] font-extrabold text-white bg-red-600 px-2 py-0.5 rounded-full shadow-sm shrink-0" title="Total active anomalies">
             {data?.length || 0}
@@ -81,7 +84,7 @@ export default function RecentAlerts({ data }) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <span className={`border ${cfg.badge} py-0.5 px-2 rounded-full text-[9px] font-bold uppercase tracking-wider`}>
-                        {cfg.label}
+                        {t(cfg.labelKey, cfg.defaultLabel)}
                       </span>
                       <span className="text-[10px] text-slate-500 font-semibold shrink-0">
                         {alert.time}
@@ -105,3 +108,4 @@ export default function RecentAlerts({ data }) {
     </div>
   );
 }
+

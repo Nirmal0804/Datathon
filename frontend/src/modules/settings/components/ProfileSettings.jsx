@@ -18,7 +18,7 @@ export default function ProfileSettings() {
     <div className="space-y-6">
       {/* Avatar */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h3 className="text-base font-semibold text-white mb-5">{t('settings.profile', 'Personal Identity')}</h3>
+        <h3 className="text-base font-semibold text-white mb-5">{t('settings.personalIdentity', 'Personal Identity')}</h3>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <div className="relative group">
             <div className="w-20 h-20 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center text-2xl font-bold text-white">
@@ -34,7 +34,7 @@ export default function ProfileSettings() {
               <Badge className="w-4 h-4" /> {form.badge} • {form.rank}
             </p>
             <button className="mt-3 text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-slate-300 transition-colors">
-              {t('settings.profile', 'Upload Photo')}
+              {t('settings.uploadNewPhoto', 'Upload Photo')}
             </button>
           </div>
         </div>
@@ -42,16 +42,16 @@ export default function ProfileSettings() {
 
       {/* Details Form */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h3 className="text-base font-semibold text-white mb-5">{t('settings.profile', 'Profile Details')}</h3>
+        <h3 className="text-base font-semibold text-white mb-5">{t('settings.departmentCredentials', 'Profile Details')}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {[
-            { label: t('settings.name', 'Full Name'), key: 'name' },
+            { label: t('settings.fullName', 'Full Name'), key: 'name' },
             { label: t('settings.badgeNumber', 'Badge Number'), key: 'badge' },
-            { label: t('settings.role', 'Rank / Designation'), key: 'rank' },
+            { label: t('settings.rank', 'Rank / Designation'), key: 'rank' },
             { label: t('settings.email', 'Official Email'), key: 'email' },
             { label: t('settings.phone', 'Contact Number'), key: 'phone' },
-            { label: t('settings.district', 'Assigned District'), key: 'district' },
-            { label: t('settings.role', 'Department'), key: 'department' },
+            { label: t('settings.assignedDistrict', 'Assigned District'), key: 'district' },
+            { label: t('settings.department', 'Department'), key: 'department' },
           ].map(field => (
             <div key={field.key} className={field.key === 'department' ? 'sm:col-span-2' : ''}>
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{field.label}</label>
@@ -73,3 +73,4 @@ export default function ProfileSettings() {
     </div>
   );
 }
+

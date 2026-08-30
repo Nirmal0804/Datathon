@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldAlert, MapPin, Brain, Briefcase, Settings, AlertTriangle, ShieldCheck, User } from 'lucide-react';
 import { useNotification } from '../../../context/NotificationContext';
+import { useTranslation } from '../../../i18n';
 
 const getPriorityColor = (priority) => {
   switch (priority) {
@@ -24,21 +25,32 @@ const getIcon = (type) => {
   }
 };
 
-const getActionLabel = (type) => {
-  switch (type) {
-    case 'alert':   return 'View Intelligence';
-    case 'hotspot': return 'Open Crime Map';
-    case 'ai':      return 'View Forecast';
-    case 'case':    return 'Open Case';
-    case 'system':  return 'System Status';
-    case 'user':    return 'View Activity';
-    default:        return 'View Details';
-  }
-};
-
 export default function NotificationCard({ notification }) {
+  const { t } = useTranslation();
   const { markAsRead } = useNotification();
   const { id, type, priority, title, desc, time, read, location } = notification;
+
+  const getActionLabel = (type) => {
+    switch (type) {
+      case 'alert':   return t('feed.viewIntelligence', 'View Intelligence');
+      case 'hotspot': return t('feed.openCrimeMap', 'Open Crime Map');
+      case 'ai':      return t('feed.viewForecast', 'View Forecast');
+      case 'case':    return t('cases.openCase', 'Open Case');
+      case 'system':  return t('feed.systemStatus', 'System Status');
+      case 'user':    return t('feed.viewActivity', 'View Activity');
+      default:        return t('feed.viewDetails', 'View Details');
+    }
+  };
+
+  const getLocalizedPriority = (p) => {
+    switch (p) {
+      case 'Critical': return t('feed.critical', 'Critical');
+      case 'High':     return t('feed.high', 'High');
+      case 'Medium':   return t('feed.medium', 'Medium');
+      case 'Low':      return t('feed.low', 'Low');
+      default:         return p;
+    }
+  };
 
   return (
     <div 
@@ -61,7 +73,7 @@ export default function NotificationCard({ notification }) {
           <div className="flex justify-between items-start gap-2">
             <h4 className="text-sm font-bold text-[#0F172A] truncate group-hover:text-[#0B1F4D] transition-colors">{title}</h4>
             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${getPriorityColor(priority)}`}>
-              {priority}
+              {getLocalizedPriority(priority)}
             </span>
           </div>
           
@@ -74,7 +86,7 @@ export default function NotificationCard({ notification }) {
               {time} • {location}
             </span>
             
-            <button className="text-[11px] font-bold text-[#0B1F4D] hover:text-[#C79A2B] transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100">
+            <button className="text-[11px] font-bold text-[#0B1F4D] hover:text-[#C79A2B] transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100 cursor-pointer">
               {getActionLabel(type)}
               <span aria-hidden="true">&rarr;</span>
             </button>
@@ -84,3 +96,4 @@ export default function NotificationCard({ notification }) {
     </div>
   );
 }
+

@@ -174,7 +174,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
           <thead>
             <tr className="sticky top-0 bg-[#F8F9FB] z-10 border-b border-[#E7ECF3]">
               {[
-                { label: 'Case ID', field: 'id' },
+                { label: t('cases.firId', 'Case ID'), field: 'id' },
                 { label: t('cases.classification', 'Category'), field: 'category' },
                 { label: t('cases.jurisdiction', 'Jurisdiction'), field: 'district' },
                 { label: t('cases.loggedDate', 'Date Logged'), field: 'rawDate' },
@@ -205,7 +205,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   <EmptyState
                     type={searchQuery ? 'search' : 'filters'}
                     onAction={searchQuery ? () => setSearchQuery('') : null}
-                    actionLabel="Clear Search"
+                    actionLabel={t('cases.resetFilters', 'Clear Search')}
                   />
                 </td>
               </tr>
@@ -227,12 +227,14 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   </td>
                   <td className="px-6 py-3.5 align-middle text-xs font-medium text-[#64748B]">{formatDate(row.rawDate || row.date)}</td>
                   <td className="px-6 py-3.5 align-middle">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-bold text-[11px] ${riskBadge(row.risk)}`}>{row.risk}</span>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-bold text-[11px] ${riskBadge(row.risk)}`}>
+                      {row.risk === 'Critical' ? t('common.critical', 'Critical') : row.risk === 'High' ? t('common.high', 'High') : row.risk === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
+                    </span>
                   </td>
                   <td className="px-6 py-3.5 align-middle">
                     <span className="inline-flex items-center gap-2 text-xs text-[#0F172A] font-bold">
                       <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[row.id] || row.status)}`} />
-                      {caseStatuses[row.id] || row.status}
+                      {(caseStatuses[row.id] || row.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[row.id] || row.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[row.id] || row.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[row.id] || row.status)}
                     </span>
                   </td>
                   <td className="px-6 py-3.5 align-middle text-right" onClick={(e) => e.stopPropagation()}>
@@ -258,23 +260,23 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                             {/* Open Case */}
                             <button
                               onClick={(e) => handleCaseAction(e, row.id, 'open')}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left"
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left cursor-pointer"
                             >
                               <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center">
                                 <FolderOpen className="w-3.5 h-3.5 text-blue-600" />
                               </div>
-                              Open Case
+                              {t('cases.openCase', 'Open Case')}
                             </button>
 
                             {/* Investigate */}
                             <button
                               onClick={(e) => handleCaseAction(e, row.id, 'investigate')}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left"
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#0B1F4D] hover:bg-[#F8F9FB] transition-colors text-left cursor-pointer"
                             >
                               <div className="w-6 h-6 rounded-lg bg-amber-50 flex items-center justify-center">
                                 <SearchIcon className="w-3.5 h-3.5 text-amber-600" />
                               </div>
-                              Investigate
+                              {t('cases.investigate', 'Investigate')}
                             </button>
 
                             {/* Divider */}
@@ -283,12 +285,12 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                             {/* Close Case */}
                             <button
                               onClick={(e) => handleCaseAction(e, row.id, 'close')}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left"
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left cursor-pointer"
                             >
                               <div className="w-6 h-6 rounded-lg bg-red-50 flex items-center justify-center">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-red-500" />
                               </div>
-                              Close Case
+                              {t('cases.closeCase', 'Close Case')}
                             </button>
                           </motion.div>
                         )}
@@ -305,7 +307,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
       {/* 6. Improved Pagination Footer */}
       <div className="flex items-center justify-between px-6 sm:px-8 py-4 border-t border-[#E7ECF3] bg-[#F8F9FB]/40 shrink-0 rounded-b-[24px]">
         <p className="text-xs font-semibold text-[#64748B]">
-          Showing <span className="font-extrabold text-[#0F172A]">{sortedCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, sortedCases.length)}</span> of <span className="font-extrabold text-[#0F172A]">{sortedCases.length}</span> records
+          {t('cases.showing', 'Showing')} <span className="font-extrabold text-[#0F172A]">{sortedCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> {t('cases.showingTo', 'to')} <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, sortedCases.length)}</span> {t('cases.showingOf', 'of')} <span className="font-extrabold text-[#0F172A]">{sortedCases.length}</span> {t('dashboard.records', 'records')}
         </p>
         <div className="flex items-center gap-2">
           <button
@@ -313,17 +315,17 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
             disabled={currentPage === 1}
             className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
           >
-            Prev
+            {t('cases.previous', 'Previous')}
           </button>
           <div className="px-3 text-xs font-bold text-[#0F172A]">
-            Page {currentPage} of {totalPages}
+            {t('cases.page', 'Page')} {currentPage} {t('cases.showingOf', 'of')} {totalPages}
           </div>
           <button
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
             className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
           >
-            Next
+            {t('cases.next', 'Next')}
           </button>
         </div>
       </div>
@@ -361,7 +363,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   </div>
                   <div>
                     <h4 className="text-xl font-extrabold text-white font-mono tracking-tight">{selectedCase.id}</h4>
-                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mt-1">Case Intelligence Brief</p>
+                    <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest mt-1">{t('cases.caseDetailsTitle', 'Case Intelligence Brief')}</p>
                   </div>
                 </div>
                 <button
@@ -377,24 +379,26 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                 {/* Meta details */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-[#F7F8FA] p-5 rounded-2xl border border-[#E7EAF0]">
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Classification</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.classification', 'Classification')}</span>
                     <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{selectedCase.category}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Jurisdiction</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.jurisdiction', 'Jurisdiction')}</span>
                     <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{selectedCase.policeStation}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Logged Date</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.loggedDate', 'Logged Date')}</span>
                     <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{formatDate(selectedCase.rawDate || selectedCase.date)}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Risk / Status</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.statusRisk', 'AI Risk / Status')}</span>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className={`badge ${riskBadge(selectedCase.risk)} py-0 px-2`}>{selectedCase.risk}</span>
+                      <span className={`badge ${riskBadge(selectedCase.risk)} py-0 px-2`}>
+                        {selectedCase.risk === 'Critical' ? t('common.critical', 'Critical') : selectedCase.risk === 'High' ? t('common.high', 'High') : selectedCase.risk === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
+                      </span>
                       <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A]">
                         <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[selectedCase.id] || selectedCase.status)} shadow-sm`} />
-                        {caseStatuses[selectedCase.id] || selectedCase.status}
+                        {(caseStatuses[selectedCase.id] || selectedCase.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[selectedCase.id] || selectedCase.status)}
                       </span>
                     </div>
                   </div>
@@ -407,7 +411,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                       <User className="w-6 h-6" />
                     </div>
                     <div>
-                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Investigator</span>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.investigatingOfficer', 'Investigator')}</span>
                       <span className="text-[14px] font-extrabold text-[#0F172A] mt-0.5 block">{selectedCase.details.officer}</span>
                     </div>
                   </div>
@@ -416,7 +420,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                       <FileText className="w-6 h-6" />
                     </div>
                     <div>
-                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Penal Code</span>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('fir.penalCode', 'Penal Code')}</span>
                       <span className="text-[14px] font-extrabold text-[#0F172A] font-mono mt-0.5 block">{selectedCase.details.section}</span>
                     </div>
                   </div>
@@ -424,7 +428,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
 
                 {/* Narrative Summary */}
                 <div className="space-y-3">
-                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Case Incident Narrative</h5>
+                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('cases.narrativeSummary', 'Case Incident Narrative')}</h5>
                   <p className="text-[13px] text-slate-600 font-medium leading-relaxed bg-[#F7F8FA] p-5 rounded-2xl border border-[#E7EAF0]">
                     {selectedCase.details.summary}
                   </p>
@@ -432,7 +436,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
 
                 {/* Timeline */}
                 <div className="space-y-4">
-                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Historical System Logs</h5>
+                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{t('cases.historicalLogs', 'Historical System Logs')}</h5>
                   <div className="relative border-l-2 border-[#E7EAF0] ml-3 space-y-6">
                     {selectedCase.details.timeline.map((item, idx) => (
                       <div key={idx} className="relative pl-6">
@@ -474,28 +478,28 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'open')}
                     className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs hover:bg-blue-100 transition-colors cursor-pointer"
                   >
-                    <FolderOpen className="w-3.5 h-3.5" /> Open
+                    <FolderOpen className="w-3.5 h-3.5" /> {t('cases.startReopen', 'Open')}
                   </button>
                   {/* Investigate */}
                   <button
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'investigate')}
                     className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-amber-50 border border-amber-200 text-amber-700 font-bold text-xs hover:bg-amber-100 transition-colors cursor-pointer"
                   >
-                    <SearchIcon className="w-3.5 h-3.5" /> Investigate
+                    <SearchIcon className="w-3.5 h-3.5" /> {t('cases.investigate', 'Investigate')}
                   </button>
                   {/* Close Case */}
                   <button
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'close')}
                     className="flex items-center gap-2 h-9 px-4 rounded-[12px] bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors cursor-pointer"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Close Case
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {t('cases.closeCase', 'Close Case')}
                   </button>
                   {/* Dismiss */}
                   <button
                     onClick={() => setSelectedCase(null)}
                     className="h-9 px-4 rounded-[12px] bg-[#0B1F4D] text-white font-bold text-xs hover:bg-[#0B1F4D]/90 transition-colors cursor-pointer"
                   >
-                    Dismiss
+                    {t('common.close', 'Dismiss')}
                   </button>
                 </div>
               </div>

@@ -1,7 +1,10 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, Minus, Activity, Target } from 'lucide-react';
+import { TrendingUp, Minus, Activity } from 'lucide-react';
+import { useTranslation } from '../../../i18n';
 
 export default function TrendBadge({ trend }) {
+  const { t } = useTranslation();
+
   if (trend === 'Critical Spike') {
     return (
       <span 
@@ -9,7 +12,7 @@ export default function TrendBadge({ trend }) {
         className="inline-flex items-center gap-1 text-[10px] font-bold text-[#B91C1C] bg-[#B91C1C]/10 px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse-soft cursor-help"
       >
         <TrendingUp className="w-3 h-3" />
-        <span>Critical Spike</span>
+        <span>{t('hotspots.criticalSpike', 'Critical Spike')}</span>
       </span>
     );
   }
@@ -21,7 +24,7 @@ export default function TrendBadge({ trend }) {
         className="inline-flex items-center gap-1 text-[10px] font-bold text-[#B45309] bg-[#B45309]/10 px-2 py-0.5 rounded-full uppercase tracking-wider cursor-help"
       >
         <TrendingUp className="w-3 h-3" />
-        <span>Escalating</span>
+        <span>{t('hotspots.escalating', 'Escalating')}</span>
       </span>
     );
   }
@@ -33,7 +36,7 @@ export default function TrendBadge({ trend }) {
         className="inline-flex items-center gap-1 text-[10px] font-bold text-[#C79A2B] bg-[#C79A2B]/10 px-2 py-0.5 rounded-full uppercase tracking-wider cursor-help"
       >
         <Activity className="w-3 h-3" />
-        <span>Seasonal</span>
+        <span>{t('hotspots.seasonal', 'Seasonal')}</span>
       </span>
     );
   }
@@ -45,7 +48,7 @@ export default function TrendBadge({ trend }) {
         className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0B1F4D] bg-[#0B1F4D]/10 px-2 py-0.5 rounded-full uppercase tracking-wider cursor-help"
       >
         <TrendingUp className="w-3 h-3" />
-        <span>Increasing</span>
+        <span>{t('hotspots.increasing', 'Increasing')}</span>
       </span>
     );
   }
@@ -57,7 +60,7 @@ export default function TrendBadge({ trend }) {
       className="inline-flex items-center gap-1 text-[10px] font-bold text-[#15803D] bg-[#15803D]/10 px-2 py-0.5 rounded-full uppercase tracking-wider cursor-help"
     >
       <Minus className="w-3 h-3" />
-      <span>Stable</span>
+      <span>{t('hotspots.stable', 'Stable')}</span>
     </span>
   );
 }

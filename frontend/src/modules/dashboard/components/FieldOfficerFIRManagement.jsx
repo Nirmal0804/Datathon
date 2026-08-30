@@ -149,13 +149,13 @@ export default function FieldOfficerFIRManagement() {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('fir.title', 'FIR Management')}</h2>
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">{t('fir.managementTitle', 'FIR Management')}</h2>
               <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] sm:text-xs">
-                {localCases.length} {t('fir.statusActive', 'Active Records')}
+                {localCases.length} {t('fir.activeRecords', 'Active Records')}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#64748B] mt-0.5">
-              {t('fir.subtitle', 'Register new incident complaints and view precinct intake logs.')}
+              {t('fir.managementSubtitle', 'Register new incident complaints and view precinct intake logs.')}
             </p>
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function FieldOfficerFIRManagement() {
         <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-end">
           <div className="hidden md:flex items-center gap-2 bg-[#F0FDF4] border border-[#DCFCE7] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#166534]">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>{t('cases.dutyStatus', 'Duty Status: Active On-Field')}</span>
+            <span>{t('officer.dutyStatus', 'Duty Status')}: {t('officer.activeOnField', 'Active On-Field')}</span>
           </div>
 
           <button 
@@ -171,7 +171,7 @@ export default function FieldOfficerFIRManagement() {
             className="w-full sm:w-auto h-9 sm:h-10 px-4 sm:px-5 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4 text-[#C79A2B]" />
-            <span>{t('fir.registerNew', 'Register New FIR')}</span>
+            <span>{t('fir.registerNewFIR', 'Register New FIR')}</span>
           </button>
         </div>
       </div>
@@ -180,7 +180,7 @@ export default function FieldOfficerFIRManagement() {
       <div className="bg-white border border-[#E7ECF3] rounded-[20px] sm:rounded-[24px] p-4 sm:p-7 md:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7ECF3] pb-5">
           <div className="flex items-center gap-3">
-            <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('fir.title', 'Precinct FIR Records')}</h3>
+            <h3 className="text-base font-black text-[#0F172A] tracking-tight">{t('fir.precinctFIRRecords', 'Precinct FIR Records')}</h3>
             <span className="bg-[#0B1F4D]/10 text-[#0B1F4D] border border-[#0B1F4D]/20 px-2.5 py-0.5 rounded-full font-extrabold text-xs">
               {filteredCases.length} {t('dashboard.records', 'Records')}
             </span>
@@ -191,7 +191,7 @@ export default function FieldOfficerFIRManagement() {
             <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search FIR number, category, station..."
+              placeholder={t('fir.searchPlaceholder', 'Search FIR number, category, station...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-10 sm:h-11 pl-10 pr-8 bg-[#F8F9FB] border border-[#E7ECF3] text-[#0F172A] text-xs font-semibold rounded-[14px] sm:rounded-[16px] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all placeholder:text-slate-400 font-sans"
@@ -212,10 +212,10 @@ export default function FieldOfficerFIRManagement() {
           {paginatedCases.length === 0 ? (
             <EmptyState
               type={searchQuery ? 'search' : 'filters'}
-              title="No FIR Records Found"
-              message="No precinct FIR records match your active search or filter criteria."
-              onAction={() => { setSearchQuery(''); setStatusFilter('All'); setCategoryFilter('All'); }}
-              actionLabel="Reset Filters"
+              title={t('fir.noRecordsFound', 'No FIR Records Found')}
+              message={t('fir.noRecordsMatch', 'No precinct FIR records match your active search or filter criteria.')}
+              onAction={() => { setSearchQuery(''); }}
+              actionLabel={t('cases.resetFilters', 'Reset Filters')}
             />
           ) : (
             paginatedCases.map(c => {
@@ -244,11 +244,11 @@ export default function FieldOfficerFIRManagement() {
                   {/* Right: Risk Badge, Status Badge & Chevron */}
                   <div className="flex items-center gap-3 self-end sm:self-auto">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-xs ${riskBadgeClass(c.risk)}`}>
-                      {c.risk}
+                      {c.risk === 'Critical' ? t('common.critical', 'Critical') : c.risk === 'High' ? t('common.high', 'High') : c.risk === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
                     </span>
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-xs ${statusBadgeClass(currentStatus)}`}>
                       <span className={`w-2 h-2 rounded-full ${statusDotClass(currentStatus)}`} />
-                      {currentStatus}
+                      {currentStatus === 'Active' ? t('cases.statusActive', 'Active') : currentStatus === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : currentStatus === 'Closed' ? t('cases.statusClosed', 'Closed') : currentStatus}
                     </span>
                     <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 group-hover:text-[#0B1F4D] transition-all ml-1" />
                   </div>
@@ -261,7 +261,7 @@ export default function FieldOfficerFIRManagement() {
         {/* 10. Clean Pagination Footer */}
         <div className="flex items-center justify-between px-2 pt-4 border-t border-[#E7ECF3]">
           <p className="text-xs font-semibold text-[#64748B]">
-            Showing <span className="font-extrabold text-[#0F172A]">{filteredCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, filteredCases.length)}</span> of <span className="font-extrabold text-[#0F172A]">{filteredCases.length}</span> records
+            {t('cases.showing', 'Showing')} <span className="font-extrabold text-[#0F172A]">{filteredCases.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> {t('cases.showingTo', 'to')} <span className="font-extrabold text-[#0F172A]">{Math.min(currentPage * itemsPerPage, filteredCases.length)}</span> {t('cases.showingOf', 'of')} <span className="font-extrabold text-[#0F172A]">{filteredCases.length}</span> {t('dashboard.records', 'records')}
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -269,17 +269,17 @@ export default function FieldOfficerFIRManagement() {
               disabled={currentPage === 1}
               className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
             >
-              Previous
+              {t('cases.previous', 'Previous')}
             </button>
             <div className="px-3 text-xs font-bold text-[#0F172A]">
-              Page {currentPage} of {totalPages}
+              {t('cases.page', 'Page')} {currentPage} {t('cases.showingOf', 'of')} {totalPages}
             </div>
             <button
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
               className="h-9 px-4 rounded-[12px] bg-white border border-[#E7ECF3] font-bold text-xs text-[#0F172A] hover:bg-[#F8F9FB] disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-all cursor-pointer"
             >
-              Next
+              {t('cases.next', 'Next')}
             </button>
           </div>
         </div>
@@ -299,7 +299,7 @@ export default function FieldOfficerFIRManagement() {
               <div className="flex items-center justify-between px-6 py-5 bg-[#0B1F4D] text-white">
                 <h3 className="text-base font-black flex items-center gap-2 tracking-tight">
                   <Plus className="w-5 h-5 text-[#C79A2B]" />
-                  Log New Incident Report (FIR)
+                  {t('officer.logNewFIR', 'Log New Incident Report (FIR)')}
                 </h3>
                 <button 
                   type="button" 
@@ -313,42 +313,42 @@ export default function FieldOfficerFIRManagement() {
               <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Crime Category</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('fir.category', 'Crime Category')}</label>
                     <select 
                       value={firForm.category} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, category: e.target.value }))}
                       className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     >
-                      <option value="Cybercrime">Cybercrime</option>
-                      <option value="Property Theft">Property Theft</option>
-                      <option value="Violent Crime">Violent Crime</option>
-                      <option value="Financial Fraud">Financial Fraud</option>
-                      <option value="Narcotics">Narcotics</option>
-                      <option value="Crime Against Women">Crime Against Women</option>
+                      <option value="Cybercrime">{t('categories.cybercrime', 'Cybercrime')}</option>
+                      <option value="Property Theft">{t('categories.propertyTheft', 'Property Theft')}</option>
+                      <option value="Violent Crime">{t('categories.violentCrime', 'Violent Crime')}</option>
+                      <option value="Financial Fraud">{t('categories.financialFraud', 'Financial Fraud')}</option>
+                      <option value="Narcotics">{t('categories.narcotics', 'Narcotics')}</option>
+                      <option value="Crime Against Women">{t('categories.crimeAgainstWomen', 'Crime Against Women')}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#0F172A] mb-1">AI Risk Scoring Estimate</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('cases.priority', 'AI Risk Scoring Estimate')}</label>
                     <select 
                       value={firForm.risk} 
                       onChange={(e) => setFirForm(prev => ({ ...prev, risk: e.target.value }))}
                       className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]"
                     >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Critical">Critical</option>
+                      <option value="Low">{t('common.low', 'Low')}</option>
+                      <option value="Medium">{t('common.medium', 'Medium')}</option>
+                      <option value="High">{t('common.high', 'High')}</option>
+                      <option value="Critical">{t('common.critical', 'Critical')}</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Jurisdiction Station</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('common.station', 'Jurisdiction Station')}</label>
                     <input type="text" disabled className="w-full h-11 px-3 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-slate-400 opacity-70" value={firForm.policeStation} />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#0F172A] mb-1">Penal Section Code</label>
+                    <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('fir.penalCode', 'Penal Section Code')}</label>
                     <input 
                       type="text" 
                       className="w-full h-11 px-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]" 
@@ -359,11 +359,11 @@ export default function FieldOfficerFIRManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#0F172A] mb-1">Complainant / Witness Name</label>
+                  <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('fir.complainantName', 'Complainant / Witness Name')}</label>
                   <input 
                     type="text" 
                     required 
-                    placeholder="Enter full name"
+                    placeholder={t('fir.complainantPlaceholder', 'Enter full name')}
                     className="w-full h-11 px-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]" 
                     value={firForm.complainant}
                     onChange={(e) => setFirForm(prev => ({ ...prev, complainant: e.target.value }))}
@@ -371,11 +371,11 @@ export default function FieldOfficerFIRManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#0F172A] mb-1">Brief Narrative</label>
+                  <label className="block text-xs font-bold text-[#0F172A] mb-1">{t('fir.incidentNarrative', 'Brief Narrative')}</label>
                   <textarea 
                     required 
                     rows="3" 
-                    placeholder="Describe incident in detail..."
+                    placeholder={t('fir.narrativePlaceholder', 'Describe incident in detail...')}
                     className="w-full p-3 bg-white border border-[#E7ECF3] rounded-[14px] text-xs font-medium text-[#0F172A] focus:ring-2 focus:ring-[#0B1F4D]" 
                     value={firForm.description}
                     onChange={(e) => setFirForm(prev => ({ ...prev, description: e.target.value }))}
@@ -389,13 +389,13 @@ export default function FieldOfficerFIRManagement() {
                   onClick={() => setRegisterModal(false)} 
                   className="h-10 px-5 rounded-full bg-white border border-[#E7ECF3] text-[#0F172A] font-bold text-xs hover:bg-[#F8F9FB] transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t('common.cancel', 'Cancel')}
                 </button>
                 <button 
                   type="submit" 
                   className="h-10 px-6 rounded-full bg-[#0B1F4D] hover:bg-[#143275] text-white font-extrabold text-xs shadow-sm transition-colors cursor-pointer"
                 >
-                  Submit FIR
+                  {t('fir.submitFIR', 'Submit FIR')}
                 </button>
               </div>
             </motion.form>
@@ -436,7 +436,7 @@ export default function FieldOfficerFIRManagement() {
                   </div>
                   <div>
                     <h4 className="text-lg font-extrabold font-mono tracking-tight text-white">{selectedCase.id}</h4>
-                    <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest mt-0.5">FIR Case Details & Brief</p>
+                    <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest mt-0.5">{t('cases.caseDetailsTitle', 'FIR Case Details & Brief')}</p>
                   </div>
                 </div>
                 <button
@@ -452,24 +452,26 @@ export default function FieldOfficerFIRManagement() {
                 {/* Meta details grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Classification</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.classification', 'Classification')}</span>
                     <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.category}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Jurisdiction</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.jurisdiction', 'Jurisdiction')}</span>
                     <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{selectedCase.policeStation}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Logged Date</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.loggedDate', 'Logged Date')}</span>
                     <span className="text-xs font-extrabold text-[#0F172A] mt-1 block">{formatDate(selectedCase.rawDate || selectedCase.date)}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status / Risk</span>
+                    <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.statusRisk', 'Status / Risk')}</span>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-extrabold text-[10px] ${riskBadgeClass(selectedCase.risk)}`}>{selectedCase.risk}</span>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-extrabold text-[10px] ${riskBadgeClass(selectedCase.risk)}`}>
+                        {selectedCase.risk === 'Critical' ? t('common.critical', 'Critical') : selectedCase.risk === 'High' ? t('common.high', 'High') : selectedCase.risk === 'Medium' ? t('common.medium', 'Medium') : t('common.low', 'Low')}
+                      </span>
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-extrabold text-[10px] ${statusBadgeClass(caseStatuses[selectedCase.id] || selectedCase.status)}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${statusDotClass(caseStatuses[selectedCase.id] || selectedCase.status)}`} />
-                        {caseStatuses[selectedCase.id] || selectedCase.status}
+                        {(caseStatuses[selectedCase.id] || selectedCase.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[selectedCase.id] || selectedCase.status)}
                       </span>
                     </div>
                   </div>
@@ -482,7 +484,7 @@ export default function FieldOfficerFIRManagement() {
                       <User className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Investigating Officer</span>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('cases.investigatingOfficer', 'Investigating Officer')}</span>
                       <span className="text-xs font-extrabold text-[#0F172A] mt-0.5 block">{selectedCase.details?.officer || 'Inspector Patil'}</span>
                     </div>
                   </div>
@@ -491,7 +493,7 @@ export default function FieldOfficerFIRManagement() {
                       <FileText className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Penal Section Code</span>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('fir.penalCode', 'Penal Section Code')}</span>
                       <span className="text-xs font-extrabold text-[#0F172A] font-mono mt-0.5 block">{selectedCase.details?.section || 'Section 379 IPC'}</span>
                     </div>
                   </div>
@@ -499,7 +501,7 @@ export default function FieldOfficerFIRManagement() {
 
                 {/* Narrative Summary */}
                 <div className="space-y-2">
-                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Case Narrative & Summary</h5>
+                  <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('cases.narrativeSummary', 'Case Narrative & Summary')}</h5>
                   <p className="text-xs text-slate-700 font-medium leading-relaxed bg-[#F8F9FB] p-4 rounded-2xl border border-[#E7ECF3]">
                     {selectedCase.details?.summary || 'Complaint logged and registered under precinct jurisdiction.'}
                   </p>
@@ -508,7 +510,7 @@ export default function FieldOfficerFIRManagement() {
                 {/* Timeline */}
                 {selectedCase.details?.timeline && (
                   <div className="space-y-3">
-                    <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Historical Case Logs</h5>
+                    <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t('cases.historicalLogs', 'Historical Case Logs')}</h5>
                     <div className="relative border-l-2 border-[#E7ECF3] ml-3 space-y-4">
                       {selectedCase.details.timeline.map((item, idx) => (
                         <div key={idx} className="relative pl-5">
@@ -533,26 +535,26 @@ export default function FieldOfficerFIRManagement() {
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'open')}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs hover:bg-emerald-100 transition-colors cursor-pointer"
                   >
-                    <FolderOpen className="w-3.5 h-3.5" /> Start / Reopen
+                    <FolderOpen className="w-3.5 h-3.5" /> {t('cases.startReopen', 'Start / Reopen')}
                   </button>
                   <button
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'investigate')}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold text-xs hover:bg-amber-100 transition-colors cursor-pointer"
                   >
-                    <Search className="w-3.5 h-3.5" /> Investigate
+                    <Search className="w-3.5 h-3.5" /> {t('cases.investigate', 'Investigate')}
                   </button>
                   <button
                     onClick={(e) => handleCaseAction(e, selectedCase.id, 'close')}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 h-9 px-4 rounded-full bg-rose-50 border border-rose-200 text-rose-700 font-bold text-xs hover:bg-rose-100 transition-colors cursor-pointer"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Close Case
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {t('cases.closeCase', 'Close Case')}
                   </button>
                 </div>
                 <button
                   onClick={() => setSelectedCase(null)}
                   className="w-full sm:w-auto h-9 px-5 rounded-full bg-[#0B1F4D] text-white font-bold text-xs hover:bg-[#143275] transition-colors cursor-pointer"
                 >
-                  Close
+                  {t('common.close', 'Close')}
                 </button>
               </div>
             </motion.div>

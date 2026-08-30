@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Download, ShieldCheck, LogIn, LogOut, FilePen, Trash2, Eye, Clock } from 'lucide-react';
 import EmptyState from '../../../components/common/EmptyState';
 import { useDateTimeFormatter } from '../../../utils/dateTime';
+import { useTranslation } from '../../../i18n';
 
 const logs = [
   { id: 1, action: 'Login', user: 'J. Doe', role: 'Analyst', module: 'Authentication', detail: 'Successful login from 192.168.1.10', time: '2026-07-26 09:14:02', type: 'auth' },
@@ -22,6 +23,7 @@ const typeConfig = {
 export default function AuditLogs() {
   const [search, setSearch] = useState('');
   const { formatDateTime } = useDateTimeFormatter();
+  const { t } = useTranslation();
 
   const filtered = logs.filter(l =>
     (l.action || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -49,14 +51,14 @@ export default function AuditLogs() {
     <div className="bg-white border border-[#E7ECF3] rounded-[26px] p-6 lg:p-8 shadow-sm space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E7ECF3] pb-4">
         <div>
-          <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">Audit &amp; System Activity Logs</h3>
-          <p className="text-xs font-semibold text-[#64748B] mt-0.5">Tamper-proof record of security events and administrative actions on the platform.</p>
+          <h3 className="text-sm font-black text-[#0F172A] uppercase tracking-wider">{t('settings.auditSystemLogsTitle', 'Audit & System Activity Logs')}</h3>
+          <p className="text-xs font-semibold text-[#64748B] mt-0.5">{t('settings.auditSystemLogsDesc', 'Tamper-proof record of security events and administrative actions on the platform.')}</p>
         </div>
         <button
           onClick={exportCSV}
           className="flex items-center gap-2 h-9 px-4 bg-[#0B1F4D] hover:bg-[#0F2A6B] text-white text-xs font-extrabold rounded-full transition-colors shrink-0 cursor-pointer shadow-sm"
         >
-          <Download className="w-3.5 h-3.5 text-[#C79A2B]" /> Export Logs
+          <Download className="w-3.5 h-3.5 text-[#C79A2B]" /> {t('settings.exportLogsBtn', 'Export Logs')}
         </button>
       </div>
 
@@ -66,7 +68,7 @@ export default function AuditLogs() {
         </div>
         <input
           type="text"
-          placeholder="Search by action, personnel, or module..."
+          placeholder={t('settings.searchAuditPlaceholder', 'Search by action, personnel, or module...')}
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full pl-10 pr-4 h-10 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[14px] text-xs font-bold text-[#0F172A] placeholder:text-[#64748B] focus:outline-none focus:border-[#0B1F4D] transition-colors"
@@ -78,12 +80,12 @@ export default function AuditLogs() {
           <table className="w-full text-xs text-left">
             <thead className="text-[11px] font-black text-[#0F172A] uppercase bg-[#F8F9FB] border-b border-[#E7ECF3]">
               <tr>
-                <th className="px-4 py-3">Event Type</th>
-                <th className="px-4 py-3">Action</th>
-                <th className="px-4 py-3">User Personnel</th>
-                <th className="px-4 py-3">Module</th>
-                <th className="px-4 py-3">Audit Details</th>
-                <th className="px-4 py-3">Timestamp</th>
+                <th className="px-4 py-3">{t('settings.thEventType', 'Event Type')}</th>
+                <th className="px-4 py-3">{t('settings.thAction', 'Action')}</th>
+                <th className="px-4 py-3">{t('settings.thUserPersonnel', 'User Personnel')}</th>
+                <th className="px-4 py-3">{t('settings.thModule', 'Module')}</th>
+                <th className="px-4 py-3">{t('settings.thAuditDetails', 'Audit Details')}</th>
+                <th className="px-4 py-3">{t('settings.thTimestamp', 'Timestamp')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E7ECF3]">
@@ -115,11 +117,12 @@ export default function AuditLogs() {
         {filtered.length === 0 && (
           <EmptyState
             type="audit"
-            onAction={() => { setSearch(''); setFilter('all'); }}
-            actionLabel="Reset Filters"
+            onAction={() => { setSearch(''); }}
+            actionLabel={t('cases.resetFilters', 'Reset Filters')}
           />
         )}
       </div>
     </div>
   );
 }
+

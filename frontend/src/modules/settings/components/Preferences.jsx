@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Monitor, Globe, Clock, Palette } from 'lucide-react';
+import { useTranslation } from '../../../../i18n';
 
 export default function Preferences() {
+  const { t } = useTranslation();
   const [prefs, setPrefs] = useState({
     theme: 'light',
     language: 'en',
@@ -16,28 +18,28 @@ export default function Preferences() {
 
   const sections = [
     {
-      icon: Palette, title: 'Appearance',
+      icon: Palette, title: t('settings.colorTheme', 'Appearance'),
       fields: [
-        { label: 'Color Theme', key: 'theme', type: 'select', options: ['light', 'dark'] },
+        { label: t('settings.colorTheme', 'Color Theme'), key: 'theme', type: 'select', options: ['light', 'dark'] },
         { label: 'UI Density', key: 'density', type: 'select', options: ['compact', 'comfortable', 'spacious'] },
       ],
     },
     {
-      icon: Globe, title: 'Locale & Time',
+      icon: Globe, title: t('settings.language', 'Locale & Time'),
       fields: [
-        { label: 'Language', key: 'language', type: 'select', options: ['en', 'kn', 'hi'] },
+        { label: t('settings.language', 'Language'), key: 'language', type: 'select', options: ['en', 'kn'] },
         { label: 'Timezone', key: 'timezone', type: 'select', options: ['Asia/Kolkata', 'UTC'] },
-        { label: 'Date Format', key: 'dateFormat', type: 'select', options: ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'] },
+        { label: t('settings.dateFormat', 'Date Format'), key: 'dateFormat', type: 'select', options: ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'] },
       ],
     },
     {
-      icon: Monitor, title: 'Dashboard',
+      icon: Monitor, title: t('settings.defaultLanding', 'Dashboard'),
       fields: [
-        { label: 'Default Module on Login', key: 'defaultModule', type: 'select', options: ['overview', 'map', 'district', 'analytics'] },
+        { label: t('settings.defaultLanding', 'Default Module on Login'), key: 'defaultModule', type: 'select', options: ['overview', 'map', 'district', 'analytics'] },
       ],
     },
     {
-      icon: Clock, title: 'Security',
+      icon: Clock, title: t('settings.securityTab', 'Security'),
       fields: [
         { label: 'Session Timeout (minutes)', key: 'sessionTimeout', type: 'select', options: ['15', '30', '60', '120'] },
       ],
@@ -69,9 +71,10 @@ export default function Preferences() {
       ))}
       <div className="flex justify-end">
         <button className="px-5 py-2 bg-primary hover:bg-indigo-500 text-white rounded-md text-sm font-medium transition-colors">
-          Save Preferences
+          {t('settings.saveChanges', 'Save Preferences')}
         </button>
       </div>
     </div>
   );
 }
+

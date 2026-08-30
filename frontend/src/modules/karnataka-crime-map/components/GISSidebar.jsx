@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Layers, Filter, Calendar, Zap, ShieldAlert, Activity, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 import { DISTRICTS, POLICE_STATIONS, CATEGORIES, STATUSES } from '../../dashboard/components/mockData';
+import { useTranslation } from '../../../i18n';
 
 export default function GISSidebar({
   filters,
@@ -10,6 +11,7 @@ export default function GISSidebar({
   onReset,
   role
 }) {
+  const { t } = useTranslation();
   // Accordion Expand/Collapse States
   const [layersExpanded, setLayersExpanded] = useState(true);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
@@ -54,12 +56,12 @@ export default function GISSidebar({
             <div className="w-9 h-9 rounded-[12px] bg-[#0B1F4D]/10 text-[#0B1F4D] flex items-center justify-center shrink-0">
               <Layers className="w-4.5 h-4.5" />
             </div>
-            <h2 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Map Layers</h2>
+            <h2 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">{t('map.mapLayers', 'Map Layers')}</h2>
           </div>
           <button
             onClick={onReset}
             className="p-2 rounded-[12px] bg-[#F8F9FB] border border-[#E7ECF3] hover:bg-slate-100 text-slate-500 hover:text-[#0F172A] transition-colors cursor-pointer"
-            title="Reset Filters"
+            title={t('dashboard.resetFilters', 'Reset Filters')}
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
@@ -72,7 +74,7 @@ export default function GISSidebar({
             className="w-full px-3.5 py-3 bg-white border-b border-[#E7ECF3] flex items-center justify-between text-[11px] font-bold text-[#0F172A] uppercase tracking-wider transition-colors cursor-pointer"
           >
             <span className="flex items-center gap-2">
-              <Activity className="w-3.5 h-3.5 text-police-blue" /> Overlays Toggle
+              <Activity className="w-3.5 h-3.5 text-police-blue" /> {t('map.overlaysToggle', 'Overlays Toggle')}
             </span>
             {layersExpanded ? <ChevronDown className="w-3.5 h-3.5 text-slate-400" /> : <ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
           </button>
@@ -80,7 +82,7 @@ export default function GISSidebar({
           {layersExpanded && (
             <div className="p-3 space-y-2">
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Severity Markers</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.severityMarkers', 'Severity Markers')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showMarkers}
@@ -90,7 +92,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Heatmap Layer</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.heatmapLayer', 'Heatmap Layer')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showHeatmap}
@@ -100,7 +102,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Crime Clusters</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.crimeClusters', 'Crime Clusters')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showClusters}
@@ -110,7 +112,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Crime Density</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.crimeDensity', 'Crime Density')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showDensity}
@@ -120,7 +122,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Beat Sectors</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.beatSectors', 'Beat Sectors')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showJurisdictions}
@@ -130,7 +132,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">Emerging Hotspots</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.emergingHotspots', 'Emerging Hotspots')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showHotspots}
@@ -140,7 +142,7 @@ export default function GISSidebar({
               </label>
 
               <label className="flex items-center justify-between cursor-pointer group p-2 rounded-[10px] hover:bg-white transition-colors">
-                <span className="text-xs text-[#334155] font-semibold">District Boundaries</span>
+                <span className="text-xs text-[#334155] font-semibold">{t('map.districtBoundaries', 'District Boundaries')}</span>
                 <input
                   type="checkbox"
                   checked={!!layers.showBoundaries}
@@ -159,7 +161,7 @@ export default function GISSidebar({
             className="w-full px-3.5 py-3 bg-white border-b border-[#E7ECF3] flex items-center justify-between text-[11px] font-bold text-[#0F172A] uppercase tracking-wider transition-colors cursor-pointer"
           >
             <span className="flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5 text-amber-500" /> Map Legend
+              <Zap className="w-3.5 h-3.5 text-amber-500" /> {t('map.mapLegend', 'Map Legend')}
             </span>
             {legendExpanded ? <ChevronDown className="w-3.5 h-3.5 text-slate-400" /> : <ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
           </button>
@@ -168,42 +170,42 @@ export default function GISSidebar({
             <div className="p-3 space-y-2.5 text-xs text-[#64748B] font-medium">
               <div className="flex items-center gap-2.5">
                 <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">Critical Incident</span>
+                <span className="text-[#0F172A]">{t('map.criticalIncident', 'Critical Incident')}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">High / Medium Incident</span>
+                <span className="text-[#0F172A]">{t('map.highMediumIncident', 'High / Medium Incident')}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
-                <span className="text-[#0F172A]">Low Incident</span>
+                <span className="text-[#0F172A]">{t('map.lowIncident', 'Low Incident')}</span>
               </div>
 
               {layers.showHeatmap && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded bg-gradient-to-r from-rose-500/30 via-amber-500/30 to-emerald-500/30 border border-[#E7ECF3]"></span>
-                  <span className="text-[#0F172A]">Heatmap Glow</span>
+                  <span className="text-[#0F172A]">{t('map.heatmapGlow', 'Heatmap Glow')}</span>
                 </div>
               )}
 
               {layers.showClusters && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-[#0B1F4D] text-white flex items-center justify-center text-[9px] font-mono font-bold shadow-sm">12</span>
-                  <span className="text-[#0F172A]">Crime Cluster</span>
+                  <span className="text-[#0F172A]">{t('map.crimeCluster', 'Crime Cluster')}</span>
                 </div>
               )}
 
               {layers.showHotspots && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded-full border border-dashed border-rose-500 bg-rose-50"></span>
-                  <span className="text-[#0F172A]">Hotspot Zone</span>
+                  <span className="text-[#0F172A]">{t('map.hotspotZone', 'Hotspot Zone')}</span>
                 </div>
               )}
 
               {layers.showBoundaries && (
                 <div className="flex items-center gap-2.5">
                   <span className="w-4 h-4 rounded border-2 border-indigo-500 bg-indigo-500/10"></span>
-                  <span className="text-[#0F172A]">District Boundaries</span>
+                  <span className="text-[#0F172A]">{t('map.districtBoundaries', 'District Boundaries')}</span>
                 </div>
               )}
             </div>
@@ -212,12 +214,12 @@ export default function GISSidebar({
 
         {/* Station / Officer Info Card */}
         <div className="p-4 rounded-[16px] bg-[#F8F9FB] border border-[#E7ECF3] text-xs">
-          <p className="font-bold text-[#0F172A]">Karnataka Police Command</p>
-          <p className="text-[#64748B] text-[11px] mt-0.5">Geospatial Telemetry Hub</p>
+          <p className="font-bold text-[#0F172A]">{t('map.policeCommand', 'Karnataka Police Command')}</p>
+          <p className="text-[#64748B] text-[11px] mt-0.5">{t('map.telemetryHub', 'Geospatial Telemetry Hub')}</p>
           <div className="mt-3 pt-2.5 border-t border-[#E7ECF3] flex items-center justify-between text-[11px]">
-            <span className="text-[#64748B]">Status:</span>
+            <span className="text-[#64748B]">{t('common.status', 'Status')}:</span>
             <span className="font-bold text-emerald-600 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Telemetry
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> {t('map.liveTelemetry', 'Live Telemetry')}
             </span>
           </div>
         </div>
