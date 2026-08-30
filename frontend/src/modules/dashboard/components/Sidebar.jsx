@@ -198,10 +198,21 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
 
       {/* Navigation list */}
       <nav className="flex-1 overflow-y-auto py-5 px-3 space-y-5 no-scrollbar" aria-label="Main navigation">
-        {navSections.map(section => (
+        {navSections.map(section => {
+          const sectionLabelMap = {
+            'Command': t('nav.sectionCommand', 'Command'),
+            'Intelligence': t('nav.sectionIntelligence', 'Intelligence'),
+            'System': t('nav.sectionSystem', 'System'),
+            'Operations': t('nav.sectionOperations', 'Operations'),
+            'Notifications': t('nav.sectionNotifications', 'Notifications'),
+            'Diagnostics': t('nav.sectionDiagnostics', 'Diagnostics'),
+            'Administration': t('nav.sectionAdministration', 'Administration'),
+          };
+          const translatedSectionLabel = sectionLabelMap[section.label] || section.label;
+          return (
           <div key={section.label}>
             <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest px-3 mb-2">
-              {section.label}
+              {translatedSectionLabel}
             </p>
             <div className="space-y-1">
               {section.items.map(item => {
@@ -222,7 +233,7 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
                   roles: t('nav.roles', item.name),
                   audit_logs: t('nav.auditLogs', item.name),
                   system_health: t('nav.systemHealth', item.name),
-                  config: t('nav.settings', item.name),
+                  config: t('nav.config', item.name),
                   settings: t('nav.settings', item.name),
                 };
                 const translatedName = labelMap[item.id] || item.name;
@@ -252,7 +263,8 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
               })}
             </div>
           </div>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Bottom User & Action Panel */}
