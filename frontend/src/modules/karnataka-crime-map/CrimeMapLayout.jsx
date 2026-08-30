@@ -441,7 +441,14 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           >
             <option value="All">{t('dashboard.allCategories', 'All Categories')}</option>
             {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat === 'Cybercrime' ? t('categories.cybercrime', 'Cybercrime') :
+                 cat === 'Property Theft' ? t('categories.propertyTheft', 'Property Theft') :
+                 cat === 'Violent Crime' ? t('categories.violentCrime', 'Violent Crime') :
+                 cat === 'Financial Fraud' ? t('categories.financialFraud', 'Financial Fraud') :
+                 cat === 'Narcotics' ? t('categories.narcotics', 'Narcotics') :
+                 cat === 'Crime Against Women' ? t('categories.crimeAgainstWomen', 'Crime Against Women') : cat}
+              </option>
             ))}
           </select>
 
@@ -451,7 +458,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             onChange={(e) => handleFilterChange('severity', e.target.value)}
             className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3.5 text-xs font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0B1F4D] transition-all"
           >
-            <option value="All">{t('dashboard.allSeverities', 'All Severities')}</option>
+            <option value="All">{t('cases.allPriorities', 'All Severities')}</option>
             <option value="Critical">{t('common.critical', 'Critical')}</option>
             <option value="High">{t('common.high', 'High')}</option>
             <option value="Medium">{t('common.medium', 'Medium')}</option>
@@ -466,7 +473,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
               onChange={(e) => handleFilterChange('startDate', e.target.value)}
               className="h-11 rounded-[16px] bg-[#F8F9FB] border border-[#D9E2EC] px-3 text-xs font-semibold text-[#0F172A]"
             />
-            <span className="text-slate-400 text-xs">to</span>
+            <span className="text-slate-400 text-xs">{t('cases.showingTo', 'to')}</span>
             <input
               type="date"
               value={filters.endDate}
@@ -482,10 +489,10 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
           <button
             onClick={handleResetAll}
             className="h-11 px-4 rounded-[999px] bg-white border border-[#E7ECF3] hover:bg-[#F8F9FB] text-[#0F172A] font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
-            title={t('dashboard.clearFilters', 'Reset Filters')}
+            title={t('cases.resetFilters', 'Reset Filters')}
           >
             <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>{t('dashboard.clearFilters', 'Reset')}</span>
+            <span>{t('cases.resetFilters', 'Reset')}</span>
           </button>
 
           <button
@@ -493,7 +500,7 @@ export default function CrimeMapLayout({ role = 'analyst' }) {
             className="h-11 px-4 rounded-[999px] bg-[#0B1F4D] hover:bg-[#143275] text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5 text-[#C79A2B]" />
-            <span>{t('reports.exportPNG', 'Export Snapshot')}</span>
+            <span>{t('map.exportSnapshot', 'Export Snapshot')}</span>
           </button>
         </div>
       </div>

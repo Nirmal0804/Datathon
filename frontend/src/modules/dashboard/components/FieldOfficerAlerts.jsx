@@ -31,6 +31,42 @@ export default function FieldOfficerAlerts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const getAlertTitle = (alert) => {
+    switch (alert.title) {
+      case 'Cybercrime Surge': return t('alerts.cybercrimeSurgeTitle', 'Cybercrime Surge');
+      case 'Property Theft Alert': return t('alerts.propertyTheftTitle', 'Property Theft Alert');
+      case 'Narcotics Syndicate Node': return t('alerts.narcoticsNodeTitle', 'Narcotics Syndicate Node');
+      case 'Data Reconciliation Complete': return t('alerts.dataReconciliationTitle', 'Data Reconciliation Complete');
+      case 'Repeat Offender Alert': return t('alerts.repeatOffenderTitle', 'Repeat Offender Alert');
+      default: return alert.title;
+    }
+  };
+
+  const getAlertDesc = (alert) => {
+    switch (alert.title) {
+      case 'Cybercrime Surge': return t('alerts.cybercrimeSurgeDesc', 'Phishing cases spiked 35% in Bengaluru City during last 48 hours.');
+      case 'Property Theft Alert': return t('alerts.propertyTheftDesc', 'Unusual nighttime burglary pattern spotted in Saraswathipuram, Mysuru.');
+      case 'Narcotics Syndicate Node': return t('alerts.narcoticsNodeDesc', 'Syndicate transport route flagged near Hubballi-Dharwad highway checkpost.');
+      case 'Data Reconciliation Complete': return t('alerts.dataReconciliationDesc', 'Weekly Crime & Criminal Tracking Network Systems (CCTNS) databases synced.');
+      case 'Repeat Offender Alert': return t('alerts.repeatOffenderDesc', 'Known financial fraud offender spotted near bank cluster in Mangaluru.');
+      default: return alert.desc;
+    }
+  };
+
+  const formatTimeAgo = (timeStr) => {
+    if (!timeStr) return '';
+    if (timeStr.includes('10m ago')) return t('common.tenMinAgo', '10m ago');
+    if (timeStr.includes('24m ago')) return t('common.twentyFourMinAgo', '24m ago');
+    if (timeStr.includes('45m ago')) return t('common.fortyFiveMinAgo', '45m ago');
+    if (timeStr.includes('1h ago')) return t('common.oneHourAgo', '1h ago');
+    if (timeStr.includes('2h ago')) return t('common.twoHoursAgo', '2h ago');
+    if (timeStr.includes('3h ago')) return t('common.threeHoursAgo', '3h ago');
+    if (timeStr.includes('4h ago')) return t('common.fourHoursAgo', '4h ago');
+    if (timeStr.includes('6h ago')) return t('common.sixHoursAgo', '6h ago');
+    if (timeStr.includes('Just now')) return t('common.justNow', 'Just now');
+    return timeStr;
+  };
+
   const severityLabel = (type) => {
     switch (type) {
       case 'critical': return t('feed.critical', 'CRITICAL');
@@ -276,17 +312,17 @@ export default function FieldOfficerAlerts() {
                     </div>
                     <div>
                       <h4 className="text-base font-extrabold text-[#0F172A] tracking-tight hover:text-[#0B1F4D] transition-colors">
-                        {alert.title}
+                        {getAlertTitle(alert)}
                       </h4>
                       <p className="text-xs font-semibold text-[#64748B] mt-0.5 line-clamp-1 max-w-2xl">
-                        {alert.desc}
+                        {getAlertDesc(alert)}
                       </p>
                     </div>
                   </div>
 
                   {/* Right: Timestamp + Pill Badges + Chevron */}
                   <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
-                    <span className="text-xs font-semibold text-[#64748B] mr-1">{alert.time}</span>
+                    <span className="text-xs font-semibold text-[#64748B] mr-1">{formatTimeAgo(alert.time)}</span>
 
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-extrabold text-[10px] tracking-wider ${severityBadgeClass(alert.type)}`}>
                       {severityLabel(alert.type)}

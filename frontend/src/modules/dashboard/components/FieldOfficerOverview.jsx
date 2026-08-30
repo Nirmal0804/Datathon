@@ -202,6 +202,42 @@ export default function FieldOfficerOverview({ onNavigate }) {
     }
   };
 
+  const getAlertTitle = (alert) => {
+    switch (alert.title) {
+      case 'Cybercrime Surge': return t('alerts.cybercrimeSurgeTitle', 'Cybercrime Surge');
+      case 'Property Theft Alert': return t('alerts.propertyTheftTitle', 'Property Theft Alert');
+      case 'Narcotics Syndicate Node': return t('alerts.narcoticsNodeTitle', 'Narcotics Syndicate Node');
+      case 'Data Reconciliation Complete': return t('alerts.dataReconciliationTitle', 'Data Reconciliation Complete');
+      case 'Repeat Offender Alert': return t('alerts.repeatOffenderTitle', 'Repeat Offender Alert');
+      default: return alert.title;
+    }
+  };
+
+  const getAlertDesc = (alert) => {
+    switch (alert.title) {
+      case 'Cybercrime Surge': return t('alerts.cybercrimeSurgeDesc', 'Phishing cases spiked 35% in Bengaluru City during last 48 hours.');
+      case 'Property Theft Alert': return t('alerts.propertyTheftDesc', 'Unusual nighttime burglary pattern spotted in Saraswathipuram, Mysuru.');
+      case 'Narcotics Syndicate Node': return t('alerts.narcoticsNodeDesc', 'Syndicate transport route flagged near Hubballi-Dharwad highway checkpost.');
+      case 'Data Reconciliation Complete': return t('alerts.dataReconciliationDesc', 'Weekly Crime & Criminal Tracking Network Systems (CCTNS) databases synced.');
+      case 'Repeat Offender Alert': return t('alerts.repeatOffenderDesc', 'Known financial fraud offender spotted near bank cluster in Mangaluru.');
+      default: return alert.desc;
+    }
+  };
+
+  const formatTimeAgo = (timeStr) => {
+    if (!timeStr) return '';
+    if (timeStr.includes('10m ago')) return t('common.tenMinAgo', '10m ago');
+    if (timeStr.includes('24m ago')) return t('common.twentyFourMinAgo', '24m ago');
+    if (timeStr.includes('45m ago')) return t('common.fortyFiveMinAgo', '45m ago');
+    if (timeStr.includes('1h ago')) return t('common.oneHourAgo', '1h ago');
+    if (timeStr.includes('2h ago')) return t('common.twoHoursAgo', '2h ago');
+    if (timeStr.includes('3h ago')) return t('common.threeHoursAgo', '3h ago');
+    if (timeStr.includes('4h ago')) return t('common.fourHoursAgo', '4h ago');
+    if (timeStr.includes('6h ago')) return t('common.sixHoursAgo', '6h ago');
+    if (timeStr.includes('Just now')) return t('common.justNow', 'Just now');
+    return timeStr;
+  };
+
   const baseActivities = [
     {
       time: '10m ago',
@@ -505,7 +541,7 @@ export default function FieldOfficerOverview({ onNavigate }) {
                           {getActivityStatusLabel(act.status)}
                         </span>
                       )}
-                      <span className="text-[10px] text-[#64748B] font-mono">{act.time}</span>
+                      <span className="text-[10px] text-[#64748B] font-mono">{formatTimeAgo(act.time)}</span>
                     </div>
                   </div>
                 );
@@ -541,10 +577,10 @@ export default function FieldOfficerOverview({ onNavigate }) {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <span className="badge badge-critical py-0.5 px-2 text-[10px] font-bold uppercase">{t('common.critical', 'BOLO')}</span>
-                      <span className="text-[10px] text-rose-500 font-mono font-semibold">{alert.time}</span>
+                      <span className="text-[10px] text-rose-500 font-mono font-semibold">{formatTimeAgo(alert.time)}</span>
                     </div>
-                    <p className="font-bold text-[#0F172A] mt-1.5 truncate leading-tight">{alert.title}</p>
-                    <p className="text-[#64748B] text-xs leading-relaxed mt-1 line-clamp-2">{alert.desc}</p>
+                    <p className="font-bold text-[#0F172A] mt-1.5 truncate leading-tight">{getAlertTitle(alert)}</p>
+                    <p className="text-[#64748B] text-xs leading-relaxed mt-1 line-clamp-2">{getAlertDesc(alert)}</p>
                   </div>
                 </div>
               ))}

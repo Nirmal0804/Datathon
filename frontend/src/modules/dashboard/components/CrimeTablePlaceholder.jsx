@@ -17,7 +17,8 @@ const riskBadge = (risk) => {
 const statusDot = (status) => {
   if (status === 'Closed') return 'bg-slate-400';
   if (status === 'Active') return 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse';
-  if (status === 'Under Review') return 'bg-[#0B1F4D]';
+  if (status === 'Under Review') return 'bg-blue-500';
+  if (status === 'Investigating') return 'bg-amber-500';
   return 'bg-amber-500';
 };
 
@@ -25,6 +26,29 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
   const cases = data || [];
   const { formatDate } = useDateTimeFormatter();
   const { t } = useTranslation();
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'Active': return t('cases.statusActive', 'Active');
+      case 'Investigating': return t('cases.statusInvestigating', 'Investigating');
+      case 'Under Review': return t('cases.statusUnderReview', 'Under Review');
+      case 'Closed': return t('cases.statusClosed', 'Closed');
+      case 'Open': return t('cases.statusOpen', 'Open');
+      default: return status;
+    }
+  };
 
   // Table states
   const [searchQuery, setSearchQuery] = useState('');
@@ -220,7 +244,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   className="h-14 border-b border-[#E7ECF3]/60 hover:bg-[#F8F9FB]/80 transition-colors duration-150 cursor-pointer align-middle"
                 >
                   <td className="px-6 py-3.5 align-middle font-mono text-xs font-extrabold text-[#0B1F4D]">{row.id}</td>
-                  <td className="px-6 py-3.5 align-middle font-bold text-[#0F172A] text-xs">{row.category}</td>
+                  <td className="px-6 py-3.5 align-middle font-bold text-[#0F172A] text-xs">{getCategoryLabel(row.category)}</td>
                   <td className="px-6 py-3.5 align-middle">
                     <p className="text-[#0F172A] font-bold text-xs">{row.policeStation}</p>
                     <p className="text-[#64748B] font-semibold text-[11px] mt-0.5">{row.district}</p>
@@ -234,7 +258,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                   <td className="px-6 py-3.5 align-middle">
                     <span className="inline-flex items-center gap-2 text-xs text-[#0F172A] font-bold">
                       <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[row.id] || row.status)}`} />
-                      {(caseStatuses[row.id] || row.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[row.id] || row.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[row.id] || row.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[row.id] || row.status)}
+                      {getStatusLabel(caseStatuses[row.id] || row.status)}
                     </span>
                   </td>
                   <td className="px-6 py-3.5 align-middle text-right" onClick={(e) => e.stopPropagation()}>
@@ -380,7 +404,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-[#F7F8FA] p-5 rounded-2xl border border-[#E7EAF0]">
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.classification', 'Classification')}</span>
-                    <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{selectedCase.category}</span>
+                    <span className="text-[13px] font-extrabold text-[#0F172A] mt-1 block">{getCategoryLabel(selectedCase.category)}</span>
                   </div>
                   <div>
                     <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('cases.jurisdiction', 'Jurisdiction')}</span>
@@ -398,7 +422,7 @@ export default function CrimeTablePlaceholder({ data, itemsPerPage: customItemsP
                       </span>
                       <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A]">
                         <span className={`w-2 h-2 rounded-full ${statusDot(caseStatuses[selectedCase.id] || selectedCase.status)} shadow-sm`} />
-                        {(caseStatuses[selectedCase.id] || selectedCase.status) === 'Active' ? t('cases.statusActive', 'Active') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Investigating' ? t('cases.statusInvestigating', 'Investigating') : (caseStatuses[selectedCase.id] || selectedCase.status) === 'Closed' ? t('cases.statusClosed', 'Closed') : (caseStatuses[selectedCase.id] || selectedCase.status)}
+                        {getStatusLabel(caseStatuses[selectedCase.id] || selectedCase.status)}
                       </span>
                     </div>
                   </div>

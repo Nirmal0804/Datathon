@@ -3,6 +3,7 @@ import { BarChart2, X, RefreshCw, Layers, Calendar, HelpCircle, Activity } from 
 import { DISTRICTS } from '../../dashboard/components/mockData';
 import TimelineSlider from './TimelineSlider';
 import GlobalKPICard from '../../../components/shared/ui/GlobalKPICard';
+import { useTranslation } from '../../../i18n';
 
 export default function AnalyticsPanel({ 
   filteredCases = [], 
@@ -13,10 +14,23 @@ export default function AnalyticsPanel({
   startDate,
   endDate
 }) {
+  const { t } = useTranslation();
   const isAnalyst = role === 'analyst';
   const [activeTab, setActiveTab] = useState('analytics');
   const [districtA, setDistrictA] = useState('Bengaluru City');
   const [districtB, setDistrictB] = useState('Mysuru');
+
+  const getCategoryLabel = (cat) => {
+    switch (cat) {
+      case 'Cybercrime': return t('categories.cybercrime', 'Cybercrime');
+      case 'Property Theft': return t('categories.propertyTheft', 'Property Theft');
+      case 'Violent Crime': return t('categories.violentCrime', 'Violent Crime');
+      case 'Financial Fraud': return t('categories.financialFraud', 'Financial Fraud');
+      case 'Narcotics': return t('categories.narcotics', 'Narcotics');
+      case 'Crime Against Women': return t('categories.crimeAgainstWomen', 'Crime Against Women');
+      default: return cat;
+    }
+  };
 
   const safeCases = Array.isArray(filteredCases) ? filteredCases : [];
   const safeAllCases = Array.isArray(allCases) && allCases.length > 0 ? allCases : safeCases;
@@ -94,16 +108,16 @@ export default function AnalyticsPanel({
             <BarChart2 className="w-4.5 h-4.5 text-police-gold" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-[#0F172A] tracking-tight">Spatial Intelligence & Analytics</h2>
-            <p className="text-xs text-[#64748B] font-medium mt-0.5">Geospatial metrics, district comparative analysis, and temporal telemetry.</p>
+            <h2 className="text-lg font-bold text-[#0F172A] tracking-tight">{t('analytics.title', 'Spatial Intelligence & Analytics')}</h2>
+            <p className="text-xs text-[#64748B] font-medium mt-0.5">{t('analytics.subtitle', 'Geospatial metrics, district comparative analysis, and temporal telemetry.')}</p>
           </div>
         </div>
 
         {/* Tab Buttons */}
         <div className="flex gap-1.5 bg-[#F8F9FB] p-1 rounded-[999px] border border-[#E7ECF3]">
           {[
-            { id: 'analytics', label: 'Spatial Analytics' },
-            { id: 'comparison', label: 'District Comparison' }
+            { id: 'analytics', label: t('analytics.spatialAnalytics', 'Spatial Analytics') },
+            { id: 'comparison', label: t('analytics.districtComparison', 'District Comparison') }
           ].map(t => (
             <button
               key={t.id}
@@ -129,29 +143,29 @@ export default function AnalyticsPanel({
             {/* KPI Cards in 4-column responsive grid matching dashboard scale */}
             <div>
               <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Activity className="w-3.5 h-3.5 text-police-blue" /> Key Spatial Indicators
+                <Activity className="w-3.5 h-3.5 text-police-blue" /> {t('analytics.keySpatialIndicators', 'Key Spatial Indicators')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <GlobalKPICard
-                  title="Total Crimes"
+                  title={t('analytics.totalCrimes', 'Total Crimes')}
                   value={stats.total}
                   type="info"
                   compact={true}
                 />
                 <GlobalKPICard
-                  title="Active Cases"
+                  title={t('analytics.activeCases', 'Active Cases')}
                   value={stats.active}
                   type="warning"
                   compact={true}
                 />
                 <GlobalKPICard
-                  title="High Severity"
+                  title={t('analytics.highSeverity', 'High Severity')}
                   value={stats.highSeverity}
                   type="critical"
                   compact={true}
                 />
                 <GlobalKPICard
-                  title="Density Index"
+                  title={t('analytics.densityIndex', 'Density Index')}
                   value={stats.densityScore}
                   description="/ 10"
                   type="warning"
@@ -164,8 +178,8 @@ export default function AnalyticsPanel({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex items-center justify-between">
                 <div>
-                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">Detected Hotspot Zones</span>
-                  <p className="text-xl font-extrabold text-rose-600 font-mono mt-0.5">{stats.hotspotsCount} Critical Clusters</p>
+                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">{t('analytics.detectedHotspotZones', 'Detected Hotspot Zones')}</span>
+                  <p className="text-xl font-extrabold text-rose-600 font-mono mt-0.5">{stats.hotspotsCount} {t('analytics.criticalClusters', 'Critical Clusters')}</p>
                 </div>
                 <div className="w-10 h-10 rounded-[10px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
                   <Activity className="w-5 h-5" />
@@ -174,8 +188,8 @@ export default function AnalyticsPanel({
 
               <div className="p-5 bg-[#F8F9FB] border border-[#E7ECF3] rounded-[16px] flex items-center justify-between">
                 <div>
-                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">Dominant Crime Category</span>
-                  <p className="text-lg font-extrabold text-[#0F172A] mt-0.5">{stats.commonCat}</p>
+                  <span className="text-[#64748B] font-bold uppercase text-[11px] tracking-wider">{t('analytics.dominantCrimeCategory', 'Dominant Crime Category')}</span>
+                  <p className="text-lg font-extrabold text-[#0F172A] mt-0.5">{getCategoryLabel(stats.commonCat)}</p>
                 </div>
                 <div className="w-10 h-10 rounded-[10px] bg-indigo-50 border border-indigo-200 text-[#0B1F4D] flex items-center justify-center">
                   <Layers className="w-5 h-5" />
@@ -190,13 +204,13 @@ export default function AnalyticsPanel({
           <div className="space-y-5">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-police-blue" /> District Comparative Matrix
+                <Layers className="w-3.5 h-3.5 text-police-blue" /> {t('analytics.districtComparativeMatrix', 'District Comparative Matrix')}
               </h3>
 
               {/* District Dropdown Selectors */}
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <div className="flex items-center gap-2">
-                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-a">District A:</label>
+                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-a">{t('analytics.districtA', 'District A:')}</label>
                   <select 
                     id="compare-dist-a"
                     value={districtA} 
@@ -209,10 +223,10 @@ export default function AnalyticsPanel({
                   </select>
                 </div>
 
-                <span className="text-xs font-bold text-slate-400">VS</span>
+                <span className="text-xs font-bold text-slate-400">{t('analytics.vs', 'VS')}</span>
 
                 <div className="flex items-center gap-2">
-                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-b">District B:</label>
+                  <label className="text-xs font-bold text-[#0F172A]" htmlFor="compare-dist-b">{t('analytics.districtB', 'District B:')}</label>
                   <select 
                     id="compare-dist-b"
                     value={districtB} 
@@ -231,17 +245,17 @@ export default function AnalyticsPanel({
             <div className="p-5 bg-[#F8F9FB] rounded-[16px] border border-[#E7ECF3]">
               <div className="grid grid-cols-3 text-center font-bold text-[#64748B] text-xs uppercase tracking-wider pb-2.5 border-b border-[#E7ECF3]">
                 <span className="text-left font-extrabold text-[#0B1F4D]">{districtA}</span>
-                <span>Comparative Indicator</span>
+                <span>{t('analytics.comparativeIndicator', 'Comparative Indicator')}</span>
                 <span className="text-right font-extrabold text-police-blue">{districtB}</span>
               </div>
 
               <div className="divide-y divide-[#E7ECF3]">
                 {[
-                  { label: 'Total Crimes Recorded', valA: comparison.a.total, valB: comparison.b.total, isMono: true },
-                  { label: 'YoY Rate of Growth', valA: `${comparison.a.growth >= 0 ? '+' : ''}${comparison.a.growth}%`, valB: `${comparison.b.growth >= 0 ? '+' : ''}${comparison.b.growth}%`, isMono: true, highlight: true },
-                  { label: 'Active Investigation Cases', valA: comparison.a.active, valB: comparison.b.active, isMono: true },
-                  { label: 'High Severity Incidents', valA: comparison.a.high, valB: comparison.b.high, isMono: true },
-                  { label: 'High Risk Hotspot Zone', valA: comparison.a.hotspot ? 'Yes' : 'No', valB: comparison.b.hotspot ? 'Yes' : 'No' },
+                  { label: t('analytics.totalCrimesRecorded', 'Total Crimes Recorded'), valA: comparison.a.total, valB: comparison.b.total, isMono: true },
+                  { label: t('analytics.yoyGrowthRate', 'YoY Rate of Growth'), valA: `${comparison.a.growth >= 0 ? '+' : ''}${comparison.a.growth}%`, valB: `${comparison.b.growth >= 0 ? '+' : ''}${comparison.b.growth}%`, isMono: true, highlight: true },
+                  { label: t('analytics.activeInvestigationCases', 'Active Investigation Cases'), valA: comparison.a.active, valB: comparison.b.active, isMono: true },
+                  { label: t('analytics.highSeverityIncidents', 'High Severity Incidents'), valA: comparison.a.high, valB: comparison.b.high, isMono: true },
+                  { label: t('analytics.highRiskHotspotZone', 'High Risk Hotspot Zone'), valA: comparison.a.hotspot ? t('analytics.yes', 'Yes') : t('analytics.no', 'No'), valB: comparison.b.hotspot ? t('analytics.yes', 'Yes') : t('analytics.no', 'No') },
                 ].map((row, i) => (
                   <div key={i} className="grid grid-cols-3 text-center text-xs py-2.5 items-center">
                     <span className={`text-left font-extrabold ${row.isMono ? 'font-mono text-[#0F172A]' : 'text-[#334155]'}`}>{row.valA}</span>
