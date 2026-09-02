@@ -10,7 +10,7 @@ export default function Hero({ onLoginClick, onNavigate }) {
   const { t } = useTranslation();
 
   const handleReadDocumentation = () => {
-    downloadArchitectureDocumentation();
+    window.open('./crimeintel-architecture-documentation.pdf', '_blank', 'noopener,noreferrer');
   };
 
   return (

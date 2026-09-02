@@ -92,8 +92,8 @@ export default function TopNavbar({ toggleMobileMenu, role }) {
             <LazyImage src={kspLogo} alt="Karnataka Police" className="h-full w-auto object-contain" containerClassName="w-full h-full" loading="eager" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-white font-extrabold text-sm leading-tight tracking-tight truncate">KSP INTEL</span>
-            <span className="text-[9.5px] text-[#F5E7C1] font-bold tracking-wider uppercase truncate">POLICE</span>
+            <span className="text-white font-extrabold text-sm leading-tight tracking-tight truncate">KARNATAKA POLICE</span>
+            <span className="text-[9.5px] text-[#F5E7C1] font-medium tracking-wide truncate">{t('auth.portalName', 'Crime Analytics Platform')}</span>
           </div>
         </div>
 

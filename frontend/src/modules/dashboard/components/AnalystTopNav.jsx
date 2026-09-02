@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useNotification } from '../../../context/NotificationContext';
 import kspLogo from '../../../assets/ksp-official-logo.webp';
 import LazyImage from '../../../components/ui/LazyImage';
+import { useTranslation } from '../../../i18n';
 
 export const ANALYST_NAV_ITEMS = [
   { id: 'overview', name: 'Overview' },
@@ -43,6 +44,7 @@ export function getRoleNavItems(role) {
 }
 
 export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
+  const { t } = useTranslation();
   const { unreadCount, togglePanel } = useNotification();
   const [customProfile, setCustomProfile] = React.useState(() => {
     try {
@@ -133,7 +135,7 @@ export default function AnalystTopNav({ activeModule, setActiveModule, role }) {
             KARNATAKA POLICE
             <span className="text-[9.5px] bg-[#D49A00] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
           </h2>
-          <p className="text-[11px] text-[#F5E7C1] font-bold tracking-wider uppercase mt-0.5 leading-none">{platformSubtitle}</p>
+          <p className="text-[11px] text-[#F5E7C1] font-medium tracking-wide mt-0.5 leading-none">{t('auth.portalName', 'Crime Analytics Platform')}</p>
         </div>
       </div>
 

@@ -82,7 +82,7 @@ export default function Workflow() {
 
             {/* Read Architecture Docs Button */}
             <button 
-              onClick={() => downloadArchitectureDocumentation('KSP_Architecture_Documentation.pdf')}
+              onClick={() => window.open('./ksp-architecture-documentation.pdf', '_blank', 'noopener,noreferrer')}
               className="inline-flex items-center gap-2.5 px-6 py-3.5 text-sm font-semibold text-[#142B45] bg-white hover:bg-[#FFF1F1] rounded-xl transition-all duration-200 border border-[#E8EEF5] hover:border-[#E00000]/30 shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#E00000]" />

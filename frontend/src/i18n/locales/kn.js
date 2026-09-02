@@ -1163,8 +1163,8 @@ export default {
 
   // Authentication & Login
   auth: {
-    kspTitle: 'ಕರ್ನಾಟಕ ರಾಜ್ಯ ಪೊಲೀಸ್',
-    portalName: 'ಅಪರಾಧ ಗುಪ್ತಚರ & ಮುನ್ಸೂಚನಾ ವಿಶ್ಲೇಷಣಾ ವೇದಿಕೆ',
+    kspTitle: 'ಕರ್ನಾಟಕ ಪೊಲೀಸ್',
+    portalName: 'ಅಪರಾಧ ವಿಶ್ಲೇಷಣಾ ವೇದಿಕೆ',
     officerPortal: 'ಫೀಲ್ಡ್ ಆಫೀಸರ್ ಪೋರ್ಟಲ್',
     analystPortal: 'ಇಂಟೆಲಿಜೆನ್ಸ್ ಅನಲಿಸ್ಟ್ ಪೋರ್ಟಲ್',
     adminPortal: 'ಸಿಸ್ಟಮ್ ಅಡ್ಮಿನಿಸ್ಟ್ರೇಟರ್ ಪೋರ್ಟಲ್',

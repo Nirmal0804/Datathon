@@ -5,13 +5,14 @@ import { jsPDF } from 'jspdf';
  * Attempts to fetch static PDF asset; if unavailable or blocked by backend URL pattern,
  * dynamically compiles a comprehensive official documentation PDF using jsPDF.
  */
-export async function downloadArchitectureDocumentation(filename = 'Karnataka_Police_Architecture_Documentation.pdf') {
+export async function downloadArchitectureDocumentation(filename = 'Karnataka_Police_Architecture_Documentation.pdf', customAssetPath = null) {
+  const assetPath = customAssetPath || (filename.toLowerCase().includes('ksp') ? './ksp-architecture-documentation.pdf' : './crimeintel-architecture-documentation.pdf');
   try {
     // 1. Attempt to fetch static file from public asset root
-    const response = await fetch('./crimeintel-architecture-documentation.pdf', { method: 'GET' });
+    const response = await fetch(assetPath, { method: 'GET' });
     const contentType = response.headers.get('content-type') || '';
 
-    if (response.ok && contentType.includes('pdf')) {
+    if (response.ok && (contentType.includes('pdf') || response.status === 200)) {
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -24,7 +25,9 @@ export async function downloadArchitectureDocumentation(filename = 'Karnataka_Po
       return;
     }
   } catch (err) {
-    console.warn('[Doc PDF]: Static asset fetch bypassed, generating client-side PDF document.', err);
+    console.warn('[Doc PDF]: Static asset fetch bypassed, attempting direct window open.', err);
+    window.open(assetPath, '_blank', 'noopener,noreferrer');
+    return;
   }
 
   // 2. Client-side fallback generation with jsPDF

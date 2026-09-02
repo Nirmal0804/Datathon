@@ -60,7 +60,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
                   <span className="text-[10px] bg-[#D49A00] text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
                 </span>
                 <p className="text-xs text-white/80 font-medium tracking-wide mt-1">
-                  {t('auth.portalName', 'AI-Driven Crime Analytics Platform')}
+                  {t('auth.portalName', 'Crime Analytics Platform')}
                 </p>
               </div>
             </div>
@@ -232,7 +232,7 @@ export default function Footer({ onLoginClick, rounded = false, role = null, act
               <ShieldCheck className="w-4 h-4 text-white" />
             </div>
             <p>
-              &copy; {new Date().getFullYear()} {t('auth.kspTitle', 'Karnataka State Police')}. {t('common.allRightsReserved', 'All rights reserved.')}
+              &copy; {new Date().getFullYear()} {t('auth.kspTitle', 'KARNATAKA POLICE')}. {t('common.allRightsReserved', 'All rights reserved.')}
             </p>
           </div>
 
