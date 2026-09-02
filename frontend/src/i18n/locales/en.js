@@ -1041,7 +1041,7 @@ export default {
     signIn: 'Secure Portal Login',
     portalSubtitle: 'Select your access level and enter credentials to authenticate.',
     email: 'Official ID / Email',
-    emailPlaceholder: 'Select access level to autofill',
+    emailPlaceholder: 'Enter official email',
     password: 'Password',
     passwordPlaceholder: 'Enter password',
     rememberMe: 'Remember this terminal',

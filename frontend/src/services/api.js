@@ -5,6 +5,8 @@
  * Backend Base URL: https://crimeintel-backend-50044367664.development.catalystappsail.in/api/v1
  */
 
+import { supabase } from './supabase';
+
 const RAW_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://crimeintel-backend-50044367664.development.catalystappsail.in/api/v1';
 
 // Normalize base URL (strip trailing slash)
@@ -48,14 +50,10 @@ export async function fetchAPI(endpoint, options = {}) {
     ...(customFetchOptions.headers || {}),
   };
 
-  // Retrieve token from browser storage or Catalyst session
+  // Retrieve token from active Supabase Auth session
   try {
-    const token =
-      (typeof localStorage !== 'undefined' && (localStorage.getItem('token') || localStorage.getItem('access_token'))) ||
-      (typeof sessionStorage !== 'undefined' && (sessionStorage.getItem('token') || sessionStorage.getItem('access_token'))) ||
-      (typeof window !== 'undefined' && window.catalyst?.auth?.getAccessToken?.()) ||
-      (typeof window !== 'undefined' && window.catalyst?.auth?.token);
-
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }

@@ -1171,7 +1171,7 @@ export default {
     signIn: 'ಸುರಕ್ಷಿತ ಪೋರ್ಟಲ್ ಲಾಗಿನ್',
     portalSubtitle: 'ಪ್ರವೇಶ ಮಟ್ಟವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ದೃಢೀಕರಿಸಲು ರುಜುವಾತುಗಳನ್ನು ನಮೂದಿಸಿ.',
     email: 'ಅಧಿಕೃತ ಐಡಿ / ಇಮೇಲ್',
-    emailPlaceholder: 'ಸ್ವಯಂ ತುಂಬಲು ಪ್ರವೇಶ ಮಟ್ಟ ಆಯ್ಕೆಮಾಡಿ',
+    emailPlaceholder: 'ಅಧಿಕೃತ ಇಮೇಲ್ ನಮೂದಿಸಿ',
     password: 'ಪಾಸ್‌ವರ್ಡ್',
     passwordPlaceholder: 'ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
     rememberMe: 'ಈ ಟರ್ಮಿನಲ್ ಅನ್ನು ನೆನಪಿಡಿ',

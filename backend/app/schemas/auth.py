@@ -74,6 +74,10 @@ class MeResponse(BaseModel):
         default=None,
         description="User email if available in verified token",
     )
+    role: str | None = Field(
+        default=None,
+        description="Server-resolved application role (FIELD_OFFICER, ANALYST, ADMIN)",
+    )
 
 
 class AuthErrorResponse(BaseModel):

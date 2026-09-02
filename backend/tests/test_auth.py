@@ -501,8 +501,9 @@ class TestAuthMe:
             headers={"Authorization": f"Bearer {token}"},
         )
         body = resp.json()
-        # Only safe fields should be present
-        assert set(body.keys()) == {"user_id", "authenticated", "email"}
+        # Only safe verified fields should be present; unverified raw claims like district_id are excluded
+        assert set(body.keys()) == {"user_id", "authenticated", "email", "role"}
+        assert "district_id" not in body
 
     def test_request_id_present(self, auth_client):
         token = create_test_jwt()
