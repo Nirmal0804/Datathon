@@ -17,15 +17,15 @@ const roles = [
 export const DEMO_PREFILL_CREDENTIALS = {
   officer: {
     email: 'crimeintel.officer@gmail.com',
-    password: 'Officer@Pass2026',
+    password: 'Techfortune@123',
   },
   analyst: {
     email: 'crimeintel.analystt@gmail.com',
-    password: 'Analyst@Pass2026',
+    password: 'Techfortune@123',
   },
   admin: {
     email: 'crimeintel.admin@gmail.com',
-    password: 'Admin@Pass2026',
+    password: 'Techfortune@123',
   },
 };
 
