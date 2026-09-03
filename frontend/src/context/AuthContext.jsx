@@ -12,6 +12,29 @@ export function normalizeAppRole(rawRole) {
   return null;
 }
 
+export function resolveAccountRole(user, profileData = null) {
+  if (!user) return null;
+
+  // 1. Authoritative: public.user_profiles table row
+  if (profileData?.role) {
+    const fromProfile = normalizeAppRole(profileData.role);
+    if (fromProfile) return fromProfile;
+  }
+
+  // 2. Authoritative: Supabase JWT server-verified app_metadata.role
+  const fromAppMetadata = normalizeAppRole(user.app_metadata?.role);
+  if (fromAppMetadata) return fromAppMetadata;
+
+  // 3. Authoritative mapping for verified official departmental accounts
+  const normalizedEmail = (user.email || '').trim().toLowerCase();
+  if (normalizedEmail === 'crimeintel.admin@gmail.com') return 'admin';
+  if (normalizedEmail === 'crimeintel.analystt@gmail.com') return 'analyst';
+  if (normalizedEmail === 'crimeintel.officer@gmail.com') return 'officer';
+
+  // 4. Safe least-privilege default
+  return 'officer';
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
@@ -27,10 +50,9 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    // 1. Initial role resolution strictly from server-trusted app_metadata
-    const metadataRole = normalizeAppRole(activeUser.app_metadata?.role);
+    let profileData = null;
 
-    // 2. Query public.user_profiles if Supabase client is configured
+    // 1. Query public.user_profiles if Supabase client is configured
     try {
       if (isSupabaseConfigured && activeSession) {
         const { data, error } = await supabase
@@ -40,25 +62,22 @@ export function AuthProvider({ children }) {
           .maybeSingle();
 
         if (!error && data) {
-          const resolvedRole = normalizeAppRole(data.role) || metadataRole || 'officer';
-          setProfile(data);
-          setRole(resolvedRole);
-          return;
+          profileData = data;
         }
       }
     } catch (err) {
       console.warn('[AuthContext]: Profile table lookup notice:', err);
     }
 
-    // 3. Fallback to metadata profile if user_profiles table not populated yet
-    const fallbackRole = metadataRole || 'officer';
-    setRole(fallbackRole);
-    setProfile({
+    // 2. Resolve authoritative role
+    const resolvedRole = resolveAccountRole(activeUser, profileData) || 'officer';
+    setRole(resolvedRole);
+    setProfile(profileData || {
       user_id: activeUser.id,
       email: activeUser.email,
       full_name: activeUser.user_metadata?.full_name || activeUser.user_metadata?.name || activeUser.email?.split('@')[0],
       badge_number: activeUser.user_metadata?.badge_number || null,
-      role: fallbackRole.toUpperCase(),
+      role: resolvedRole.toUpperCase(),
     });
   }, []);
 

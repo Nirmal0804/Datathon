@@ -6,13 +6,28 @@ import LazyImage from '../../components/ui/LazyImage';
 import { useToast } from '../../components/ui/Toast';
 import { useTranslation } from '../../i18n';
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, resolveAccountRole } from '../../context/AuthContext';
 
 const roles = [
   { id: 'officer', nameKey: 'auth.roleFieldOfficer', name: 'Field Officer', icon: User },
   { id: 'analyst', nameKey: 'auth.roleAnalyst', name: 'Intelligence Analyst', icon: Shield },
   { id: 'admin', nameKey: 'auth.roleAdmin', name: 'System Administrator', icon: Settings }
 ];
+
+export const DEMO_PREFILL_CREDENTIALS = {
+  officer: {
+    email: 'crimeintel.officer@gmail.com',
+    password: 'Officer@Pass2026',
+  },
+  analyst: {
+    email: 'crimeintel.analystt@gmail.com',
+    password: 'Analyst@Pass2026',
+  },
+  admin: {
+    email: 'crimeintel.admin@gmail.com',
+    password: 'Admin@Pass2026',
+  },
+};
 
 export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
   const { addToast } = useToast();
@@ -21,20 +36,31 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role || null);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const initialCreds = role && DEMO_PREFILL_CREDENTIALS[role] ? DEMO_PREFILL_CREDENTIALS[role] : { email: '', password: '' };
+  const [email, setEmail] = useState(initialCreds.email);
+  const [password, setPassword] = useState(initialCreds.password);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (role) {
       setSelectedRole(role);
+      const prefill = DEMO_PREFILL_CREDENTIALS[role];
+      if (prefill) {
+        setEmail(prefill.email);
+        setPassword(prefill.password);
+      }
       setErrorMessage('');
     }
   }, [role]);
 
   const handleRoleClick = (roleId) => {
     setSelectedRole(roleId);
+    const prefill = DEMO_PREFILL_CREDENTIALS[roleId];
+    if (prefill) {
+      setEmail(prefill.email);
+      setPassword(prefill.password);
+    }
     setErrorMessage('');
     if (onRoleSelect) {
       onRoleSelect(roleId);
@@ -81,26 +107,8 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       const authData = await login(email, password);
       const userObj = authData?.user;
 
-      // Extract verified role strictly from server-trusted app_metadata
-      const rawRole = userObj?.app_metadata?.role || 'FIELD_OFFICER';
-
-      const upperRole = String(rawRole).trim().toUpperCase();
-      const normalizedRole =
-        upperRole.includes('ADMIN') ? 'admin' :
-        upperRole.includes('ANALYST') ? 'analyst' : 'officer';
-
-      // Security verification: compare selected UI access level with verified profile role
-      if (selectedRole && selectedRole !== normalizedRole) {
-        setIsLoading(false);
-        const roleMismatchMsg = `Access Denied: Your official credentials are authorized for ${normalizedRole.toUpperCase()} level, not ${selectedRole.toUpperCase()}.`;
-        setErrorMessage(roleMismatchMsg);
-        addToast({
-          title: t('auth.authDenied', 'Access Level Mismatch'),
-          message: roleMismatchMsg,
-          type: 'error',
-        });
-        return;
-      }
+      // Extract verified authoritative role from authenticated identity
+      const normalizedRole = resolveAccountRole(userObj) || 'officer';
 
       setIsLoading(false);
       const userName = userObj?.user_metadata?.full_name || userObj?.user_metadata?.name || email.split('@')[0];
@@ -108,7 +116,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
 
       addToast({
         title: t('auth.authSuccess', 'Authentication Successful'),
-        message: `Welcome back, ${userName} (${userBadge}).`,
+        message: `Welcome back, ${userName} (${userBadge}). Authorized level: ${normalizedRole.toUpperCase()}.`,
         type: 'success',
       });
 
