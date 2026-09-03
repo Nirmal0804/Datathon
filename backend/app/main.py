@@ -232,7 +232,17 @@ class AuthenticationMiddleware:
             await self.app(scope, receive, send)
             return
 
-        # Auth disabled (development mode)
+        # Production safety guard: dev-user-000 bypass is strictly prohibited in production
+        if settings.ENVIRONMENT == "production" and not settings.REQUIRE_AUTH:
+            logger.error("Security violation: REQUIRE_AUTH=false is prohibited in production environment")
+            await self._reject(
+                scope, receive, send,
+                code="AUTH_NOT_CONFIGURED",
+                message="Authentication enforcement is required in production.",
+            )
+            return
+
+        # Auth disabled (local development / offline test mode only)
         if not settings.REQUIRE_AUTH:
             from app.core.rbac import ADMIN, PERMISSIONS
 

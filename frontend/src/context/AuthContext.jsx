@@ -27,10 +27,8 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    // 1. Initial role resolution from verified JWT metadata
-    const metadataRole =
-      normalizeAppRole(activeUser.app_metadata?.role) ||
-      normalizeAppRole(activeUser.user_metadata?.role);
+    // 1. Initial role resolution strictly from server-trusted app_metadata
+    const metadataRole = normalizeAppRole(activeUser.app_metadata?.role);
 
     // 2. Query public.user_profiles if Supabase client is configured
     try {

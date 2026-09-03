@@ -81,11 +81,8 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       const authData = await login(email, password);
       const userObj = authData?.user;
 
-      // Extract verified role from JWT metadata
-      const rawRole =
-        userObj?.app_metadata?.role ||
-        userObj?.user_metadata?.role ||
-        'FIELD_OFFICER';
+      // Extract verified role strictly from server-trusted app_metadata
+      const rawRole = userObj?.app_metadata?.role || 'FIELD_OFFICER';
 
       const upperRole = String(rawRole).trim().toUpperCase();
       const normalizedRole =

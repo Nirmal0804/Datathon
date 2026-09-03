@@ -16,11 +16,10 @@ Role resolution
 Roles are resolved **server-side only**, from the *verified* Supabase
 Auth JWT. The frontend is never trusted for authorization.
 
-Claim sources (checked in order, all configurable):
+Claim sources (checked in order, server-trusted only):
 
 1. ``app_metadata.role``  (Supabase convention for privileged metadata)
-2. ``user_metadata.role`` (Supabase convention for user metadata)
-3. ``role``              (top-level claim)
+2. ``role``              (top-level claim)
 
 A resolved role is accepted only if it is present in the role
 allowlist. If no recognized role claim exists, the identity receives the

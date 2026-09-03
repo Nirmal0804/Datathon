@@ -57,8 +57,7 @@ Claims are then inspected for a role via configurable dotted paths
 (`RBAC_ROLE_CLAIM_PATHS`, default order):
 
 1. `app_metadata.role`   (Supabase convention for privileged metadata)
-2. `user_metadata.role`
-3. `role`                (top-level claim)
+2. `role`                (top-level claim)
 
 The raw value is normalized (`upper`, `-`/spaces → `_`) and accepted
 only if it is in the allowlist `{FIELD_OFFICER, ANALYST, ADMIN}`. If no
@@ -127,7 +126,7 @@ Current RLS posture (migration `005_rls.sql`):
 |---------|---------|---------|
 | `RBAC_ENABLED` | `true` | Master switch for permission checks |
 | `RBAC_DEFAULT_ROLE` | `FIELD_OFFICER` | Least-privilege default role |
-| `RBAC_ROLE_CLAIM_PATHS` | `app_metadata.role,user_metadata.role,role` | Claim lookup order |
+| `RBAC_ROLE_CLAIM_PATHS` | `app_metadata.role,role` | Claim lookup order |
 | `RATE_LIMIT_ENABLED` | `true` | Master switch for rate limiting |
 | `RATE_LIMIT_DEFAULT_LIMIT` / `_WINDOW` | `300 / 60` | Default allowance |
 | `RATE_LIMIT_EXPORT_LIMIT` / `_WINDOW` | `10 / 3600` | Export budget |

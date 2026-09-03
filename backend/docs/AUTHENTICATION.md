@@ -121,7 +121,7 @@ server-resolved role:
 | `district_ids` | claim path | Optional district-scoping data (not exposed in responses) |
 
 Role resolution reads configured claim paths (`app_metadata.role`,
-`user_metadata.role`, `role`) and falls back to `RBAC_DEFAULT_ROLE` —
+`role`) and falls back to `RBAC_DEFAULT_ROLE` —
 see `docs/RBAC_AUTHORIZATION.md`.
 
 **Never returned:** raw JWT token, refresh token, role claims, district assignments.

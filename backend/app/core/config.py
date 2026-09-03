@@ -114,10 +114,9 @@ class Settings(BaseSettings):
     RBAC_DEFAULT_ROLE: str = "FIELD_OFFICER"
 
     # Dotted claim paths checked (in order) to resolve an application
-    # role from verified JWT claims.
+    # role from verified JWT claims. Server-trusted claims only.
     RBAC_ROLE_CLAIM_PATHS: list[str] = [
         "app_metadata.role",
-        "user_metadata.role",
         "role",
     ]
 
