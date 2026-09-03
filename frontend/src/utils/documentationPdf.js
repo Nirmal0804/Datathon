@@ -1,33 +1,66 @@
 import { jsPDF } from 'jspdf';
 
 /**
+ * Resolves static asset URL safely across local dev, custom domain, and Zoho Catalyst Web Client hosting.
+ */
+export function getDocumentAssetUrl(filename) {
+  if (!filename) return '';
+  if (filename.startsWith('http://') || filename.startsWith('https://') || filename.startsWith('blob:')) {
+    return filename;
+  }
+  const cleanName = filename.replace(/^\.?\//, '');
+  
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    // On Zoho Catalyst Web Client hosting, the app is served under /app/
+    if (window.location.hostname.includes('catalystserverless.in') || window.location.pathname.startsWith('/app/')) {
+      return `${origin}/app/${cleanName}`;
+    }
+    const base = import.meta.env.BASE_URL || './';
+    if (base === './') {
+      return `${origin}/${cleanName}`;
+    }
+    return `${base.replace(/\/$/, '')}/${cleanName}`;
+  }
+  return `./${cleanName}`;
+}
+
+export function openDocumentInNewTab(filename) {
+  const url = getDocumentAssetUrl(filename);
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+/**
  * Downloads official Karnataka State Police Architecture Documentation.
  * Attempts to fetch static PDF asset; if unavailable or blocked by backend URL pattern,
  * dynamically compiles a comprehensive official documentation PDF using jsPDF.
  */
 export async function downloadArchitectureDocumentation(filename = 'Karnataka_Police_Architecture_Documentation.pdf', customAssetPath = null) {
-  const assetPath = customAssetPath || (filename.toLowerCase().includes('ksp') ? './ksp-architecture-documentation.pdf' : './crimeintel-architecture-documentation.pdf');
+  const assetName = filename.toLowerCase().includes('ksp')
+    ? 'ksp-architecture-documentation.pdf'
+    : 'crimeintel-architecture-documentation.pdf';
+
+  const resolvedUrl = customAssetPath || getDocumentAssetUrl(assetName);
+
   try {
     // 1. Attempt to fetch static file from public asset root
-    const response = await fetch(assetPath, { method: 'GET' });
-    const contentType = response.headers.get('content-type') || '';
-
-    if (response.ok && (contentType.includes('pdf') || response.status === 200)) {
+    const response = await fetch(resolvedUrl, { method: 'GET' });
+    if (response.ok && response.status === 200) {
       const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-      return;
+      if (blob.size > 1000) {
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        return;
+      }
     }
   } catch (err) {
-    console.warn('[Doc PDF]: Static asset fetch bypassed, attempting direct window open.', err);
-    window.open(assetPath, '_blank', 'noopener,noreferrer');
-    return;
+    console.warn('[Doc PDF]: Static asset fetch error, using client generator fallback.', err);
   }
 
   // 2. Client-side fallback generation with jsPDF
