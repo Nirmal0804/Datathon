@@ -148,6 +148,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     CACHE_ENABLED: bool = True
     CACHE_TTL_SECONDS: int = 600
+    CACHE_MAX_ENTRIES: int = 1000
 
     @model_validator(mode="before")
     @classmethod

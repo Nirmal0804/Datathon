@@ -489,6 +489,12 @@ async def health():
             health_status["database"] = "disconnected"
             health_status["status"] = "degraded"
 
+    try:
+        from app.core.cache import get_cache_service
+        health_status["cache"] = get_cache_service().get_stats()
+    except Exception:
+        pass
+
     return health_status
 
 
