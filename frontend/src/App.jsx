@@ -83,14 +83,14 @@ const VIEW_PATH_MAP = {
 };
 
 function resolveInitialView() {
-  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
   const hash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
 
-  if (ROUTE_PATH_MAP[pathname]) {
-    return ROUTE_PATH_MAP[pathname];
-  }
   if (ROUTE_PATH_MAP[hash]) {
     return ROUTE_PATH_MAP[hash];
+  }
+  if (ROUTE_PATH_MAP[pathname]) {
+    return ROUTE_PATH_MAP[pathname];
   }
 
   return localStorage.getItem('ksp_current_view') || 'landing';
@@ -98,7 +98,7 @@ function resolveInitialView() {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState(resolveInitialView);
-  const { session, role: authRole, logout } = useAuth();
+  const { session, role: authRole, logout, isLoading } = useAuth();
   const [selectedRoleIntent, setSelectedRoleIntent] = useState(null);
 
   // Authoritative role from verified Supabase session
@@ -108,9 +108,19 @@ function AppContent() {
     const resolvedView = ROUTE_PATH_MAP[viewOrPath] || viewOrPath;
     setCurrentView(resolvedView);
     const targetPath = VIEW_PATH_MAP[resolvedView] || (resolvedView === 'landing' ? '/' : null);
-    if (targetPath && window.location.pathname !== targetPath) {
+    if (targetPath) {
       try {
-        window.history.pushState({ view: resolvedView }, '', targetPath);
+        const targetHash = targetPath === '/' ? '' : `#${targetPath}`;
+        const targetUrl = targetHash
+          ? `${window.location.pathname}${window.location.search}${targetHash}`
+          : `${window.location.pathname}${window.location.search}`;
+
+        const currentNormalizedHash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
+        const targetNormalizedHash = targetPath === '/' ? '' : targetPath;
+
+        if (currentNormalizedHash !== targetNormalizedHash) {
+          window.history.pushState({ view: resolvedView }, '', targetUrl);
+        }
       } catch {
         // Fallback for isolated webview contexts
       }
@@ -151,23 +161,31 @@ function AppContent() {
     return () => window.removeEventListener('ksp_preferences_updated', applySavedTheme);
   }, []);
 
-  // Listen to browser forward/backward buttons
+  // Listen to browser forward/backward buttons and hash changes
   useEffect(() => {
-    const handlePopState = (e) => {
+    const handleUrlChange = (e) => {
+      const hash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
       const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
-      if (ROUTE_PATH_MAP[pathname]) {
-        setCurrentView(ROUTE_PATH_MAP[pathname]);
-      } else if (e.state?.view) {
+
+      if (ROUTE_PATH_MAP[hash]) {
+        setCurrentView(ROUTE_PATH_MAP[hash]);
+      } else if (e?.state?.view) {
         setCurrentView(e.state.view);
+      } else if (ROUTE_PATH_MAP[pathname]) {
+        setCurrentView(ROUTE_PATH_MAP[pathname]);
       } else if (pathname === '/dashboard') {
         setCurrentView('dashboard');
-      } else if (pathname === '/' || pathname === '') {
+      } else {
         setCurrentView('landing');
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -176,12 +194,12 @@ function AppContent() {
     }
   }, [currentView]);
 
-  // Protect dashboard view — require active Supabase session
+  // Protect dashboard view — require active Supabase session once initialization finishes
   useEffect(() => {
-    if (currentView === 'dashboard' && !session) {
+    if (!isLoading && currentView === 'dashboard' && !session) {
       navigateTo('auth-login');
     }
-  }, [currentView, session, navigateTo]);
+  }, [currentView, session, isLoading, navigateTo]);
 
   const navigateToAuth = () => navigateTo('auth-login');
 
@@ -323,6 +341,16 @@ function AppContent() {
         );
 
       case 'dashboard':
+        if (isLoading) {
+          return (
+            <PageTransition key="dashboard-loading">
+              <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#F8F9FB] text-slate-500">
+                <div className="w-10 h-10 border-4 border-slate-200 border-t-[#153E75] rounded-full animate-spin mb-4" />
+                <p className="text-sm font-semibold tracking-wide text-slate-600">Verifying session credentials...</p>
+              </div>
+            </PageTransition>
+          );
+        }
         return (
           <PageTransition key="dashboard">
             <DashboardLayout
