@@ -150,6 +150,11 @@ class Settings(BaseSettings):
     CACHE_TTL_SECONDS: int = 600
     CACHE_MAX_ENTRIES: int = 1000
 
+    # Zoho Catalyst L2 Cache Settings
+    CATALYST_CACHE_ENABLED: bool = False
+    CATALYST_CACHE_SEGMENT_ID: str = ""
+    CATALYST_CACHE_TTL_SECONDS: int = 600
+
     @model_validator(mode="before")
     @classmethod
     def _normalize_backend(cls, values: dict) -> dict:

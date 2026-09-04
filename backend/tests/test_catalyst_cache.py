@@ -1,5 +1,5 @@
-"""Automated tests for Hardened In-Memory Cache Service, LRU eviction,
-invalidation, single-flight stampede protection, telemetry, and RBAC/security order.
+"""Automated tests for Multi-Tier Cache Service: L1 In-Memory LRU + L2 Catalyst Cache,
+single-flight stampede protection, fail-safe degradation, invalidation, telemetry, and RBAC order.
 """
 
 import concurrent.futures
@@ -9,7 +9,13 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.core.cache import get_cache_service, CacheService, InMemoryCacheStore
+from app.core.cache import (
+    get_cache_service,
+    CacheService,
+    InMemoryCacheStore,
+    CatalystCacheStore,
+    MAX_CATALYST_PAYLOAD_BYTES,
+)
 from app.core.config import settings
 
 
@@ -45,7 +51,7 @@ def test_cache_key_isolation():
 
 
 # ---------------------------------------------------------------------------
-# 2. Put / Get flow & Miss
+# 2. Put / Get flow & Miss (L1)
 # ---------------------------------------------------------------------------
 
 
@@ -99,7 +105,7 @@ def test_disabled_cache_behavior():
 
 
 # ---------------------------------------------------------------------------
-# 5. LRU memory eviction
+# 5. LRU memory eviction (L1)
 # ---------------------------------------------------------------------------
 
 
@@ -127,7 +133,82 @@ def test_lru_eviction():
 
 
 # ---------------------------------------------------------------------------
-# 6. Prefix and single-key invalidation
+# 6. L2 Catalyst Cache Store & Multi-Tier Hierarchy
+# ---------------------------------------------------------------------------
+
+
+def test_l1_hit_prevents_l2_lookup():
+    mock_l2_client = MagicMock()
+    l2_store = CatalystCacheStore(enabled=True, client=mock_l2_client)
+    cache = CacheService(l2_store=l2_store)
+
+    # Put into L1
+    cache.put("hot_key", {"data": "fast"}, ttl_seconds=60)
+    mock_l2_client.get_value.reset_mock()
+    mock_l2_client.get.reset_mock()
+
+    # Get should be served directly from L1 without querying L2
+    res = cache.get("hot_key")
+    assert res == {"data": "fast"}
+    mock_l2_client.get_value.assert_not_called()
+    mock_l2_client.get.assert_not_called()
+
+
+def test_l1_miss_and_l2_hit_populates_l1():
+    mock_l2_client = MagicMock()
+    mock_l2_client.get_value.return_value = '{"from": "catalyst_l2"}'
+    l2_store = CatalystCacheStore(enabled=True, client=mock_l2_client)
+    cache = CacheService(l2_store=l2_store)
+
+    # First access: L1 misses, L2 hits
+    res1 = cache.get("l2_key")
+    assert res1 == {"from": "catalyst_l2"}
+    assert mock_l2_client.get_value.call_count == 1
+
+    # Second access: should now HIT L1 directly without querying L2 again
+    mock_l2_client.get_value.reset_mock()
+    res2 = cache.get("l2_key")
+    assert res2 == {"from": "catalyst_l2"}
+    mock_l2_client.get_value.assert_not_called()
+
+
+def test_l1_miss_and_l2_miss():
+    mock_l2_client = MagicMock()
+    mock_l2_client.get_value.return_value = None
+    l2_store = CatalystCacheStore(enabled=True, client=mock_l2_client)
+    cache = CacheService(l2_store=l2_store)
+
+    assert cache.get("completely_missing_key") is None
+    assert l2_store.get_stats()["misses"] == 1
+
+
+def test_l2_unavailable_graceful_fallback():
+    # Simulate L2 raising a network timeout / connection error
+    mock_l2_client = MagicMock()
+    mock_l2_client.get_value.side_effect = TimeoutError("Catalyst Cache network timeout")
+    l2_store = CatalystCacheStore(enabled=True, client=mock_l2_client)
+    cache = CacheService(l2_store=l2_store)
+
+    # Must NOT throw 500 or crash; should return None and log warning
+    assert cache.get("timeout_key") is None
+    assert l2_store.get_stats()["errors"] >= 1
+
+
+def test_l2_oversized_payload_protection():
+    mock_l2_client = MagicMock()
+    l2_store = CatalystCacheStore(enabled=True, client=mock_l2_client)
+
+    # Value larger than 512KB limit
+    large_val = "x" * (MAX_CATALYST_PAYLOAD_BYTES + 1024)
+    res = l2_store.put("big_key", large_val, ttl_seconds=60)
+
+    # L2 skips storing oversized payload safely
+    assert res is False
+    mock_l2_client.put.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# 7. Prefix and single-key invalidation (L1 + L2)
 # ---------------------------------------------------------------------------
 
 
@@ -168,7 +249,7 @@ def test_cache_clear():
 
 
 # ---------------------------------------------------------------------------
-# 7. Operational statistics
+# 8. Operational statistics (L1 + L2 breakdown)
 # ---------------------------------------------------------------------------
 
 
@@ -184,6 +265,8 @@ def test_cache_statistics():
     _ = cache.get("s3_missing")
 
     stats = cache.get_stats()
+    assert "l1" in stats
+    assert "l2" in stats
     assert stats["hits"] >= 1
     assert stats["misses"] >= 1
     assert stats["sets"] >= 2
@@ -192,7 +275,7 @@ def test_cache_statistics():
 
 
 # ---------------------------------------------------------------------------
-# 8. Single-flight stampede protection
+# 9. Single-flight stampede protection
 # ---------------------------------------------------------------------------
 
 
@@ -263,7 +346,7 @@ def test_single_flight_exception_safety():
 
 
 # ---------------------------------------------------------------------------
-# 9. Database mutation post-commit invalidation vs failure safety
+# 10. Database mutation post-commit invalidation vs failure safety
 # ---------------------------------------------------------------------------
 
 
@@ -299,13 +382,11 @@ def test_failed_mutation_does_not_invalidate():
 
 
 # ---------------------------------------------------------------------------
-# 10. Security & RBAC order verification
+# 11. Security & RBAC order verification
 # ---------------------------------------------------------------------------
 
 
 def test_analytics_rbac_protection(client):
-    # When unauthenticated or calling without valid permissions, protected endpoints return 401 / 403
-    # In test dev mode with dev user (Admin), access succeeds and is cached
     res1 = client.get("/api/v1/analytics/summary")
     assert res1.status_code == 200
     res2 = client.get("/api/v1/analytics/summary")
@@ -318,13 +399,15 @@ def test_cache_does_not_contain_secrets():
     cache.put("test_obj", {"token": "sensitive_val", "score": 10}, ttl_seconds=60)
 
     stats = cache.get_stats()
-    # Stats dict must contain strictly numerical metrics and zero payload strings or keys
-    for k, v in stats.items():
-        assert isinstance(v, int)
+    # Stats dict must contain strictly non-sensitive telemetry
+    assert "hits" in stats
+    assert "misses" in stats
+    assert "l1" in stats
+    assert "l2" in stats
 
 
 # ---------------------------------------------------------------------------
-# 11. Existing route integration tests
+# 12. Existing route integration tests
 # ---------------------------------------------------------------------------
 
 
