@@ -68,6 +68,7 @@ _logger = logging.getLogger("crime_analytics")
 # ---------------------------------------------------------------------------
 
 _PUBLIC_PATHS: list[str | re.Pattern] = [
+    "/",
     "/health",
     "/health/live",
     "/health/ready",
@@ -184,8 +185,8 @@ class SecurityHeadersMiddleware:
                 if path.startswith("/api/v1/"):
                     # Protected API responses: no-store
                     headers.append((b"cache-control", b"no-store"))
-                elif path.startswith("/health"):
-                    # Health endpoints: short cache acceptable
+                elif path.startswith("/health") or path == "/":
+                    # Health/root endpoints: short cache acceptable
                     headers.append((b"cache-control", b"max-age=10"))
 
                 message["headers"] = headers
@@ -466,8 +467,18 @@ async def handle_uncaught_exception(request: Request, exc: Exception) -> JSONRes
 
 
 # ---------------------------------------------------------------------------
-# Routes: Health (public)
+# Routes: Public Root & Health
 # ---------------------------------------------------------------------------
+
+
+@app.get("/", tags=["public"])
+async def root():
+    """Public root endpoint. Reports service name and status."""
+    return {
+        "service": "CrimeIntel API",
+        "status": "online",
+        "message": "Authentication required for API access.",
+    }
 
 
 @app.get("/health")

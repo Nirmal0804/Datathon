@@ -4,6 +4,37 @@ from fastapi.testclient import TestClient
 from app.main import app
 
 
+# ---------------------------------------------------------------------------
+# GET / — Public Root / Status
+# ---------------------------------------------------------------------------
+
+
+def test_root_returns_200():
+    client = TestClient(app)
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+def test_root_returns_expected_structure():
+    client = TestClient(app)
+    response = client.get("/")
+    body = response.json()
+    assert body["service"] == "CrimeIntel API"
+    assert body["status"] == "online"
+    assert "message" in body
+
+
+def test_root_is_get_only():
+    client = TestClient(app)
+    response = client.post("/")
+    assert response.status_code == 405
+
+
+# ---------------------------------------------------------------------------
+# GET /health — Comprehensive health check
+# ---------------------------------------------------------------------------
+
+
 def test_health_returns_200():
     client = TestClient(app)
     response = client.get("/health")

@@ -140,8 +140,8 @@ class RateLimitMiddleware:
 
         path = scope.get("path", "")
 
-        # Health/docs are never rate-limited
-        if path.startswith("/health") or path.startswith("/docs") or path == "/openapi.json" or path == "/redoc":
+        # Health/docs/root are never rate-limited
+        if path == "/" or path.startswith("/health") or path.startswith("/docs") or path == "/openapi.json" or path == "/redoc":
             await self.app(scope, receive, send)
             return
 
