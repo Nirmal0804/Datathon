@@ -85,7 +85,20 @@ async def get_current_identity(
 
     request_id = get_request_id(request)
 
-    # If auth is disabled (development mode), return a default identity
+    # Production safety guard: dev-user-000 bypass is strictly prohibited in production
+    if settings.ENVIRONMENT == "production" and not settings.REQUIRE_AUTH:
+        logger.error("Security violation: REQUIRE_AUTH=false is prohibited in production environment")
+        raise HTTPException(
+            status_code=401,
+            headers={"WWW-Authenticate": "Bearer"},
+            detail=_build_auth_error(
+                AUTH_NOT_CONFIGURED,
+                "Authentication enforcement is required in production.",
+                request_id,
+            ),
+        )
+
+    # If auth is disabled (local development / offline test mode only), return mock dev identity
     if not settings.REQUIRE_AUTH:
         from app.core.rbac import ADMIN, PERMISSIONS
 

@@ -29,9 +29,10 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 async def get_me(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
 ) -> MeResponse:
-    """Return verified user identity from the validated JWT."""
+    """Return verified user identity and role from the validated JWT."""
     return MeResponse(
         user_id=identity.user_id,
         authenticated=True,
         email=identity.email,
+        role=identity.role,
     )

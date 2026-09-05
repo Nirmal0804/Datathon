@@ -93,3 +93,44 @@ def get_cursor(
             raise
         finally:
             cur.close()
+
+
+def execute_query(
+    query: str,
+    params: Any = None,
+    cursor_factory: Any = None,
+) -> list[dict]:
+    """Execute a SELECT query and return all rows as dicts."""
+    with get_cursor(commit=False, cursor_factory=cursor_factory) as cur:
+        cur.execute(query, params)
+        return cur.fetchall()
+
+
+def execute_one(
+    query: str,
+    params: Any = None,
+    cursor_factory: Any = None,
+) -> Optional[dict]:
+    """Execute a SELECT query and return a single row as a dict, or None."""
+    with get_cursor(commit=False, cursor_factory=cursor_factory) as cur:
+        cur.execute(query, params)
+        return cur.fetchone()
+
+
+def execute_write(
+    query: str,
+    params: Any = None,
+) -> None:
+    """Execute an INSERT, UPDATE, or DELETE statement within a transaction."""
+    with get_cursor(commit=True) as cur:
+        cur.execute(query, params)
+
+
+def execute_many(
+    query: str,
+    params_list: list[Any],
+) -> None:
+    """Execute a batch INSERT/UPDATE within a transaction."""
+    with get_cursor(commit=True) as cur:
+        cur.executemany(query, params_list)
+

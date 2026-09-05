@@ -1,23 +1,47 @@
 import React, { useState } from 'react';
-import { Shield, Mail, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Shield, Mail, Loader2, CheckCircle2, ArrowLeft, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import LazyImage from '../../components/ui/LazyImage';
 import { useTranslation } from '../../i18n';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../components/ui/Toast';
 
 export default function ForgotPassword({ onBack }) {
   const { t } = useTranslation();
+  const { resetPassword } = useAuth();
+  const { addToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !email.trim()) return;
+
     setIsLoading(true);
-    setTimeout(() => {
+    setErrorMessage('');
+
+    try {
+      await resetPassword(email);
       setIsLoading(false);
       setIsSent(true);
-    }, 1500);
+      addToast({
+        title: t('auth.resetSuccessTitle', 'Reset Link Dispatched'),
+        message: t('auth.resetSuccessMsg', 'Please check your official email for further instructions.'),
+        type: 'success',
+      });
+    } catch (err) {
+      setIsLoading(false);
+      const msg = err?.message || 'Failed to dispatch reset request. Please verify your official email address.';
+      setErrorMessage(msg);
+      addToast({
+        title: 'Reset Error',
+        message: msg,
+        type: 'error',
+      });
+    }
   };
 
   return (

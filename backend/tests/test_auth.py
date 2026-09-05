@@ -295,7 +295,15 @@ class TestRouteProtection:
 
 
 class TestPublicEndpoints:
-    """Health probes and docs must remain public."""
+    """Health probes, root, and docs must remain public."""
+
+    def test_root_public(self, auth_client):
+        resp = auth_client.get("/")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["service"] == "CrimeIntel API"
+        assert body["status"] == "online"
+        assert "message" in body
 
     def test_health_public(self, auth_client):
         resp = auth_client.get("/health")
@@ -316,6 +324,59 @@ class TestPublicEndpoints:
     def test_openapi_public(self, auth_client):
         resp = auth_client.get("/openapi.json")
         assert resp.status_code == 200
+
+
+# ---------------------------------------------------------------------------
+# 3b. Root endpoint & Protected Route Security Verification
+# ---------------------------------------------------------------------------
+
+
+class TestPublicRootAndRouteSecurity:
+    """Explicit verification for public root vs protected endpoints."""
+
+    def test_root_public_returns_200(self, auth_client):
+        """TEST 1: GET / returns 200 without Authorization header."""
+        resp = auth_client.get("/")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["service"] == "CrimeIntel API"
+        assert body["status"] == "online"
+        assert "message" in body
+
+    def test_dashboard_summary_unauthenticated_returns_token_missing(self, auth_client):
+        """TEST 2: GET /api/v1/dashboard/summary without Authorization returns 401 TOKEN_MISSING."""
+        resp = auth_client.get("/api/v1/dashboard/summary")
+        assert resp.status_code == 401
+        body = resp.json()
+        assert body["error"]["code"] == "TOKEN_MISSING"
+
+    def test_districts_unauthenticated_returns_token_missing(self, auth_client):
+        """TEST 3: GET /api/v1/districts without Authorization returns 401 TOKEN_MISSING."""
+        resp = auth_client.get("/api/v1/districts")
+        assert resp.status_code == 401
+        body = resp.json()
+        assert body["error"]["code"] == "TOKEN_MISSING"
+
+    def test_stations_unauthenticated_returns_token_missing(self, auth_client):
+        """TEST 4: GET /api/v1/stations without Authorization returns 401 TOKEN_MISSING."""
+        resp = auth_client.get("/api/v1/stations")
+        assert resp.status_code == 401
+        body = resp.json()
+        assert body["error"]["code"] == "TOKEN_MISSING"
+
+    def test_authenticated_requests_continue_returning_200(self, auth_client):
+        """TEST 5: Existing authenticated requests continue returning HTTP 200."""
+        token = create_test_jwt()
+        headers = {"Authorization": f"Bearer {token}"}
+
+        resp_dash = auth_client.get("/api/v1/dashboard/summary", headers=headers)
+        assert resp_dash.status_code == 200
+
+        resp_dist = auth_client.get("/api/v1/districts", headers=headers)
+        assert resp_dist.status_code == 200
+
+        resp_stat = auth_client.get("/api/v1/stations", headers=headers)
+        assert resp_stat.status_code == 200
 
 
 # ---------------------------------------------------------------------------
@@ -501,8 +562,9 @@ class TestAuthMe:
             headers={"Authorization": f"Bearer {token}"},
         )
         body = resp.json()
-        # Only safe fields should be present
-        assert set(body.keys()) == {"user_id", "authenticated", "email"}
+        # Only safe verified fields should be present; unverified raw claims like district_id are excluded
+        assert set(body.keys()) == {"user_id", "authenticated", "email", "role"}
+        assert "district_id" not in body
 
     def test_request_id_present(self, auth_client):
         token = create_test_jwt()

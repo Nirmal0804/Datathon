@@ -446,6 +446,23 @@ def ingest_all(
 
         conn.commit()
 
+        # Invalidate cached analytics only after confirmed successful database commit
+        try:
+            from app.core.cache import get_cache_service
+            cache = get_cache_service()
+            invalidated_count = (
+                cache.invalidate_prefix("dashboard_summary")
+                + cache.invalidate_prefix("districts_list")
+                + cache.invalidate_prefix("district_intelligence_")
+                + cache.invalidate_prefix("map_intelligence_")
+                + cache.invalidate_prefix("stations_list")
+                + cache.invalidate_prefix("station_detail_")
+                + cache.invalidate_prefix("analytics_")
+            )
+            logger.info("Cache invalidated after batch %s (%d entries purged)", batch_id, invalidated_count)
+        except Exception as cache_exc:
+            logger.warning("Cache invalidation notice after ingestion: %s", cache_exc)
+
         summary["total_records"] = total
         summary["status"] = "success"
         summary["completed_at"] = datetime.now(timezone.utc).isoformat()

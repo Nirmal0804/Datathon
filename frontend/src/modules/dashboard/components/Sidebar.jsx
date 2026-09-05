@@ -178,8 +178,8 @@ export default function Sidebar({ onLogout, activeModule, setActiveModule, role,
               KARNATAKA POLICE
               <span className="text-[9.5px] bg-[#C79A2B] text-white font-black px-1.5 py-0.5 rounded uppercase tracking-wider">KSP</span>
             </h2>
-            <p className="text-[11px] text-white/70 font-semibold uppercase tracking-wider mt-0.5 truncate">
-              {platformSubtitle}
+            <p className="text-[11px] text-white/70 font-medium tracking-wide mt-0.5 truncate">
+              {t('auth.portalName', 'Crime Analytics Platform')}
             </p>
           </div>
         </div>

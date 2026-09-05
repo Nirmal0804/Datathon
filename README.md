@@ -8,16 +8,19 @@
 
 CrimeIntel unifies crime records, geospatial intelligence, analytical dashboards, hotspot detection, district intelligence, criminal-network analysis, and AI/ML-assisted insights in a secure decision-support platform for law-enforcement workflows.
 
-DEPLOYMENT LINK: https://crime-intel-60079748823.development.catalystserverless.in/app/index.html
+**Development / Demo Deployment:**
+- **Web Application:** [https://crime-intel-60079748823.development.catalystserverless.in/app/index.html](https://crime-intel-60079748823.development.catalystserverless.in/app/index.html)
+- **Backend API:** [https://crimeintel-backend-50044367664.development.catalystappsail.in](https://crimeintel-backend-50044367664.development.catalystappsail.in)
 
-[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61dafb)](#6-technology-stack)
-[![Backend](https://img.shields.io/badge/Backend-FastAPI%20(Python)-009688)](#6-technology-stack)
+[![Frontend](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite%208-61dafb)](#6-technology-stack)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI%20(Python%203.10)-009688)](#6-technology-stack)
 [![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ecf8e)](#6-technology-stack)
 [![Auth](https://img.shields.io/badge/Auth-Supabase%20Auth%20%2B%20JWT-6f42c1)](#8-security--authentication)
-[![GIS](https://img.shields.io/badge/GIS-Google%20Maps-4285F4)](#4-key-features)
+[![Cache](https://img.shields.io/badge/Cache-L1%20Memory%20%2B%20L2%20Catalyst-ff9800)](#5-system-architecture)
+[![GIS](https://img.shields.io/badge/GIS-Google%20Maps-4285F4)](#3-google-maps-integration)
 [![Deployment](https://img.shields.io/badge/Deployment-Zoho%20Catalyst-2e7d32)](#14-deployment)
 
-**React + Vite · FastAPI · Supabase PostgreSQL · Supabase Auth + JWT · Google Maps · Zoho Catalyst**
+**React + Vite · FastAPI · Supabase PostgreSQL · Supabase Auth + JWT · Multi-Tier Cache · Google Maps · Zoho Catalyst**
 
 </div>
 
@@ -25,68 +28,70 @@ DEPLOYMENT LINK: https://crime-intel-60079748823.development.catalystserverless.
 
 ## ⭐ Refined Prototype Phase — Upgrades & Enhancements
 
-During the Refined Prototype Phase, CrimeIntel was enhanced beyond its initial functional prototype to improve deployment readiness, usability, accessibility, localization, privacy transparency, role-specific workflows, performance, and operational validation.
+During the Refined Prototype Phase, CrimeIntel was enhanced beyond its initial functional prototype to improve deployment readiness, usability, accessibility, localization, privacy transparency, role-specific workflows, multi-tier caching performance, and operational validation.
 
 ### 🎨 UI/UX Refinement
-- More polished professional interface with consistent visual hierarchy.
-- Improved loading states, including skeleton/loading placeholders for perceived performance.
-- Refined role-specific dashboards with better empty states.
-- Enhanced navbar and footer structure.
+- Polished professional interface with consistent visual hierarchy tailored for police intelligence operations.
+- Smooth page transitions and loading states, including skeleton/loading placeholders for perceived performance.
+- Refined role-specific dashboards with distinct views for Field Officers, Intelligence Analysts, and Administrators.
+- Enhanced navigation bar, breadcrumbs, and standardized footer structure.
 - Back-to-top functionality and desktop-focused experience optimization.
-- Consistent red/yellow/Karnataka Police visual identity.
-- Professional settings/preferences experience.
-- Added Resources and Support sections for better content presentation.
+- Consistent Karnataka Police visual identity and styling system.
+- Comprehensive user settings/preferences experience with instant persistence.
+- Built-in Resources, Statutory Documents (PDF guides), and Support sections.
 
 ### 🗺️ Google Maps Upgrade
-- Replaced the initial Leaflet-based mapping layer with **Google Maps**.
-- Refined the geographic intelligence visualization experience to provide a more familiar, polished, and integrated interface.
-- Integrated mapping more closely with the overall CrimeIntel design system.
-- Preserved the existing crime-intelligence and analytical purpose of the map.
-- Improved the overall usability and presentation of spatial crime information.
+- Replaced the initial Leaflet-based mapping layer with **Google Maps** (`@vis.gl/react-google-maps`).
+- Refined the geographic intelligence visualization experience to provide a familiar, high-performance, and integrated interface.
+- Integrated mapping seamlessly with the overall CrimeIntel design system.
+- Preserved all crime-intelligence and analytical capabilities (clusters, hotspots, density heatmaps, precinct boundaries).
+- Enhanced interactive marker selection and detailed case telemetry popups.
 
 ### 🌐 Language & Accessibility
-- Multilingual interface supporting English (UK/IN) and Kannada (ಕನ್ನಡ).
-- Application UI localization for Kannada, including navigation, role-specific dashboards, forms, and messages.
-- Language preference is available through Settings and persists across sessions.
-- *(Note: Localization primarily targets user-facing interface content; actual identifiers and backend data remain unchanged.)*
+- Multilingual interface supporting English and Kannada (ಕನ್ನಡ).
+- Application UI localization for Kannada across navigation, dashboards, forms, telemetry labels, and alert messages.
+- Language preference is configurable through Settings and persists across sessions.
+- *(Note: Localization primarily targets user-facing interface content; actual identifiers and backend data remain canonical.)*
 
 ### ⚙️ User Preferences
-- **Theme:** Light/Dark mode.
-- **Formats:** Date format and Time format preferences.
-- **Landing:** Default dashboard landing preference.
-- **Language:** UI language preference.
-These preferences persist to provide a tailored user experience.
+- **Theme:** Light / Dark mode toggle with instant theme application.
+- **Formats:** Configurable Date format and Time format preferences.
+- **Landing:** Default dashboard landing preference based on operational role.
+- **Language:** UI language selection (English / Kannada).
+These preferences persist in local storage to provide a tailored user experience across sessions.
 
 ### 🔐 Privacy, Consent & Security UX
-- **Cookie Consent:** Added a professional cookie consent banner for transparent data handling.
-- **Privacy Policy & Terms of Service:** Added dedicated pages for transparency and user trust.
-- **Security Guidelines:** Added a Security Guidelines page to communicate privacy-oriented UX.
-- **Support:** Added a Contact Support experience with user-facing submission confirmation.
+- **Cookie Consent:** Professional cookie consent banner for transparent data handling.
+- **Privacy Policy & Terms of Service:** Dedicated pages for transparency and governance trust.
+- **Security Guidelines:** Dedicated Security Guidelines documentation page.
+- **Support:** Integrated Contact Support experience with user-facing submission confirmation.
 
 ### 👥 Role-Based Experience Refinement
-- Refined role-specific navigation and dashboards for **Field Officer**, **Intelligent Analyst**, and **Administrator**.
-- Tailored Field Officer and Intelligent Analyst workflows.
-- Role-specific Kannada localization and RBAC-preserving navigation.
+- Tailored role-specific navigation and workflows for **Field Officer**, **Intelligence Analyst**, and **Administrator**.
+- Field Officer workflow focused on quick incident filtering, station beat cases, and local hotspot telemetry.
+- Intelligence Analyst workflow focused on cross-district comparisons, temporal trends, DBSCAN spatial clustering, CCRI risk scoring, and predictive forecasting.
+- Administrator workflow focused on security audit log queries, system status telemetry, and user management.
 
 ### ☁️ Zoho Catalyst Deployment
-- Moved from a development-only environment toward a deployed application.
-- **Zoho Catalyst AppSail:** FastAPI/Python backend runs as an AppSail service. The production API is accessible through Catalyst's AppSail infrastructure, which provides managed deployment/runtime infrastructure.
-- **Catalyst CLI:** Used for deployment and project management.
+- **Zoho Catalyst AppSail:** FastAPI/Python backend runs as an AppSail service with Python 3.10 runtime.
+- **Catalyst Web Client Hosting:** React 19 production build deployed to Catalyst Web Client Hosting.
+- **Catalyst CLI:** Integrated deployment workflows and automated packaging.
 
-### 💾 Caching & Backend Optimization
-- **Catalyst Cache Evaluation:** Catalyst Cache was evaluated as part of the refinement phase. The project investigated integrating Catalyst's managed Cache service with the AppSail backend. During validation, the AppSail runtime authentication model prevented the intended direct BaaS Cache integration without additional supported credentials/configuration.
-- **In-Memory TTL Cache:** To maintain reliability and avoid introducing authentication/security risks, the final deployed application uses a thread-safe in-memory TTL response cache for appropriate read-heavy endpoints (Dashboard, Districts, Stations, Analytics, Intelligence Map). This provides caching benefits and reduces repeated computation without affecting application reliability.
-- **Server Optimization:** Uvicorn/ASGI deployment optimized with stateless request handling, health/readiness endpoints, and cache initialization.
+### 💾 Multi-Tier Caching & Backend Optimization
+- **Multi-Tier Cache Architecture:** Implemented a two-tier caching architecture combining a fast L1 in-memory LRU cache and an L2 Zoho Catalyst Cache segment.
+- **L1 In-Memory LRU Cache:** Thread-safe, bounded memory store (1,000 entries max) with per-item TTL expiration for sub-millisecond hot reads.
+- **L2 Zoho Catalyst Cache:** Shared BaaS cache segment for distributed persistence across AppSail worker instances.
+- **Promotion & Fallback:** Two-tier promotion on cache miss (L1 Miss $\rightarrow$ L2 Hit $\rightarrow$ Populate L1 $\rightarrow$ Return response). Cache failures fail safely directly to the repository layer without impacting API availability.
+- **Single-Flight Coordination:** Concurrency lock preventing cache stampedes during concurrent cache misses for identical keys.
+- **Public Root Endpoint:** Clean public `GET /` service status endpoint alongside health probes.
 
 ### 🚀 Scalability & Concurrency
-- Validated concurrency: The deployed AppSail backend was tested with 10 concurrent simulated users.
-- Validation achieved 100% success across tested endpoints, including Health, Readiness, Districts, District Intelligence, Analytics Summary, Forecast, and mixed endpoint traffic.
+- Validated concurrency: The deployed AppSail backend handles concurrent simulated analytical workloads.
+- Verified operational resilience across core endpoints: Health, Readiness, Districts, District Intelligence, Analytics Summary, Hotspots, and Forecasting.
 
 ### 🧪 Testing & Validation
-- Backend test suite passed during refinement.
-- Cache, Dashboard API, District API, Station API, and Intelligence Map API tests passed.
-- Concurrency testing performed against deployed AppSail.
-- 10 concurrent-user scenario achieved 100% success across tested endpoints.
+- Automated backend test suite verifies **683 tests** (`683 passed, 92 deselected, 0 failed, 0 errors`).
+- Comprehensive test coverage for JWT verification, server-side RBAC, multi-tier cache operations, rate limiting, audit logging, public root/health endpoints, and domain services.
 
 ---
 
@@ -112,96 +117,96 @@ These preferences persist to provide a tailored user experience.
 
 ## 1. 🎯 Problem Statement
 
-Law-enforcement agencies generate large volumes of information across FIRs, districts, police stations, arrests, chargesheets, victims, accused persons, and legal records. When these records remain fragmented across files and reporting systems, extracting timely intelligence becomes difficult.
+Law-enforcement agencies generate large volumes of operational information across FIRs, districts, police stations, arrests, chargesheets, victims, accused persons, and legal records. When these records remain fragmented across siloed files and reporting systems, extracting timely, actionable intelligence becomes difficult.
 
 | Challenge | Impact |
 |-----------|--------|
-| **Fragmented crime records** | Information must be combined manually before meaningful analysis. |
-| **Limited analytical visibility** | Trends, hotspots, district variations, and relationships are difficult to identify quickly. |
-| **Reactive decision-making** | Historical records exist, but converting them into actionable intelligence is difficult. |
-| **Complex spatial and relational patterns** | Geographic concentrations and cross-case relationships can remain hidden in tabular records. |
+| **Fragmented crime records** | Information must be combined manually before meaningful strategic or field analysis can occur. |
+| **Limited analytical visibility** | High-level trends, geographic hotspots, district variations, and repeat-offender links are difficult to identify quickly. |
+| **Reactive decision-making** | Historical records exist, but converting them into proactive operational intelligence requires specialized processing. |
+| **Complex spatial and relational patterns** | Geographic concentrations and multi-case criminal networks remain hidden within flat tabular records. |
 
 ---
 
 ## 2. 💡 Solution Overview
 
-**CrimeIntel** is an integrated crime analytics and intelligence platform that converts structured police data into operational and strategic insights.
+**CrimeIntel** is an integrated AI-driven crime analytics and intelligence platform that converts structured police records into operational and strategic insights for data-driven policing.
 
 > **Crime Dashboard · Geographic Crime Map · Hotspot Intelligence · District Intelligence · Trend Analytics · Network Analysis · AI/ML Insights · Secure Decision Support**
 
-CrimeIntel follows an API-first architecture. The React frontend consumes secured FastAPI services. Supabase provides authentication and hosted PostgreSQL infrastructure, while Zoho Catalyst is used for application deployment.
+CrimeIntel follows an API-first architecture. The modern React frontend communicates with secured FastAPI backend services. Supabase provides authentication and hosted PostgreSQL infrastructure, Zoho Catalyst provides cloud deployment (AppSail and Web Client Hosting), and Zoho Catalyst Cache provides distributed L2 caching.
 
 ```text
-User
-  ↓
-CrimeIntel Frontend
-  ↓
-Zoho Catalyst / AppSail
-  ↓
-FastAPI Backend
-  ↓
-Data + Analytics + ML
-  ↓
-Crime Intelligence Response
+User / Officer
+      ↓
+React + Vite Frontend (Catalyst Web Client)
+      ↓  Bearer JWT (Supabase Auth)
+FastAPI Backend (Zoho Catalyst AppSail)
+      ↓
+Multi-Tier Cache (L1 Memory → L2 Catalyst Cache)
+      ↓ (Cache Miss)
+Repository & ML Analytics Layer
+      ↓
+Supabase PostgreSQL Database
 ```
 
 ---
 
 ## 3. 🗺️ Google Maps Integration
 
-During the Refined Prototype Phase, the original Leaflet-based mapping implementation was replaced with **Google Maps** (`@vis.gl/react-google-maps`) to provide a more familiar, polished, and integrated geographic visualization experience.
+During the Refined Prototype Phase, the initial mapping layer was upgraded to **Google Maps** (`@vis.gl/react-google-maps`) to provide a familiar, high-performance, and professional geographic visualization experience.
 
-This refinement aligns the mapping experience with the product's professional, production-oriented interface, maintaining the exact same analytical capabilities but presenting them with enhanced usability and visual hierarchy.
+This integration aligns the spatial analysis workflow with modern law-enforcement UX standards while preserving all crime-intelligence and spatial telemetry features.
 
 ### Prototype Evolution
 
-| Mapping Layer | Initial Prototype | Refined Prototype |
+| Capability | Initial Prototype | Refined / Final Implementation |
 |---|---|---|
-| Mapping Technology | Leaflet | Google Maps |
-| Geographic Visualization | ✅ | ✅ Enhanced |
-| Crime Locations | ✅ | ✅ |
-| Hotspot Visualization | ✅ | ✅ |
-| Heatmap/Spatial Analysis | Existing prototype capability | Refined Google Maps experience |
-| Role-Based Map Usage | Existing | Refined |
+| Mapping Technology | Leaflet | Google Maps (`@vis.gl/react-google-maps`) |
+| Geographic Visualization | Basic | Enhanced Vector Maps + Satellite Layers |
+| Crime Locations | Coordinate plotting | Interactive markers with rich metadata cards |
+| Hotspot Detection | Bounded boxes | Dynamic DBSCAN clusters & intensity gradients |
+| Density Heatmaps | Basic raster | Native high-density heatmap layers |
+| Incident Clustering | Marker grouping | High-performance dynamic coordinate clustering |
+| Role-Based Workflows | Unified map | Role-tailored Field Map & Intelligence Map |
 
 ### Geographic Capabilities
 
-CrimeIntel uses Google Maps to provide an interactive geographic intelligence layer. Current implementation features include:
-- **Crime Location Visualization:** Precise coordinate plotting of incidents.
-- **Crime Hotspots:** Visualizing geographic concentrations of recorded crime.
-- **Heatmap Visualization:** Rendering intensity maps based on location density.
-- **Cluster Visualization:** Grouping dense incident records for easier map navigation.
-- **Location-Based Intelligence:** Clicking map markers reveals detailed case insights.
-
-*(Note: Google Maps credentials/API keys are securely managed through environment configuration (`.env.production`) and must not be committed to source control.)*
+- **Crime Location Visualization:** Precise coordinate plotting of incidents with crime category color coding.
+- **Crime Hotspots:** Visualizing geographic concentrations of recorded crime for patrol beat planning.
+- **Heatmap Visualization:** Rendering density intensity maps across urban and rural police precincts.
+- **Cluster Visualization:** Dynamically grouping dense incident records for clean map navigation.
+- **Location-Based Telemetry:** Interactive modal inspection with FIR summary, IPC sections, and station jurisdiction.
 
 ---
 
 ## 4. ✨ Key Features
 
-### 📊 Interactive Crime Dashboard
-Consolidated crime indicators, district distribution, trends, recent cases, and intelligence summaries.
+### 📊 Interactive Executive & Role Dashboards
+Consolidated crime KPIs, arrest rates, chargesheet distributions, temporal trends, district comparative metrics, and executive summaries tailored for Field Officers, Intelligence Analysts, and Station Commanders.
 
-### 🗺️ Karnataka Geographic Crime Map
-Powered by Google Maps, providing interactive geographic visualization of crime incidents, filters, clusters, heatmaps, and hotspot information.
+### 🗺️ Geospatial Crime Intelligence (Google Maps)
+Interactive geographic visualization of incidents, precinct boundaries, dynamic DBSCAN clusters, density heatmaps, and spatial hotspot detection.
 
 ### 🔥 Crime Hotspot Intelligence
-Highlights geographic concentrations of crime to support location-focused analysis and operational planning.
+Identifies geographic concentrations of crime using spatial clustering algorithms to support targeted patrol deployment and resource allocation.
 
 ### 📈 Trend & Temporal Analytics
-Explores crime patterns over time through timeline analysis, crime-category trends, temporal distributions, and district comparisons.
+Explores crime patterns across time through multi-year timeline analysis, seasonal category trends, day/night temporal distributions, and cross-district comparative metrics.
 
-### 🏙️ District Intelligence
-Provides district-level statistics, category breakdowns, police-station information, recent cases, and hotspot summaries.
+### 🏙️ District & Station Intelligence Profiles
+Comprehensive district-level profiles across all 31 Karnataka districts, including station rosters, crime category breakdowns, CCRI risk indicators, and recent FIR records.
 
 ### 🔗 Criminal Network Analysis
-Builds deterministic relationship graphs from FIR-person relationships to reveal linked FIRs, person-case relationships, and co-accused connections.
+Builds deterministic relationship graphs from FIR-person relationships to reveal linked FIRs, person-case connections, co-accused associations, and repeat-offender clusters.
 
-### 🧠 AI/ML-Assisted Intelligence
-Provides an extensible intelligence layer for validated predictive risk, anomaly detection, forecasting, and related model-driven analytics.
+### 🧠 AI/ML Analytics & Forecasting
+- **DBSCAN Spatial Hotspots:** Pre-computed density-based spatial clustering of incident coordinates.
+- **Composite Crime Risk Index (CCRI):** Multi-factor risk scoring and ranking across police precincts.
+- **Predictive Forecasting:** Multi-day crime incident volume projections.
 
 ### 📤 Reporting, Export & Decision Support
-Provides bounded operational CSV export, interactive visualizations, and analytical workflows supporting evidence-based policing.
+Provides bounded operational CSV/PDF export, interactive visualizations, and structured analytical dossiers supporting evidence-based decision-making.
 
 ---
 
@@ -216,105 +221,130 @@ Provides bounded operational CSV export, interactive visualizations, and analyti
                                   |
                                   v
 +----------------------------------------------------------------+
-|                       React + Vite Frontend                     |
-| Dashboard | Crime Map | District | Network | Analytics | Reports|
-+------------------------------+---------------------------------+
-                               |
-                           Bearer JWT
-                               |
-                               v
+|                     React + Vite Frontend                      |
+| Dashboard | Field Map | Intelligence Map | District | Network  |
++---------------------------------+------------------------------+
+                                  |
+                              Bearer JWT
+                                  |
+                                  v
 +----------------------------------------------------------------+
-|                         FastAPI Backend                        |
-| Auth | Security | Audit | Validation | REST APIs               |
-| Dashboard | Maps | Districts | Stations | Network | Export     |
-+------------------------------+---------------------------------+
-                               |
-                      Repository / Service Layer
-                               |
-                               v
+|                        FastAPI Backend                         |
+|   Public Root (GET /)  |  Health Probes  |  Protected APIs     |
++---------------------------------+------------------------------+
+                                  |
+      +---------------------------+---------------------------+
+      |                                                       |
+      v                                                       v
++-----------------------------+             +-----------------------------+
+|    L1 In-Memory LRU Cache   |             |    Authentication & RBAC    |
+|   Thread-Safe · TTL Bounded |             |   JWT Verify · Claim Map    |
++--------------+--------------+             +-----------------------------+
+               | (cache miss)
+               v
++-----------------------------+
+|   L2 Zoho Catalyst Cache    |
+|   Segment Store · Fail-Safe |
++--------------+--------------+
+               | (cache miss)
+               v
 +----------------------------------------------------------------+
-|                        Supabase Platform                       |
-|        Supabase Auth              PostgreSQL Database          |
-|        Session + JWT              Production Persistence       |
+|                   Repository & Service Layer                   |
+|       PostgreSQL Repositories    |    ML & Analytics Engine    |
++---------------------------------+------------------------------+
+                                  |
+                                  v
++----------------------------------------------------------------+
+|                       Supabase Platform                        |
+|        Supabase Auth                 PostgreSQL Database       |
+|        Session + JWT                 Production Persistence    |
 +----------------------------------------------------------------+
 
-                Deployment Platform: Zoho Catalyst AppSail
+      Cloud Deployment: Zoho Catalyst (AppSail + Web Client Hosting)
 ```
 
-Architecture principles include API-first separation, repository abstraction, backend-enforced authentication, privacy-aware responses, evidence-based analytics, and an extensible ML/GIS integration layer.
+### Multi-Tier Caching Architecture
+
+1. **L1 In-Memory LRU Cache:** Fast in-process cache storing serializable response objects with per-item TTL expiration and capacity bounds (1,000 entries max).
+2. **L2 Zoho Catalyst Cache:** Shared BaaS cache segment in Zoho Catalyst providing cross-worker cache persistence.
+3. **Promotion on Miss:** When an L1 cache miss occurs, the system queries L2. On an L2 hit, the item is promoted to L1 for subsequent sub-millisecond retrieval.
+4. **Single-Flight Stampede Protection:** Mutex coordination prevents redundant simultaneous backend queries for identical cache keys during heavy traffic.
+5. **Fail-Safe Operation:** If L2 cache is unreachable or unconfigured, the application gracefully degrades to L1 and repository queries without throwing API errors.
+6. **Targeted Invalidation:** Mutation operations trigger coordinated prefix and key invalidation across both L1 and L2 layers.
 
 ---
 
 ## 6. 🧰 Technology Stack
 
-| Layer | Technologies |
-|-------|--------------|
-| **Frontend** | React 19, Vite, JavaScript/JSX, Tailwind CSS |
-| **Visualization** | Interactive charts, Google Maps |
-| **Backend** | Python, FastAPI, Uvicorn, Pydantic |
-| **Database** | PostgreSQL hosted on Supabase |
-| **Authentication** | Supabase Auth, JWT |
-| **Data Access** | Repository pattern with PostgreSQL and CSV adapters |
-| **Analytics/ML** | Python, Pandas, NumPy, Scikit-learn, XGBoost, DBSCAN |
-| **GIS** | Google Maps (`@vis.gl/react-google-maps`), coordinate-based spatial visualization |
-| **Network Intelligence** | FIR-person relationship graph analysis |
-| **Testing** | Pytest |
-| **Version Control** | Git, GitHub |
-| **Cloud/Deployment**| Zoho Catalyst, AppSail, Catalyst CLI |
+| Layer | Technologies | Version / Details |
+|---|---|---|
+| **Frontend** | React 19, Vite 8, JavaScript/JSX | Modern component-driven UI |
+| **Styling & UI** | Tailwind CSS, Framer Motion, Lucide React | Clean, professional dark/light police design |
+| **Mapping / GIS** | Google Maps (`@vis.gl/react-google-maps`) | Coordinate plotting, heatmaps, clustering |
+| **Backend** | Python 3.10, FastAPI, Uvicorn, Pydantic v2 | High-performance asynchronous REST API |
+| **Database** | PostgreSQL hosted on Supabase | Relational persistence, connection pooling |
+| **Authentication** | Supabase Auth, JWT (PyJWT, Cryptography) | Cryptographic Bearer token verification |
+| **Authorization** | Server-Side RBAC | Least-privilege role & permission mapping |
+| **Caching** | Multi-Tier Cache (L1 LRU + L2 Zoho Catalyst) | In-memory TTL + Catalyst BaaS segment |
+| **Analytics & ML** | Pandas, NumPy, Scikit-learn, XGBoost | DBSCAN clustering, CCRI scoring, forecasting |
+| **Network Intelligence**| Graph analysis | FIR-person relationship link analysis |
+| **Testing** | Pytest, TestClient, AnyIO | Automated testing suite (683 tests) |
+| **Cloud Hosting** | Zoho Catalyst AppSail & Web Client Hosting | Managed serverless deployment |
 
 ---
 
 ## 7. 📋 Data & Transparency
 
-CrimeIntel follows a strict data-transparency principle: crime records, identities, coordinates, model outputs, and district statistics must not be fabricated and represented as authoritative information.
+CrimeIntel adheres to strict data-integrity and privacy principles:
 
-The data layer supports structured entities including districts, police stations, FIRs, FIR-person relationships, arrests, chargesheets, and crime attributes.
-
-**Key principles:**
-
-- Approved datasets remain the source of truth.
-- Synthetic values must not be silently mixed with real government records.
-- Person-level PII is excluded from general analytical API responses.
-- Persistence is separated from analytics through repository and service layers.
-- Dataset provenance and limitations should remain documented as additional sources are integrated.
-- Production ingestion supports batched PostgreSQL upserts and repeatable ingestion.
+- **Approved Datasets as Source of Truth:** Official crime records, FIR details, district boundaries, and station rosters serve as authoritative sources.
+- **No Unattributed Synthetic Data:** Synthetic or demo data is clearly separated and never presented as authoritative government records.
+- **PII Exclusion in Analytical APIs:** Person-level sensitive details (victim identities, full PII) are excluded from general analytical responses.
+- **Architectural Separation:** Persistence, business logic, caching, and presentation layers are decoupled via repository contracts.
+- **Data Backend Support:** Production persistence relies on PostgreSQL on Supabase, with an in-memory/CSV repository adapter available for offline unit testing.
 
 ---
 
 ## 8. 🔐 Security & Authentication
 
-CrimeIntel uses **Supabase Auth** for frontend authentication and **FastAPI JWT verification** for backend enforcement.
+CrimeIntel implements a Zero-Trust, deny-by-default security architecture combining **Supabase Auth** for client sessions and **FastAPI JWT validation** for backend API enforcement.
 
 ```text
-User
- |
- v
-React Login
- |
- | Supabase URL + Publishable/Anon Key
- v
-Supabase Auth
- |
- | Session + Access JWT
- v
-Frontend API Client
- |
- | Authorization: Bearer <JWT>
- v
-FastAPI Authentication Middleware
- |
- | Verify identity
- v
-Protected CrimeIntel APIs
+User / Officer
+      |
+      v
+React Frontend (Supabase Client)
+      |
+      | Sign in with departmental credentials
+      v
+Supabase Auth Service
+      |
+      | Returns Session + Access JWT
+      v
+Frontend API Client (`fetchAPI`)
+      |
+      | Authorization: Bearer <JWT>
+      v
+FastAPI Authentication Middleware & Dependencies (`get_current_identity`)
+      |
+      +---> Cryptographic JWT signature & expiry check (JWKS / Secret)
+      +---> Server-side RBAC claim resolution (Admin / Analyst / Officer)
+      +---> Route permission check (e.g. `dashboard.read`, `map.read`)
+      |
+      v
+Protected CrimeIntel API Handlers
 ```
 
-Security controls include deny-by-default authentication, JWT signature and claim validation, HS256/JWKS verification support, explicit algorithm allowlists, algorithm-confusion protection, expiration checks, production authentication guards, security headers, controlled CORS, request IDs, structured logging, audit logging with an admin read API, centralized errors, production API-documentation hardening, and route-level RBAC enforced server-side from verified JWT claims (see `backend/docs/RBAC_AUTHORIZATION.md`).
+### Security Controls
 
-Server-side RBAC resolves each authenticated identity to a least-privilege role (default `FIELD_OFFICER`); every protected endpoint maps to an explicit permission (`dashboard.read`, `map.intelligence.read`, `audit.read`, etc.). A fixed-window rate limiter (single-instance scope) protects route classes such as export and search. Full details: `backend/docs/RBAC_AUTHORIZATION.md`.
-
-Frontend-safe configuration includes the Supabase project URL and publishable/anon key. Database passwords, database URLs, JWT signing secrets, and privileged Supabase service credentials remain server-side.
-
-Database Row Level Security is enabled on all tables (`supabase/migrations/005_rls.sql`): `districts` and `police_stations` are readable by `authenticated`; all PII-bearing and operational tables are deny-by-default. The backend connects as a privileged role and bypasses RLS — its access is governed by the RBAC permissions above.
+- **Public vs Protected Endpoints:**
+  - **Public Endpoints:** Root service status (`GET /`) and health probes (`/health`, `/health/live`, `/health/ready`) are accessible without authentication.
+  - **Protected Endpoints:** All `/api/v1/*` routes require a valid Bearer JWT. Unauthenticated requests are rejected with `HTTP 401 TOKEN_MISSING`.
+- **Cryptographic Verification:** Validates token signatures against Supabase JWKS / JWT secrets, checking issuer, audience, and expiry claims.
+- **Server-Side RBAC:** Maps claims to validated roles (`ADMIN`, `ANALYST`, `FIELD_OFFICER`) with explicit granular permissions (`dashboard.read`, `map.intelligence.read`, `audit.read`, etc.).
+- **Rate Limiting:** In-process fixed-window rate limiter protecting cost-heavy endpoints (export, search, audit).
+- **Security Headers:** Enforces `Cache-Control: no-store` on authenticated API responses, `X-Content-Type-Options: nosniff`, and `Referrer-Policy: strict-origin-when-cross-origin`.
+- **Security Audit Trail:** Immutable append-only audit logging recording security events and denied access attempts.
 
 ---
 
@@ -324,38 +354,36 @@ Database Row Level Security is enabled on all tables (`supabase/migrations/005_r
 Datathon/
 ├── backend/
 │   ├── app/
-│   │   ├── api/                 # FastAPI routes
-│   │   ├── analytics/           # Analytical logic
-│   │   ├── core/                # Auth, config, logging, audit, errors
+│   │   ├── api/                 # FastAPI routes (dashboard, districts, maps, stations, analytics, auth)
+│   │   ├── core/                # Auth dependencies, JWT verification, cache, audit, rate limit, config
 │   │   ├── database/
-│   │   │   ├── repositories/    # Repository contracts/adapters
-│   │   │   ├── postgres/        # PostgreSQL implementation
-│   │   │   └── ingest/          # Data ingestion
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   └── main.py
-│   ├── tests/
+│   │   │   ├── postgres/        # PostgreSQL implementation and connection pooling
+│   │   │   ├── repositories/    # Repository contracts and CSV fallback adapters
+│   │   │   └── ingest/          # Data ingestion utilities
+│   │   ├── models/              # Pydantic and domain models
+│   │   ├── schemas/             # Request/response schemas
+│   │   ├── services/            # Business logic and intelligence services
+│   │   └── main.py              # Application entry point, middleware, and route registration
+│   ├── tests/                   # Pytest test suite (auth, rbac, cache, api, health, repositories)
 │   ├── requirements.txt
+│   ├── app-config.json          # Catalyst AppSail configuration
 │   └── .env.example
 ├── frontend/
 │   ├── src/
-│   │   ├── api/                 # API client and Supabase auth
-│   │   ├── modules/
-│   │   │   ├── analytics/
-│   │   │   ├── dashboard/
-│   │   │   ├── district-intelligence/
-│   │   │   ├── hotspot-detection/
-│   │   │   ├── karnataka-crime-map/
-│   │   │   ├── network-analysis/
-│   │   │   ├── reports/
-│   │   │   └── settings/
-│   │   └── App.jsx
+│   │   ├── components/          # Reusable UI elements, navigation, notifications, modals
+│   │   ├── context/             # AuthContext (Supabase session), NotificationContext
+│   │   ├── modules/             # Analytics, dashboard, district-intelligence, hotspot-detection, map, network
+│   │   ├── services/            # Unified API client (`api.js`) and Supabase client (`supabase.js`)
+│   │   ├── utils/               # PDF generation, formatters
+│   │   └── App.jsx              # Main routing, role switching, and view controller
+│   ├── public/                  # Public assets, icons, documentation resources
 │   ├── package.json
+│   ├── vite.config.js
 │   └── .env.example
-├── data/
-├── docs/
-├── ml-engine/
+├── catalyst-web-client/         # Catalyst Web Client build output directory
+├── docs/                        # Architecture, API specifications, and RBAC documentation
+├── ml-engine/                   # ML models, clustering notebooks, and training pipelines
+├── catalyst.json                # Catalyst project deployment configuration
 └── README.md
 ```
 
@@ -365,19 +393,19 @@ Datathon/
 
 ### Prerequisites
 
-- Python
-- Node.js and npm
-- Git
-- Access to the configured Supabase project for live database/auth testing
+- **Python 3.10+**
+- **Node.js 18+ and npm**
+- **Git**
+- Access to Supabase project (URL and publishable/anon key)
 
-### Clone
+### 1. Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Nirmal0804/Datathon.git
 cd Datathon
 ```
 
-### Backend
+### 2. Backend Setup
 
 ```bash
 cd backend
@@ -385,41 +413,32 @@ python -m venv .venv
 ```
 
 Windows PowerShell:
-
 ```powershell
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item .env.example .env
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
 
-Backend:
+Backend will be available at `http://localhost:8000`.
 
-```text
-http://localhost:8000
-```
+### 3. Frontend Setup
 
-### Frontend
-
-In another terminal:
-
+In a separate terminal:
 ```bash
 cd frontend
 npm install
+Copy-Item .env.example .env
 npm run dev
 ```
 
-Frontend:
-
-```text
-http://localhost:5173
-```
+Frontend will be available at `http://localhost:5173`.
 
 ---
 
 ## 11. 🔧 Configuration
 
-Representative backend configuration:
+### Backend Configuration (`backend/.env`)
 
 ```env
 APP_NAME=crime-analytics-backend
@@ -427,148 +446,207 @@ ENVIRONMENT=development
 API_PREFIX=/api/v1
 CORS_ORIGINS=["http://localhost:5173","http://localhost:3000"]
 
+# Database Configuration
 DATA_BACKEND=postgres
-DATABASE_URL=<postgresql-connection-string>
+DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 
+# Authentication Configuration
 REQUIRE_AUTH=true
+SUPABASE_PROJECT_REF=your-project-ref
+SUPABASE_JWKS_URL=https://your-project-ref.supabase.co/auth/v1/.well-known/jwks.json
+SUPABASE_JWT_ISSUER=https://your-project-ref.supabase.co/auth/v1
+SUPABASE_JWT_AUDIENCE=authenticated
+
+# L1 In-Memory Response Cache
+CACHE_ENABLED=true
+CACHE_TTL_SECONDS=600
+CACHE_MAX_ENTRIES=1000
+
+# L2 Zoho Catalyst Cache
+CACHE_L2_ENABLED=true
+CACHE_L2_SEGMENT_ID=your-catalyst-cache-segment-id
+CACHE_L2_TTL_SECONDS=600
 ```
 
-Representative frontend configuration:
+### Frontend Configuration (`frontend/.env`)
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
-VITE_SUPABASE_URL=<your-supabase-project-url>
-VITE_SUPABASE_ANON_KEY=<your-supabase-publishable-or-anon-key>
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-publishable-or-anon-key
+VITE_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ```
 
-Use the repository `.env.example` files as the authoritative configuration reference. Never commit real server credentials.
+*(Note: Never commit real passwords, secret keys, or service-role keys to source control.)*
 
 ---
 
 ## 12. 📡 API Overview
 
-### Health
+### Public Service & Health Probes
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/health` | Application/dependency health |
-| GET | `/health/live` | Liveness probe |
-| GET | `/health/ready` | Readiness probe |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/` | Public root service status and message | No |
+| GET | `/health` | Application status, database connection & cache statistics | No |
+| GET | `/health/live` | Process liveness probe | No |
+| GET | `/health/ready` | Readiness probe verifying PostgreSQL connection | No |
 
 ### Authentication
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/api/v1/auth/me` | Backend-verified authenticated identity |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/auth/me` | Returns server-verified identity and RBAC role | Yes (`Bearer`) |
 
-### Dashboard
+### Executive Dashboard
 
-| Method | Endpoint |
-|--------|----------|
-| GET | `/api/v1/dashboard/summary` |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/dashboard/summary` | State-level KPIs, arrest rates, chargesheet distributions | Yes (`Bearer`) |
 
 ### Field Crime Map
 
-| Method | Endpoint |
-|--------|----------|
-| GET | `/api/v1/map/field/cases` |
-| GET | `/api/v1/map/field/case/{fir_identifier}` |
-| GET | `/api/v1/map/field/filters` |
-| GET | `/api/v1/map/field/hotspots` |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/map/field/cases` | Paginated FIR case records with geospatial filters | Yes (`Bearer`) |
+| GET | `/api/v1/map/field/case/{fir_identifier}` | Detailed FIR record and case summary | Yes (`Bearer`) |
+| GET | `/api/v1/map/field/filters` | Distinct filter options (districts, stages, crime types) | Yes (`Bearer`) |
+| GET | `/api/v1/map/field/hotspots` | Beat-level spatial crime clusters | Yes (`Bearer`) |
 
-### Intelligence Map
+### Intelligence Map & Analytics
 
-| Method | Endpoint |
-|--------|----------|
-| GET | `/api/v1/map/intelligence/analytics` |
-| GET | `/api/v1/map/intelligence/heatmap` |
-| GET | `/api/v1/map/intelligence/clusters` |
-| GET | `/api/v1/map/intelligence/hotspots` |
-| GET | `/api/v1/map/intelligence/district-comparison` |
-| GET | `/api/v1/map/intelligence/timeline` |
-| GET | `/api/v1/map/intelligence/export` |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/map/intelligence/analytics` | High-level spatial intelligence metrics | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/heatmap` | Spatial density coordinate points for heatmaps | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/clusters` | Station-level incident clusters | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/hotspots` | DBSCAN spatial hotspot centroids | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/district-comparison` | Multi-district comparative crime metrics | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/timeline` | Temporal crime incident trend data | Yes (`Bearer`) |
+| GET | `/api/v1/map/intelligence/export` | Bounded operational CSV intelligence export | Yes (`Bearer`) |
 
-### District Intelligence
+### District & Station Intelligence
 
-| Method | Endpoint |
-|--------|----------|
-| GET | `/api/v1/districts` |
-| GET | `/api/v1/districts/{district_id}/intelligence` |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/districts` | List all 31 districts with summary metrics | Yes (`Bearer`) |
+| GET | `/api/v1/districts/{district_id}/intelligence` | Single-district comprehensive intelligence dossier | Yes (`Bearer`) |
+| GET | `/api/v1/stations` | List police stations with optional district filtering | Yes (`Bearer`) |
+| GET | `/api/v1/stations/{station_id}` | Detailed police precinct profile and metrics | Yes (`Bearer`) |
 
-### Stations
+### Predictive & ML Analytics
 
-| Method | Endpoint |
-|--------|----------|
-| GET | `/api/v1/stations` |
-| GET | `/api/v1/stations/{station_id}` |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/analytics/summary` | Executive ML dashboard summary metrics | Yes (`Bearer`) |
+| GET | `/api/v1/analytics/hotspots` | DBSCAN spatial cluster summaries | Yes (`Bearer`) |
+| GET | `/api/v1/analytics/risk-scores` | Station-level CCRI risk ranks, scores, and tiers | Yes (`Bearer`) |
+| GET | `/api/v1/analytics/forecast` | Daily crime incident volume forecast (1 to 30 days) | Yes (`Bearer`) |
 
-### Network Intelligence
+### Criminal Network Analysis
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/api/v1/network/graph` | Relationship graph |
-| GET | `/api/v1/network/entities/{entity_type}/{entity_id}` | Entity detail |
-| GET | `/api/v1/network/search` | Cross-entity search |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/network/graph` | Deterministic FIR-person relationship graph | Yes (`Bearer`) |
+| GET | `/api/v1/network/entities/{type}/{id}` | Entity detail (FIR, person, station) | Yes (`Bearer`) |
+| GET | `/api/v1/network/search` | Multi-entity cross-reference search | Yes (`Bearer`) |
 
-### Admin
+### Security & Administration
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/api/v1/admin/audit/events` | Audit trail query (requires `audit.read`; 503 in CSV/dev) |
-
-For exact query parameters and response contracts, refer to the API contract under `docs/`.
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/v1/admin/audit/events` | Query security audit event logs | Yes (`admin`) |
 
 ---
 
 ## 13. ✅ Testing & Reliability
 
-The automated backend test suite (734 tests) covers authentication and JWT security, RBAC authorization, audit write + read API, rate limiting, dashboard services, crime-map APIs, intelligence analytics, district intelligence, stations, network analysis, health probes, error handling, repositories, ingestion, audit logging, and privacy/PII behavior.
+CrimeIntel is backed by a comprehensive automated test suite.
 
-Reliability measures include PostgreSQL connection pooling and timeouts, bounded exports, bounded graph construction, centralized error responses, deterministic repository-backed tests, and health/liveness/readiness probes. Continuous integration runs the full suite on every branch via `.github/workflows/backend-ci.yml`. 
-During the refinement phase, cache tests, concurrency testing, and individual module API tests passed successfully. The 10 concurrent-user scenario achieved 100% success across tested endpoints.
+```powershell
+python -m pytest tests/ -k "not test_production_db_migration"
+```
+
+**Verified Test Result:**
+```text
+===================== 683 passed, 92 deselected in 18.35s =====================
+```
+
+### Reliability & Verification Coverage
+
+- **Authentication & JWT Security:** Valid token resolution, expired/malformed token rejection, JWKS validation, and algorithm-confusion protection.
+- **Route Protection:** Deny-by-default access verification across all protected routes.
+- **Public Root & Probes:** Verified `GET /`, `/health`, `/health/live`, and `/health/ready` responses.
+- **Server-Side RBAC:** Verified least-privilege role mappings and permission gates for Field Officers, Analysts, and Admins.
+- **Multi-Tier Cache Operations:** Unit and integration tests for L1 LRU memory store, L2 Catalyst Cache fallback, two-tier promotion, TTL eviction, and concurrency stampede coordination.
+- **Rate Limiting:** Verified fixed-window rate limiter on standard, search, export, and audit routes.
+- **Domain Services:** Tested dashboard metrics, district intelligence dossiers, station telemetry, DBSCAN hotspots, CCRI risk scoring, network graphs, and CSV data loader.
 
 ---
 
 ## 14. 📦 Deployment
 
-CrimeIntel uses **Zoho Catalyst** for application deployment.
+CrimeIntel is deployed to **Zoho Catalyst** in a Development / Demo environment.
 
 ```text
-                   Zoho Catalyst
-             +-----------------------+
-Browser ---> | React Web Application |
-             +-----------+-----------+
-                         |
-                         v
-             +-----------------------+
-             |   FastAPI / AppSail   |
-             +-----------+-----------+
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-       Supabase Auth        Supabase PostgreSQL
+                     Zoho Catalyst Cloud
+              +--------------------------------+
+Browser ----> |  Catalyst Web Client Hosting   | (React 19 + Vite 8 App)
+              +---------------+----------------+
+                              |
+                              v
+              +--------------------------------+
+              |     Catalyst AppSail (Python)  | (FastAPI Service)
+              +---------------+----------------+
+                              |
+              +---------------+----------------+
+              |                                |
+              v                                v
+     Zoho Catalyst Cache               Supabase Cloud
+     (Distributed L2 Cache)      (Auth + PostgreSQL Database)
 ```
 
-The React/Vite production build is hosted as the web application, while the FastAPI backend runs through Catalyst AppSail. Supabase remains responsible for authentication and PostgreSQL persistence.
+### Deployed Endpoints (Development / Demo)
 
-Production deployment must configure the final frontend origin in CORS and supply production environment variables securely.
+- **Frontend (Web Client):** [https://crime-intel-60079748823.development.catalystserverless.in/app/index.html](https://crime-intel-60079748823.development.catalystserverless.in/app/index.html)
+- **Backend (AppSail):** [https://crimeintel-backend-50044367664.development.catalystappsail.in](https://crimeintel-backend-50044367664.development.catalystappsail.in)
+
+### Deployment Commands
+
+To deploy the AppSail backend:
+```bash
+catalyst deploy --only appsail:crimeintel-backend --ignore-scripts
+```
+
+To build and deploy the React frontend:
+```bash
+cd frontend
+npm run build:catalyst
+cd ..
+catalyst deploy --only webclient
+```
 
 ---
 
 ## 15. 🔮 Production Extensions
 
-Implemented this iteration:
+### Implemented in Current Release
 
-- **RBAC authorization** — roles/permissions model, server-side claim resolution, route-level permission deps (`backend/docs/RBAC_AUTHORIZATION.md`).
-- **Row Level Security** — deny-by-default on PII tables, selective `authenticated` reads (`supabase/migrations/005_rls.sql`).
-- **Audit read API** — `GET /api/v1/admin/audit/events` behind `audit.read` (503 in CSV/dev).
-- **Rate limiting** — fixed-window in-process limiter per route class.
-- **CI** — `.github/workflows/backend-ci.yml` runs the full suite + production-settings guard.
-- **ML integration contract** — audited `ml-engine`; artifacts documented with integration recommendations, no fabricated endpoints (`backend/docs/ML_INTEGRATION.md`).
-- **Zoho Catalyst packaging** — `Procfile` + deployment/env-var guide (`backend/docs/PRODUCTION_DATABASE.md`).
+- **Role-Based Access Control (RBAC):** Server-side role mapping (`FIELD_OFFICER`, `ANALYST`, `ADMIN`) with granular permissions.
+- **Multi-Tier Response Caching:** L1 in-process LRU cache combined with L2 Zoho Catalyst Cache segment.
+- **Public Root Endpoint:** Public `GET /` service response alongside health probes.
+- **Google Maps GIS Integration:** Advanced coordinate plotting, clustering, and heatmap layers.
+- **AI/ML Predictive Analytics:** DBSCAN spatial clustering, precinct CCRI risk scoring, and 30-day crime volume forecasting.
+- **Security Audit Logging:** Append-only security audit trail with query API.
+- **Multi-Language Support:** English and Kannada interface localization.
+- **User Preference Persistence:** Theme, date/time formatting, and default landing preferences.
 
-Remaining as departmental requirements/authoritative artifacts become available: predictive crime-risk models served from the API, anomaly detection, authoritative GIS boundaries, approved socio-economic datasets, administrative APIs, distributed rate limiting, monitoring, and expanded reporting.
+### Planned Future Extensions
+
+- **Distributed Rate Limiting:** Migrating in-process rate limiting to distributed store for multi-region active-active deployments.
+- **Authoritative Boundary Ingestion:** Integration with state GIS department boundary polygons.
+- **Advanced Real-Time Telemetry:** WebSocket integration for live officer location tracking and dispatch events.
+- **Expanded Statutory PDF Reporting:** Additional statutory compliance templates for automated court dossier generation.
 
 ---
 
@@ -578,7 +656,7 @@ Remaining as departmental requirements/authoritative artifacts become available:
 
 **Crime Intelligence · Geospatial Analytics · Network Analysis · Decision Support**
 
-### From fragmented crime records to actionable intelligence.
+### Transforming fragmented crime records into actionable intelligence.
 
 **Built for Datathon 2026**
 

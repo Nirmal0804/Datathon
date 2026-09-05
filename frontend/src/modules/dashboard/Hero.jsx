@@ -4,13 +4,13 @@ import { ArrowRight, ShieldCheck, FileText } from 'lucide-react';
 import kspLogo from '../../assets/ksp-official-logo.webp';
 import vidhanSoudha from '../../assets/vidhan-soudha-exact.webp';
 import { useTranslation } from '../../i18n';
-import { downloadArchitectureDocumentation } from '../../utils/documentationPdf';
+import { downloadArchitectureDocumentation, openDocumentInNewTab } from '../../utils/documentationPdf';
 
 export default function Hero({ onLoginClick, onNavigate }) {
   const { t } = useTranslation();
 
   const handleReadDocumentation = () => {
-    downloadArchitectureDocumentation();
+    openDocumentInNewTab('crimeintel-architecture-documentation.pdf');
   };
 
   return (

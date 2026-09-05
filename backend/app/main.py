@@ -68,6 +68,7 @@ _logger = logging.getLogger("crime_analytics")
 # ---------------------------------------------------------------------------
 
 _PUBLIC_PATHS: list[str | re.Pattern] = [
+    "/",
     "/health",
     "/health/live",
     "/health/ready",
@@ -184,8 +185,8 @@ class SecurityHeadersMiddleware:
                 if path.startswith("/api/v1/"):
                     # Protected API responses: no-store
                     headers.append((b"cache-control", b"no-store"))
-                elif path.startswith("/health"):
-                    # Health endpoints: short cache acceptable
+                elif path.startswith("/health") or path == "/":
+                    # Health/root endpoints: short cache acceptable
                     headers.append((b"cache-control", b"max-age=10"))
 
                 message["headers"] = headers
@@ -232,7 +233,17 @@ class AuthenticationMiddleware:
             await self.app(scope, receive, send)
             return
 
-        # Auth disabled (development mode)
+        # Production safety guard: dev-user-000 bypass is strictly prohibited in production
+        if settings.ENVIRONMENT == "production" and not settings.REQUIRE_AUTH:
+            logger.error("Security violation: REQUIRE_AUTH=false is prohibited in production environment")
+            await self._reject(
+                scope, receive, send,
+                code="AUTH_NOT_CONFIGURED",
+                message="Authentication enforcement is required in production.",
+            )
+            return
+
+        # Auth disabled (local development / offline test mode only)
         if not settings.REQUIRE_AUTH:
             from app.core.rbac import ADMIN, PERMISSIONS
 
@@ -456,8 +467,18 @@ async def handle_uncaught_exception(request: Request, exc: Exception) -> JSONRes
 
 
 # ---------------------------------------------------------------------------
-# Routes: Health (public)
+# Routes: Public Root & Health
 # ---------------------------------------------------------------------------
+
+
+@app.get("/", tags=["public"])
+async def root():
+    """Public root endpoint. Reports service name and status."""
+    return {
+        "service": "CrimeIntel API",
+        "status": "online",
+        "message": "Authentication required for API access.",
+    }
 
 
 @app.get("/health")
@@ -478,6 +499,12 @@ async def health():
         except Exception:
             health_status["database"] = "disconnected"
             health_status["status"] = "degraded"
+
+    try:
+        from app.core.cache import get_cache_service
+        health_status["cache"] = get_cache_service().get_stats()
+    except Exception:
+        pass
 
     return health_status
 

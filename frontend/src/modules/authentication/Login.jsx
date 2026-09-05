@@ -6,40 +6,37 @@ import LazyImage from '../../components/ui/LazyImage';
 import { useToast } from '../../components/ui/Toast';
 import { useTranslation } from '../../i18n';
 
+import { useAuth, resolveAccountRole } from '../../context/AuthContext';
+
 const roles = [
   { id: 'officer', nameKey: 'auth.roleFieldOfficer', name: 'Field Officer', icon: User },
   { id: 'analyst', nameKey: 'auth.roleAnalyst', name: 'Intelligence Analyst', icon: Shield },
   { id: 'admin', nameKey: 'auth.roleAdmin', name: 'System Administrator', icon: Settings }
 ];
 
-export const ROLE_CREDENTIALS = {
+export const DEMO_PREFILL_CREDENTIALS = {
   officer: {
     email: 'crimeintel.officer@gmail.com',
-    password: 'Officer@Pass2026',
-    name: 'Field Officer',
-    badge: 'KSP-FO-4892'
+    password: 'Techfortune@123',
   },
   analyst: {
     email: 'crimeintel.analystt@gmail.com',
-    password: 'Analyst@Pass2026',
-    name: 'Intelligence Analyst',
-    badge: 'KSP-IA-1044'
+    password: 'Techfortune@123',
   },
   admin: {
     email: 'crimeintel.admin@gmail.com',
-    password: 'Admin@Pass2026',
-    name: 'System Administrator',
-    badge: 'KSP-ADM-001'
-  }
+    password: 'Techfortune@123',
+  },
 };
 
 export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin }) {
   const { addToast } = useToast();
   const { t } = useTranslation();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role || null);
 
-  const initialCreds = role && ROLE_CREDENTIALS[role] ? ROLE_CREDENTIALS[role] : { email: '', password: '' };
+  const initialCreds = role && DEMO_PREFILL_CREDENTIALS[role] ? DEMO_PREFILL_CREDENTIALS[role] : { email: '', password: '' };
   const [email, setEmail] = useState(initialCreds.email);
   const [password, setPassword] = useState(initialCreds.password);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,10 +45,10 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
   useEffect(() => {
     if (role) {
       setSelectedRole(role);
-      const creds = ROLE_CREDENTIALS[role];
-      if (creds) {
-        setEmail(creds.email);
-        setPassword(creds.password);
+      const prefill = DEMO_PREFILL_CREDENTIALS[role];
+      if (prefill) {
+        setEmail(prefill.email);
+        setPassword(prefill.password);
       }
       setErrorMessage('');
     }
@@ -59,16 +56,18 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
 
   const handleRoleClick = (roleId) => {
     setSelectedRole(roleId);
-    const creds = ROLE_CREDENTIALS[roleId] || { email: '', password: '' };
-    setEmail(creds.email);
-    setPassword(creds.password);
+    const prefill = DEMO_PREFILL_CREDENTIALS[roleId];
+    if (prefill) {
+      setEmail(prefill.email);
+      setPassword(prefill.password);
+    }
     setErrorMessage('');
     if (onRoleSelect) {
       onRoleSelect(roleId);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedRole) {
       addToast({
@@ -101,40 +100,44 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
       return;
     }
 
-    const expected = ROLE_CREDENTIALS[selectedRole];
-    const normalizedEnteredEmail = email.trim().toLowerCase();
-    const normalizedExpectedEmail = expected.email.toLowerCase();
+    setErrorMessage('');
+    setIsLoading(true);
 
-    if (normalizedEnteredEmail !== normalizedExpectedEmail || password !== expected.password) {
-      const errorMsg = t('auth.authDeniedMsg', 'Invalid credentials. Please verify your official email and password for the selected access level.');
+    try {
+      const authData = await login(email, password);
+      const userObj = authData?.user;
+
+      // Extract verified authoritative role from authenticated identity
+      const normalizedRole = resolveAccountRole(userObj) || 'officer';
+
+      setIsLoading(false);
+      const userName = userObj?.user_metadata?.full_name || userObj?.user_metadata?.name || email.split('@')[0];
+      const userBadge = userObj?.user_metadata?.badge_number || 'KSP-AUTH';
+
+      addToast({
+        title: t('auth.authSuccess', 'Authentication Successful'),
+        message: `Welcome back, ${userName} (${userBadge}). Authorized level: ${normalizedRole.toUpperCase()}.`,
+        type: 'success',
+      });
+
+      if (onLogin) {
+        onLogin(normalizedRole, {
+          email: userObj?.email,
+          name: userName,
+          role: normalizedRole,
+          badge: userBadge,
+        });
+      }
+    } catch (err) {
+      setIsLoading(false);
+      const errorMsg = err?.message || t('auth.authDeniedMsg', 'Invalid credentials. Please verify your official email and password.');
       setErrorMessage(errorMsg);
       addToast({
         title: t('auth.authDenied', 'Authentication Denied'),
         message: errorMsg,
         type: 'error',
       });
-      return;
     }
-
-    setErrorMessage('');
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      addToast({
-        title: t('auth.authSuccess', 'Authentication Successful'),
-        message: `Welcome back, ${expected.name} (${expected.badge}).`,
-        type: 'success',
-      });
-      if (onLogin) {
-        onLogin(selectedRole, {
-          email: expected.email,
-          name: expected.name,
-          role: selectedRole,
-          badge: expected.badge
-        });
-      }
-    }, 600);
   };
 
   return (
@@ -266,7 +269,7 @@ export default function Login({ role, onRoleSelect, onBack, onForgot, onLogin })
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('auth.emailPlaceholder', 'Select access level to autofill')}
+                  placeholder={t('auth.emailPlaceholder', 'Enter official email')}
                   className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm text-[#142B45] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E00000] focus:border-transparent transition-all shadow-2xs font-medium"
                 />
               </div>

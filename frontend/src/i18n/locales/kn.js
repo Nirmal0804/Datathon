@@ -1163,15 +1163,15 @@ export default {
 
   // Authentication & Login
   auth: {
-    kspTitle: 'ಕರ್ನಾಟಕ ರಾಜ್ಯ ಪೊಲೀಸ್',
-    portalName: 'ಅಪರಾಧ ಗುಪ್ತಚರ & ಮುನ್ಸೂಚನಾ ವಿಶ್ಲೇಷಣಾ ವೇದಿಕೆ',
+    kspTitle: 'ಕರ್ನಾಟಕ ಪೊಲೀಸ್',
+    portalName: 'ಅಪರಾಧ ವಿಶ್ಲೇಷಣಾ ವೇದಿಕೆ',
     officerPortal: 'ಫೀಲ್ಡ್ ಆಫೀಸರ್ ಪೋರ್ಟಲ್',
     analystPortal: 'ಇಂಟೆಲಿಜೆನ್ಸ್ ಅನಲಿಸ್ಟ್ ಪೋರ್ಟಲ್',
     adminPortal: 'ಸಿಸ್ಟಮ್ ಅಡ್ಮಿನಿಸ್ಟ್ರೇಟರ್ ಪೋರ್ಟಲ್',
     signIn: 'ಸುರಕ್ಷಿತ ಪೋರ್ಟಲ್ ಲಾಗಿನ್',
     portalSubtitle: 'ಪ್ರವೇಶ ಮಟ್ಟವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ದೃಢೀಕರಿಸಲು ರುಜುವಾತುಗಳನ್ನು ನಮೂದಿಸಿ.',
     email: 'ಅಧಿಕೃತ ಐಡಿ / ಇಮೇಲ್',
-    emailPlaceholder: 'ಸ್ವಯಂ ತುಂಬಲು ಪ್ರವೇಶ ಮಟ್ಟ ಆಯ್ಕೆಮಾಡಿ',
+    emailPlaceholder: 'ಅಧಿಕೃತ ಇಮೇಲ್ ನಮೂದಿಸಿ',
     password: 'ಪಾಸ್‌ವರ್ಡ್',
     passwordPlaceholder: 'ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
     rememberMe: 'ಈ ಟರ್ಮಿನಲ್ ಅನ್ನು ನೆನಪಿಡಿ',

@@ -270,15 +270,18 @@ class JWTVerifier:
 
             # Build verification key
             try:
-                public_key = jwt.algorithms.RSAAlgorithm.from_jwk(key)
+                public_key = jwt.PyJWK.from_dict(key).key
             except Exception:
                 try:
-                    public_key = jwt_algorithms.ECAlgorithm.from_jwk(key)
+                    public_key = jwt.algorithms.RSAAlgorithm.from_jwk(key)
                 except Exception:
-                    raise AuthenticationError(
-                        VERIFICATION_FAILED,
-                        "Unable to process signing key.",
-                    )
+                    try:
+                        public_key = jwt_algorithms.ECAlgorithm.from_jwk(key)
+                    except Exception:
+                        raise AuthenticationError(
+                            VERIFICATION_FAILED,
+                            "Unable to process signing key.",
+                        )
 
             # Verify
             kwargs: dict[str, Any] = {

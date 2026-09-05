@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from pydantic import model_validator
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings
 
 _BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
@@ -114,10 +114,9 @@ class Settings(BaseSettings):
     RBAC_DEFAULT_ROLE: str = "FIELD_OFFICER"
 
     # Dotted claim paths checked (in order) to resolve an application
-    # role from verified JWT claims.
+    # role from verified JWT claims. Server-trusted claims only.
     RBAC_ROLE_CLAIM_PATHS: list[str] = [
         "app_metadata.role",
-        "user_metadata.role",
         "role",
     ]
 
@@ -149,10 +148,34 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     CACHE_ENABLED: bool = True
     CACHE_TTL_SECONDS: int = 600
+    CACHE_MAX_ENTRIES: int = 1000
+
+    # Zoho Catalyst L2 Cache Settings
+    CATALYST_CACHE_ENABLED: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("CATALYST_CACHE_ENABLED", "CACHE_L2_ENABLED", "APP_CATALYST_CACHE_ENABLED"),
+    )
+    CATALYST_CACHE_SEGMENT_ID: str = Field(
+        default="",
+        validation_alias=AliasChoices("CATALYST_CACHE_SEGMENT_ID", "CACHE_L2_SEGMENT_ID", "APP_CATALYST_CACHE_SEGMENT_ID"),
+    )
+    CATALYST_CACHE_TTL_SECONDS: int = Field(
+        default=600,
+        validation_alias=AliasChoices("CATALYST_CACHE_TTL_SECONDS", "CACHE_L2_TTL_SECONDS", "APP_CATALYST_CACHE_TTL_SECONDS"),
+    )
 
     @model_validator(mode="before")
     @classmethod
     def _normalize_backend(cls, values: dict) -> dict:
+        # Allow L2 cache settings to be set via non-reserved env vars (Catalyst blocks CATALYST_ prefix)
+        for prefix in ("APP_CATALYST_CACHE_", "CACHE_L2_"):
+            if f"{prefix}ENABLED" in values and "CATALYST_CACHE_ENABLED" not in values:
+                values["CATALYST_CACHE_ENABLED"] = values[f"{prefix}ENABLED"]
+            if f"{prefix}SEGMENT_ID" in values and "CATALYST_CACHE_SEGMENT_ID" not in values:
+                values["CATALYST_CACHE_SEGMENT_ID"] = values[f"{prefix}SEGMENT_ID"]
+            if f"{prefix}TTL_SECONDS" in values and "CATALYST_CACHE_TTL_SECONDS" not in values:
+                values["CATALYST_CACHE_TTL_SECONDS"] = values[f"{prefix}TTL_SECONDS"]
+
         if "DATA_BACKEND" in values and isinstance(values["DATA_BACKEND"], str):
             values["DATA_BACKEND"] = values["DATA_BACKEND"].lower().strip()
         # Auto-derive Supabase project ref from DATABASE_URL if not set
@@ -215,7 +238,7 @@ class Settings(BaseSettings):
             )
         return self
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 def _extract_project_ref(database_url: str) -> str:

@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.rbac_deps import require_permission
 from app.core.cache import CatalystCacheService, get_cache_service
@@ -50,17 +50,18 @@ def _get_district_service(
     "transactional data are included with zero-valued statistics.",
 )
 async def list_districts(
+    request: Request,
     service: DistrictService = Depends(_get_district_service),
     cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("districts.read")),
 ) -> DistrictListResponse:
     cache_key = "districts_list"
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return DistrictListResponse(**cached)
 
     result = service.list_all_districts()
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return DistrictListResponse(**result)
 
 
@@ -78,6 +79,7 @@ async def list_districts(
 )
 async def get_district_intelligence(
     district_id: int,
+    request: Request,
     start_date: Optional[date] = Query(
         None, description="Inclusive start date (YYYY-MM-DD)"
     ),
@@ -101,7 +103,7 @@ async def get_district_intelligence(
         crime_head=crime_head,
         status=status,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return DistrictIntelligenceProfile(**cached)
 
@@ -112,5 +114,5 @@ async def get_district_intelligence(
         crime_head=crime_head,
         status=status,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return DistrictIntelligenceProfile(**result)

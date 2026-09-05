@@ -127,8 +127,13 @@ class TestResolveRole:
         claims = {"app_metadata": {"role": "ANALYST"}}
         assert resolve_role(claims) == ANALYST
 
-    def test_user_metadata_role(self):
+    def test_user_metadata_role_cannot_elevate_privileges(self):
+        # user_metadata is client-controlled and must NOT be trusted; falls back to default
         claims = {"user_metadata": {"role": "admin"}}
+        assert resolve_role(claims) == FIELD_OFFICER
+
+    def test_app_metadata_role_grants_role(self):
+        claims = {"app_metadata": {"role": "admin"}}
         assert resolve_role(claims) == ADMIN
 
     def test_top_level_role(self):
@@ -271,10 +276,11 @@ class TestRoleClaimsGrantAccess:
             resp = auth_client.get(path, headers=headers)
             assert resp.status_code == 200, path
 
-    def test_user_metadata_role_claim(self, auth_client):
+    def test_user_metadata_role_claim_denied(self, auth_client):
+        # user_metadata is not trusted; token receives FIELD_OFFICER, which is denied for analyst endpoints
         headers = _auth_header({"user_metadata": {"role": "ANALYST"}})
         resp = auth_client.get("/api/v1/map/intelligence/analytics", headers=headers)
-        assert resp.status_code == 200
+        assert resp.status_code == 403
 
     def test_top_level_role_claim(self, auth_client):
         headers = _auth_header({"role": "ANALYST"})

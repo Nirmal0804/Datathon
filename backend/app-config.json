@@ -2,7 +2,20 @@
   "command": "python3 main.py",
   "build_path": "./",
   "stack": "python_3_10",
-  "env_variables": {},
+  "env_variables": {
+    "REQUIRE_AUTH": "true",
+    "ENVIRONMENT": "production",
+    "CACHE_L2_ENABLED": "true",
+    "CACHE_L2_SEGMENT_ID": "42154000000087004",
+    "CACHE_L2_TTL_SECONDS": "600",
+    "CACHE_ENABLED": "true",
+    "CACHE_TTL_SECONDS": "600",
+    "CACHE_MAX_ENTRIES": "1000",
+    "SUPABASE_PROJECT_REF": "gcxppkdtbvmleynrzqao",
+    "SUPABASE_JWKS_URL": "https://gcxppkdtbvmleynrzqao.supabase.co/auth/v1/.well-known/jwks.json",
+    "SUPABASE_JWT_ISSUER": "https://gcxppkdtbvmleynrzqao.supabase.co/auth/v1",
+    "SUPABASE_JWT_AUDIENCE": "authenticated"
+  },
   "memory": 512,
   "scripts": {
     "preserve": "python -m pip install --platform manylinux2014_x86_64 --target ./vendor --implementation cp --python-version 310 --only-binary=:all: --upgrade -r ./requirements.txt",

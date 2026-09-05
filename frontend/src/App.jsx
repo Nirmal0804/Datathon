@@ -19,6 +19,7 @@ import About from './modules/dashboard/About';
 import Footer from './components/shared/navigation/Footer';
 
 // Auth
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './modules/authentication/Login';
 import ForgotPassword from './modules/authentication/ForgotPassword';
 
@@ -82,14 +83,14 @@ const VIEW_PATH_MAP = {
 };
 
 function resolveInitialView() {
-  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
   const hash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
 
-  if (ROUTE_PATH_MAP[pathname]) {
-    return ROUTE_PATH_MAP[pathname];
-  }
   if (ROUTE_PATH_MAP[hash]) {
     return ROUTE_PATH_MAP[hash];
+  }
+  if (ROUTE_PATH_MAP[pathname]) {
+    return ROUTE_PATH_MAP[pathname];
   }
 
   return localStorage.getItem('ksp_current_view') || 'landing';
@@ -97,17 +98,29 @@ function resolveInitialView() {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState(resolveInitialView);
-  const [selectedRole, setSelectedRole] = useState(() => {
-    return localStorage.getItem('ksp_selected_role') || null;
-  });
+  const { session, role: authRole, logout, isLoading } = useAuth();
+  const [selectedRoleIntent, setSelectedRoleIntent] = useState(null);
+
+  // Authoritative role from verified Supabase session
+  const effectiveRole = authRole || selectedRoleIntent;
 
   const navigateTo = useCallback((viewOrPath) => {
     const resolvedView = ROUTE_PATH_MAP[viewOrPath] || viewOrPath;
     setCurrentView(resolvedView);
     const targetPath = VIEW_PATH_MAP[resolvedView] || (resolvedView === 'landing' ? '/' : null);
-    if (targetPath && window.location.pathname !== targetPath) {
+    if (targetPath) {
       try {
-        window.history.pushState({ view: resolvedView }, '', targetPath);
+        const targetHash = targetPath === '/' ? '' : `#${targetPath}`;
+        const targetUrl = targetHash
+          ? `${window.location.pathname}${window.location.search}${targetHash}`
+          : `${window.location.pathname}${window.location.search}`;
+
+        const currentNormalizedHash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
+        const targetNormalizedHash = targetPath === '/' ? '' : targetPath;
+
+        if (currentNormalizedHash !== targetNormalizedHash) {
+          window.history.pushState({ view: resolvedView }, '', targetUrl);
+        }
       } catch {
         // Fallback for isolated webview contexts
       }
@@ -148,23 +161,31 @@ function AppContent() {
     return () => window.removeEventListener('ksp_preferences_updated', applySavedTheme);
   }, []);
 
-  // Listen to browser forward/backward buttons
+  // Listen to browser forward/backward buttons and hash changes
   useEffect(() => {
-    const handlePopState = (e) => {
+    const handleUrlChange = (e) => {
+      const hash = window.location.hash.replace(/^#\/?/, '/').replace(/\/+$/, '');
       const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
-      if (ROUTE_PATH_MAP[pathname]) {
-        setCurrentView(ROUTE_PATH_MAP[pathname]);
-      } else if (e.state?.view) {
+
+      if (ROUTE_PATH_MAP[hash]) {
+        setCurrentView(ROUTE_PATH_MAP[hash]);
+      } else if (e?.state?.view) {
         setCurrentView(e.state.view);
+      } else if (ROUTE_PATH_MAP[pathname]) {
+        setCurrentView(ROUTE_PATH_MAP[pathname]);
       } else if (pathname === '/dashboard') {
         setCurrentView('dashboard');
-      } else if (pathname === '/' || pathname === '') {
+      } else {
         setCurrentView('landing');
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -173,18 +194,22 @@ function AppContent() {
     }
   }, [currentView]);
 
+  // Protect dashboard view — require active Supabase session once initialization finishes
   useEffect(() => {
-    if (selectedRole) {
-      localStorage.setItem('ksp_selected_role', selectedRole);
+    if (!isLoading && currentView === 'dashboard' && !session) {
+      navigateTo('auth-login');
     }
-  }, [selectedRole]);
+  }, [currentView, session, isLoading, navigateTo]);
 
   const navigateToAuth = () => navigateTo('auth-login');
 
-  const handleLogout = () => {
-    setSelectedRole(null);
-    localStorage.removeItem('ksp_selected_role');
-    localStorage.removeItem('ksp_active_module');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      // Safe fallback
+    }
+    setSelectedRoleIntent(null);
     navigateTo('landing');
   };
 
@@ -193,12 +218,12 @@ function AppContent() {
   };
 
   const handleRoleSelect = (role) => {
-    setSelectedRole(role);
+    setSelectedRoleIntent(role);
   };
 
   const handleLogin = (role) => {
     if (role) {
-      setSelectedRole(role);
+      setSelectedRoleIntent(role);
     }
     navigateTo('dashboard');
   };
@@ -211,7 +236,7 @@ function AppContent() {
             <PrivacyPolicy
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -222,7 +247,7 @@ function AppContent() {
             <TermsOfService
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -233,7 +258,7 @@ function AppContent() {
             <SecurityAudit
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -244,7 +269,7 @@ function AppContent() {
             <SupportLanding
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -255,7 +280,7 @@ function AppContent() {
             <Documentation
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -266,7 +291,7 @@ function AppContent() {
             <ApiAccess
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -277,7 +302,7 @@ function AppContent() {
             <HelpCenter
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -288,7 +313,7 @@ function AppContent() {
             <SecurityGuidelines
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -299,7 +324,7 @@ function AppContent() {
             <Faqs
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
@@ -310,18 +335,28 @@ function AppContent() {
             <ContactSupport
               onNavigate={navigateTo}
               onLoginClick={navigateToAuth}
-              role={selectedRole}
+              role={effectiveRole}
             />
           </PageTransition>
         );
 
       case 'dashboard':
+        if (isLoading) {
+          return (
+            <PageTransition key="dashboard-loading">
+              <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#F8F9FB] text-slate-500">
+                <div className="w-10 h-10 border-4 border-slate-200 border-t-[#153E75] rounded-full animate-spin mb-4" />
+                <p className="text-sm font-semibold tracking-wide text-slate-600">Verifying session credentials...</p>
+              </div>
+            </PageTransition>
+          );
+        }
         return (
           <PageTransition key="dashboard">
             <DashboardLayout
               onLogout={handleLogout}
               onNavigate={navigateTo}
-              role={selectedRole || 'analyst'}
+              role={effectiveRole || 'analyst'}
             />
           </PageTransition>
         );
@@ -331,7 +366,7 @@ function AppContent() {
         return (
           <PageTransition key="auth-login">
             <Login
-              role={selectedRole}
+              role={effectiveRole}
               onRoleSelect={handleRoleSelect}
               onBack={navigateToLanding}
               onForgot={() => navigateTo('auth-forgot')}
@@ -352,13 +387,13 @@ function AppContent() {
           <PageTransition key="landing">
             <div className="min-h-screen bg-[#F8F9FB] font-sans text-[#111827] selection:bg-[#153E75]/10 selection:text-[#153E75]">
               <Navbar
-                onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth}
+                onLoginClick={session && effectiveRole ? () => navigateTo('dashboard') : navigateToAuth}
                 onHomeClick={navigateToLanding}
-                role={selectedRole}
+                role={effectiveRole}
               />
               <main>
                 <Hero 
-                  onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth} 
+                  onLoginClick={session && effectiveRole ? () => navigateTo('dashboard') : navigateToAuth} 
                   onNavigate={navigateTo}
                 />
                 <Stats />
@@ -368,9 +403,9 @@ function AppContent() {
                 <About />
               </main>
               <Footer
-                onLoginClick={selectedRole ? () => navigateTo('dashboard') : navigateToAuth}
+                onLoginClick={session && effectiveRole ? () => navigateTo('dashboard') : navigateToAuth}
                 onNavigate={navigateTo}
-                role={selectedRole}
+                role={effectiveRole}
               />
             </div>
           </PageTransition>
@@ -379,7 +414,7 @@ function AppContent() {
   };
 
   return (
-    <NotificationProvider role={selectedRole}>
+    <NotificationProvider role={effectiveRole}>
       <GlobalNotificationCenter />
       <AnimatePresence mode="wait">
         {renderView()}
@@ -395,7 +430,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <AppContent />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </ToastProvider>
     </ErrorBoundary>
   );
