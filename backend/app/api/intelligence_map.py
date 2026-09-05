@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import PlainTextResponse
 
 from app.api.rbac_deps import require_permission
@@ -55,6 +55,7 @@ def _get_intelligence_service(
     "All filters are optional and combine with AND semantics.",
 )
 async def get_intelligence_analytics(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -78,7 +79,7 @@ async def get_intelligence_analytics(
         start_date=start_date,
         end_date=end_date,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return IntelligenceAnalyticsResponse(**cached)
 
@@ -90,7 +91,7 @@ async def get_intelligence_analytics(
         start_date=start_date,
         end_date=end_date,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return IntelligenceAnalyticsResponse(**result)
 
 
@@ -107,6 +108,7 @@ async def get_intelligence_analytics(
     "All filters are optional and combine with AND semantics.",
 )
 async def get_intelligence_heatmap(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -130,7 +132,7 @@ async def get_intelligence_heatmap(
         start_date=start_date,
         end_date=end_date,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return HeatmapResponse(**cached)
 
@@ -142,7 +144,7 @@ async def get_intelligence_heatmap(
         start_date=start_date,
         end_date=end_date,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return HeatmapResponse(**result)
 
 
@@ -160,6 +162,7 @@ async def get_intelligence_heatmap(
     "Not ML clustering.",
 )
 async def get_intelligence_clusters(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -183,7 +186,7 @@ async def get_intelligence_clusters(
         start_date=start_date,
         end_date=end_date,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return ClusterResponse(**cached)
 
@@ -195,7 +198,7 @@ async def get_intelligence_clusters(
         start_date=start_date,
         end_date=end_date,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return ClusterResponse(**result)
 
 
@@ -212,6 +215,7 @@ async def get_intelligence_clusters(
     "Shared implementation with field officer hotspots.",
 )
 async def get_intelligence_hotspots(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -235,7 +239,7 @@ async def get_intelligence_hotspots(
         start_date=start_date,
         end_date=end_date,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return HotspotResponse(**cached)
 
@@ -247,7 +251,7 @@ async def get_intelligence_hotspots(
         start_date=start_date,
         end_date=end_date,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return HotspotResponse(**result)
 
 
@@ -265,6 +269,7 @@ async def get_intelligence_hotspots(
     "status breakdown.",
 )
 async def get_intelligence_district_comparison(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -288,7 +293,7 @@ async def get_intelligence_district_comparison(
         start_date=start_date,
         end_date=end_date,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return DistrictComparisonResponse(**cached)
 
@@ -300,7 +305,7 @@ async def get_intelligence_district_comparison(
         start_date=start_date,
         end_date=end_date,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return DistrictComparisonResponse(**result)
 
 
@@ -317,6 +322,7 @@ async def get_intelligence_district_comparison(
     "Supports 'daily' and 'monthly' granularity (default: monthly).",
 )
 async def get_intelligence_timeline(
+    request: Request,
     district: Optional[str] = Query(None, description="Filter by district name"),
     station_id: Optional[str] = Query(None, description="Filter by station ID"),
     crime_head: Optional[str] = Query(None, description="Filter by crime category"),
@@ -345,7 +351,7 @@ async def get_intelligence_timeline(
         end_date=end_date,
         granularity=granularity,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return TimelineResponse(**cached)
 
@@ -358,7 +364,7 @@ async def get_intelligence_timeline(
         end_date=end_date,
         granularity=granularity,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return TimelineResponse(**result)
 
 

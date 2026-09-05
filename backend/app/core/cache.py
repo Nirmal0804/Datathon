@@ -492,10 +492,10 @@ class CacheService:
 
         return l1_ok
 
-    def invalidate(self, key: str) -> bool:
+    def invalidate(self, key: str, req: Optional[Any] = None) -> bool:
         """Invalidate a specific cache key in both L1 and L2."""
         l1_res = self._l1.invalidate(key)
-        l2_res = self._l2.invalidate(key) if (self._l2 and self._l2.is_enabled) else False
+        l2_res = self._l2.invalidate(key, req=req) if (self._l2 and self._l2.is_enabled) else False
         return l1_res or l2_res
 
     def invalidate_prefix(self, prefix: str) -> int:

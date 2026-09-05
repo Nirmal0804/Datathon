@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.api.rbac_deps import require_permission
 from app.core.cache import CatalystCacheService, get_cache_service
@@ -44,6 +44,7 @@ def _get_station_service(
     "All filters are optional. Pagination defaults to 50 per page.",
 )
 async def list_stations(
+    request: Request,
     district_id: Optional[int] = Query(
         None, description="Filter by district ID"
     ),
@@ -61,7 +62,7 @@ async def list_stations(
         page=page,
         page_size=page_size,
     )
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return StationListResponse(**cached)
 
@@ -70,7 +71,7 @@ async def list_stations(
         page=page,
         page_size=page_size,
     )
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return StationListResponse(**result)
 
 
@@ -88,15 +89,16 @@ async def list_stations(
 )
 async def get_station_detail(
     station_id: str,
+    request: Request,
     service: StationService = Depends(_get_station_service),
     cache: CatalystCacheService = Depends(get_cache_service),
     _identity: AuthenticatedIdentity = Depends(require_permission("stations.read")),
 ) -> StationDetailResponse:
     cache_key = f"station_detail_{station_id}"
-    cached = cache.get(cache_key)
+    cached = cache.get(cache_key, req=request)
     if cached is not None:
         return StationDetailResponse(**cached)
 
     result = service.get_station_detail(station_id)
-    cache.put(cache_key, result)
+    cache.put(cache_key, result, req=request)
     return StationDetailResponse(**result)

@@ -447,6 +447,14 @@ def test_map_intelligence_caching(client):
     assert res1.json() == res2.json()
 
 
+def test_stations_caching(client):
+    res1 = client.get("/api/v1/stations")
+    assert res1.status_code == 200
+    res2 = client.get("/api/v1/stations")
+    assert res2.status_code == 200
+    assert res1.json() == res2.json()
+
+
 def test_health_endpoints(client):
     res = client.get("/health")
     assert res.status_code == 200
@@ -459,3 +467,66 @@ def test_health_endpoints(client):
     assert res_live.status_code == 200
     res_ready = client.get("/health/ready")
     assert res_ready.status_code == 200
+
+
+def test_catalyst_sdk_initialize_with_request():
+    """Verify that CatalystCacheStore._get_segment passes req into zcatalyst_sdk.initialize."""
+    import sys
+    from unittest.mock import MagicMock
+
+    mock_sdk = MagicMock()
+    mock_app = MagicMock()
+    mock_cache = MagicMock()
+    mock_segment = MagicMock()
+
+    mock_sdk.initialize.return_value = mock_app
+    mock_app.cache.return_value = mock_cache
+    mock_cache.segment.return_value = mock_segment
+
+    mock_req = MagicMock()
+
+    # Temporarily inject mock_sdk into sys.modules
+    sys.modules["zcatalyst_sdk"] = mock_sdk
+    try:
+        store = CatalystCacheStore(segment_id="test_segment_123")
+        segment = store._get_segment(req=mock_req)
+        assert segment == mock_segment
+        mock_sdk.initialize.assert_called_with(req=mock_req)
+    finally:
+        sys.modules.pop("zcatalyst_sdk", None)
+
+
+def test_endpoint_request_context_propagation_to_cache(client):
+    """Verify all cached endpoints pass request context to cache service."""
+    from unittest.mock import patch
+
+    cache_svc = get_cache_service()
+    with patch.object(cache_svc, "get", wraps=cache_svc.get) as mock_get:
+        # 1. Dashboard
+        client.get("/api/v1/dashboard/summary")
+        assert mock_get.called
+        assert mock_get.call_args.kwargs.get("req") is not None
+
+        # 2. Districts
+        mock_get.reset_mock()
+        client.get("/api/v1/districts")
+        assert mock_get.called
+        assert mock_get.call_args.kwargs.get("req") is not None
+
+        # 3. Analytics
+        mock_get.reset_mock()
+        client.get("/api/v1/analytics/summary")
+        assert mock_get.called
+        assert mock_get.call_args.kwargs.get("req") is not None
+
+        # 4. Intelligence Map
+        mock_get.reset_mock()
+        client.get("/api/v1/map/intelligence/analytics")
+        assert mock_get.called
+        assert mock_get.call_args.kwargs.get("req") is not None
+
+        # 5. Stations
+        mock_get.reset_mock()
+        client.get("/api/v1/stations")
+        assert mock_get.called
+        assert mock_get.call_args.kwargs.get("req") is not None
