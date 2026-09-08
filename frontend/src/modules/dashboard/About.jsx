@@ -14,7 +14,7 @@ const technologies = [
   { name: 'React', icon: Code2 },
   { name: 'FastAPI', icon: Zap },
   { name: 'PostgreSQL / Supabase', icon: Database },
-  { name: 'Leaflet', icon: MapPin },
+  { name: 'Google Maps', icon: MapPin },
   { name: 'Python / ML', icon: BrainCircuit },
 ];
 
