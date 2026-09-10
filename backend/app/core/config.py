@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     """
 
     APP_NAME: str = "crime-analytics-backend"
-    APP_VERSION: str = "0.1.0"
+    APP_VERSION: str = "1.1.0"
     ENVIRONMENT: str = "development"
 
     API_PREFIX: str = "/api/v1"

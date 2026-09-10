@@ -1,0 +1,30 @@
+MIT License
+
+Copyright (c) 2026 Nirmal P, Tech Fortune, and all collaborators
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+### Third-Party Licenses & Disclaimers
+
+1. **Original Source Code:** This license applies solely to the original source code, architecture, and analytical models developed for the CrimeIntel project.
+2. **Third-Party Libraries & Dependencies:** All third-party libraries, packages, and frameworks (such as React, Vite, FastAPI, Tailwind CSS, Pytest, Pydantic, Scikit-learn, etc.) remain subject to their respective open-source licenses.
+3. **External Cloud Services & APIs:** Integrations with external platforms (including Google Maps API, Supabase Auth and Database, and Zoho Catalyst Cloud Services) remain subject to their respective terms of service and commercial licenses.
+4. **Government & Public Data:** Datasets, crime statistics, spatial boundaries, and reference records provided for the Karnataka Police Datathon remain the property of their respective governing authorities and are used strictly for analysis and evaluation purposes.

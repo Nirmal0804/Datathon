@@ -112,6 +112,9 @@ These preferences persist in local storage to provide a tailored user experience
 13. [Testing & Reliability](#13--testing--reliability)
 14. [Deployment](#14--deployment)
 15. [Production Extensions](#15--production-extensions)
+16. [Release Information](#16--release-information)
+17. [Team & Attribution](#17--team--attribution)
+18. [License](#18--license)
 
 ---
 
@@ -647,6 +650,38 @@ catalyst deploy --only webclient
 - **Authoritative Boundary Ingestion:** Integration with state GIS department boundary polygons.
 - **Advanced Real-Time Telemetry:** WebSocket integration for live officer location tracking and dispatch events.
 - **Expanded Statutory PDF Reporting:** Additional statutory compliance templates for automated court dossier generation.
+
+---
+
+## 16. 🏷️ Release Information
+
+- **Current Version:** `v1.1.0`
+- **Release Status:** Stable (Official Release)
+- **Release Date:** 6 September 2026
+- **Release Channel:** Final Datathon Release
+- **Release Notes:** [`RELEASE_NOTES.md`](RELEASE_NOTES.md)
+- **Documentation Asset:** [`docs/CrimeIntel-Documentation.pdf`](docs/CrimeIntel-Documentation.pdf)
+- **License:** MIT License
+
+---
+
+## 17. 👥 Team & Attribution
+
+- **Project:** CrimeIntel — AI-Driven Crime Analytics & Intelligence Platform
+- **Event:** Karnataka Police Datathon 2026
+- **Copyright:** &copy; 2026 Nirmal P, Tech Fortune, and all collaborators
+- **Team Members:** _[To be completed]_
+- **Collaborator Names:** _[To be completed]_
+- **GitHub Usernames:** _[To be completed]_
+- **Acknowledgements:** Karnataka State Police, Datathon Mentors & Organizers
+
+---
+
+## 18. 📄 License
+
+This project is licensed under the **MIT License** — see the [`LICENSE`](LICENSE) file for details.
+
+*Note: The MIT License applies to the project's original source code and analytical models. Third-party packages, datasets, Google Maps services, Supabase infrastructure, and Zoho Catalyst cloud services remain subject to their respective terms and licenses.*
 
 ---
 
